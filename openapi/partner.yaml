@@ -1,0 +1,682 @@
+openapi: 3.1.0
+info:
+  title: Floit Partner API
+  version: 0.1.0
+  description: |
+    Autoservicio partner (Sprint 4): claim, ownership, perfil y planes.
+servers:
+  - url: http://localhost:4013
+paths:
+  /health:
+    get:
+      operationId: health
+      summary: Health del partner-service con estado de auth y colas internas
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok, service, auth, queues, readiness]
+                properties:
+                  ok: { type: boolean }
+                  service: { type: string }
+                  auth:
+                    type: object
+                    required:
+                      [
+                        adminStrictOidc,
+                        adminOidcConfigured,
+                        partnerStrictOidc,
+                        partnerOidcConfigured,
+                      ]
+                    properties:
+                      adminStrictOidc: { type: boolean }
+                      adminOidcConfigured: { type: boolean }
+                      partnerStrictOidc: { type: boolean }
+                      partnerOidcConfigured: { type: boolean }
+                  queues:
+                    type: object
+                    required: [catalogSync, catalogSyncOutbox]
+                    properties:
+                      catalogSync:
+                        type: object
+                        required: [pending, failed, sent]
+                        properties:
+                          pending: { type: integer }
+                          failed: { type: integer }
+                          sent: { type: integer }
+                      catalogSyncOutbox:
+                        type: object
+                        required: [pending, failed, published]
+                        properties:
+                          pending: { type: integer }
+                          failed: { type: integer }
+                          published: { type: integer }
+                  readiness:
+                    type: object
+                    required:
+                      [
+                        oidcConfigReady,
+                        queuesHealthy,
+                        recommendedForStrictOidc,
+                        failedQueues,
+                      ]
+                    properties:
+                      oidcConfigReady: { type: boolean }
+                      queuesHealthy: { type: boolean }
+                      recommendedForStrictOidc: { type: boolean }
+                      failedQueues: { type: integer }
+  /v1/partner/claims:
+    post:
+      operationId: createPartnerClaim
+      summary: Crear solicitud de claim de gimnasio por representante
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PartnerClaimCreate" }
+      responses:
+        "201":
+          description: Claim recibido
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, status]
+                properties:
+                  id: { type: string, format: uuid }
+                  status:
+                    type: string
+                    enum: [pending_review]
+        "400":
+          description: Error de validación
+  /v1/admin/partner/claims:
+    get:
+      operationId: adminListPartnerClaims
+      summary: Lista claims recientes para revisión operativa
+      security:
+        - AdminOidcBearer: []
+        - AdminLegacyToken: []
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 500, default: 200 }
+      responses:
+        "200":
+          description: Lista de claims
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: "#/components/schemas/PartnerClaimSummary" }
+        "401":
+          description: No autorizado
+  /v1/admin/partner/claims/{id}/status:
+    post:
+      operationId: adminUpdatePartnerClaimStatus
+      summary: Aprueba o rechaza un claim
+      security:
+        - AdminOidcBearer: []
+        - AdminLegacyToken: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [approved, rejected]
+      responses:
+        "200":
+          description: Estado actualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, status]
+                properties:
+                  id: { type: string, format: uuid }
+                  status: { type: string }
+        "401":
+          description: No autorizado
+  /v1/partner/me/leads:
+    get:
+      operationId: partnerMyLeads
+      summary: Bandeja de leads del partner (solo venues con claim aprobado)
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 500, default: 200 }
+      responses:
+        "200":
+          description: Leads visibles por ownership
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items, venues]
+                properties:
+                  venues:
+                    type: array
+                    items: { type: string }
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        [id, venueSlug, intent, name, phone, status, createdAt]
+                      properties:
+                        id: { type: string, format: uuid }
+                        venueSlug: { type: string }
+                        intent: { type: string }
+                        name: { type: string }
+                        phone: { type: string }
+                        email: { type: string, nullable: true }
+                        status: { type: string }
+                        createdAt: { type: string, format: date-time }
+        "503":
+          description: Integración interna de leads no configurada
+        "401":
+          description: No autorizado
+  /v1/partner/me/leads/{id}/status:
+    patch:
+      operationId: partnerUpdateLeadStatus
+      summary: Actualizar estado de lead del partner (ownership requerido)
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [contacted, closed]
+      responses:
+        "200":
+          description: Lead actualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, status]
+                properties:
+                  id: { type: string, format: uuid }
+                  status: { type: string }
+                  firstContactedAt:
+                    type: string
+                    format: date-time
+                    nullable: true
+        "401":
+          description: No autorizado
+        "403":
+          description: Lead no accesible o integración no configurada
+  /v1/partner/me/profile:
+    get:
+      operationId: partnerMyProfile
+      summary: Perfil editable del partner autenticado
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      responses:
+        "200":
+          description: Perfil
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PartnerProfile" }
+        "401":
+          description: No autorizado
+    put:
+      operationId: partnerUpsertMyProfile
+      summary: Crear/actualizar perfil partner autenticado
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PartnerProfileUpdate" }
+      responses:
+        "200":
+          description: Perfil actualizado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PartnerProfile" }
+        "401":
+          description: No autorizado
+  /v1/partner/me/plans:
+    get:
+      operationId: partnerMyPlans
+      summary: Listar planes del partner autenticado
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      responses:
+        "200":
+          description: Lista de planes
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: "#/components/schemas/PartnerPlan" }
+        "401":
+          description: No autorizado
+    post:
+      operationId: partnerCreatePlan
+      summary: Crear plan para venue del partner (ownership requerido)
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PartnerPlanCreate" }
+      responses:
+        "201":
+          description: Plan creado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PartnerPlan" }
+        "401":
+          description: No autorizado
+        "403":
+          description: Venue no asociado al partner
+  /v1/partner/me/plans/{id}:
+    patch:
+      operationId: partnerPatchPlan
+      summary: Editar plan del partner autenticado
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PartnerPlanUpdate" }
+      responses:
+        "200":
+          description: Plan actualizado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PartnerPlan" }
+        "401":
+          description: No autorizado
+        "403":
+          description: Plan no encontrado o sin ownership
+  /v1/admin/partner/catalog-sync/failures:
+    get:
+      operationId: adminPartnerCatalogSyncFailures
+      summary: DLQ de sincronización partner->catalog
+      security:
+        - AdminOidcBearer: []
+        - AdminLegacyToken: []
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 500, default: 100 }
+      responses:
+        "200":
+          description: Fallos de sync
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, partnerEmail, venueSlug, attempts, createdAt]
+                      properties:
+                        id: { type: string, format: uuid }
+                        partnerEmail: { type: string }
+                        venueSlug: { type: string }
+                        attempts: { type: integer }
+                        lastError: { type: string, nullable: true }
+                        createdAt: { type: string, format: date-time }
+        "401":
+          description: No autorizado
+  /v1/admin/partner/catalog-sync/retry:
+    post:
+      operationId: adminPartnerCatalogSyncRetry
+      summary: Reencola fallos de sync partner->catalog
+      security:
+        - AdminOidcBearer: []
+        - AdminLegacyToken: []
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 500, default: 50 }
+      responses:
+        "200":
+          description: Resultado retry
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [requeued, remaining]
+                properties:
+                  requeued: { type: integer }
+                  remaining: { type: integer }
+        "401":
+          description: No autorizado
+  /v1/admin/partner/catalog-sync/outbox/failures:
+    get:
+      operationId: adminPartnerCatalogSyncOutboxFailures
+      summary: DLQ de publicación outbox partner->catalog-sync
+      security:
+        - AdminOidcBearer: []
+        - AdminLegacyToken: []
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 500, default: 100 }
+      responses:
+        "200":
+          description: Fallos de publicación outbox
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, partnerEmail, venueSlug, attempts, createdAt]
+                      properties:
+                        id: { type: string, format: uuid }
+                        partnerEmail: { type: string }
+                        venueSlug: { type: string }
+                        attempts: { type: integer }
+                        lastError: { type: string, nullable: true }
+                        createdAt: { type: string, format: date-time }
+        "401":
+          description: No autorizado
+  /v1/admin/partner/catalog-sync/outbox/retry:
+    post:
+      operationId: adminPartnerCatalogSyncOutboxRetry
+      summary: Reencola fallos de publicación outbox partner->catalog-sync
+      security:
+        - AdminOidcBearer: []
+        - AdminLegacyToken: []
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 500, default: 50 }
+      responses:
+        "200":
+          description: Resultado retry de outbox
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [requeued, remaining]
+                properties:
+                  requeued: { type: integer }
+                  remaining: { type: integer }
+        "401":
+          description: No autorizado
+  /v1/admin/partner/ownerships:
+    get:
+      operationId: adminPartnerOwnerships
+      summary: Lista relación partner↔venue para operación RBAC
+      security:
+        - AdminOidcBearer: []
+        - AdminLegacyToken: []
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 500, default: 200 }
+      responses:
+        "200":
+          description: Ownerships
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, partnerEmail, venueSlug, status, createdAt, updatedAt]
+                      properties:
+                        id: { type: string, format: uuid }
+                        partnerEmail: { type: string }
+                        venueSlug: { type: string }
+                        status: { type: string, enum: [active, revoked] }
+                        createdAt: { type: string, format: date-time }
+                        updatedAt: { type: string, format: date-time }
+        "401":
+          description: No autorizado
+  /v1/admin/partner/ownerships/{id}/revoke:
+    post:
+      operationId: adminPartnerOwnershipRevoke
+      summary: Revoca ownership partner↔venue
+      security:
+        - AdminOidcBearer: []
+        - AdminLegacyToken: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason: { type: string, maxLength: 500 }
+      responses:
+        "200":
+          description: Ownership revocado
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, status]
+                properties:
+                  id: { type: string, format: uuid }
+                  status: { type: string }
+        "401":
+          description: No autorizado
+  /v1/admin/partner/ownership-audit:
+    get:
+      operationId: adminPartnerOwnershipAudit
+      summary: Historial operativo de cambios de ownership
+      security:
+        - AdminOidcBearer: []
+        - AdminLegacyToken: []
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 500, default: 100 }
+        - name: partnerEmail
+          in: query
+          schema: { type: string }
+        - name: venueSlug
+          in: query
+          schema: { type: string }
+      responses:
+        "200":
+          description: Eventos de auditoría de ownership
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, action, partnerEmail, venueSlug, actor, createdAt]
+                      properties:
+                        id: { type: string, format: uuid }
+                        action: { type: string, enum: [revoked] }
+                        partnerEmail: { type: string }
+                        venueSlug: { type: string }
+                        actor: { type: string }
+                        reason: { type: string, nullable: true }
+                        createdAt: { type: string, format: date-time }
+        "401":
+          description: No autorizado
+components:
+  securitySchemes:
+    AdminOidcBearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    AdminLegacyToken:
+      type: apiKey
+      in: header
+      name: x-admin-token
+    PartnerOidcBearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    PartnerDevEmail:
+      type: apiKey
+      in: header
+      name: x-partner-email
+  schemas:
+    PartnerClaimCreate:
+      type: object
+      required:
+        [venueSlug, representativeName, representativeEmail, representativePhone]
+      properties:
+        venueSlug:
+          type: string
+          minLength: 2
+          maxLength: 160
+        representativeName:
+          type: string
+          minLength: 2
+          maxLength: 160
+        representativeEmail:
+          type: string
+          format: email
+          maxLength: 200
+        representativePhone:
+          type: string
+          minLength: 6
+          maxLength: 40
+        evidence:
+          type: string
+          maxLength: 1200
+    PartnerClaimSummary:
+      type: object
+      required:
+        [
+          id,
+          venueSlug,
+          representativeName,
+          representativeEmail,
+          representativePhone,
+          status,
+          createdAt,
+        ]
+      properties:
+        id: { type: string, format: uuid }
+        venueSlug: { type: string }
+        representativeName: { type: string }
+        representativeEmail: { type: string }
+        representativePhone: { type: string }
+        evidence: { type: string, nullable: true }
+        status:
+          type: string
+          enum: [pending_review, approved, rejected]
+        createdAt: { type: string, format: date-time }
+    PartnerProfile:
+      type: object
+      required: [partnerEmail]
+      properties:
+        partnerEmail: { type: string, format: email }
+        businessName: { type: string, nullable: true }
+        description: { type: string, nullable: true }
+        scheduleSummary: { type: string, nullable: true }
+        contactPhone: { type: string, nullable: true }
+        contactEmail: { type: string, nullable: true }
+        contactWhatsapp: { type: string, nullable: true }
+    PartnerProfileUpdate:
+      type: object
+      properties:
+        businessName: { type: string, maxLength: 160 }
+        description: { type: string, maxLength: 1200 }
+        scheduleSummary: { type: string, maxLength: 500 }
+        contactPhone: { type: string, maxLength: 40 }
+        contactEmail: { type: string, format: email, maxLength: 200 }
+        contactWhatsapp: { type: string, maxLength: 200 }
+    PartnerPlan:
+      type: object
+      required: [id, venueSlug, name, active]
+      properties:
+        id: { type: string, format: uuid }
+        venueSlug: { type: string }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        period: { type: string, nullable: true }
+        priceLabel: { type: string, nullable: true }
+        active: { type: boolean }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    PartnerPlanCreate:
+      type: object
+      required: [venueSlug, name]
+      properties:
+        venueSlug: { type: string, minLength: 2, maxLength: 160 }
+        name: { type: string, minLength: 2, maxLength: 120 }
+        description: { type: string, maxLength: 500 }
+        period: { type: string, maxLength: 32 }
+        priceLabel: { type: string, maxLength: 32 }
+    PartnerPlanUpdate:
+      type: object
+      properties:
+        name: { type: string, minLength: 2, maxLength: 120 }
+        description: { type: string, maxLength: 500 }
+        period: { type: string, maxLength: 32 }
+        priceLabel: { type: string, maxLength: 32 }
+        active: { type: boolean }

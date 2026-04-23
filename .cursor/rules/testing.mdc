@@ -1,0 +1,10 @@
+---
+description: Pirámide de pruebas Floit
+globs: "**/*.{ts,tsx,spec.ts,e2e.ts}"
+---
+
+# Testing
+
+- Por funcionalidad: **unit** (dominio), **integration** (servicio + DB en testcontainer/cadena local), **contract** (OpenAPI), **E2E** (Playwright: flujos críticos usuario/partner/admin).
+- E2E sin `sleep` fijo; esperas basadas en UI o red.
+- Datos de prueba realistas para Caracas/zonas cuando el dominio lo use.

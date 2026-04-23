@@ -1,0 +1,441 @@
+openapi: 3.1.0
+info:
+  title: Floit Leads API
+  version: 0.3.0
+  description: |
+    Captura de intención comercial (SQLite en MVP). Throttle en `POST /v1/leads`
+    (US-7.2). Listado operativo protegido con Bearer OIDC (`ADMIN_OIDC_ISSUER`)
+    y fallback `x-admin-token` legacy para desarrollo local.
+servers:
+  - url: http://localhost:4012
+paths:
+  /health:
+    get:
+      operationId: health
+      responses:
+        "200":
+          description: OK
+  /v1/leads:
+    post:
+      operationId: createLead
+      summary: Crear lead desde formulario web u otro canal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LeadCreate" }
+      responses:
+        "201":
+          description: Creado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LeadCreated" }
+        "400":
+          description: Validación (mensajes en `message` string o array)
+        "429":
+          description: Demasiados envíos (rate limit por IP, US-7.2)
+  /v1/admin/leads:
+    get:
+      operationId: adminListLeads
+      summary: Listado reciente para operación/backoffice (OIDC Bearer recomendado)
+      security:
+        - AdminOidcBearer: []
+        - AdminLegacyToken: []
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 500, default: 200 }
+        - name: Authorization
+          in: header
+          required: false
+          schema: { type: string }
+          description: Formato `Bearer <jwt>` válido contra issuer/audience configurados.
+        - name: x-admin-token
+          in: header
+          required: false
+          schema: { type: string, minLength: 8 }
+          description: Legacy fallback, solo si no hay `ADMIN_OIDC_ISSUER`.
+      responses:
+        "200":
+          description: Lista compacta de leads
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: "#/components/schemas/LeadAdminSummary" }
+        "401":
+          description: Token ausente o inválido / admin no configurado
+  /v1/admin/leads/sla-summary:
+    get:
+      operationId: adminLeadsSlaSummary
+      summary: KPI operativo de SLA de respuesta partner
+      security:
+        - AdminOidcBearer: []
+        - AdminLegacyToken: []
+      parameters:
+        - name: windowHours
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 720, default: 168 }
+        - name: targetMinutes
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 1440, default: 120 }
+      responses:
+        "200":
+          description: Resumen SLA en ventana
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  [
+                    windowHours,
+                    targetMinutes,
+                    totalLeads,
+                    contactedLeads,
+                    contactedWithinTarget,
+                    partnerSlaRate,
+                  ]
+                properties:
+                  windowHours: { type: integer }
+                  targetMinutes: { type: integer }
+                  totalLeads: { type: integer }
+                  contactedLeads: { type: integer }
+                  contactedWithinTarget: { type: integer }
+                  partnerSlaRate: { type: number, format: float }
+                  averageFirstResponseMinutes:
+                    type: number
+                    format: float
+                    nullable: true
+        "401":
+          description: No autorizado
+  /v1/admin/leads/export.csv:
+    get:
+      operationId: adminExportLeadsCsv
+      summary: Export CSV (UTF-8 + BOM) para operación / backoffice
+      security:
+        - AdminOidcBearer: []
+        - AdminLegacyToken: []
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 500, default: 500 }
+        - name: Authorization
+          in: header
+          required: false
+          schema: { type: string }
+        - name: x-admin-token
+          in: header
+          required: false
+          schema: { type: string, minLength: 8 }
+      responses:
+        "200":
+          description: CSV
+          content:
+            text/csv:
+              schema: { type: string }
+        "401": { description: No autorizado }
+  /v1/admin/notifications/failures:
+    get:
+      operationId: adminListNotificationFailures
+      summary: Lista DLQ persistida de notificaciones fallidas
+      security:
+        - AdminOidcBearer: []
+        - AdminLegacyToken: []
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 500, default: 100 }
+      responses:
+        "200":
+          description: Fallos más recientes
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: "#/components/schemas/NotificationFailure" }
+        "401": { description: No autorizado }
+  /v1/admin/notifications/retry:
+    post:
+      operationId: adminRetryNotificationFailures
+      summary: Reencola fallos DLQ para reintento inmediato
+      security:
+        - AdminOidcBearer: []
+        - AdminLegacyToken: []
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 500, default: 50 }
+      responses:
+        "200":
+          description: Resultado de reencolado
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [requeued, remaining]
+                properties:
+                  requeued: { type: integer }
+                  remaining: { type: integer }
+        "401": { description: No autorizado }
+  /v1/leads/status/{token}:
+    get:
+      operationId: leadStatus
+      summary: Estado público por token opaco (UUID)
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema: { type: string, minLength: 8 }
+      responses:
+        "200":
+          description: Estado actual
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LeadStatus" }
+        "404": { description: Token no encontrado }
+  /v1/internal/leads/by-venues:
+    get:
+      operationId: internalLeadsByVenues
+      summary: Endpoint interno S2S para ownership partner por `venueSlug`
+      parameters:
+        - name: venues
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Lista CSV de slugs de venues.
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 500, default: 200 }
+        - name: x-internal-token
+          in: header
+          required: true
+          schema: { type: string, minLength: 8 }
+      responses:
+        "200":
+          description: Leads por venues
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        [id, venueSlug, intent, name, phone, status, createdAt]
+                      properties:
+                        id: { type: string, format: uuid }
+                        venueSlug: { type: string }
+                        intent: { type: string }
+                        name: { type: string }
+                        phone: { type: string }
+                        email: { type: string, nullable: true }
+                        status: { type: string }
+                        createdAt: { type: string, format: date-time }
+        "401":
+          description: Token interno inválido
+  /v1/internal/leads/{id}:
+    get:
+      operationId: internalLeadById
+      summary: Obtener lead interno por id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: x-internal-token
+          in: header
+          required: true
+          schema: { type: string, minLength: 8 }
+      responses:
+        "200":
+          description: Lead interno
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, venueSlug, status, createdAt]
+                properties:
+                  id: { type: string, format: uuid }
+                  venueSlug: { type: string }
+                  status: { type: string, enum: [received, contacted, closed] }
+                  createdAt: { type: string, format: date-time }
+                  firstContactedAt:
+                    type: string
+                    format: date-time
+                    nullable: true
+        "401":
+          description: Token interno inválido
+        "404":
+          description: Lead no encontrado
+  /v1/internal/leads/{id}/status:
+    patch:
+      operationId: internalLeadStatusPatch
+      summary: Actualizar estado interno de lead para operación partner
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: x-internal-token
+          in: header
+          required: true
+          schema: { type: string, minLength: 8 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [contacted, closed]
+      responses:
+        "200":
+          description: Lead actualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok, id, status, venueSlug]
+                properties:
+                  ok: { type: boolean, const: true }
+                  id: { type: string, format: uuid }
+                  status: { type: string, enum: [received, contacted, closed] }
+                  venueSlug: { type: string }
+                  firstContactedAt:
+                    type: string
+                    format: date-time
+                    nullable: true
+        "401":
+          description: Token interno inválido
+        "404":
+          description: Lead no encontrado
+components:
+  securitySchemes:
+    AdminOidcBearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Token JWT emitido por proveedor OIDC y validado por `issuer`/`audience`
+        usando JWKS remoto.
+    AdminLegacyToken:
+      type: apiKey
+      in: header
+      name: x-admin-token
+      description: Fallback temporal para desarrollo local.
+  schemas:
+    LeadCreate:
+      type: object
+      required: [venueSlug, intent, name, phone, consentAccepted]
+      properties:
+        venueSlug:
+          type: string
+          minLength: 2
+          maxLength: 160
+        intent:
+          type: string
+          enum: [membership, trial, info]
+        name:
+          type: string
+          minLength: 2
+          maxLength: 160
+        phone:
+          type: string
+          minLength: 6
+          maxLength: 40
+        email:
+          type: string
+          maxLength: 200
+        preferredSlot:
+          type: string
+          maxLength: 500
+        message:
+          type: string
+          maxLength: 1200
+        consentAccepted:
+          type: boolean
+          const: true
+          description: Debe ser true (checkbox obligatorio en UI).
+        consentVersion:
+          type: string
+          maxLength: 32
+          description: Versión de términos aceptados (ej. floit-r2-2026-04).
+    LeadCreated:
+      type: object
+      required: [id, publicToken, status]
+      properties:
+        id: { type: string, format: uuid }
+        publicToken: { type: string }
+        status:
+          type: string
+          enum: [received, contacted, closed]
+          description: Estado inicial siempre received
+    LeadStatus:
+      type: object
+      required: [status, intent, venueSlug, createdAt]
+      properties:
+        status:
+          type: string
+          enum: [received, contacted, closed]
+        intent:
+          type: string
+          enum: [membership, trial, info]
+        venueSlug: { type: string }
+        createdAt: { type: string, format: date-time }
+    LeadAdminSummary:
+      type: object
+      required:
+        [id, venueSlug, intent, name, phone, status, suspicious, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        venueSlug: { type: string }
+        intent: { type: string }
+        name: { type: string }
+        phone: { type: string }
+        email: { type: string, nullable: true }
+        status: { type: string }
+        firstContactedAt:
+          type: string
+          format: date-time
+          nullable: true
+        suspicious: { type: boolean }
+        clientIp: { type: string, nullable: true }
+        consentVersion: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+    NotificationFailure:
+      type: object
+      required: [id, failedAt, attempts, lead]
+      properties:
+        id: { type: string, format: uuid }
+        failedAt: { type: string, format: date-time }
+        attempts: { type: integer, minimum: 1 }
+        lastError: { type: string, nullable: true }
+        lead:
+          type: object
+          required: [id, venueSlug, intent, name, phone, suspicious, createdAt]
+          properties:
+            id: { type: string, format: uuid }
+            venueSlug: { type: string }
+            intent: { type: string }
+            name: { type: string }
+            phone: { type: string }
+            email: { type: string, nullable: true }
+            preferredSlot: { type: string, nullable: true }
+            message: { type: string, nullable: true }
+            suspicious: { type: boolean }
+            createdAt: { type: string, format: date-time }

@@ -1,0 +1,280 @@
+openapi: 3.1.0
+info:
+  title: Floit Catalog API
+  version: 0.2.0
+  description: |
+    Catálogo y taxonomía (venues). Proyección de discovery vive en Search (ADR-001).
+    Sprint 2: relevancia, verificación, promos, reportes públicos y utilitarios meta.
+servers:
+  - url: http://localhost:4010
+    description: Desarrollo local
+paths:
+  /health:
+    get:
+      operationId: health
+      summary: Liveness
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok, service]
+                properties:
+                  ok: { type: boolean, const: true }
+                  service: { type: string, const: catalog }
+  /v1/venues:
+    get:
+      operationId: listVenues
+      summary: Listado público con filtros y orden
+      parameters:
+        - name: q
+          in: query
+          schema: { type: string }
+        - name: zone
+          in: query
+          schema: { type: string }
+        - name: venue_type
+          in: query
+          schema: { type: string }
+        - name: modality
+          in: query
+          schema: { type: string }
+        - name: budget_min
+          in: query
+          schema: { type: number }
+        - name: budget_max
+          in: query
+          schema: { type: number }
+        - name: lat
+          in: query
+          schema: { type: number }
+        - name: lng
+          in: query
+          schema: { type: number }
+        - name: radius_km
+          in: query
+          schema: { type: number, minimum: 0.5, maximum: 80 }
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [relevance, distance, price_asc, price_desc, name, popularity]
+      responses:
+        "200":
+          description: Lista y meta de orden/geo
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items, meta]
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: "#/components/schemas/VenueSummary" }
+                  meta:
+                    type: object
+                    required: [total]
+                    properties:
+                      total: { type: integer }
+                      sort: { type: string }
+                      lat: { type: number }
+                      lng: { type: number }
+                      radius_km: { type: number }
+  /v1/venues/{slug}:
+    get:
+      operationId: getVenueBySlug
+      summary: Ficha pública por slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string, minLength: 1 }
+      responses:
+        "200":
+          description: Venue público extendido
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/VenuePublicDetail" }
+        "404": { description: No encontrado }
+  /v1/venues/{slug}/reports:
+    post:
+      operationId: createVenueReport
+      summary: Reportar datos incorrectos (público, MVP sin auth)
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string, minLength: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/VenueReportCreate" }
+      responses:
+        "204": { description: Aceptado, sin cuerpo }
+        "400": { description: Validación }
+        "404": { description: Venue no encontrado }
+  /v1/meta/zones:
+    get:
+      operationId: listZones
+      summary: Zonas distintas para facetas UI
+      responses:
+        "200":
+          description: Lista de zonas
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [zones]
+                properties:
+                  zones:
+                    type: array
+                    items: { type: string }
+  /v1/meta/duplicate-suspects:
+    get:
+      operationId: duplicateSuspects
+      summary: Pares candidatos a duplicado (operación / revisión manual)
+      responses:
+        "200":
+          description: Pares con motivo heurístico
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [pairs]
+                properties:
+                  pairs:
+                    type: array
+                    items:
+                      type: object
+                      required: [a, b, reason]
+                      properties:
+                        a: { type: string }
+                        b: { type: string }
+                        reason: { type: string }
+  /v1/internal/venues/{slug}/partner-sync:
+    post:
+      operationId: internalPartnerSyncVenue
+      summary: Sync interno S2S de datos partner hacia ficha pública
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string, minLength: 1 }
+        - name: x-internal-token
+          in: header
+          required: true
+          schema: { type: string, minLength: 8 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description: { type: string, maxLength: 1200 }
+                contactPhone: { type: string, maxLength: 40 }
+                contactWhatsapp: { type: string, maxLength: 200 }
+                contactEmail: { type: string, format: email, maxLength: 200 }
+                allowsTrial: { type: boolean }
+                plans:
+                  type: array
+                  items:
+                    type: object
+                    required: [name, active]
+                    properties:
+                      name: { type: string }
+                      description: { type: string, nullable: true }
+                      period: { type: string, nullable: true }
+                      priceLabel: { type: string, nullable: true }
+                      active: { type: boolean }
+      responses:
+        "204": { description: Sincronizado }
+        "401": { description: Token interno inválido }
+        "404": { description: Venue no encontrado }
+components:
+  schemas:
+    VenueSummary:
+      type: object
+      required:
+        [id, slug, name, address, zone, lat, lng, venueType, modalities, amenities]
+      properties:
+        id: { type: string, format: uuid }
+        slug: { type: string }
+        name: { type: string }
+        address: { type: string }
+        zone: { type: string }
+        lat: { type: number }
+        lng: { type: number }
+        venueType: { type: string }
+        modalities:
+          type: array
+          items: { type: string }
+        amenities:
+          type: array
+          items: { type: string }
+        priceMin: { type: number, nullable: true }
+        priceMax: { type: number, nullable: true }
+        completenessScore: { type: number, nullable: true }
+        popularityScore: { type: number }
+        verificationStatus: { type: string }
+        allowsTrial: { type: boolean }
+        activePromotionTitle: { type: string, nullable: true }
+        distanceM: { type: number, description: Presente cuando hay lat/lng + radio }
+    VenuePublicDetail:
+      type: object
+      required:
+        - id
+        - slug
+        - name
+        - address
+        - zone
+        - lat
+        - lng
+        - venueType
+        - modalities
+        - amenities
+        - popularityScore
+        - verificationStatus
+        - allowsTrial
+        - updatedAt
+      properties:
+        id: { type: string, format: uuid }
+        slug: { type: string }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        address: { type: string }
+        zone: { type: string }
+        lat: { type: number }
+        lng: { type: number }
+        venueType: { type: string }
+        modalities:
+          type: array
+          items: { type: string }
+        amenities:
+          type: array
+          items: { type: string }
+        priceMin: { type: number, nullable: true }
+        priceMax: { type: number, nullable: true }
+        completenessScore: { type: number, nullable: true }
+        popularityScore: { type: number }
+        verificationStatus: { type: string }
+        allowsTrial: { type: boolean }
+        contactPhone: { type: string, nullable: true }
+        contactWhatsapp: { type: string, nullable: true }
+        contactEmail: { type: string, nullable: true }
+        activePromotionTitle: { type: string, nullable: true }
+        updatedAt: { type: string, format: date-time }
+    VenueReportCreate:
+      type: object
+      required: [kind, message]
+      properties:
+        kind:
+          type: string
+          enum: [precio, ubicacion, horario, info, otro]
+        message:
+          type: string
+          minLength: 5
+          maxLength: 1200

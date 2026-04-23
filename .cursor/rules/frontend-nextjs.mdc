@@ -1,0 +1,11 @@
+---
+description: Next.js App Router y BFF
+globs: "apps/web/**/*.{ts,tsx}"
+---
+
+# Frontend Next.js
+
+- **Server Components** por defecto; `"use client"` solo con estado local, efectos o APIs del navegador.
+- No llames microservicios directamente desde componentes cliente salvo decisión explícita; preferir **route handlers / server actions / fetch en servidor** con URLs internas.
+- Rutas públicas MVP: `/`, `/buscar`, `/gyms/[slug]`, `/comparar`, `/lead/confirmacion` (extendiendo según backlog).
+- Diseño **mobile-first**, estados vacío/carga/error explícitos; instrumentación analítica cuando se implemente.

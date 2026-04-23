@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://floit.example/schemas/leads/lead-created.v1.json",
+  "title": "LeadCreated",
+  "type": "object",
+  "required": ["event_type", "occurred_at", "payload"],
+  "properties": {
+    "event_type": {
+      "type": "string",
+      "const": "floit.leads.lead_created.v1"
+    },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "payload": {
+      "type": "object",
+      "required": ["lead_id", "venue_id", "channel"],
+      "properties": {
+        "lead_id": { "type": "string", "format": "uuid" },
+        "venue_id": { "type": "string" },
+        "channel": { "type": "string" },
+        "intent": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

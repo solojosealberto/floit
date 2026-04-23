@@ -1,0 +1,68 @@
+# Copiar fragmentos relevantes a servicios/apps según necesidad.
+
+# Postgres (docker compose up -d postgres)
+DATABASE_URL=postgresql://floit:floit@localhost:5432/floit_catalog
+DATABASE_SYNC=true
+SEED_ON_BOOT=true
+
+CATALOG_SERVICE_URL=http://localhost:4010
+SEARCH_SERVICE_URL=http://localhost:4011
+LEADS_SERVICE_URL=http://localhost:4012
+PARTNER_SERVICE_URL=http://localhost:4013
+
+# Token compartido para GET /v1/admin/leads y página server-side /admin/leads (MVP)
+ADMIN_API_TOKEN=change-me-dev-only
+# OIDC admin (recomendado para S3+): si se define issuer en leads, exige Bearer JWT válido.
+# ADMIN_OIDC_ISSUER=https://idp.example.com/realms/floit
+# ADMIN_OIDC_AUDIENCE=floit-admin
+# ADMIN_OIDC_JWKS_URL=https://idp.example.com/realms/floit/protocol/openid-connect/certs
+# Token server-side para web/BFF admin
+# ADMIN_OIDC_ACCESS_TOKEN=
+# Rollout a OIDC-only en admin (si true, desactiva fallback x-admin-token)
+# ADMIN_AUTH_REQUIRE_OIDC=false
+# OIDC/identidad para partner (Sprint 4: bandeja ownership por claim aprobado)
+# PARTNER_OIDC_ISSUER=https://idp.example.com/realms/floit
+# PARTNER_OIDC_AUDIENCE=floit-partner
+# PARTNER_OIDC_JWKS_URL=https://idp.example.com/realms/floit/protocol/openid-connect/certs
+# PARTNER_OIDC_ACCESS_TOKEN=
+# Rollout a OIDC-only en partner (si true, desactiva fallback x-partner-email)
+# PARTNER_AUTH_REQUIRE_OIDC=false
+# Fallback local dev (solo desarrollo)
+# PARTNER_DEV_EMAIL=owner@example.com
+
+# Turnstile (opcional). Con secret definido, el BFF exige `turnstileToken` en JSON al POST /api/leads
+# TURNSTILE_SECRET_KEY=
+# NEXT_PUBLIC_TURNSTILE_SITE_KEY=  # solo cuando incrustes el widget en el formulario
+# Analytics (servicio dedicado; 4013 es partner-service). Usar también en `services/leads` para evento `lead_persisted`.
+ANALYTICS_SERVICE_URL=http://localhost:4014
+# Persistencia local analytics-service (Sprint 5)
+# ANALYTICS_SQLITE_PATH=services/analytics/data/analytics.sqlite
+# Webhook opcional para notificaciones reales (email/WhatsApp) desde leads-service.
+# LEADS_NOTIFICATION_WEBHOOK_URL=
+# Sprint 4 hardening (cola/retry DLQ persistida para webhook de notificaciones)
+# LEADS_NOTIFICATION_MAX_ATTEMPTS=4
+# LEADS_NOTIFICATION_BASE_DELAY_MS=1000
+# LEADS_NOTIFICATION_DLQ_MAX_ITEMS=200
+
+# Partner service (SQLite local)
+# PARTNER_SQLITE_PATH=services/partner/data/partner.sqlite
+# Credenciales S2S partner -> leads internal endpoint (ownership)
+# PARTNER_TO_LEADS_INTERNAL_TOKEN=
+# LEADS_INTERNAL_API_TOKEN=
+# Credenciales S2S partner -> catalog internal sync endpoint (perfil/planes -> ficha pública)
+# PARTNER_TO_CATALOG_INTERNAL_TOKEN=
+# CATALOG_INTERNAL_API_TOKEN=
+# Hardening sync partner->catalog (cola persistida + retry)
+# PARTNER_CATALOG_SYNC_MAX_ATTEMPTS=4
+# PARTNER_CATALOG_SYNC_BASE_DELAY_MS=1000
+# PARTNER_CATALOG_SYNC_DLQ_MAX_ITEMS=200
+# Outbox partner->catalog-sync (publicación de eventos internos)
+# PARTNER_CATALOG_OUTBOX_MAX_ATTEMPTS=6
+# PARTNER_CATALOG_OUTBOX_BASE_DELAY_MS=1000
+# PARTNER_CATALOG_OUTBOX_DLQ_MAX_ITEMS=300
+
+# Next.js (apps/web) — SEO y proxies BFF
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+# Versión de consentimiento mostrada en formulario de leads (opcional override UI)
+# NEXT_PUBLIC_FLOIT_CONSENT_VERSION=floit-r2-2026-04

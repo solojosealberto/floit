@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://floit.example/schemas/leads/lead-updated.v1.json",
+  "title": "LeadUpdated",
+  "type": "object",
+  "required": ["event_type", "occurred_at", "payload"],
+  "properties": {
+    "event_type": {
+      "type": "string",
+      "const": "floit.leads.lead_updated.v1"
+    },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "payload": {
+      "type": "object",
+      "required": ["lead_id", "status"],
+      "properties": {
+        "lead_id": { "type": "string", "format": "uuid" },
+        "status": {
+          "type": "string",
+          "enum": ["new", "contacted", "trial_scheduled", "won", "lost"]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

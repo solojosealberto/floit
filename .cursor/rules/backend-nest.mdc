@@ -1,0 +1,11 @@
+---
+description: Servicios NestJS Floit
+globs: "services/**/*.ts"
+---
+
+# Backend Nest
+
+- Controladores delgados; reglas en **servicios de dominio** / casos de uso; persistencia detrás de repositorios.
+- Validar entrada con **DTO + class-validator** (o equivalente) según contrato OpenAPI.
+- Endpoints internos no exponen detalles de otros contextos; composición ocurre en **web/BFF** cuando aplique.
+- Seguridad: RBAC por rol en partner/admin cuando exista OIDC; tests de autorización para rutas sensibles.

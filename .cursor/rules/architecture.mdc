@@ -1,0 +1,11 @@
+---
+description: Bounded contexts, datos y eventos Floit
+globs: "**/*.{ts,tsx,yml,yaml}"
+---
+
+# Arquitectura Floit
+
+- No accedas desde un servicio a la base de datos de otro servicio; usa APIs o eventos.
+- Catálogo es dueño semántico de **venue**; Search es una proyección indexada (sin integridad fuerte).
+- Eventos de dominio críticos salen solo tras persistencia bien hecha (**transactional outbox** cuando exista infra).
+- Leads tienen ciclo propio (consentimiento, estado, export); no acoples leads al modelo de venue más allá de IDs y snapshots necesarios.

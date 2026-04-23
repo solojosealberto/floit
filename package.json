@@ -1,0 +1,40 @@
+{
+  "name": "floit",
+  "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm -r run build",
+    "dev": "pnpm --filter @floit/web dev",
+    "dev:services": "pnpm --parallel --filter \"@floit/catalog-service\" --filter \"@floit/search-service\" --filter \"@floit/leads-service\" --filter \"@floit/partner-service\" --filter \"@floit/analytics-service\" dev",
+    "dev:web": "pnpm --filter @floit/web dev",
+    "docker:up": "docker compose up -d postgres",
+    "docker:down": "docker compose down",
+    "smoke:local": "node scripts/smoke-local.mjs",
+    "platform:preflight": "node scripts/platform-preflight.mjs",
+    "sprint4:readiness": "node scripts/sprint4-readiness.mjs",
+    "sprint4:auth-negative": "node scripts/sprint4-auth-negative.mjs",
+    "sprint4:gate": "pnpm sprint4:readiness && pnpm sprint4:auth-negative",
+    "sprint5:flow-checklist": "node scripts/sprint5-flow-checklist.mjs",
+    "sprint5:kpi-gate": "node scripts/sprint5-kpi-gate.mjs",
+    "lint": "pnpm -r run lint",
+    "typecheck": "pnpm -r run typecheck",
+    "verify": "pnpm run lint && pnpm run typecheck && pnpm run build",
+    "test": "pnpm -r run test",
+    "test:unit": "tsx --test apps/web/src/lib/venue-badges.spec.ts apps/web/src/lib/format-upstream-error.spec.ts",
+    "test:integration": "tsx --tsconfig services/catalog/tsconfig.json --test services/catalog/test/capability-search-profile-compare.integration.spec.ts",
+    "test:contract": "tsx --test tests/contracts/openapi-capability.contract.test.ts",
+    "test:e2e": "pnpm --filter @floit/web test:e2e",
+    "test:capability": "pnpm test:unit && pnpm test:integration && pnpm test:contract && pnpm test:e2e"
+  },
+  "devDependencies": {
+    "@apidevtools/swagger-parser": "^12.1.0",
+    "@nestjs/testing": "^11.1.19",
+    "@types/supertest": "^7.2.0",
+    "supertest": "^7.2.2",
+    "testcontainers": "^11.14.0",
+    "tsx": "^4.21.0"
+  }
+}

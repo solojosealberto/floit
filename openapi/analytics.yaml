@@ -1,0 +1,351 @@
+openapi: 3.1.0
+info:
+  title: Floit Analytics API
+  version: 0.1.0
+  description: |
+    Ingesta de eventos y métricas de funnel para operación MVP (Sprint 5),
+    con persistencia local SQLite en el servicio analytics.
+servers:
+  - url: http://localhost:4014
+paths:
+  /health:
+    get:
+      operationId: health
+      responses:
+        "200":
+          description: OK
+  /v1/events:
+    post:
+      operationId: ingestEvent
+      summary: Registrar evento de producto/analytics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/IngestEvent" }
+      responses:
+        "202":
+          description: Aceptado
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok]
+                properties:
+                  ok: { type: boolean, const: true }
+        "400": { description: Validación }
+  /v1/metrics/summary:
+    get:
+      operationId: metricsSummary
+      summary: Resumen del buffer en memoria (desarrollo)
+      responses:
+        "200":
+          description: Conteo y último evento
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events: { type: integer }
+                  last:
+                    type: object
+                    nullable: true
+                    properties:
+                      at: { type: string, format: date-time }
+                      name: { type: string }
+                      properties:
+                        type: object
+                        additionalProperties: true
+  /v1/metrics/funnel:
+    get:
+      operationId: metricsFunnel
+      summary: Métricas de funnel y segmentación (MVP Sprint 5)
+      parameters:
+        - in: query
+          name: windowHours
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 720
+            default: 168
+          description: Ventana temporal en horas para agregación.
+      responses:
+        "200":
+          description: Métricas agregadas para dashboard operativo.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [windowHours, events, funnel, rates, segments]
+                properties:
+                  windowHours: { type: integer }
+                  events: { type: integer }
+                  last:
+                    type: object
+                    nullable: true
+                    properties:
+                      at: { type: string, format: date-time }
+                      name: { type: string }
+                      device: { type: string }
+                      source: { type: string, nullable: true }
+                      properties:
+                        type: object
+                        additionalProperties: true
+                  byName:
+                    type: array
+                    items:
+                      type: object
+                      required: [name, count]
+                      properties:
+                        name: { type: string }
+                        count: { type: integer }
+                  funnel:
+                    type: object
+                    required:
+                      [
+                        discoveryViews,
+                        filterApplies,
+                        venueViews,
+                        compareOpens,
+                        ctaClicks,
+                        leadSubmits,
+                        directContacts,
+                        leadPersisted,
+                      ]
+                    properties:
+                      discoveryViews: { type: integer }
+                      filterApplies: { type: integer }
+                      venueViews: { type: integer }
+                      compareOpens: { type: integer }
+                      ctaClicks: { type: integer }
+                      leadSubmits: { type: integer }
+                      directContacts: { type: integer }
+                      leadPersisted: { type: integer }
+                  rates:
+                    type: object
+                    required:
+                      [
+                        searchToProfileRate,
+                        compareAdoptionRate,
+                        profileToLeadSubmitRate,
+                        profileToCtaRate,
+                      ]
+                    properties:
+                      searchToProfileRate: { type: number, format: float }
+                      compareAdoptionRate: { type: number, format: float }
+                      profileToLeadSubmitRate: { type: number, format: float }
+                      profileToCtaRate: { type: number, format: float }
+                  segments:
+                    type: object
+                    required: [zones, devices, sources]
+                    properties:
+                      zones:
+                        type: array
+                        items:
+                          type: object
+                          required: [zone, count]
+                          properties:
+                            zone: { type: string }
+                            count: { type: integer }
+                      devices:
+                        type: array
+                        items:
+                          type: object
+                          required: [device, count]
+                          properties:
+                            device: { type: string }
+                            count: { type: integer }
+                      sources:
+                        type: array
+                        items:
+                          type: object
+                          required: [source, count]
+                          properties:
+                            source: { type: string }
+                            count: { type: integer }
+                  topVenues:
+                    type: array
+                    items:
+                      type: object
+                      required: [venueSlug, count]
+                      properties:
+                        venueSlug: { type: string }
+                        count: { type: integer }
+                  experiments:
+                    type: object
+                    required: [ctaLeadForm]
+                    properties:
+                      ctaLeadForm:
+                        type: array
+                        items:
+                          type: object
+                          required:
+                            [
+                              variant,
+                              assignments,
+                              ctaClicks,
+                              leadSubmits,
+                              submitRateFromAssignments,
+                              submitRateFromClicks,
+                            ]
+                          properties:
+                            variant: { type: string }
+                            assignments: { type: integer }
+                            ctaClicks: { type: integer }
+                            leadSubmits: { type: integer }
+                            submitRateFromAssignments: { type: number, format: float }
+                            submitRateFromClicks: { type: number, format: float }
+  /v1/metrics/timeseries:
+    get:
+      operationId: metricsTimeseries
+      summary: Serie temporal diaria de eventos clave del funnel
+      parameters:
+        - in: query
+          name: windowDays
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 90
+            default: 14
+          description: Días hacia atrás a incluir en la serie.
+      responses:
+        "200":
+          description: Serie temporal agregada por día.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [windowDays, points]
+                properties:
+                  windowDays: { type: integer }
+                  points:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        [
+                          date,
+                          discoveryViews,
+                          venueViews,
+                          compareOpens,
+                          ctaClicks,
+                          leadSubmits,
+                          leadPersisted,
+                        ]
+                      properties:
+                        date: { type: string, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }
+                        discoveryViews: { type: integer }
+                        venueViews: { type: integer }
+                        compareOpens: { type: integer }
+                        ctaClicks: { type: integer }
+                        leadSubmits: { type: integer }
+                        leadPersisted: { type: integer }
+  /v1/metrics/experiments/cta-lead-form:
+    get:
+      operationId: metricsExperimentCtaLeadForm
+      summary: Resumen y serie diaria del experimento multivariante `cta_lead_entrypoint_v2`
+      parameters:
+        - in: query
+          name: windowDays
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 90
+            default: 14
+      responses:
+        "200":
+          description: Métricas por variante y estabilidad diaria
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  [experiment, windowDays, stableDaysWithBothVariants, summary, points]
+                properties:
+                  experiment: { type: string }
+                  windowDays: { type: integer }
+                  stableDaysWithBothVariants: { type: integer }
+                  stableDaysWithAllVariants: { type: integer }
+                  summary:
+                    type: object
+                    required:
+                      [
+                        membership,
+                        trial,
+                        whatsapp_first,
+                        upliftTrialVsMembership,
+                        upliftWhatsappVsMembership,
+                      ]
+                    properties:
+                      membership:
+                        type: object
+                        required:
+                          [assignments, leadSubmits, submitRateFromAssignments]
+                        properties:
+                          assignments: { type: integer }
+                          leadSubmits: { type: integer }
+                          submitRateFromAssignments:
+                            { type: number, format: float }
+                      trial:
+                        type: object
+                        required:
+                          [assignments, leadSubmits, submitRateFromAssignments]
+                        properties:
+                          assignments: { type: integer }
+                          leadSubmits: { type: integer }
+                          submitRateFromAssignments:
+                            { type: number, format: float }
+                      whatsapp_first:
+                        type: object
+                        required:
+                          [assignments, leadSubmits, submitRateFromAssignments]
+                        properties:
+                          assignments: { type: integer }
+                          leadSubmits: { type: integer }
+                          submitRateFromAssignments:
+                            { type: number, format: float }
+                      upliftTrialVsMembership: { type: number, format: float }
+                      upliftWhatsappVsMembership:
+                        { type: number, format: float }
+                  points:
+                    type: array
+                    items:
+                      type: object
+                      required: [date, membership, trial, whatsapp_first]
+                      properties:
+                        date:
+                          { type: string, pattern: "^\\d{4}-\\d{2}-\\d{2}$" }
+                        membership:
+                          type: object
+                          required: [assignments, leadSubmits]
+                          properties:
+                            assignments: { type: integer }
+                            leadSubmits: { type: integer }
+                        trial:
+                          type: object
+                          required: [assignments, leadSubmits]
+                          properties:
+                            assignments: { type: integer }
+                            leadSubmits: { type: integer }
+                        whatsapp_first:
+                          type: object
+                          required: [assignments, leadSubmits]
+                          properties:
+                            assignments: { type: integer }
+                            leadSubmits: { type: integer }
+components:
+  schemas:
+    IngestEvent:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        properties:
+          type: object
+          additionalProperties: true

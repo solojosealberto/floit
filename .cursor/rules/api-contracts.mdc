@@ -1,0 +1,10 @@
+---
+description: Contratos HTTP y compatibilidad
+globs: "openapi/**/*.yaml,services/**/*.ts,apps/web/**/*.ts"
+---
+
+# Contratos API
+
+- Nuevos endpoints REST: primero **OpenAPI 3.1** en `/openapi`, luego implementación alineada al contrato.
+- Cambios compatibles: campos opcionales nuevos, respuestas aditivas; versionar (`/v1`) ante rupturas.
+- Errores: cuerpo JSON estable (`code`, `message`, `details` opcional) y códigos HTTP correctos.

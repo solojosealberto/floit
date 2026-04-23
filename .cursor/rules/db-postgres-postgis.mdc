@@ -1,0 +1,10 @@
+---
+description: PostgreSQL y migraciones
+globs: "**/*.sql,services/**/*migration*,**/migrations/**"
+---
+
+# Datos Postgres / PostGIS
+
+- Cambios de esquema solo vía **migraciones versionadas** (timestamp + nombre); sin SQL “volador” en producción.
+- Índices espaciales y geosearch justificados con consultas reales; revisar tras volumen inicial.
+- PostGIS para radio/cercanía cuando el discovery lo exija; mantener SRID explícito (4326 típico para lat/lng).

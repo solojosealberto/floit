@@ -1,0 +1,119 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+        working-directory: ${{ github.workspace }}
+
+      - name: Lint
+        run: pnpm run lint
+        working-directory: ${{ github.workspace }}
+
+      - name: Typecheck
+        run: pnpm run typecheck
+        working-directory: ${{ github.workspace }}
+
+      - name: Build
+        run: pnpm run build
+        working-directory: ${{ github.workspace }}
+
+  e2e-services:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+        working-directory: ${{ github.workspace }}
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @floit/web exec playwright install --with-deps chromium
+        working-directory: ${{ github.workspace }}
+
+      - name: Start Postgres
+        run: pnpm docker:up
+        working-directory: ${{ github.workspace }}
+
+      - name: Start backend services
+        env:
+          DATABASE_URL: postgresql://floit:floit@localhost:5432/floit_catalog
+          DATABASE_SYNC: "true"
+          SEED_ON_BOOT: "true"
+          CATALOG_SERVICE_URL: http://localhost:4010
+          SEARCH_SERVICE_URL: http://localhost:4011
+          LEADS_SERVICE_URL: http://localhost:4012
+          ANALYTICS_SERVICE_URL: http://localhost:4014
+          ADMIN_API_TOKEN: ci-admin-token
+        run: pnpm dev:services > /tmp/dev-services.log 2>&1 &
+        working-directory: ${{ github.workspace }}
+
+      - name: Start web app
+        env:
+          CATALOG_SERVICE_URL: http://localhost:4010
+          SEARCH_SERVICE_URL: http://localhost:4011
+          LEADS_SERVICE_URL: http://localhost:4012
+          ANALYTICS_SERVICE_URL: http://localhost:4014
+          ADMIN_API_TOKEN: ci-admin-token
+          NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3050
+        run: pnpm --filter @floit/web dev -- --port 3050 > /tmp/web.log 2>&1 &
+        working-directory: ${{ github.workspace }}
+
+      - name: Wait for services
+        run: |
+          set -e
+          for i in {1..90}; do
+            if curl -fsS http://127.0.0.1:4010/health >/dev/null \
+              && curl -fsS http://127.0.0.1:4011/health >/dev/null \
+              && curl -fsS http://127.0.0.1:4012/health >/dev/null \
+              && curl -fsS http://127.0.0.1:4014/health >/dev/null \
+              && curl -fsS http://127.0.0.1:3050 >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Services did not become healthy in time"
+          echo "----- services log -----"
+          cat /tmp/dev-services.log || true
+          echo "----- web log -----"
+          cat /tmp/web.log || true
+          exit 1
+
+      - name: Run E2E suite
+        env:
+          CI: "true"
+          PW_NO_SERVER: "1"
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:3050
+          E2E_WITH_SERVICES: "1"
+        run: pnpm test:e2e
+        working-directory: ${{ github.workspace }}
+
+      - name: Stop Docker services
+        if: always()
+        run: pnpm docker:down
+        working-directory: ${{ github.workspace }}

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://floit.example/schemas/catalog/venue-published.v1.json",
+  "title": "VenuePublished",
+  "type": "object",
+  "required": ["event_type", "occurred_at", "payload"],
+  "properties": {
+    "event_type": {
+      "type": "string",
+      "const": "floit.catalog.venue_published.v1"
+    },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "payload": {
+      "type": "object",
+      "required": ["venue_id", "slug"],
+      "properties": {
+        "venue_id": { "type": "string", "format": "uuid" },
+        "slug": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}
