@@ -16,6 +16,7 @@
  *   ANALYTICS_EXPERIMENT_URL (default http://localhost:4014/v1/metrics/experiments/cta-lead-form?windowDays=14)
  *   LEADS_SLA_URL          (default http://localhost:4012/v1/admin/leads/sla-summary?windowHours=168&targetMinutes=120)
  *   LEADS_SLA_AUTH_BEARER  (optional Bearer JWT for admin-protected SLA endpoint)
+ *   LEADS_SLA_ADMIN_TOKEN  (optional legacy x-admin-token for local environments)
  */
 
 const endpoints = {
@@ -38,6 +39,7 @@ const endpoints = {
 };
 
 const leadsSlaBearer = process.env.LEADS_SLA_AUTH_BEARER?.trim();
+const leadsSlaAdminToken = process.env.LEADS_SLA_ADMIN_TOKEN?.trim();
 
 function print(ok, label, details = "") {
   const suffix = details ? ` — ${details}` : "";
@@ -78,9 +80,14 @@ try {
     checkJson(endpoints.analyticsFunnel, "analytics funnel endpoint"),
     checkJson(endpoints.analyticsExperiment, "analytics experiment endpoint"),
     checkJson(endpoints.leadsSla, "leads SLA endpoint", {
-      headers: leadsSlaBearer
-        ? { authorization: `Bearer ${leadsSlaBearer}` }
-        : undefined,
+      headers: {
+        ...(leadsSlaBearer
+          ? { authorization: `Bearer ${leadsSlaBearer}` }
+          : {}),
+        ...(leadsSlaAdminToken
+          ? { "x-admin-token": leadsSlaAdminToken }
+          : {}),
+      },
     }),
   ]);
 

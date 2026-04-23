@@ -1,12 +1,17 @@
+import "reflect-metadata";
 import assert from "node:assert/strict";
 import { after, before, describe, it } from "node:test";
+import { ConfigModule } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
+import { TypeOrmModule } from "@nestjs/typeorm";
 import type { INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { GenericContainer } from "testcontainers";
 import { capabilityFixture } from "../../../tests/fixtures/capability-search-profile-compare-lead";
-import { AppModule } from "../src/app.module";
+import { PromotionEntity } from "../src/promotions/promotion.entity";
+import { VenueReportEntity } from "../src/reports/venue-report.entity";
+import { VenuesModule } from "../src/venues/venues.module";
 import { VenueEntity } from "../src/venues/venue.entity";
 
 describe("Capability integration: buscar -> ficha -> comparar", () => {
@@ -26,11 +31,18 @@ describe("Capability integration: buscar -> ficha -> comparar", () => {
     process.env.DATABASE_URL = `postgresql://floit:floit@${pg.getHost()}:${pg.getMappedPort(
       5432,
     )}/floit_test`;
-    process.env.DATABASE_SYNC = "true";
-    process.env.SEED_ON_BOOT = "false";
-
     const moduleRef = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [
+        ConfigModule.forRoot({ isGlobal: true }),
+        TypeOrmModule.forRoot({
+          type: "postgres",
+          url: process.env.DATABASE_URL,
+          entities: [VenueEntity, PromotionEntity, VenueReportEntity],
+          synchronize: true,
+          logging: false,
+        }),
+        VenuesModule,
+      ],
     }).compile();
     app = moduleRef.createNestApplication();
     await app.init();

@@ -1,4 +1,5 @@
 import {
+  Inject,
   Body,
   Controller,
   Get,
@@ -18,7 +19,7 @@ import { UpdatePartnerSyncDto } from "./dto/update-partner-sync.dto";
 
 @Controller()
 export class VenuesController {
-  constructor(private readonly venues: VenuesService) {}
+  constructor(@Inject(VenuesService) private readonly venues: VenuesService) {}
 
   @Get("v1/venues")
   async list(

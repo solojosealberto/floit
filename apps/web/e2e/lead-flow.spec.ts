@@ -15,7 +15,11 @@ test("envia lead desde ficha y redirige a confirmacion", async ({ page }) => {
     .getByLabel(/Acepto el tratamiento de mis datos personales/i)
     .check();
 
-  await page.getByRole("button", { name: /Enviar solicitud/i }).click();
+  await page
+    .getByRole("button", {
+      name: /Solicitar membresía ahora|Pedir prueba ahora|Enviar solicitud/i,
+    })
+    .click();
 
   await expect(page).toHaveURL(/\/lead\/confirmacion/);
   await expect(page.getByText(/Recibimos tus datos/i)).toBeVisible();

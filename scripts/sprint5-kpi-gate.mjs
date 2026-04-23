@@ -10,6 +10,7 @@
  *   ANALYTICS_EXPERIMENT_URL             (default http://localhost:4014/v1/metrics/experiments/cta-lead-form?windowDays=14)
  *   LEADS_SLA_URL                        (default http://localhost:4012/v1/admin/leads/sla-summary?windowHours=168&targetMinutes=120)
  *   LEADS_SLA_AUTH_BEARER                (optional Bearer JWT for protected SLA endpoint)
+ *   LEADS_SLA_ADMIN_TOKEN                (optional x-admin-token for local fallback auth)
  *   SPRINT5_MIN_SEARCH_TO_PROFILE_RATE   (default 0)
  *   SPRINT5_MIN_COMPARE_ADOPTION_RATE    (default 0.15)
  *   SPRINT5_MIN_PROFILE_TO_LEAD_RATE     (default 0.08)
@@ -29,6 +30,7 @@ const leadsSlaUrl =
   process.env.LEADS_SLA_URL ??
   "http://localhost:4012/v1/admin/leads/sla-summary?windowHours=168&targetMinutes=120";
 const leadsSlaBearer = process.env.LEADS_SLA_AUTH_BEARER?.trim();
+const leadsSlaAdminToken = process.env.LEADS_SLA_ADMIN_TOKEN?.trim();
 
 const minSearchToProfileRate = Number(
   process.env.SPRINT5_MIN_SEARCH_TO_PROFILE_RATE ?? "0",
@@ -75,9 +77,14 @@ try {
     fetch(experimentUrl, { signal: AbortSignal.timeout(5000) }),
     fetch(leadsSlaUrl, {
       signal: AbortSignal.timeout(5000),
-      headers: leadsSlaBearer
-        ? { authorization: `Bearer ${leadsSlaBearer}` }
-        : undefined,
+      headers: {
+        ...(leadsSlaBearer
+          ? { authorization: `Bearer ${leadsSlaBearer}` }
+          : {}),
+        ...(leadsSlaAdminToken
+          ? { "x-admin-token": leadsSlaAdminToken }
+          : {}),
+      },
     }),
   ]);
   if (!funnelRes.ok) {

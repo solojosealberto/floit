@@ -11,7 +11,7 @@ import {
 import { SkipThrottle, Throttle, ThrottlerGuard } from "@nestjs/throttler";
 import type { Request } from "express";
 import { clientIpFromRequest } from "./client-ip";
-import type { CreateLeadDto } from "./dto/create-lead.dto";
+import { CreateLeadDto } from "./dto/create-lead.dto";
 import { LeadsService } from "./leads.service";
 
 @Controller()
