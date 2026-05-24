@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getAdminAuthHeader } from "@/lib/admin-auth-header";
 
 export async function POST(request: Request) {
-  const auth = getAdminAuthHeader();
+  const auth = await getAdminAuthHeader();
   const base = process.env.PARTNER_SERVICE_URL ?? "http://localhost:4013";
   if (!auth) {
     return NextResponse.json({ error: "admin_not_configured" }, { status: 503 });

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getAdminAuthHeader } from "@/lib/admin-auth-header";
 
 export async function GET(request: Request) {
-  const auth = getAdminAuthHeader();
+  const auth = await getAdminAuthHeader();
   const base = process.env.LEADS_SERVICE_URL ?? "http://localhost:4012";
   if (!auth) {
     return NextResponse.json(

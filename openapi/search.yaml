@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: Floit Search API
+  title: QueGym Search API
   version: 0.2.0
   description: |
     Discovery (lista/mapa): delega en catalog según query string. Respuesta

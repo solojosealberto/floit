@@ -5,17 +5,48 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --floit-color-primary: #030213;
+  --floit-color-primary-foreground: #ffffff;
+  --floit-color-surface-background-secondary: #fafafa;
+  --floit-color-surface-border: #e5e5e5;
+  --floit-color-neutral-600: #525252;
+  --floit-color-success: #16a34a;
+  --floit-color-success-bg: #dcfce7;
+  --floit-color-error: #dc2626;
+  --floit-color-error-bg: #fee2e2;
+  --floit-radius-sm: 0.375rem;
+  --floit-radius-md: 0.625rem;
+  --floit-radius-lg: 0.75rem;
+  --floit-spacing-2: 0.5rem;
+  --floit-spacing-3: 0.75rem;
+  --floit-spacing-4: 1rem;
+  --floit-spacing-6: 1.5rem;
+  --floit-font-size-xs: 0.75rem;
+  --floit-font-size-sm: 0.875rem;
+  --floit-font-size-base: 1rem;
+  --floit-font-size-lg: 1.125rem;
+  --floit-font-weight-medium: 500;
+  --floit-font-weight-semibold: 600;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --floit-color-surface-background-secondary: #171717;
+    --floit-color-surface-border: #262626;
+    --floit-color-neutral-600: #a3a3a3;
   }
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Inter, "Segoe UI", Arial, Helvetica, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.01em;
 }

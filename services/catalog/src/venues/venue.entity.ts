@@ -74,6 +74,9 @@ export class VenueEntity {
   @Column({ type: "varchar", length: 200, nullable: true })
   contactEmail!: string | null;
 
+  @Column({ type: "varchar", length: 900, array: true, nullable: true })
+  photoUrls!: string[] | null;
+
   @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 

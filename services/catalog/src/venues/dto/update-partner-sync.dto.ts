@@ -1,4 +1,13 @@
-import { IsArray, IsBoolean, IsEmail, IsOptional, IsString, MaxLength } from "class-validator";
+import {
+  ArrayMaxSize,
+  IsArray,
+  IsBoolean,
+  IsEmail,
+  IsOptional,
+  IsString,
+  IsUrl,
+  MaxLength,
+} from "class-validator";
 
 export class UpdatePartnerSyncDto {
   @IsOptional()
@@ -34,4 +43,10 @@ export class UpdatePartnerSyncDto {
     priceLabel?: string | null;
     active: boolean;
   }>;
+
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(12)
+  @IsUrl({ require_tld: false }, { each: true })
+  photoUrls?: string[];
 }

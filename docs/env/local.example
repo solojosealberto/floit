@@ -10,7 +10,8 @@ SEARCH_SERVICE_URL=http://localhost:4011
 LEADS_SERVICE_URL=http://localhost:4012
 PARTNER_SERVICE_URL=http://localhost:4013
 
-# Token compartido para GET /v1/admin/leads y página server-side /admin/leads (MVP)
+# Token compartido para GET /v1/admin/leads y páginas server-side /admin/* (MVP), incl. taxonomías vía catalog.
+# Definir también en services/catalog (mismo valor) para /v1/admin/taxonomy-attributes.
 ADMIN_API_TOKEN=change-me-dev-only
 # OIDC admin (recomendado para S3+): si se define issuer en leads, exige Bearer JWT válido.
 # ADMIN_OIDC_ISSUER=https://idp.example.com/realms/floit
@@ -24,11 +25,18 @@ ADMIN_API_TOKEN=change-me-dev-only
 # PARTNER_OIDC_ISSUER=https://idp.example.com/realms/floit
 # PARTNER_OIDC_AUDIENCE=floit-partner
 # PARTNER_OIDC_JWKS_URL=https://idp.example.com/realms/floit/protocol/openid-connect/certs
+# PARTNER_OIDC_CLIENT_ID=floit-partner-web
+# PARTNER_OIDC_CLIENT_SECRET=
+# PARTNER_OIDC_SCOPE=openid email profile
 # PARTNER_OIDC_ACCESS_TOKEN=
 # Rollout a OIDC-only en partner (si true, desactiva fallback x-partner-email)
 # PARTNER_AUTH_REQUIRE_OIDC=false
 # Fallback local dev (solo desarrollo)
 # PARTNER_DEV_EMAIL=owner@example.com
+# Login local por formulario (`/partner/login`) para QA sin IdP:
+# PARTNER_LOGIN_ALLOW_LOCAL_PASSWORD=true
+# PARTNER_LOCAL_LOGIN_EMAIL=owner@example.com
+# PARTNER_LOCAL_LOGIN_PASSWORD=oxide-partner-2026
 
 # Turnstile (opcional). Con secret definido, el BFF exige `turnstileToken` en JSON al POST /api/leads
 # TURNSTILE_SECRET_KEY=
@@ -46,12 +54,21 @@ ANALYTICS_SERVICE_URL=http://localhost:4014
 
 # Partner service (SQLite local)
 # PARTNER_SQLITE_PATH=services/partner/data/partner.sqlite
+# Admin UI /admin/catalogo/[slug]/panel: si un venue no tiene titular en partner_venue_ownerships,
+# el servicio puede usar este correo para crear ownership delegado (solo operación; documentado en LOCALHOST_LINKS_GUIDE.md).
+# ADMIN_CATALOG_DELEGATE_EMAIL=partner.demo@floit.local
 # Credenciales S2S partner -> leads internal endpoint (ownership)
+# Si no se configuran en local, ambos servicios usan fallback dev `change-me-dev-only`.
 # PARTNER_TO_LEADS_INTERNAL_TOKEN=
 # LEADS_INTERNAL_API_TOKEN=
-# Credenciales S2S partner -> catalog internal sync endpoint (perfil/planes -> ficha pública)
+# Credenciales S2S partner -> catalog: sync (`partner-sync`) y alta stub (`POST /v1/internal/venues`) al aprobar claim "centro nuevo".
+# En dev sin configurar, ambos suelen usar `change-me-dev-only`; en prod deben coincidir explícitamente.
 # PARTNER_TO_CATALOG_INTERNAL_TOKEN=
 # CATALOG_INTERNAL_API_TOKEN=
+# Importación masiva CSV → catalog: pnpm venues:load (ver docs/operations/VENUES_CATALOG_IMPORT.md)
+# Webhook opcional al aprobar/rechazar claim (JSON POST; cabecera opcional x-floit-webhook-secret si defines SECRET)
+# PARTNER_CLAIM_STATUS_WEBHOOK_URL=
+# PARTNER_CLAIM_STATUS_WEBHOOK_SECRET=
 # Hardening sync partner->catalog (cola persistida + retry)
 # PARTNER_CATALOG_SYNC_MAX_ATTEMPTS=4
 # PARTNER_CATALOG_SYNC_BASE_DELAY_MS=1000

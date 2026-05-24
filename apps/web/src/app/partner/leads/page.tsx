@@ -1,5 +1,15 @@
 import type { Metadata } from "next";
+import {
+  UIBadge,
+  UIBanner,
+  UIButton,
+  UICard,
+  UITable,
+  UITableCell,
+  UITableContainer,
+} from "@floit/ui";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getPartnerAuthHeader } from "@/lib/partner-auth-header";
 
 export const metadata: Metadata = {
@@ -18,10 +28,20 @@ type PartnerLead = {
   createdAt: string;
 };
 
-export default async function PartnerLeadsPage() {
-  const auth = getPartnerAuthHeader();
+type Props = { searchParams: Promise<{ venueSlug?: string }> };
+
+export default async function PartnerLeadsPage({ searchParams }: Props) {
+  const params = await searchParams;
+  const venueSlug = params.venueSlug?.trim() ?? "";
+  const auth = await getPartnerAuthHeader();
   const base = process.env.PARTNER_SERVICE_URL ?? "http://localhost:4013";
+  const localPartnerLoginEnabled =
+    process.env.PARTNER_LOGIN_ALLOW_LOCAL_PASSWORD?.trim() === "true" &&
+    process.env.NODE_ENV !== "production";
   if (!auth) {
+    if (localPartnerLoginEnabled) {
+      redirect("/partner/login");
+    }
     return (
       <main className="mx-auto max-w-4xl px-4 py-12 text-sm text-neutral-600">
         <h1 className="text-lg font-semibold text-neutral-900">Leads partner</h1>
@@ -33,20 +53,33 @@ export default async function PartnerLeadsPage() {
     );
   }
 
+  if (!venueSlug) {
+    return (
+      <main className="mx-auto max-w-4xl px-4 py-12 text-sm text-neutral-600">
+        <h1 className="text-lg font-semibold text-neutral-900">Leads partner</h1>
+        <p className="mt-2">Selecciona primero un centro para ver sus leads.</p>
+        <Link href="/partner/venues" className="mt-3 inline-block underline">
+          Ir a mis centros
+        </Link>
+      </main>
+    );
+  }
+
   let items: PartnerLead[] = [];
-  let venues: string[] = [];
   let err: string | null = null;
   try {
-    const res = await fetch(`${base}/v1/partner/me/leads?limit=200`, {
+    const res = await fetch(
+      `${base}/v1/partner/me/venues/${encodeURIComponent(venueSlug)}/leads?limit=200`,
+      {
       headers: { [auth.headerName]: auth.headerValue },
       cache: "no-store",
-    });
+      },
+    );
     if (!res.ok) {
       err = `HTTP ${res.status}`;
     } else {
-      const data = (await res.json()) as { items?: PartnerLead[]; venues?: string[] };
+      const data = (await res.json()) as { items?: PartnerLead[] };
       items = data.items ?? [];
-      venues = data.venues ?? [];
     }
   } catch (e) {
     err = e instanceof Error ? e.message : "fetch failed";
@@ -54,34 +87,35 @@ export default async function PartnerLeadsPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10">
-      <div className="mb-6 flex flex-col gap-1">
+      <div className="mb-6 flex flex-col gap-2">
+        <UIBadge>Partner ops</UIBadge>
         <h1 className="text-xl font-semibold tracking-tight">Bandeja de leads</h1>
         <p className="text-sm text-neutral-500">
           Leads filtrados por ownership de claims aprobados.
         </p>
-        <div className="flex flex-wrap gap-4 text-sm">
-          <Link className="underline" href="/partner/panel">
-            Abrir panel partner
+        <div className="flex flex-wrap gap-2 text-sm">
+          <Link href="/partner/venues">
+            <UIButton variant="secondary" size="sm">Abrir panel partner</UIButton>
           </Link>
-          <Link className="underline" href="/partner/claim">
-            Solicitar claim
+          <Link href="/partner/claim">
+            <UIButton variant="secondary" size="sm">Solicitar claim</UIButton>
           </Link>
-          <Link className="underline" href="/buscar">
-            Ver catálogo
+          <Link href="/buscar">
+            <UIButton variant="secondary" size="sm">Ver catálogo</UIButton>
           </Link>
         </div>
       </div>
 
-      {err ? <p className="mb-4 text-sm text-red-600">No se pudo cargar: {err}</p> : null}
+      {err ? <UIBanner variant="error">No se pudo cargar: {err}</UIBanner> : null}
 
-      <p className="mb-3 text-sm text-neutral-500">
-        Centros asociados: {venues.length > 0 ? venues.join(", ") : "ninguno"}
-      </p>
+      <UICard className="mb-3 bg-neutral-50 text-sm text-neutral-600">
+        Centro activo: {venueSlug}
+      </UICard>
 
-      <div className="overflow-x-auto rounded-xl border border-neutral-200 dark:border-neutral-800">
-        <table className="w-full min-w-[800px] text-left text-sm">
+      <UITableContainer>
+        <UITable className="min-w-[800px] text-left text-sm">
           <thead>
-            <tr className="border-b border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900">
+            <tr className="border-b border-neutral-200 bg-neutral-50">
               <th className="px-3 py-2 font-medium">Fecha</th>
               <th className="px-3 py-2 font-medium">Centro</th>
               <th className="px-3 py-2 font-medium">Intent</th>
@@ -95,56 +129,66 @@ export default async function PartnerLeadsPage() {
           <tbody>
             {items.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-3 py-8 text-center text-neutral-500">
+                <UITableCell colSpan={8} className="px-3 py-8 text-center text-neutral-500">
                   No hay leads para tus centros aprobados.
-                </td>
+                </UITableCell>
               </tr>
             ) : (
               items.map((it) => (
-                <tr key={it.id} className="border-b border-neutral-100 dark:border-neutral-900">
-                  <td className="px-3 py-2 text-neutral-500">{formatTime(it.createdAt)}</td>
-                  <td className="px-3 py-2">{it.venueSlug}</td>
-                  <td className="px-3 py-2">{it.intent}</td>
-                  <td className="px-3 py-2">{it.name}</td>
-                  <td className="px-3 py-2">{it.phone}</td>
-                  <td className="px-3 py-2">{it.email ?? "—"}</td>
-                  <td className="px-3 py-2">{it.status}</td>
-                  <td className="px-3 py-2">
+                <tr key={it.id} className="border-b border-neutral-100">
+                  <UITableCell className="px-3 py-2 text-neutral-500">{formatTime(it.createdAt)}</UITableCell>
+                  <UITableCell className="px-3 py-2">{it.venueSlug}</UITableCell>
+                  <UITableCell className="px-3 py-2">{it.intent}</UITableCell>
+                  <UITableCell className="px-3 py-2">{it.name}</UITableCell>
+                  <UITableCell className="px-3 py-2">{it.phone}</UITableCell>
+                  <UITableCell className="px-3 py-2">{it.email ?? "—"}</UITableCell>
+                  <UITableCell className="px-3 py-2">{it.status}</UITableCell>
+                  <UITableCell className="px-3 py-2">
                     <div className="flex flex-wrap gap-2">
                       {it.status === "received" ? (
-                        <form method="post" action={`/api/partner/me/leads/${encodeURIComponent(it.id)}/status`}>
+                        <form
+                          method="post"
+                          action={`/api/partner/me/venues/${encodeURIComponent(venueSlug)}/leads/${encodeURIComponent(it.id)}/status`}
+                        >
                           <input type="hidden" name="status" value="contacted" />
-                          <button
-                            className="rounded border border-neutral-300 px-2 py-1 text-xs dark:border-neutral-700"
+                          <UIButton
                             type="submit"
-                            formAction={`/api/partner/me/leads/${encodeURIComponent(it.id)}/status`}
+                            variant="secondary"
+                            size="sm"
+                            className="!border-neutral-300 !bg-white !text-neutral-800 hover:!bg-neutral-100"
+                            formAction={`/api/partner/me/venues/${encodeURIComponent(venueSlug)}/leads/${encodeURIComponent(it.id)}/status`}
                           >
                             Marcar contactado
-                          </button>
+                          </UIButton>
                         </form>
                       ) : null}
                       {it.status !== "closed" ? (
-                        <form method="post" action={`/api/partner/me/leads/${encodeURIComponent(it.id)}/status`}>
+                        <form
+                          method="post"
+                          action={`/api/partner/me/venues/${encodeURIComponent(venueSlug)}/leads/${encodeURIComponent(it.id)}/status`}
+                        >
                           <input type="hidden" name="status" value="closed" />
-                          <button
-                            className="rounded border border-neutral-300 px-2 py-1 text-xs dark:border-neutral-700"
+                          <UIButton
                             type="submit"
-                            formAction={`/api/partner/me/leads/${encodeURIComponent(it.id)}/status`}
+                            variant="secondary"
+                            size="sm"
+                            className="!border-neutral-300 !bg-white !text-neutral-800 hover:!bg-neutral-100"
+                            formAction={`/api/partner/me/venues/${encodeURIComponent(venueSlug)}/leads/${encodeURIComponent(it.id)}/status`}
                           >
                             Marcar cerrado
-                          </button>
+                          </UIButton>
                         </form>
                       ) : (
                         <span className="text-xs text-neutral-500">Cerrado</span>
                       )}
                     </div>
-                  </td>
+                  </UITableCell>
                 </tr>
               ))
             )}
           </tbody>
-        </table>
-      </div>
+        </UITable>
+      </UITableContainer>
     </main>
   );
 }

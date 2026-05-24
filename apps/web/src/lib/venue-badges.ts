@@ -4,7 +4,7 @@ import type { VenueSummary } from "@floit/contracts";
 export type VenueBadge = { key: string; label: string };
 
 export function computeVenueBadges(
-  items: VenueSummary[],
+  items: readonly VenueSummary[],
 ): Record<string, VenueBadge[]> {
   const out: Record<string, VenueBadge[]> = {};
   if (items.length === 0) return out;

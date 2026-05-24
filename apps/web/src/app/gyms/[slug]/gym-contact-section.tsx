@@ -1,8 +1,16 @@
 "use client";
 
+import {
+  UIBadge,
+  UIBanner,
+  UIButton,
+  UISelect,
+  UITextInput,
+} from "@floit/ui";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { BRAND_NAME } from "@/lib/brand";
 import { formatUpstreamError } from "@/lib/format-upstream-error";
 import { trackEvent } from "@/lib/track";
 
@@ -59,6 +67,8 @@ export function GymContactSection({
   const [reportBusy, setReportBusy] = useState(false);
   const [reportOk, setReportOk] = useState(false);
   const [reportErr, setReportErr] = useState<string | null>(null);
+  const [contactModalOpen, setContactModalOpen] = useState(false);
+  const [reportModalOpen, setReportModalOpen] = useState(false);
   const assignmentTrackedRef = useRef(false);
 
   useEffect(() => {
@@ -144,11 +154,44 @@ export function GymContactSection({
     }
   }, [allowsTrial, slug, contactWhatsapp]);
 
+  useEffect(() => {
+    const syncFromHash = () => {
+      const hash = window.location.hash;
+      setContactModalOpen(hash === "#contactar-modal");
+      setReportModalOpen(hash === "#reportar-modal");
+    };
+    syncFromHash();
+    window.addEventListener("hashchange", syncFromHash);
+    return () => window.removeEventListener("hashchange", syncFromHash);
+  }, []);
+
+  useEffect(() => {
+    const onClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      const anchor = target?.closest('a[href="#contactar-modal"], a[href="#reportar-modal"]');
+      if (!anchor) return;
+      const href = anchor.getAttribute("href");
+      if (href === "#contactar-modal") {
+        event.preventDefault();
+        setReportModalOpen(false);
+        setContactModalOpen(true);
+        history.replaceState(null, "", `${window.location.pathname}${window.location.search}#contactar-modal`);
+      } else if (href === "#reportar-modal") {
+        event.preventDefault();
+        setContactModalOpen(false);
+        setReportModalOpen(true);
+        history.replaceState(null, "", `${window.location.pathname}${window.location.search}#reportar-modal`);
+      }
+    };
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, []);
+
   async function onLeadSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLeadErr(null);
     if (intent === "trial" && !allowsTrial) {
-      setLeadErr("Este centro no indica prueba gratuita en Floit.");
+      setLeadErr(`Este centro no indica prueba gratuita en ${BRAND_NAME}.`);
       return;
     }
     const fd = new FormData(e.currentTarget);
@@ -176,6 +219,7 @@ export function GymContactSection({
       message: String(fd.get("message") ?? "").trim() || undefined,
       consentAccepted: true as const,
       consentVersion: FLOIT_CONSENT_VERSION,
+      entryChannel: "form" as const,
       turnstileToken: turnstileToken ?? undefined,
     };
     setLeadBusy(true);
@@ -222,7 +266,7 @@ export function GymContactSection({
     const waDigits = contactWhatsapp?.replace(/\D/g, "") ?? "";
     if (!waDigits) return;
     const waMsg = encodeURIComponent(
-      `Hola, vi ${venueName} en Floit y quiero información.`,
+      `Hola, vi ${venueName} en ${BRAND_NAME} y quiero información.`,
     );
     trackEvent("cta_click", {
       channel: "whatsapp_first",
@@ -263,198 +307,254 @@ export function GymContactSection({
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      <section className="flex flex-col gap-3 rounded-xl border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-800 dark:bg-neutral-900">
-        <h2 className="text-lg font-semibold">Contactar · {venueName}</h2>
-        <p className="text-sm text-neutral-600 dark:text-neutral-400">
-          Floit reenvía tu solicitud al centro (demo). Usa un teléfono real si
-          quieres probar el seguimiento.
-        </p>
-        {ctaVariant === "whatsapp_first" ? (
-          <button
-            type="button"
-            onClick={handleWhatsappFirstClick}
-            className="self-start rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
-          >
-            Abrir WhatsApp ahora
-          </button>
-        ) : null}
-        <form className="flex flex-col gap-3 text-sm" onSubmit={onLeadSubmit}>
-          <label className="flex flex-col gap-1">
-            <span className="font-medium">Qué necesitas</span>
-            <select
-              name="intent"
-              className="rounded-lg border border-neutral-300 bg-white px-3 py-2 dark:border-neutral-700 dark:bg-neutral-950"
-              value={intent}
-              onChange={(event) =>
-                setIntent(event.target.value as "membership" | "trial" | "info")
-              }
-            >
-              <option value="info">Información general</option>
-              <option value="membership">Membresía / precios</option>
-              <option value="trial" disabled={!allowsTrial}>
-                Probar gratis / clase de prueba
-                {!allowsTrial ? " (no indicado)" : ""}
-              </option>
-            </select>
-          </label>
-          <label className="flex flex-col gap-1">
-            <span className="font-medium">Nombre</span>
-            <input
-              name="name"
-              required
-              minLength={2}
-              maxLength={160}
-              className="rounded-lg border border-neutral-300 bg-white px-3 py-2 dark:border-neutral-700 dark:bg-neutral-950"
-              placeholder="Tu nombre"
-              autoComplete="name"
-            />
-          </label>
-          <label className="flex flex-col gap-1">
-            <span className="font-medium">Teléfono</span>
-            <input
-              name="phone"
-              required
-              minLength={6}
-              maxLength={40}
-              className="rounded-lg border border-neutral-300 bg-white px-3 py-2 dark:border-neutral-700 dark:bg-neutral-950"
-              placeholder="+58 …"
-              autoComplete="tel"
-            />
-          </label>
-          <label className="flex flex-col gap-1">
-            <span className="font-medium">Correo (opcional)</span>
-            <input
-              name="email"
-              type="email"
-              maxLength={200}
-              className="rounded-lg border border-neutral-300 bg-white px-3 py-2 dark:border-neutral-700 dark:bg-neutral-950"
-              autoComplete="email"
-            />
-          </label>
-          <label className="flex flex-col gap-1">
-            <span className="font-medium">Horario preferido (opcional)</span>
-            <input
-              name="preferredSlot"
-              maxLength={500}
-              className="rounded-lg border border-neutral-300 bg-white px-3 py-2 dark:border-neutral-700 dark:bg-neutral-950"
-              placeholder="Ej. tardes entre semana"
-            />
-          </label>
-          <label className="flex flex-col gap-1">
-            <span className="font-medium">Mensaje (opcional)</span>
-            <textarea
-              name="message"
-              maxLength={1200}
-              rows={3}
-              className="rounded-lg border border-neutral-300 bg-white px-3 py-2 dark:border-neutral-700 dark:bg-neutral-950"
-            />
-          </label>
-          <label className="flex items-start gap-2 text-sm leading-snug">
-            <input
-              type="checkbox"
-              name="consentAccepted"
-              required
-              className="mt-1 shrink-0 rounded border-neutral-300"
-            />
-            <span className="text-neutral-600 dark:text-neutral-400">
-              Acepto el tratamiento de mis datos personales de contacto para que
-              Floit y el centro puedan responder a esta solicitud. Versión:{" "}
-              {FLOIT_CONSENT_VERSION}.{" "}
-              <Link href="/privacidad" className="font-medium underline">
-                Texto completo
-              </Link>
-              .
-            </span>
-          </label>
-          {TURNSTILE_SITE_KEY ? (
-            <div className="flex flex-col gap-1">
-              <span className="font-medium">Verificación anti-spam</span>
-              <div
-                ref={turnstileHostRef}
-                className="min-h-16 rounded-lg border border-neutral-300 bg-white p-2 dark:border-neutral-700 dark:bg-neutral-950"
-              />
+    <>
+      {contactModalOpen ? (
+        <div className="fixed inset-0 z-[1200] flex items-end justify-center bg-black/45 p-3 backdrop-blur-[2px] md:items-center md:p-4">
+          <div className="w-full max-w-xl rounded-2xl border border-neutral-200 bg-white shadow-xl">
+            <div className="flex items-center justify-between border-b border-neutral-200 px-4 py-3">
+              <div className="flex items-center gap-2">
+                <UIBadge variant="success">Contacto directo</UIBadge>
+                <h2 className="text-lg font-semibold text-neutral-900">
+                  Contactar · {venueName}
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setContactModalOpen(false);
+                  if (window.location.hash === "#contactar-modal") {
+                    history.replaceState(null, "", window.location.pathname + window.location.search);
+                  }
+                }}
+                className="rounded-full border border-neutral-300 px-2 py-1 text-xs text-neutral-600"
+              >
+                Cerrar
+              </button>
             </div>
-          ) : null}
-          {leadErr ? (
-            <p className="text-sm text-red-600 dark:text-red-400">{leadErr}</p>
-          ) : null}
-          <button
-            type="submit"
-            disabled={leadBusy}
-            className="rounded-lg bg-neutral-900 px-4 py-2 font-medium text-white disabled:opacity-60 dark:bg-white dark:text-neutral-900"
-          >
-            {leadBusy
-              ? "Enviando…"
-              : ctaVariant === "trial" && allowsTrial
-                ? "Pedir prueba ahora"
-                : ctaVariant === "whatsapp_first"
-                  ? "Enviar solicitud (alternativa a WhatsApp)"
-                  : "Solicitar membresía ahora"}
-          </button>
-        </form>
-      </section>
+            <div className="max-h-[80vh] overflow-y-auto p-4">
+              <p className="mb-3 text-sm text-neutral-600">
+                {BRAND_NAME} reenvía tu solicitud al centro (demo). Usa un teléfono real
+                si quieres probar el seguimiento.
+              </p>
+              {contactWhatsapp ? (
+                <UIButton
+                  type="button"
+                  onClick={handleWhatsappFirstClick}
+                  className="mb-3 self-start bg-green-600 hover:bg-green-700"
+                >
+                  Abrir WhatsApp ahora
+                </UIButton>
+              ) : null}
+              <form className="flex flex-col gap-3 text-sm" onSubmit={onLeadSubmit}>
+                <label className="flex flex-col gap-1 text-neutral-800">
+                  <span className="font-medium text-neutral-800">Qué necesitas</span>
+                  <UISelect
+                    name="intent"
+                    value={intent}
+                    onChange={(event) =>
+                      setIntent(
+                        event.target.value as "membership" | "trial" | "info",
+                      )
+                    }
+                    className="!border-neutral-300 !bg-white !text-neutral-900"
+                  >
+                    <option value="info">Información general</option>
+                    <option value="membership">Membresía / precios</option>
+                    <option value="trial" disabled={!allowsTrial}>
+                      Probar gratis / clase de prueba
+                      {!allowsTrial ? " (no indicado)" : ""}
+                    </option>
+                  </UISelect>
+                </label>
+                <label className="flex flex-col gap-1 text-neutral-800">
+                  <span className="font-medium text-neutral-800">Nombre</span>
+                  <UITextInput
+                    name="name"
+                    required
+                    minLength={2}
+                    maxLength={160}
+                    placeholder="Tu nombre"
+                    autoComplete="name"
+                    className="!border-neutral-300 !bg-white !text-neutral-900 placeholder:!text-neutral-500"
+                  />
+                </label>
+                <label className="flex flex-col gap-1 text-neutral-800">
+                  <span className="font-medium text-neutral-800">Teléfono</span>
+                  <UITextInput
+                    name="phone"
+                    required
+                    minLength={6}
+                    maxLength={40}
+                    placeholder="+58 …"
+                    autoComplete="tel"
+                    className="!border-neutral-300 !bg-white !text-neutral-900 placeholder:!text-neutral-500"
+                  />
+                </label>
+                <label className="flex flex-col gap-1 text-neutral-800">
+                  <span className="font-medium text-neutral-800">
+                    Correo (opcional)
+                  </span>
+                  <UITextInput
+                    name="email"
+                    type="email"
+                    maxLength={200}
+                    autoComplete="email"
+                    className="!border-neutral-300 !bg-white !text-neutral-900 placeholder:!text-neutral-500"
+                  />
+                </label>
+                <label className="flex flex-col gap-1 text-neutral-800">
+                  <span className="font-medium text-neutral-800">
+                    Horario preferido (opcional)
+                  </span>
+                  <UITextInput
+                    name="preferredSlot"
+                    maxLength={500}
+                    placeholder="Ej. tardes entre semana"
+                    className="!border-neutral-300 !bg-white !text-neutral-900 placeholder:!text-neutral-500"
+                  />
+                </label>
+                <label className="flex flex-col gap-1 text-neutral-800">
+                  <span className="font-medium text-neutral-800">
+                    Mensaje (opcional)
+                  </span>
+                  <textarea
+                    name="message"
+                    maxLength={1200}
+                    rows={3}
+                    className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-neutral-900 placeholder:text-neutral-500"
+                  />
+                </label>
+                <label className="flex items-start gap-2 text-sm leading-snug">
+                  <input
+                    type="checkbox"
+                    name="consentAccepted"
+                    required
+                    className="mt-1 shrink-0 rounded border-neutral-300"
+                  />
+                  <span className="text-neutral-600">
+                    Acepto el tratamiento de mis datos personales de contacto para
+                    que {BRAND_NAME} y el centro puedan responder a esta solicitud.
+                    Versión: {FLOIT_CONSENT_VERSION}.{" "}
+                    <Link href="/privacidad" className="font-medium underline">
+                      Texto completo
+                    </Link>
+                    .
+                  </span>
+                </label>
+                {TURNSTILE_SITE_KEY ? (
+                  <div className="flex flex-col gap-1">
+                    <span className="font-medium text-neutral-800">
+                      Verificación anti-spam
+                    </span>
+                    <div
+                      ref={turnstileHostRef}
+                      className="min-h-16 rounded-lg border border-neutral-300 bg-white p-2"
+                    />
+                  </div>
+                ) : null}
+                {leadErr ? (
+                  <UIBanner variant="error" className="text-neutral-900">
+                    {leadErr}
+                  </UIBanner>
+                ) : null}
+                <UIButton
+                  type="submit"
+                  disabled={leadBusy}
+                  className="w-full !bg-neutral-900 !text-white hover:!bg-neutral-800"
+                >
+                  {leadBusy
+                    ? "Enviando…"
+                    : ctaVariant === "trial" && allowsTrial
+                      ? "Pedir prueba ahora"
+                      : ctaVariant === "whatsapp_first"
+                        ? "Enviar solicitud (alternativa a WhatsApp)"
+                        : "Solicitar membresía ahora"}
+                </UIButton>
+              </form>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
-      <section className="flex flex-col gap-3 rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-950">
-        <h2 className="text-lg font-semibold">Reportar datos incorrectos</h2>
-        <p className="text-sm text-neutral-600 dark:text-neutral-400">
-          Ayuda a mantener Floit preciso: precio, ubicación, horarios u otra
-          información.
-        </p>
-        <form className="flex flex-col gap-3 text-sm" onSubmit={onReportSubmit}>
-          <label className="flex flex-col gap-1">
-            <span className="font-medium">Tipo</span>
-            <select
-              name="kind"
-              required
-              className="rounded-lg border border-neutral-300 bg-white px-3 py-2 dark:border-neutral-700 dark:bg-neutral-950"
-              defaultValue="info"
-            >
-              <option value="precio">Precio</option>
-              <option value="ubicacion">Ubicación</option>
-              <option value="horario">Horario</option>
-              <option value="info">Información general</option>
-              <option value="otro">Otro</option>
-            </select>
-          </label>
-          <label className="flex flex-col gap-1">
-            <span className="font-medium">Detalle</span>
-            <textarea
-              name="message"
-              required
-              minLength={5}
-              maxLength={1200}
-              rows={4}
-              className="rounded-lg border border-neutral-300 bg-white px-3 py-2 dark:border-neutral-700 dark:bg-neutral-950"
-              placeholder="Describe qué está mal o qué falta."
-            />
-          </label>
-          {reportErr ? (
-            <p className="text-sm text-red-600 dark:text-red-400">{reportErr}</p>
-          ) : null}
-          {reportOk ? (
-            <p className="text-sm text-green-700 dark:text-green-400">
-              Gracias. El equipo revisará el reporte.
-            </p>
-          ) : null}
-          <button
-            type="submit"
-            disabled={reportBusy}
-            className="rounded-lg border border-neutral-300 px-4 py-2 font-medium disabled:opacity-60 dark:border-neutral-600"
-          >
-            {reportBusy ? "Enviando…" : "Enviar reporte"}
-          </button>
-        </form>
-      </section>
-
-      <div className="flex flex-wrap gap-4 text-sm">
-        <Link className="underline" href={`/buscar`}>
-          ← Buscar más centros
-        </Link>
-        <Link className="underline" href="/favoritos">
-          Favoritos
-        </Link>
-      </div>
-    </div>
+      {reportModalOpen ? (
+        <div className="fixed inset-0 z-[1200] flex items-end justify-center bg-black/45 p-3 backdrop-blur-[2px] md:items-center md:p-4">
+          <div className="w-full max-w-xl rounded-2xl border border-neutral-200 bg-white shadow-xl">
+            <div className="flex items-center justify-between border-b border-neutral-200 px-4 py-3">
+              <div className="flex items-center gap-2">
+                <UIBadge>Calidad de datos</UIBadge>
+                <h2 className="text-lg font-semibold text-neutral-900">
+                  Reportar datos incorrectos
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setReportModalOpen(false);
+                  if (window.location.hash === "#reportar-modal") {
+                    history.replaceState(null, "", window.location.pathname + window.location.search);
+                  }
+                }}
+                className="rounded-full border border-neutral-300 px-2 py-1 text-xs text-neutral-600"
+              >
+                Cerrar
+              </button>
+            </div>
+            <div className="max-h-[80vh] overflow-y-auto p-4">
+              <p className="mb-3 text-sm text-neutral-600">
+                Ayuda a mantener {BRAND_NAME} preciso: precio, ubicación, horarios u otra
+                información.
+              </p>
+              <form className="flex flex-col gap-3 text-sm" onSubmit={onReportSubmit}>
+                <label className="flex flex-col gap-1 text-neutral-800">
+                  <span className="font-medium text-neutral-800">Tipo</span>
+                  <UISelect
+                    name="kind"
+                    required
+                    defaultValue="info"
+                    className="!border-neutral-300 !bg-white !text-neutral-900"
+                  >
+                    <option value="precio">Precio</option>
+                    <option value="ubicacion">Ubicación</option>
+                    <option value="horario">Horario</option>
+                    <option value="info">Información general</option>
+                    <option value="otro">Otro</option>
+                  </UISelect>
+                </label>
+                <label className="flex flex-col gap-1 text-neutral-800">
+                  <span className="font-medium text-neutral-800">Detalle</span>
+                  <textarea
+                    name="message"
+                    required
+                    minLength={5}
+                    maxLength={1200}
+                    rows={4}
+                    className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-neutral-900 placeholder:text-neutral-500"
+                    placeholder="Describe qué está mal o qué falta."
+                  />
+                </label>
+                {reportErr ? (
+                  <UIBanner variant="error" className="text-neutral-900">
+                    {reportErr}
+                  </UIBanner>
+                ) : null}
+                {reportOk ? (
+                  <UIBanner variant="success" className="text-neutral-900">
+                    Gracias. El equipo revisará el reporte.
+                  </UIBanner>
+                ) : null}
+                <UIButton
+                  type="submit"
+                  disabled={reportBusy}
+                  variant="secondary"
+                  className="!border-neutral-300 !bg-white !text-neutral-800 hover:!bg-neutral-50"
+                >
+                  {reportBusy ? "Enviando…" : "Enviar reporte"}
+                </UIButton>
+              </form>
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }

@@ -10,6 +10,7 @@ async function bootstrap() {
       transform: true,
       whitelist: true,
       forbidUnknownValues: false,
+      transformOptions: { enableImplicitConversion: true },
     }),
   );
   app.enableCors({ origin: false });

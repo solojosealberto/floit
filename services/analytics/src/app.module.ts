@@ -13,14 +13,28 @@ import { HealthController } from "./health.controller";
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
+        const entities = [AnalyticsEventEntity];
+        const synchronize = config.get<string>("DATABASE_SYNC") !== "false";
+        const databaseUrl = config.get<string>("DATABASE_URL")?.trim();
+        if (databaseUrl) {
+          return {
+            type: "postgres" as const,
+            url: databaseUrl,
+            entities,
+            synchronize,
+            ssl: databaseUrl.includes("sslmode=require")
+              ? { rejectUnauthorized: false }
+              : undefined,
+          };
+        }
         const dbPath =
           config.get<string>("ANALYTICS_SQLITE_PATH") ??
           join(__dirname, "..", "data", "analytics.sqlite");
         return {
           type: "sqlite" as const,
           database: dbPath,
-          entities: [AnalyticsEventEntity],
-          synchronize: config.get<string>("DATABASE_SYNC") !== "false",
+          entities,
+          synchronize,
         };
       },
     }),

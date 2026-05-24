@@ -26,6 +26,14 @@ export class PartnerClaimEntity {
   @Column({ type: "text", nullable: true })
   evidence!: string | null;
 
+  /** existing = reclamo de ficha ya listada; new = alta de centro nuevo (stub en catálogo al aprobar). */
+  @Column({ type: "varchar", length: 16, default: "existing" })
+  claimKind!: "existing" | "new";
+
+  /** JSON serializado de PartnerClaimNewVenueDraftDto cuando claimKind es new. */
+  @Column({ type: "text", nullable: true })
+  newVenueDraftJson!: string | null;
+
   @Column({ type: "varchar", length: 24, default: "pending_review" })
   status!: "pending_review" | "approved" | "rejected";
 

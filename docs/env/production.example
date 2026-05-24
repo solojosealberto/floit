@@ -1,0 +1,105 @@
+# Plantilla de variables — staging / producción QueGym
+# NO commitear valores reales. Copiar a Vercel / Railway / vault.
+# Decisiones: docs/operations/PRODUCTION_LAUNCH_PLAN.md §16
+# Guía de alta: docs/operations/PRODUCTION_ACCOUNTS_SETUP.md
+
+# =============================================================================
+# Vercel — apps/web (staging: staging.quegym.com | prod: www.quegym.com)
+# =============================================================================
+NODE_ENV=production
+NEXT_PUBLIC_SITE_URL=https://staging.quegym.com
+
+# URLs de microservicios (Railway — HTTPS público staging o private networking)
+CATALOG_SERVICE_URL=https://REPLACE-catalog.up.railway.app
+SEARCH_SERVICE_URL=https://REPLACE-search.up.railway.app
+LEADS_SERVICE_URL=https://REPLACE-leads.up.railway.app
+PARTNER_SERVICE_URL=https://REPLACE-partner.up.railway.app
+ANALYTICS_SERVICE_URL=https://REPLACE-analytics.up.railway.app
+
+# --- Admin BFF (servidor) ---
+# Producción objetivo: solo Bearer M2M; staging puede usar API token + login local
+ADMIN_AUTH_REQUIRE_OIDC=false
+ADMIN_OIDC_ACCESS_TOKEN=
+ADMIN_OIDC_ISSUER=https://REPLACE.us.auth0.com/
+ADMIN_OIDC_AUDIENCE=floit-admin
+ADMIN_OIDC_JWKS_URL=
+ADMIN_API_TOKEN=GENERATE-openssl-rand-hex-32
+ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD=false
+ADMIN_LOCAL_LOGIN_EMAIL=
+ADMIN_LOCAL_LOGIN_PASSWORD=
+
+# --- Partner OIDC (login /partner/login) ---
+PARTNER_AUTH_REQUIRE_OIDC=true
+PARTNER_OIDC_ISSUER=https://REPLACE.us.auth0.com/
+PARTNER_OIDC_AUDIENCE=floit-partner
+PARTNER_OIDC_JWKS_URL=
+PARTNER_OIDC_CLIENT_ID=
+PARTNER_OIDC_CLIENT_SECRET=
+PARTNER_OIDC_SCOPE=openid email profile
+PARTNER_OIDC_REDIRECT_URI=https://staging.quegym.com/partner/auth/callback
+PARTNER_LOGIN_ALLOW_LOCAL_PASSWORD=false
+PARTNER_LOCAL_LOGIN_EMAIL=
+PARTNER_LOCAL_LOGIN_PASSWORD=
+
+# Anti-spam leads (recomendado prod)
+# TURNSTILE_SECRET_KEY=
+# NEXT_PUBLIC_TURNSTILE_SITE_KEY=
+
+# =============================================================================
+# Railway — catalog-service
+# =============================================================================
+# PORT=4010
+# DATABASE_URL=postgresql://...@.../catalog?sslmode=require
+# DATABASE_SYNC=false
+# SEED_ON_BOOT=false
+# CATALOG_INTERNAL_API_TOKEN=SAME-as-PARTNER_TO_CATALOG
+
+# =============================================================================
+# Railway — search-service
+# =============================================================================
+# PORT=4011
+# CATALOG_SERVICE_URL=http://catalog.railway.internal:4010
+
+# =============================================================================
+# Railway — leads-service
+# =============================================================================
+# PORT=4012
+# DATABASE_URL=postgresql://...@.../leads?sslmode=require
+# DATABASE_SYNC=true
+# ADMIN_AUTH_REQUIRE_OIDC=true
+# ADMIN_OIDC_ISSUER=https://REPLACE.us.auth0.com/
+# ADMIN_OIDC_AUDIENCE=floit-admin
+# LEADS_INTERNAL_API_TOKEN=GENERATE-openssl-rand-hex-32
+# ANALYTICS_SERVICE_URL=http://analytics.railway.internal:4014
+# LEADS_NOTIFICATION_WEBHOOK_URL=
+
+# =============================================================================
+# Railway — partner-service
+# =============================================================================
+# PORT=4013
+# DATABASE_URL=postgresql://...@.../partner?sslmode=require
+# DATABASE_SYNC=true
+# CATALOG_SERVICE_URL=http://catalog.railway.internal:4010
+# PARTNER_TO_CATALOG_INTERNAL_TOKEN=SAME-as-CATALOG_INTERNAL
+# PARTNER_TO_LEADS_INTERNAL_TOKEN=SAME-as-LEADS_INTERNAL
+# ADMIN_AUTH_REQUIRE_OIDC=true
+# PARTNER_AUTH_REQUIRE_OIDC=true
+# ADMIN_OIDC_ISSUER=...
+# PARTNER_OIDC_ISSUER=...
+# ADMIN_OIDC_AUDIENCE=floit-admin
+# PARTNER_OIDC_AUDIENCE=floit-partner
+# ADMIN_CATALOG_DELEGATE_EMAIL=ops@quegym.com
+# PARTNER_CLAIM_STATUS_WEBHOOK_URL=
+
+# =============================================================================
+# Railway — analytics-service
+# =============================================================================
+# PORT=4014
+# DATABASE_URL=postgresql://...@.../analytics?sslmode=require
+# DATABASE_SYNC=true
+
+# =============================================================================
+# Import catálogo (máquina CI/ops, no Vercel)
+# =============================================================================
+# CATALOG_SERVICE_URL=https://...
+# CATALOG_INTERNAL_API_TOKEN=...

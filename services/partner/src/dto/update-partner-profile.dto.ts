@@ -1,4 +1,12 @@
-import { IsEmail, IsOptional, IsString, MaxLength } from "class-validator";
+import {
+  ArrayMaxSize,
+  IsArray,
+  IsEmail,
+  IsOptional,
+  IsString,
+  IsUrl,
+  MaxLength,
+} from "class-validator";
 
 export class UpdatePartnerProfileDto {
   @IsOptional()
@@ -30,4 +38,10 @@ export class UpdatePartnerProfileDto {
   @IsString()
   @MaxLength(200)
   contactWhatsapp?: string;
+
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(12)
+  @IsUrl({ require_tld: false }, { each: true })
+  photoUrls?: string[];
 }

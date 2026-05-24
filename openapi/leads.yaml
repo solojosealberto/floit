@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: Floit Leads API
+  title: QueGym Leads API
   version: 0.3.0
   description: |
     Captura de intención comercial (SQLite en MVP). Throttle en `POST /v1/leads`
@@ -69,6 +69,87 @@ paths:
                     items: { $ref: "#/components/schemas/LeadAdminSummary" }
         "401":
           description: Token ausente o inválido / admin no configurado
+  /v1/admin/lead/{id}:
+    get:
+      operationId: adminGetLeadDetail
+      summary: Detalle de lead + métricas operativas (admin)
+      security:
+        - AdminOidcBearer: []
+        - AdminLegacyToken: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Lead, trazabilidad y timestamp de cola de notificación
+        "404":
+          description: No encontrado
+        "401":
+          description: No autorizado
+    patch:
+      operationId: adminPatchLeadDetail
+      summary: Estado, sospecha y nota interna (admin)
+      security:
+        - AdminOidcBearer: []
+        - AdminLegacyToken: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [received, contacted, closed]
+                suspicious: { type: boolean }
+                adminNote: { type: string, nullable: true }
+      responses:
+        "200":
+          description: Misma forma que GET detalle (payload actualizado)
+        "404":
+          description: No encontrado
+        "401":
+          description: No autorizado
+  /v1/admin/leads/daily-by-channel:
+    get:
+      operationId: adminLeadsDailyByChannel
+      summary: Agregación diaria de leads por canal (formulario vs WhatsApp)
+      security:
+        - AdminOidcBearer: []
+        - AdminLegacyToken: []
+      parameters:
+        - name: windowHours
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 720, default: 168 }
+      responses:
+        "200":
+          description: Puntos diarios con conteos por canal
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [windowHours, points]
+                properties:
+                  windowHours: { type: integer }
+                  points:
+                    type: array
+                    items:
+                      type: object
+                      required: [date, form, whatsapp]
+                      properties:
+                        date: { type: string, format: date }
+                        form: { type: integer }
+                        whatsapp: { type: integer }
+        "401":
+          description: No autorizado
   /v1/admin/leads/sla-summary:
     get:
       operationId: adminLeadsSlaSummary
@@ -375,6 +456,10 @@ components:
           type: string
           maxLength: 32
           description: Versión de términos aceptados (ej. floit-r2-2026-04).
+        entryChannel:
+          type: string
+          enum: [form, whatsapp]
+          description: Origen del contacto; por defecto form en el servidor.
     LeadCreated:
       type: object
       required: [id, publicToken, status]
@@ -415,6 +500,14 @@ components:
           nullable: true
         suspicious: { type: boolean }
         clientIp: { type: string, nullable: true }
+        entryChannel:
+          type: string
+          enum: [form, whatsapp]
+          description: Canal declarado al crear el lead.
+        clientUserAgent:
+          type: string
+          nullable: true
+          description: User-Agent capturado vía BFF (`x-client-user-agent`).
         consentVersion: { type: string, nullable: true }
         createdAt: { type: string, format: date-time }
     NotificationFailure:

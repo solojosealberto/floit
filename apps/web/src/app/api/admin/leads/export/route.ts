@@ -3,7 +3,7 @@ import { getAdminAuthHeader } from "@/lib/admin-auth-header";
 
 /** Proxy seguro: el token admin no sale al navegador; solo usa variables de servidor. */
 export async function GET() {
-  const auth = getAdminAuthHeader();
+  const auth = await getAdminAuthHeader();
   const base = process.env.LEADS_SERVICE_URL ?? "http://localhost:4012";
   if (!auth) {
     return NextResponse.json(

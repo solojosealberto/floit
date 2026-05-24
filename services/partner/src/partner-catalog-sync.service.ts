@@ -16,8 +16,6 @@ export class PartnerCatalogSyncService {
   ) {}
 
   async enqueue(partnerEmail: string, venueSlug: string, payload: unknown): Promise<void> {
-    const token = this.config.get<string>("PARTNER_TO_CATALOG_INTERNAL_TOKEN")?.trim();
-    if (!token) return;
     await this.jobs.save(
       this.jobs.create({
         status: "pending",
@@ -130,8 +128,13 @@ export class PartnerCatalogSyncService {
 
   private async trySend(row: PartnerCatalogSyncJobEntity): Promise<boolean> {
     const base = this.config.get<string>("CATALOG_SERVICE_URL") ?? "http://localhost:4010";
-    const token = this.config.get<string>("PARTNER_TO_CATALOG_INTERNAL_TOKEN")?.trim();
-    if (!token) return true;
+    const configured = this.config.get<string>("PARTNER_TO_CATALOG_INTERNAL_TOKEN")?.trim();
+    const isNonProduction = this.config.get<string>("NODE_ENV")?.trim() !== "production";
+    const token = configured || (isNonProduction ? "change-me-dev-only" : "");
+    if (!token) {
+      row.lastError = "partner_to_catalog_internal_token_not_configured";
+      return false;
+    }
     try {
       const payload = JSON.parse(row.payload);
       const res = await fetch(

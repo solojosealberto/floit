@@ -48,8 +48,42 @@ if (remote.status === 0) {
   fail("Git remote origin", "No existe remote origin");
 }
 
+const explicitWeb = process.env.PREFLIGHT_WEB_URL?.trim();
+const webCandidates = explicitWeb
+  ? [explicitWeb]
+  : [
+      "http://127.0.0.1:3050/",
+      "http://127.0.0.1:3000/",
+      "http://127.0.0.1:3001/",
+      "http://127.0.0.1:3002/",
+    ];
+
+let webOk = false;
+for (const url of webCandidates) {
+  try {
+    const res = await fetch(url, {
+      method: "GET",
+      signal: AbortSignal.timeout(2000),
+    });
+    if (res.ok) {
+      ok("web health", `${res.status} ${url}`);
+      webOk = true;
+      break;
+    }
+  } catch {
+    /* siguiente puerto */
+  }
+}
+if (!webOk) {
+  warn(
+    "web health",
+    explicitWeb
+      ? `No responde: ${explicitWeb}`
+      : `No responde en ${webCandidates.join(", ")}. Ejecuta pnpm dev y abre el puerto que indica Next (E2E usa 3050).`,
+  );
+}
+
 const urls = [
-  ["web", process.env.PREFLIGHT_WEB_URL ?? "http://127.0.0.1:3050/"],
   ["catalog", process.env.CATALOG_SERVICE_URL ?? "http://127.0.0.1:4010/health"],
   ["search", process.env.SEARCH_SERVICE_URL ?? "http://127.0.0.1:4011/health"],
   ["leads", process.env.LEADS_SERVICE_URL ?? "http://127.0.0.1:4012/health"],

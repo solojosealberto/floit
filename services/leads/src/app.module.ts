@@ -22,14 +22,28 @@ import { NotificationDeliveryEntity } from "./notification-delivery.entity";
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
+        const entities = [LeadEntity, NotificationDeliveryEntity];
+        const synchronize = config.get<string>("DATABASE_SYNC") !== "false";
+        const databaseUrl = config.get<string>("DATABASE_URL")?.trim();
+        if (databaseUrl) {
+          return {
+            type: "postgres" as const,
+            url: databaseUrl,
+            entities,
+            synchronize,
+            ssl: databaseUrl.includes("sslmode=require")
+              ? { rejectUnauthorized: false }
+              : undefined,
+          };
+        }
         const dbPath =
           config.get<string>("LEADS_SQLITE_PATH") ??
           join(__dirname, "..", "data", "leads.sqlite");
         return {
           type: "sqlite" as const,
           database: dbPath,
-          entities: [LeadEntity, NotificationDeliveryEntity],
-          synchronize: config.get<string>("DATABASE_SYNC") !== "false",
+          entities,
+          synchronize,
         };
       },
     }),

@@ -1,14 +1,20 @@
 import {
+  Body,
   Controller,
   Get,
   Header,
+  NotFoundException,
+  Param,
+  Patch,
   Post,
   Query,
   Res,
   UseGuards,
+  ValidationPipe,
 } from "@nestjs/common";
 import type { Response } from "express";
 import { AdminApiGuard } from "./admin-api.guard";
+import { PatchAdminLeadDto } from "./dto/patch-admin-lead.dto";
 import { LeadsService } from "./leads.service";
 import { NotificationDispatcherService } from "./notification-dispatcher.service";
 
@@ -52,6 +58,8 @@ export class AdminLeadsController {
         status: r.status,
         suspicious: r.suspicious,
         clientIp: r.clientIp,
+        entryChannel: r.entryChannel ?? "form",
+        clientUserAgent: r.clientUserAgent,
         consentVersion: r.consentVersion,
         createdAt: r.createdAt.toISOString(),
       })),
@@ -72,6 +80,34 @@ export class AdminLeadsController {
     const n = Number.parseInt(limitRaw ?? "50", 10);
     const limit = Number.isFinite(n) ? Math.min(Math.max(n, 1), 500) : 50;
     return this.notifications.retryFailures(limit);
+  }
+
+  @Get("v1/admin/lead/:id")
+  async getLeadDetail(@Param("id") id: string) {
+    const data = await this.leads.getAdminDetail(id);
+    if (!data) throw new NotFoundException();
+    return data;
+  }
+
+  @Patch("v1/admin/lead/:id")
+  async patchLeadDetail(
+    @Param("id") id: string,
+    @Body(new ValidationPipe({ whitelist: true, transform: true }))
+    dto: PatchAdminLeadDto,
+  ) {
+    const row = await this.leads.patchAdminLead(id, dto);
+    if (!row) throw new NotFoundException();
+    const data = await this.leads.getAdminDetail(row.id);
+    if (!data) throw new NotFoundException();
+    return data;
+  }
+
+  @Get("v1/admin/leads/daily-by-channel")
+  async dailyByChannel(@Query("windowHours") windowHoursRaw?: string) {
+    const windowHours = Number.parseInt(windowHoursRaw ?? "168", 10);
+    return this.leads.getDailyLeadsByChannel(
+      Number.isFinite(windowHours) ? windowHours : 168,
+    );
   }
 
   @Get("v1/admin/leads/sla-summary")

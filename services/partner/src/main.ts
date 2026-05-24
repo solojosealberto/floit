@@ -1,13 +1,27 @@
 import "reflect-metadata";
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import { existsSync, mkdirSync } from "node:fs";
+import { join } from "node:path";
+import { static as serveStatic } from "express";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
   assertAuthConfig();
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
+    }),
+  );
   app.enableCors();
+  const mediaDir = process.env.PARTNER_MEDIA_DIR?.trim() || join(process.cwd(), "data", "uploads");
+  if (!existsSync(mediaDir)) {
+    mkdirSync(mediaDir, { recursive: true });
+  }
+  app.use("/uploads", serveStatic(mediaDir));
   const port = Number(process.env.PORT ?? 4013);
   await app.listen(port);
   console.log(`partner-service listening on ${port}`);

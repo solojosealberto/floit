@@ -1,4 +1,16 @@
-import { IsEmail, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { Type } from "class-transformer";
+import {
+  IsEmail,
+  IsIn,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+  ValidateIf,
+  ValidateNested,
+} from "class-validator";
+import { PartnerClaimNewVenueDraftDto } from "./partner-claim-new-venue-draft.dto";
 
 export class CreatePartnerClaimDto {
   @IsString()
@@ -24,4 +36,15 @@ export class CreatePartnerClaimDto {
   @IsString()
   @MaxLength(1200)
   evidence?: string;
+
+  /** Si se omite, se asume `existing` (compatibilidad clientes antiguos). */
+  @IsOptional()
+  @IsIn(["existing", "new"])
+  claimKind?: "existing" | "new";
+
+  @ValidateIf((o: CreatePartnerClaimDto) => o.claimKind === "new")
+  @IsNotEmpty({ message: "newVenueDraft_required_when_claim_new" })
+  @ValidateNested()
+  @Type(() => PartnerClaimNewVenueDraftDto)
+  newVenueDraft?: PartnerClaimNewVenueDraftDto;
 }

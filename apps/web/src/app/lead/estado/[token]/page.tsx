@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { UIBadge, UIButton, UICard } from "@floit/ui";
 
 type StatusPayload = {
   status?: string;
@@ -39,40 +40,45 @@ export default async function LeadEstadoPage(props: {
 
   return (
     <main className="mx-auto flex max-w-lg flex-col gap-6 px-4 py-12">
-      <h1 className="text-2xl font-semibold tracking-tight">
-        Estado de tu solicitud
-      </h1>
-      <dl className="flex flex-col gap-3 rounded-xl border border-neutral-200 bg-neutral-50 p-4 text-sm dark:border-neutral-800 dark:bg-neutral-900">
-        <div>
-          <dt className="text-neutral-500">Estado</dt>
-          <dd className="font-medium">{statusLabel}</dd>
-        </div>
-        <div>
-          <dt className="text-neutral-500">Tipo</dt>
-          <dd className="font-medium">{formatIntent(data.intent)}</dd>
-        </div>
-        <div>
-          <dt className="text-neutral-500">Centro</dt>
-          <dd className="font-medium">{data.venueSlug ?? "—"}</dd>
-        </div>
-        {data.createdAt ? (
+      <div className="flex items-center gap-2">
+        <h1 className="text-2xl font-semibold tracking-tight">
+          Estado de tu solicitud
+        </h1>
+        <UIBadge>{statusLabel}</UIBadge>
+      </div>
+      <UICard className="bg-neutral-50 dark:bg-neutral-900">
+        <dl className="flex flex-col gap-3 text-sm">
           <div>
-            <dt className="text-neutral-500">Recibida</dt>
-            <dd className="font-medium">{formatDate(data.createdAt)}</dd>
+            <dt className="text-neutral-500">Estado</dt>
+            <dd className="font-medium">{statusLabel}</dd>
           </div>
-        ) : null}
-      </dl>
+          <div>
+            <dt className="text-neutral-500">Tipo</dt>
+            <dd className="font-medium">{formatIntent(data.intent)}</dd>
+          </div>
+          <div>
+            <dt className="text-neutral-500">Centro</dt>
+            <dd className="font-medium">{data.venueSlug ?? "—"}</dd>
+          </div>
+          {data.createdAt ? (
+            <div>
+              <dt className="text-neutral-500">Recibida</dt>
+              <dd className="font-medium">{formatDate(data.createdAt)}</dd>
+            </div>
+          ) : null}
+        </dl>
+      </UICard>
       <p className="text-sm text-neutral-600 dark:text-neutral-400">
-        Este seguimiento es una demo interna (SQLite). Para cambiar el estado,
-        actualiza la fila en el servicio de leads.
+        Seguimiento en modo demo local. El estado puede pasar de recibida a en
+        contacto y luego cerrada.
       </p>
-      <div className="flex flex-wrap gap-4 text-sm">
-        <Link className="underline" href="/buscar">
-          Buscar centros
+      <div className="flex flex-wrap gap-2">
+        <Link href="/buscar">
+          <UIButton variant="secondary">Buscar centros</UIButton>
         </Link>
         {data.venueSlug ? (
-          <Link className="underline" href={`/gyms/${data.venueSlug}`}>
-            Ver ficha del centro
+          <Link href={`/gyms/${data.venueSlug}`}>
+            <UIButton variant="secondary">Ver ficha del centro</UIButton>
           </Link>
         ) : null}
       </div>

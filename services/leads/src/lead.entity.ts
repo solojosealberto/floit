@@ -58,6 +58,18 @@ export class LeadEntity {
   @Column({ type: "boolean", default: false })
   suspicious!: boolean;
 
+  /** Origen declarado del contacto (formulario web vs WhatsApp). */
+  @Column({ type: "varchar", length: 16, default: "form" })
+  entryChannel!: "form" | "whatsapp";
+
+  /** User-Agent observado al crear el lead (cabecera enviada por el BFF web). */
+  @Column({ type: "text", nullable: true })
+  clientUserAgent!: string | null;
+
+  /** Nota interna visible solo en backoffice admin. */
+  @Column({ type: "text", nullable: true })
+  adminNote!: string | null;
+
   @CreateDateColumn({ type: "datetime" })
   createdAt!: Date;
 

@@ -26,8 +26,17 @@ export class LeadsController {
     @Body(new ValidationPipe({ whitelist: true, transform: true }))
     dto: CreateLeadDto,
   ) {
+    const uaHeader =
+      req.headers["x-client-user-agent"] ?? req.headers["user-agent"];
+    const clientUserAgent =
+      typeof uaHeader === "string"
+        ? uaHeader
+        : Array.isArray(uaHeader)
+          ? uaHeader[0]
+          : null;
     return this.leads.create(dto, {
       clientIp: clientIpFromRequest(req),
+      clientUserAgent,
     });
   }
 

@@ -1,10 +1,10 @@
 import { test, expect } from "@playwright/test";
 
-test("home muestra enlace a buscar", async ({ page }) => {
+test("home muestra acceso a descubrimiento (/buscar)", async ({ page }) => {
   await page.goto("/");
-  await expect(
-    page.getByRole("link", { name: /Buscar centros/i }),
-  ).toBeVisible();
+  /** Alineado a `app/page.tsx`: CTA del formulario + enlace «Ver todos» a `/buscar`. */
+  await expect(page.getByRole("button", { name: /^Buscar$/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /^Ver todos$/ })).toBeVisible();
 });
 
 test("privacidad muestra título", async ({ page }) => {

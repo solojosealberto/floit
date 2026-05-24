@@ -28,11 +28,18 @@ export default async function BuscarPage(props: {
 
   let data: DiscoveryResponse = emptyDiscovery();
   let zones: string[] = [];
+  let taxonomyModalities: { slug: string; label: string }[] = [];
+
+  const catalogBase = process.env.CATALOG_SERVICE_URL ?? "http://localhost:4010";
 
   try {
-    const [searchRes, zonesRes] = await Promise.all([
+    const [searchRes, zonesRes, taxRes] = await Promise.all([
       fetch(`${base}/v1/search?${qs.toString()}`, { cache: "no-store" }),
       fetch(`${base}/v1/meta/zones`, { cache: "no-store" }),
+      fetch(
+        `${catalogBase.replace(/\/$/, "")}/v1/meta/taxonomy-attributes?kind=modality`,
+        { cache: "no-store" },
+      ),
     ]);
 
     if (searchRes.ok) {
@@ -42,9 +49,25 @@ export default async function BuscarPage(props: {
       const z = (await zonesRes.json()) as { zones?: string[] };
       zones = z.zones ?? [];
     }
+    if (taxRes.ok) {
+      const tax = (await taxRes.json()) as {
+        items?: Array<{ slug: string; label: string }>;
+      };
+      taxonomyModalities = (tax.items ?? []).map((i) => ({
+        slug: i.slug,
+        label: i.label,
+      }));
+    }
   } catch {
     data = emptyDiscovery();
   }
 
-  return <BuscarClient data={data} zones={zones} query={flat} />;
+  return (
+    <BuscarClient
+      data={data}
+      zones={zones}
+      query={flat}
+      taxonomyModalities={taxonomyModalities}
+    />
+  );
 }

@@ -14,6 +14,10 @@ export class VenueReportEntity {
   @Column({ type: "text" })
   message!: string;
 
+  /** pending | reviewed | dismissed */
+  @Column({ type: "varchar", length: 24, default: "pending" })
+  status!: string;
+
   @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 }

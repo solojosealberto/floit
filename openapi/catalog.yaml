@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: Floit Catalog API
+  title: QueGym Catalog API
   version: 0.2.0
   description: |
     Catálogo y taxonomía (venues). Proyección de discovery vive en Search (ADR-001).
@@ -154,6 +154,37 @@ paths:
                         a: { type: string }
                         b: { type: string }
                         reason: { type: string }
+  /v1/internal/venues:
+    post:
+      operationId: internalCreateVenueStub
+      summary: Alta interna de stub de venue (claim partner centro nuevo)
+      description: |
+        Idempotente por slug si el venue ya existe (`created: false`).
+        Requiere el mismo `x-internal-token` que `partner-sync`.
+      parameters:
+        - name: x-internal-token
+          in: header
+          required: true
+          schema: { type: string, minLength: 8 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateInternalVenue"
+      responses:
+        "200":
+          description: Creado o ya existía el slug
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [slug, created]
+                properties:
+                  slug: { type: string }
+                  created: { type: boolean }
+        "400": { description: Validación }
+        "401": { description: Token interno inválido }
   /v1/internal/venues/{slug}/partner-sync:
     post:
       operationId: internalPartnerSyncVenue
@@ -178,6 +209,12 @@ paths:
                 contactPhone: { type: string, maxLength: 40 }
                 contactWhatsapp: { type: string, maxLength: 200 }
                 contactEmail: { type: string, format: email, maxLength: 200 }
+                photoUrls:
+                  type: array
+                  maxItems: 12
+                  items:
+                    type: string
+                    format: uri
                 allowsTrial: { type: boolean }
                 plans:
                   type: array
@@ -194,8 +231,99 @@ paths:
         "204": { description: Sincronizado }
         "401": { description: Token interno inválido }
         "404": { description: Venue no encontrado }
+  /v1/admin/taxonomy-attributes:
+    get:
+      operationId: adminListTaxonomyAttributes
+      summary: Lista modalidades y amenidades (admin)
+      description: |
+        Requiere `x-admin-token` (o Bearer OIDC si está configurado en el servicio catalog).
+        Incluye conteo de venues que referencian cada slug en `modalities` / `amenities`.
+      responses:
+        "200":
+          description: Lista con uso en gyms
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: "#/components/schemas/TaxonomyAttribute" }
+        "401": { description: No autorizado }
+    post:
+      operationId: adminCreateTaxonomyAttribute
+      summary: Alta de atributo de taxonomía
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TaxonomyAttributeCreate" }
+      responses:
+        "201":
+          description: Creado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TaxonomyAttribute" }
+        "400": { description: Validación }
+        "401": { description: No autorizado }
+        "409": { description: Slug duplicado }
+  /v1/admin/taxonomy-attributes/{slug}:
+    patch:
+      operationId: adminPatchTaxonomyAttribute
+      summary: Actualizar etiqueta, ícono o estado activo
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string, minLength: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TaxonomyAttributePatch" }
+      responses:
+        "200":
+          description: Actualizado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TaxonomyAttribute" }
+        "401": { description: No autorizado }
+        "404": { description: No encontrado }
 components:
   schemas:
+    CreateInternalVenue:
+      type: object
+      required: [slug, name, address, zone, venueType]
+      properties:
+        slug: { type: string, minLength: 2, maxLength: 160 }
+        name: { type: string, minLength: 2, maxLength: 240 }
+        address: { type: string, minLength: 2, maxLength: 320 }
+        zone: { type: string, minLength: 2, maxLength: 120 }
+        venueType: { type: string, minLength: 2, maxLength: 48 }
+        lat: { type: number }
+        lng: { type: number }
+        modalities:
+          type: array
+          items: { type: string }
+          maxItems: 24
+        amenities:
+          type: array
+          items: { type: string }
+          maxItems: 40
+        description: { type: string, maxLength: 8000 }
+        priceMin: { type: number, nullable: true }
+        priceMax: { type: number, nullable: true }
+        completenessScore: { type: number, minimum: 0, maximum: 1 }
+        popularityScore: { type: number, minimum: 0, maximum: 1 }
+        allowsTrial: { type: boolean }
+        contactPhone: { type: string, maxLength: 40 }
+        contactWhatsapp: { type: string, maxLength: 40 }
+        contactEmail: { type: string, format: email, maxLength: 200 }
+        photoUrls:
+          type: array
+          maxItems: 12
+          items: { type: string, format: uri }
     VenueSummary:
       type: object
       required:
@@ -222,6 +350,10 @@ components:
         verificationStatus: { type: string }
         allowsTrial: { type: boolean }
         activePromotionTitle: { type: string, nullable: true }
+        updatedAt:
+          type: string
+          format: date-time
+          description: Última actualización en catálogo
         distanceM: { type: number, description: Presente cuando hay lat/lng + radio }
     VenuePublicDetail:
       type: object
@@ -265,6 +397,9 @@ components:
         contactPhone: { type: string, nullable: true }
         contactWhatsapp: { type: string, nullable: true }
         contactEmail: { type: string, nullable: true }
+        photoUrls:
+          type: array
+          items: { type: string, format: uri }
         activePromotionTitle: { type: string, nullable: true }
         updatedAt: { type: string, format: date-time }
     VenueReportCreate:
@@ -278,3 +413,38 @@ components:
           type: string
           minLength: 5
           maxLength: 1200
+    TaxonomyAttribute:
+      type: object
+      required:
+        [slug, label, kind, icon, active, sortOrder, gymCount, updatedAt]
+      properties:
+        slug: { type: string }
+        label: { type: string }
+        kind:
+          type: string
+          enum: [modality, amenity]
+        icon: { type: string, nullable: true }
+        active: { type: boolean }
+        sortOrder: { type: integer }
+        gymCount: { type: integer, minimum: 0 }
+        updatedAt: { type: string, format: date-time }
+    TaxonomyAttributeCreate:
+      type: object
+      required: [slug, label, kind]
+      properties:
+        slug:
+          type: string
+          minLength: 2
+          maxLength: 120
+          pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+        label: { type: string, minLength: 1, maxLength: 160 }
+        kind:
+          type: string
+          enum: [modality, amenity]
+        icon: { type: string, maxLength: 80 }
+    TaxonomyAttributePatch:
+      type: object
+      properties:
+        label: { type: string, minLength: 1, maxLength: 160 }
+        icon: { type: string, nullable: true, maxLength: 80 }
+        active: { type: boolean }

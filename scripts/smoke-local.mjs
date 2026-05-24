@@ -7,6 +7,7 @@ const checks = [
   ["catalog", "http://localhost:4010/health"],
   ["search", "http://localhost:4011/health"],
   ["leads", "http://localhost:4012/health"],
+  ["partner", "http://localhost:4013/health"],
   ["analytics", "http://localhost:4014/health"],
 ];
 

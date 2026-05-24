@@ -28,6 +28,7 @@ export type VenueSummary = {
   allowsTrial?: boolean;
   activePromotionTitle?: string | null;
   distanceM?: number;
+  updatedAt?: string;
 };
 
 export type DiscoveryResponse = {

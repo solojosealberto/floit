@@ -15,6 +15,7 @@ import { InternalApiGuard } from "../internal-api.guard";
 import { VenuesService } from "./venues.service";
 import { ListVenuesQueryDto } from "./dto/list-venues.query";
 import type { CreateVenueReportDto } from "../reports/create-report.dto";
+import { CreateInternalVenueDto } from "./dto/create-internal-venue.dto";
 import { UpdatePartnerSyncDto } from "./dto/update-partner-sync.dto";
 
 @Controller()
@@ -55,6 +56,7 @@ export class VenuesController {
       contactPhone: v.contactPhone ?? null,
       contactWhatsapp: v.contactWhatsapp ?? null,
       contactEmail: v.contactEmail ?? null,
+      photoUrls: v.photoUrls ?? [],
       activePromotionTitle: detail.activePromotionTitle ?? null,
       updatedAt: v.updatedAt.toISOString(),
     };
@@ -81,6 +83,21 @@ export class VenuesController {
   async duplicateSuspects() {
     const pairs = await this.venues.findDuplicateSuspects();
     return { pairs };
+  }
+
+  /** Alta interna de stub de venue (p. ej. claim partner centro nuevo). Idempotente por slug. */
+  @Post("v1/internal/venues")
+  @UseGuards(InternalApiGuard)
+  async createInternalVenue(
+    @Body(new ValidationPipe({ whitelist: true, transform: true }))
+    dto: CreateInternalVenueDto,
+  ) {
+    const outcome = await this.venues.ensureStubFromPartnerClaim(dto);
+    return {
+      slug: dto.slug.trim(),
+      created: outcome === "created",
+      updated: outcome === "updated",
+    };
   }
 
   @Post("v1/internal/venues/:slug/partner-sync")

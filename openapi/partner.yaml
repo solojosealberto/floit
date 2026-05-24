@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: Floit Partner API
+  title: QueGym Partner API
   version: 0.1.0
   description: |
     Autoservicio partner (Sprint 4): claim, ownership, perfil y planes.
@@ -121,6 +121,9 @@ paths:
     post:
       operationId: adminUpdatePartnerClaimStatus
       summary: Aprueba o rechaza un claim
+      description: |
+        Si `PARTNER_CLAIM_STATUS_WEBHOOK_URL` está definido en partner-service, tras persistir el estado
+        se envía un POST JSON best-effort (`event: partner_claim_status_changed`) para integraciones externas (email, Slack, etc.).
       security:
         - AdminOidcBearer: []
         - AdminLegacyToken: []
@@ -156,7 +159,8 @@ paths:
   /v1/partner/me/leads:
     get:
       operationId: partnerMyLeads
-      summary: Bandeja de leads del partner (solo venues con claim aprobado)
+      summary: [DEPRECATED] Bandeja global de leads del partner
+      deprecated: true
       security:
         - PartnerOidcBearer: []
         - PartnerDevEmail: []
@@ -165,8 +169,271 @@ paths:
           in: query
           schema: { type: integer, minimum: 1, maximum: 500, default: 200 }
       responses:
+        "410":
+          description: Endpoint global deprecado; usar `/v1/partner/me/venues/{venueSlug}/leads`
+  /v1/partner/me/leads/{id}/status:
+    patch:
+      operationId: partnerUpdateLeadStatus
+      summary: [DEPRECATED] Actualizar estado de lead en endpoint global
+      deprecated: true
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [contacted, closed]
+      responses:
+        "410":
+          description: Endpoint global deprecado; usar `/v1/partner/me/venues/{venueSlug}/leads/{id}/status`
+  /v1/partner/me/profile:
+    get:
+      operationId: partnerMyProfile
+      summary: [DEPRECATED] Perfil partner global
+      deprecated: true
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      responses:
+        "410":
+          description: Endpoint global deprecado; usar `/v1/partner/me/venues/{venueSlug}/profile`
+    put:
+      operationId: partnerUpsertMyProfile
+      summary: [DEPRECATED] Crear/actualizar perfil partner global
+      deprecated: true
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PartnerProfileUpdate" }
+      responses:
+        "410":
+          description: Endpoint global deprecado; usar `/v1/partner/me/venues/{venueSlug}/profile`
+  /v1/partner/me/venues:
+    get:
+      operationId: partnerMyVenues
+      summary: Lista de centros con ownership activo del partner autenticado
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      responses:
         "200":
-          description: Leads visibles por ownership
+          description: Centros visibles por partner
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      required: [venueSlug, status, updatedAt]
+                      properties:
+                        venueSlug: { type: string }
+                        status: { type: string }
+                        updatedAt: { type: string, format: date-time }
+  /v1/partner/me/venues/{venueSlug}/profile:
+    get:
+      operationId: partnerMyVenueProfile
+      summary: Perfil editable del partner para un centro específico
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      parameters:
+        - name: venueSlug
+          in: path
+          required: true
+          schema: { type: string, minLength: 2, maxLength: 160 }
+      responses:
+        "200":
+          description: Perfil por centro
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PartnerProfile" }
+    put:
+      operationId: partnerUpsertMyVenueProfile
+      summary: Crear/actualizar perfil partner por centro
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      parameters:
+        - name: venueSlug
+          in: path
+          required: true
+          schema: { type: string, minLength: 2, maxLength: 160 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PartnerProfileUpdate" }
+      responses:
+        "200":
+          description: Perfil actualizado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PartnerProfile" }
+  /v1/partner/me/plans:
+    get:
+      operationId: partnerMyPlans
+      summary: [DEPRECATED] Listar planes partner globales
+      deprecated: true
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      responses:
+        "410":
+          description: Endpoint global deprecado; usar `/v1/partner/me/venues/{venueSlug}/plans`
+    post:
+      operationId: partnerCreatePlan
+      summary: [DEPRECATED] Crear plan partner global
+      deprecated: true
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PartnerPlanCreate" }
+      responses:
+        "410":
+          description: Endpoint global deprecado; usar `/v1/partner/me/venues/{venueSlug}/plans`
+  /v1/partner/me/plans/{id}:
+    patch:
+      operationId: partnerPatchPlan
+      summary: [DEPRECATED] Editar plan partner global
+      deprecated: true
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PartnerPlanUpdate" }
+      responses:
+        "410":
+          description: Endpoint global deprecado; usar `/v1/partner/me/venues/{venueSlug}/plans/{id}`
+  /v1/partner/me/venues/{venueSlug}/plans:
+    get:
+      operationId: partnerMyVenuePlans
+      summary: Listar planes del partner para un centro específico
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      parameters:
+        - name: venueSlug
+          in: path
+          required: true
+          schema: { type: string, minLength: 2, maxLength: 160 }
+      responses:
+        "200":
+          description: Lista de planes por centro
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: "#/components/schemas/PartnerPlan" }
+    post:
+      operationId: partnerCreateVenuePlan
+      summary: Crear plan para un centro específico del partner
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      parameters:
+        - name: venueSlug
+          in: path
+          required: true
+          schema: { type: string, minLength: 2, maxLength: 160 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string, minLength: 2, maxLength: 120 }
+                description: { type: string, maxLength: 500 }
+                period: { type: string, maxLength: 32 }
+                priceLabel: { type: string, maxLength: 32 }
+      responses:
+        "201":
+          description: Plan creado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PartnerPlan" }
+  /v1/partner/me/venues/{venueSlug}/plans/{id}:
+    patch:
+      operationId: partnerPatchVenuePlan
+      summary: Editar plan para un centro específico
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      parameters:
+        - name: venueSlug
+          in: path
+          required: true
+          schema: { type: string, minLength: 2, maxLength: 160 }
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PartnerPlanUpdate" }
+      responses:
+        "200":
+          description: Plan actualizado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PartnerPlan" }
+  /v1/partner/me/venues/{venueSlug}/leads:
+    get:
+      operationId: partnerMyVenueLeads
+      summary: Bandeja de leads para un centro específico del partner
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      parameters:
+        - name: venueSlug
+          in: path
+          required: true
+          schema: { type: string, minLength: 2, maxLength: 160 }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 500, default: 200 }
+      responses:
+        "200":
+          description: Leads por centro
           content:
             application/json:
               schema:
@@ -191,18 +458,18 @@ paths:
                         email: { type: string, nullable: true }
                         status: { type: string }
                         createdAt: { type: string, format: date-time }
-        "503":
-          description: Integración interna de leads no configurada
-        "401":
-          description: No autorizado
-  /v1/partner/me/leads/{id}/status:
+  /v1/partner/me/venues/{venueSlug}/leads/{id}/status:
     patch:
-      operationId: partnerUpdateLeadStatus
-      summary: Actualizar estado de lead del partner (ownership requerido)
+      operationId: partnerUpdateVenueLeadStatus
+      summary: Actualizar estado de lead para un centro específico del partner
       security:
         - PartnerOidcBearer: []
         - PartnerDevEmail: []
       parameters:
+        - name: venueSlug
+          in: path
+          required: true
+          schema: { type: string, minLength: 2, maxLength: 160 }
         - name: id
           in: path
           required: true
@@ -237,50 +504,21 @@ paths:
           description: No autorizado
         "403":
           description: Lead no accesible o integración no configurada
-  /v1/partner/me/profile:
+  /v1/partner/me/venues/{venueSlug}/photos:
     get:
-      operationId: partnerMyProfile
-      summary: Perfil editable del partner autenticado
+      operationId: partnerListVenuePhotos
+      summary: Listar fotos de un venue del partner autenticado
       security:
         - PartnerOidcBearer: []
         - PartnerDevEmail: []
+      parameters:
+        - name: venueSlug
+          in: path
+          required: true
+          schema: { type: string, minLength: 2, maxLength: 160 }
       responses:
         "200":
-          description: Perfil
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/PartnerProfile" }
-        "401":
-          description: No autorizado
-    put:
-      operationId: partnerUpsertMyProfile
-      summary: Crear/actualizar perfil partner autenticado
-      security:
-        - PartnerOidcBearer: []
-        - PartnerDevEmail: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: "#/components/schemas/PartnerProfileUpdate" }
-      responses:
-        "200":
-          description: Perfil actualizado
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/PartnerProfile" }
-        "401":
-          description: No autorizado
-  /v1/partner/me/plans:
-    get:
-      operationId: partnerMyPlans
-      summary: Listar planes del partner autenticado
-      security:
-        - PartnerOidcBearer: []
-        - PartnerDevEmail: []
-      responses:
-        "200":
-          description: Lista de planes
+          description: Fotos activas del venue
           content:
             application/json:
               schema:
@@ -289,38 +527,90 @@ paths:
                 properties:
                   items:
                     type: array
-                    items: { $ref: "#/components/schemas/PartnerPlan" }
-        "401":
-          description: No autorizado
-    post:
-      operationId: partnerCreatePlan
-      summary: Crear plan para venue del partner (ownership requerido)
-      security:
-        - PartnerOidcBearer: []
-        - PartnerDevEmail: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: "#/components/schemas/PartnerPlanCreate" }
-      responses:
-        "201":
-          description: Plan creado
-          content:
-            application/json:
-              schema: { $ref: "#/components/schemas/PartnerPlan" }
+                    items: { $ref: "#/components/schemas/PartnerVenuePhoto" }
         "401":
           description: No autorizado
         "403":
           description: Venue no asociado al partner
-  /v1/partner/me/plans/{id}:
-    patch:
-      operationId: partnerPatchPlan
-      summary: Editar plan del partner autenticado
+    post:
+      operationId: partnerUploadVenuePhoto
+      summary: Subir foto para un venue del partner autenticado
       security:
         - PartnerOidcBearer: []
         - PartnerDevEmail: []
       parameters:
+        - name: venueSlug
+          in: path
+          required: true
+          schema: { type: string, minLength: 2, maxLength: 160 }
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: Foto creada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PartnerVenuePhoto" }
+        "400":
+          description: Validación (archivo inválido o límite alcanzado)
+        "401":
+          description: No autorizado
+        "403":
+          description: Venue no asociado al partner
+  /v1/partner/me/venues/{venueSlug}/photos/{id}:
+    delete:
+      operationId: partnerDeleteVenuePhoto
+      summary: Eliminar foto de un venue del partner autenticado
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      parameters:
+        - name: venueSlug
+          in: path
+          required: true
+          schema: { type: string, minLength: 2, maxLength: 160 }
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Foto eliminada
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, status]
+                properties:
+                  id: { type: string, format: uuid }
+                  status: { type: string, enum: [deleted] }
+        "400":
+          description: Foto no encontrada
+        "401":
+          description: No autorizado
+        "403":
+          description: Venue no asociado al partner
+  /v1/partner/me/venues/{venueSlug}/photos/{id}/order:
+    patch:
+      operationId: partnerMoveVenuePhoto
+      summary: Reordenar foto de un venue del partner autenticado
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      parameters:
+        - name: venueSlug
+          in: path
+          required: true
+          schema: { type: string, minLength: 2, maxLength: 160 }
         - name: id
           in: path
           required: true
@@ -329,17 +619,112 @@ paths:
         required: true
         content:
           application/json:
-            schema: { $ref: "#/components/schemas/PartnerPlanUpdate" }
+            schema:
+              type: object
+              required: [direction]
+              properties:
+                direction:
+                  type: string
+                  enum: [up, down]
       responses:
         "200":
-          description: Plan actualizado
+          description: Orden actualizado
           content:
             application/json:
-              schema: { $ref: "#/components/schemas/PartnerPlan" }
+              schema:
+                type: object
+                required: [ok]
+                properties:
+                  ok: { type: boolean }
+        "400":
+          description: Foto no encontrada o payload inválido
         "401":
           description: No autorizado
         "403":
-          description: Plan no encontrado o sin ownership
+          description: Venue no asociado al partner
+  /v1/partner/me/venues/{venueSlug}/photos/reorder:
+    patch:
+      operationId: partnerReorderVenuePhotos
+      summary: Reordenar todas las fotos de un venue del partner autenticado
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      parameters:
+        - name: venueSlug
+          in: path
+          required: true
+          schema: { type: string, minLength: 2, maxLength: 160 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [photoIds]
+              properties:
+                photoIds:
+                  type: array
+                  minItems: 1
+                  maxItems: 12
+                  items:
+                    type: string
+                    format: uuid
+      responses:
+        "200":
+          description: Orden global actualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok]
+                properties:
+                  ok: { type: boolean }
+        "400":
+          description: Payload inválido o lista inconsistente
+        "401":
+          description: No autorizado
+        "403":
+          description: Venue no asociado al partner
+  /v1/partner/me/venues/{venueSlug}/photos/{id}/cover:
+    patch:
+      operationId: partnerSetVenuePhotoCover
+      summary: Marcar foto como portada del venue (la mueve al primer lugar)
+      security:
+        - PartnerOidcBearer: []
+        - PartnerDevEmail: []
+      parameters:
+        - name: venueSlug
+          in: path
+          required: true
+          schema: { type: string, minLength: 2, maxLength: 160 }
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cover: { type: boolean }
+      responses:
+        "200":
+          description: Portada actualizada
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok]
+                properties:
+                  ok: { type: boolean }
+        "400":
+          description: Foto no encontrada
+        "401":
+          description: No autorizado
+        "403":
+          description: Venue no asociado al partner
   /v1/admin/partner/catalog-sync/failures:
     get:
       operationId: adminPartnerCatalogSyncFailures
@@ -607,6 +992,25 @@ components:
         evidence:
           type: string
           maxLength: 1200
+        claimKind:
+          type: string
+          enum: [existing, new]
+          description: |
+            existing = reclamo de ficha ya en catálogo; new = alta de centro nuevo (stub en catálogo al aprobar).
+            Si se omite, el servicio asume existing (compatibilidad).
+        newVenueDraft:
+          $ref: "#/components/schemas/PartnerClaimNewVenueDraft"
+          description: Obligatorio cuando claimKind es new (validación en partner-service).
+    PartnerClaimNewVenueDraft:
+      type: object
+      required: [businessName, zone, venueType, address]
+      properties:
+        businessName: { type: string, minLength: 2, maxLength: 160 }
+        zone: { type: string, minLength: 2, maxLength: 120 }
+        venueType: { type: string, minLength: 2, maxLength: 48 }
+        address: { type: string, maxLength: 320 }
+        lat: { type: number }
+        lng: { type: number }
     PartnerClaimSummary:
       type: object
       required:
@@ -626,21 +1030,37 @@ components:
         representativeEmail: { type: string }
         representativePhone: { type: string }
         evidence: { type: string, nullable: true }
+        claimKind:
+          type: string
+          enum: [existing, new]
+        newVenueDraft:
+          type: object
+          additionalProperties: true
+          nullable: true
+          description: Copia del borrador enviado en el claim (solo claimKind new).
         status:
           type: string
           enum: [pending_review, approved, rejected]
         createdAt: { type: string, format: date-time }
+        updatedAt:
+          type: string
+          format: date-time
+          description: Última actualización del registro (útil para línea de tiempo en revisión admin).
     PartnerProfile:
       type: object
-      required: [partnerEmail]
+      required: [partnerEmail, venueSlug]
       properties:
         partnerEmail: { type: string, format: email }
+        venueSlug: { type: string }
         businessName: { type: string, nullable: true }
         description: { type: string, nullable: true }
         scheduleSummary: { type: string, nullable: true }
         contactPhone: { type: string, nullable: true }
         contactEmail: { type: string, nullable: true }
         contactWhatsapp: { type: string, nullable: true }
+        photoUrls:
+          type: array
+          items: { type: string, format: uri }
     PartnerProfileUpdate:
       type: object
       properties:
@@ -650,6 +1070,12 @@ components:
         contactPhone: { type: string, maxLength: 40 }
         contactEmail: { type: string, format: email, maxLength: 200 }
         contactWhatsapp: { type: string, maxLength: 200 }
+        photoUrls:
+          type: array
+          maxItems: 12
+          items:
+            type: string
+            format: uri
     PartnerPlan:
       type: object
       required: [id, venueSlug, name, active]
@@ -680,3 +1106,14 @@ components:
         period: { type: string, maxLength: 32 }
         priceLabel: { type: string, maxLength: 32 }
         active: { type: boolean }
+    PartnerVenuePhoto:
+      type: object
+      required: [id, venueSlug, url, mimeType, sizeBytes, sortOrder, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        venueSlug: { type: string }
+        url: { type: string, format: uri }
+        mimeType: { type: string }
+        sizeBytes: { type: integer }
+        sortOrder: { type: integer }
+        createdAt: { type: string, format: date-time }

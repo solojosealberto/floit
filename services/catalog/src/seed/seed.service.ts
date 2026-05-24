@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { PromotionEntity } from "../promotions/promotion.entity";
+import { TaxonomyService } from "../taxonomy/taxonomy.service";
 import { VenueEntity } from "../venues/venue.entity";
 
 /** Datos demo — Caracas / Miranda (coordenadas aproximadas). */
@@ -178,6 +179,26 @@ const DEMO_CONTACTS: Record<
   },
 };
 
+const DEMO_PHOTO_URLS: Record<string, string[]> = {
+  "oxide-chacao": ["/api/demo-images/oxide-1", "/api/demo-images/oxide-2"],
+  "arena-baruta": ["/api/demo-images/arena-1", "/api/demo-images/arena-2"],
+  "zen-hatillo": ["/api/demo-images/zen-1", "/api/demo-images/zen-2"],
+  "metropolitan-libertador": [
+    "/api/demo-images/metropolitan-1",
+    "/api/demo-images/metropolitan-2",
+  ],
+  "las-mercedes-cross": [
+    "/api/demo-images/las-mercedes-1",
+    "/api/demo-images/las-mercedes-2",
+  ],
+  "ride-miranda": ["/api/demo-images/ride-1", "/api/demo-images/ride-2"],
+  "forma-personal": ["/api/demo-images/forma-1", "/api/demo-images/forma-2"],
+  "balance-pilates": [
+    "/api/demo-images/balance-1",
+    "/api/demo-images/balance-2",
+  ],
+};
+
 @Injectable()
 export class SeedService implements OnModuleInit {
   private readonly log = new Logger(SeedService.name);
@@ -188,6 +209,7 @@ export class SeedService implements OnModuleInit {
     @InjectRepository(PromotionEntity)
     private readonly promotions: Repository<PromotionEntity>,
     private readonly config: ConfigService,
+    private readonly taxonomy: TaxonomyService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -199,16 +221,49 @@ export class SeedService implements OnModuleInit {
         this.venues.create({
           ...v,
           ...(v.slug ? DEMO_CONTACTS[v.slug] ?? {} : {}),
+          ...(v.slug ? { photoUrls: DEMO_PHOTO_URLS[v.slug] ?? [] } : {}),
         }),
       );
       const saved = await this.venues.save(rows);
       this.log.log(`Seeded ${saved.length} demo venues`);
       await this.seedPromotions(saved);
+      await this.syncTaxonomyFromVenues();
       return;
     }
 
     this.log.log(`Seed venues skipped (${venueCount} exist)`);
-    await this.seedPromotionsIfEmpty(await this.venues.find());
+    const existing = await this.venues.find();
+    await this.backfillDemoPhotoUrls(existing);
+    await this.seedPromotionsIfEmpty(existing);
+    await this.syncTaxonomyFromVenues();
+  }
+
+  private async syncTaxonomyFromVenues(): Promise<void> {
+    try {
+      const { inserted } = await this.taxonomy.syncMissingSlugsFromVenues();
+      if (inserted > 0) {
+        this.log.log(`Synced ${inserted} taxonomy rows from venue modalities/amenities`);
+      }
+    } catch (err) {
+      this.log.warn(
+        `Taxonomy sync skipped: ${err instanceof Error ? err.message : String(err)}`,
+      );
+    }
+  }
+
+  private async backfillDemoPhotoUrls(venues: VenueEntity[]): Promise<void> {
+    const updates = venues.filter((venue) => {
+      const next = DEMO_PHOTO_URLS[venue.slug];
+      if (!next || next.length === 0) return false;
+      const current = venue.photoUrls ?? [];
+      return current.length === 0;
+    });
+    if (updates.length === 0) return;
+    for (const venue of updates) {
+      venue.photoUrls = DEMO_PHOTO_URLS[venue.slug] ?? [];
+    }
+    await this.venues.save(updates);
+    this.log.log(`Backfilled photoUrls for ${updates.length} demo venues`);
   }
 
   private async seedPromotionsIfEmpty(vs: VenueEntity[]): Promise<void> {

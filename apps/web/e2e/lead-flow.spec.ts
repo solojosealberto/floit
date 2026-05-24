@@ -6,11 +6,12 @@ test.skip(
 );
 
 test("envia lead desde ficha y redirige a confirmacion", async ({ page }) => {
-  await page.goto("/gyms/oxide-chacao");
+  await page.goto("/gyms/gym-fitness-caracas#contactar-modal");
 
-  await page.getByLabel("Qué necesitas").selectOption("info");
-  await page.getByLabel("Nombre").fill("QA Sprint 3");
-  await page.getByLabel("Teléfono").fill("+584120000000");
+  await expect(page.getByText("Qué necesitas")).toBeVisible();
+  await page.locator('select[name="intent"]').selectOption("info");
+  await page.locator('input[name="name"]').fill("QA Sprint 3");
+  await page.locator('input[name="phone"]').fill("+584120000000");
   await page
     .getByLabel(/Acepto el tratamiento de mis datos personales/i)
     .check();
@@ -22,5 +23,5 @@ test("envia lead desde ficha y redirige a confirmacion", async ({ page }) => {
     .click();
 
   await expect(page).toHaveURL(/\/lead\/confirmacion/);
-  await expect(page.getByText(/Recibimos tus datos/i)).toBeVisible();
+  await expect(page.getByText(/Tu solicitud fue recibida/i)).toBeVisible();
 });

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
-import { LessThanOrEqual, Repository } from "typeorm";
+import { LessThanOrEqual, Like, Repository } from "typeorm";
 import type { LeadEntity } from "./lead.entity";
 import { NotificationDeliveryEntity } from "./notification-delivery.entity";
 
@@ -36,6 +36,17 @@ export class NotificationDispatcherService {
     private readonly deliveries: Repository<NotificationDeliveryEntity>,
     private readonly config: ConfigService,
   ) {}
+
+  /** Primera cola de notificación asociada al lead (payload incluye `lead.id`). */
+  async getNotificationEnqueueIsoForLeadId(
+    leadId: string,
+  ): Promise<string | null> {
+    const row = await this.deliveries.findOne({
+      where: { payload: Like(`%${leadId}%`) },
+      order: { createdAt: "ASC" },
+    });
+    return row ? row.createdAt.toISOString() : null;
+  }
 
   async enqueueLeadReceived(leadRow: LeadEntity): Promise<void> {
     if (!this.webhookUrl()) return;

@@ -4,6 +4,7 @@ import { Repository } from "typeorm";
 import type { CreateVenueReportDto } from "../reports/create-report.dto";
 import { PromotionEntity } from "../promotions/promotion.entity";
 import { VenueReportEntity } from "../reports/venue-report.entity";
+import type { CreateInternalVenueDto } from "./dto/create-internal-venue.dto";
 import type { UpdatePartnerSyncDto } from "./dto/update-partner-sync.dto";
 import type { ListVenuesQueryDto } from "./dto/list-venues.query";
 import { VenueEntity } from "./venue.entity";
@@ -25,8 +26,11 @@ export type VenueSummary = {
   popularityScore: number;
   verificationStatus: string;
   allowsTrial: boolean;
+  photoUrls: string[];
   activePromotionTitle?: string;
   distanceM?: number;
+  /** ISO 8601; útil para vistas operativas (admin). */
+  updatedAt?: string;
 };
 
 @Injectable()
@@ -185,8 +189,237 @@ export class VenuesService {
         venueSlug: slug,
         kind: dto.kind,
         message: dto.message,
+        status: "pending",
       }),
     );
+  }
+
+  async listVenueReports(opts: {
+    status?: string;
+    limit: number;
+  }): Promise<
+    {
+      id: string;
+      venueSlug: string;
+      kind: string;
+      message: string;
+      status: string;
+      createdAt: string;
+    }[]
+  > {
+    const qb = this.reports
+      .createQueryBuilder("r")
+      .orderBy("r.createdAt", "DESC")
+      .take(opts.limit);
+    if (opts.status) {
+      qb.where("r.status = :status", { status: opts.status });
+    }
+    const rows = await qb.getMany();
+    return rows.map((r) => ({
+      id: r.id,
+      venueSlug: r.venueSlug,
+      kind: r.kind,
+      message: r.message,
+      status: r.status ?? "pending",
+      createdAt: r.createdAt.toISOString(),
+    }));
+  }
+
+  async updateVenueReportStatus(
+    id: string,
+    status: string,
+  ): Promise<{
+    id: string;
+    venueSlug: string;
+    kind: string;
+    message: string;
+    status: string;
+    createdAt: string;
+  }> {
+    const row = await this.reports.findOne({ where: { id } });
+    if (!row) throw new NotFoundException("report_not_found");
+    row.status = status;
+    const saved = await this.reports.save(row);
+    return {
+      id: saved.id,
+      venueSlug: saved.venueSlug,
+      kind: saved.kind,
+      message: saved.message,
+      status: saved.status,
+      createdAt: saved.createdAt.toISOString(),
+    };
+  }
+
+  async listMediaForReview(): Promise<
+    {
+      venueSlug: string;
+      venueName: string;
+      zone: string;
+      photoCount: number;
+      coverUrl: string | null;
+      photoUrls: string[];
+    }[]
+  > {
+    const venues = await this.venues.find({ order: { name: "ASC" } });
+    return venues
+      .map((v) => {
+        const photoUrls = (v.photoUrls ?? []).filter(Boolean);
+        return {
+          venueSlug: v.slug,
+          venueName: v.name,
+          zone: v.zone,
+          photoCount: photoUrls.length,
+          coverUrl: photoUrls[0] ?? null,
+          photoUrls,
+        };
+      })
+      .filter((x) => x.photoCount > 0);
+  }
+
+  /**
+   * Crea un stub en catálogo para un claim de centro nuevo, o no-op si el slug ya existe.
+   * Coordenadas por defecto: centro aproximado de Caracas si no vienen en el claim.
+   */
+  async ensureStubFromPartnerClaim(
+    dto: CreateInternalVenueDto,
+  ): Promise<"created" | "exists" | "updated"> {
+    const slug = dto.slug.trim();
+    const existing = await this.findBySlug(slug);
+    if (existing) {
+      if (this.applyImportFieldsToVenue(existing, dto)) {
+        await this.venues.save(existing);
+        return "updated";
+      }
+      return "exists";
+    }
+
+    const lat =
+      dto.lat != null && Number.isFinite(dto.lat) ? dto.lat : 10.480594;
+    const lng =
+      dto.lng != null && Number.isFinite(dto.lng) ? dto.lng : -66.903606;
+    const venueType = dto.venueType.trim();
+    const modalities =
+      dto.modalities && dto.modalities.length > 0 ? dto.modalities : [venueType];
+
+    const photoUrls =
+      dto.photoUrls && dto.photoUrls.length > 0
+        ? sanitizePhotoUrls(dto.photoUrls)
+        : [];
+    const venue = this.venues.create({
+      slug,
+      name: dto.name.trim(),
+      description: dto.description?.trim() ? dto.description.trim() : null,
+      address: dto.address.trim(),
+      zone: dto.zone.trim(),
+      lat,
+      lng,
+      venueType,
+      modalities,
+      amenities: dto.amenities ?? [],
+      priceMin:
+        dto.priceMin != null && Number.isFinite(dto.priceMin) ? dto.priceMin : null,
+      priceMax:
+        dto.priceMax != null && Number.isFinite(dto.priceMax) ? dto.priceMax : null,
+      completenessScore:
+        dto.completenessScore != null && Number.isFinite(dto.completenessScore)
+          ? Math.min(1, Math.max(0, dto.completenessScore))
+          : 0.35,
+      popularityScore:
+        dto.popularityScore != null && Number.isFinite(dto.popularityScore)
+          ? Math.min(1, Math.max(0, dto.popularityScore))
+          : 0.35,
+      verificationStatus: "reference",
+      allowsTrial: dto.allowsTrial ?? true,
+      contactPhone: dto.contactPhone?.trim() ? dto.contactPhone.trim() : null,
+      contactWhatsapp: dto.contactWhatsapp?.trim()
+        ? dto.contactWhatsapp.trim()
+        : null,
+      contactEmail: dto.contactEmail?.trim()
+        ? dto.contactEmail.trim().toLowerCase()
+        : null,
+      photoUrls: photoUrls.length > 0 ? photoUrls : null,
+    });
+    await this.venues.save(venue);
+    return "created";
+  }
+
+  /** Aplica campos opcionales de import interno sobre un venue ya existente. */
+  private applyImportFieldsToVenue(
+    venue: VenueEntity,
+    dto: CreateInternalVenueDto,
+  ): boolean {
+    let dirty = false;
+    const set = <K extends keyof VenueEntity>(
+      key: K,
+      value: VenueEntity[K] | undefined,
+    ) => {
+      if (value === undefined) return;
+      if (venue[key] !== value) {
+        venue[key] = value;
+        dirty = true;
+      }
+    };
+    if (dto.name?.trim()) set("name", dto.name.trim());
+    if (dto.address?.trim()) set("address", dto.address.trim());
+    if (dto.zone?.trim()) set("zone", dto.zone.trim());
+    if (dto.venueType?.trim()) set("venueType", dto.venueType.trim());
+    if (dto.lat != null && Number.isFinite(dto.lat)) set("lat", dto.lat);
+    if (dto.lng != null && Number.isFinite(dto.lng)) set("lng", dto.lng);
+    if (dto.modalities && dto.modalities.length > 0) {
+      set("modalities", dto.modalities);
+    }
+    if (dto.amenities) set("amenities", dto.amenities);
+    if (dto.description !== undefined) {
+      set("description", dto.description?.trim() ? dto.description.trim() : null);
+    }
+    if (dto.priceMin !== undefined) {
+      set(
+        "priceMin",
+        dto.priceMin != null && Number.isFinite(dto.priceMin) ? dto.priceMin : null,
+      );
+    }
+    if (dto.priceMax !== undefined) {
+      set(
+        "priceMax",
+        dto.priceMax != null && Number.isFinite(dto.priceMax) ? dto.priceMax : null,
+      );
+    }
+    if (dto.completenessScore != null && Number.isFinite(dto.completenessScore)) {
+      set(
+        "completenessScore",
+        Math.min(1, Math.max(0, dto.completenessScore)) as VenueEntity["completenessScore"],
+      );
+    }
+    if (dto.popularityScore != null && Number.isFinite(dto.popularityScore)) {
+      set(
+        "popularityScore",
+        Math.min(1, Math.max(0, dto.popularityScore)),
+      );
+    }
+    if (dto.allowsTrial !== undefined) set("allowsTrial", dto.allowsTrial);
+    if (dto.contactPhone !== undefined) {
+      set("contactPhone", dto.contactPhone?.trim() ? dto.contactPhone.trim() : null);
+    }
+    if (dto.contactWhatsapp !== undefined) {
+      set(
+        "contactWhatsapp",
+        dto.contactWhatsapp?.trim() ? dto.contactWhatsapp.trim() : null,
+      );
+    }
+    if (dto.contactEmail !== undefined) {
+      set(
+        "contactEmail",
+        dto.contactEmail?.trim() ? dto.contactEmail.trim().toLowerCase() : null,
+      );
+    }
+    if (dto.photoUrls !== undefined) {
+      const urls =
+        dto.photoUrls && dto.photoUrls.length > 0
+          ? sanitizePhotoUrls(dto.photoUrls)
+          : null;
+      set("photoUrls", urls && urls.length > 0 ? urls : null);
+    }
+    return dirty;
   }
 
   async applyPartnerSync(slug: string, dto: UpdatePartnerSyncDto): Promise<void> {
@@ -224,6 +457,9 @@ export class VenuesService {
       venue.contactEmail = dto.contactEmail.trim().toLowerCase() || null;
     }
     if (dto.allowsTrial !== undefined) venue.allowsTrial = dto.allowsTrial;
+    if (dto.photoUrls !== undefined) {
+      venue.photoUrls = sanitizePhotoUrls(dto.photoUrls);
+    }
     if (venue.verificationStatus === "reference") {
       venue.verificationStatus = "partner_verified";
     }
@@ -308,6 +544,8 @@ export class VenuesService {
       popularityScore: v.popularityScore ?? 0.5,
       verificationStatus: v.verificationStatus ?? "reference",
       allowsTrial: v.allowsTrial ?? true,
+      photoUrls: v.photoUrls ?? [],
+      updatedAt: v.updatedAt?.toISOString?.() ?? undefined,
       ...(promotionTitle ? { activePromotionTitle: promotionTitle } : {}),
       ...(distanceM !== undefined ? { distanceM } : {}),
     };
@@ -383,4 +621,17 @@ function levenshtein(a: string, b: string): number {
     }
   }
   return dp[m]![n]!;
+}
+
+function sanitizePhotoUrls(items: string[]): string[] {
+  const seen = new Set<string>();
+  const cleaned: string[] = [];
+  for (const raw of items) {
+    const value = raw.trim();
+    if (!value || seen.has(value)) continue;
+    seen.add(value);
+    cleaned.push(value);
+    if (cleaned.length >= 12) break;
+  }
+  return cleaned;
 }

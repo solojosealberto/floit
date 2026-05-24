@@ -1,0 +1,43 @@
+changelog:
+  exclude:
+    labels:
+      - skip-release-notes
+    authors:
+      - github-actions[bot]
+  categories:
+    - title: "Breaking Changes"
+      labels:
+        - breaking-change
+        - breaking
+    - title: "Features"
+      labels:
+        - feature
+        - enhancement
+        - feat
+    - title: "Fixes"
+      labels:
+        - bug
+        - bugfix
+        - fix
+    - title: "UI/UX"
+      labels:
+        - ui
+        - ux
+        - design
+    - title: "Backend & APIs"
+      labels:
+        - backend
+        - api
+        - database
+    - title: "DevOps & CI"
+      labels:
+        - ci
+        - devops
+        - infra
+    - title: "Documentation"
+      labels:
+        - docs
+        - documentation
+    - title: "Other Changes"
+      labels:
+        - "*"

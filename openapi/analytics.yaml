@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: Floit Analytics API
+  title: QueGym Analytics API
   version: 0.1.0
   description: |
     Ingesta de eventos y métricas de funnel para operación MVP (Sprint 5),
@@ -70,6 +70,14 @@ paths:
             maximum: 720
             default: 168
           description: Ventana temporal en horas para agregación.
+        - in: query
+          name: device
+          required: false
+          schema:
+            type: string
+            enum: [all, mobile, tablet, desktop]
+            default: all
+          description: Filtra eventos por dispositivo detectado (`all` omite filtro).
       responses:
         "200":
           description: Métricas agregadas para dashboard operativo.
@@ -210,6 +218,13 @@ paths:
             maximum: 90
             default: 14
           description: Días hacia atrás a incluir en la serie.
+        - in: query
+          name: device
+          required: false
+          schema:
+            type: string
+            enum: [all, mobile, tablet, desktop]
+            default: all
       responses:
         "200":
           description: Serie temporal agregada por día.

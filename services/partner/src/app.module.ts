@@ -16,6 +16,7 @@ import { PartnerPlanEntity } from "./partner-plan.entity";
 import { PartnerProfileEntity } from "./partner-profile.entity";
 import { PartnerOwnershipAuditEntity } from "./partner-ownership-audit.entity";
 import { PartnerVenueOwnershipEntity } from "./partner-venue-ownership.entity";
+import { PartnerVenuePhotoEntity } from "./partner-venue-photo.entity";
 
 @Module({
   imports: [
@@ -24,22 +25,37 @@ import { PartnerVenueOwnershipEntity } from "./partner-venue-ownership.entity";
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
+        const entities = [
+          PartnerClaimEntity,
+          PartnerVenueOwnershipEntity,
+          PartnerProfileEntity,
+          PartnerPlanEntity,
+          PartnerOwnershipAuditEntity,
+          PartnerVenuePhotoEntity,
+          PartnerCatalogSyncOutboxEntity,
+          PartnerCatalogSyncJobEntity,
+        ];
+        const synchronize = config.get<string>("DATABASE_SYNC") !== "false";
+        const databaseUrl = config.get<string>("DATABASE_URL")?.trim();
+        if (databaseUrl) {
+          return {
+            type: "postgres" as const,
+            url: databaseUrl,
+            entities,
+            synchronize,
+            ssl: databaseUrl.includes("sslmode=require")
+              ? { rejectUnauthorized: false }
+              : undefined,
+          };
+        }
         const dbPath =
           config.get<string>("PARTNER_SQLITE_PATH") ??
           join(__dirname, "..", "data", "partner.sqlite");
         return {
           type: "sqlite" as const,
           database: dbPath,
-          entities: [
-            PartnerClaimEntity,
-            PartnerVenueOwnershipEntity,
-            PartnerProfileEntity,
-            PartnerPlanEntity,
-            PartnerOwnershipAuditEntity,
-            PartnerCatalogSyncOutboxEntity,
-            PartnerCatalogSyncJobEntity,
-          ],
-          synchronize: config.get<string>("DATABASE_SYNC") !== "false",
+          entities,
+          synchronize,
         };
       },
     }),
@@ -49,6 +65,7 @@ import { PartnerVenueOwnershipEntity } from "./partner-venue-ownership.entity";
       PartnerProfileEntity,
       PartnerPlanEntity,
       PartnerOwnershipAuditEntity,
+      PartnerVenuePhotoEntity,
       PartnerCatalogSyncOutboxEntity,
       PartnerCatalogSyncJobEntity,
     ]),

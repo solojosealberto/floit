@@ -20,9 +20,13 @@ export async function POST(req: Request) {
     const outbound = { ...raw };
     delete outbound.turnstileToken;
     const body = JSON.stringify(outbound);
+    const clientUa = req.headers.get("user-agent")?.trim() ?? "";
     const res = await fetch(`${base}/v1/leads`, {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: {
+        "content-type": "application/json",
+        ...(clientUa ? { "x-client-user-agent": clientUa.slice(0, 1024) } : {}),
+      },
       body,
     });
     const json = await res.json().catch(() => ({}));

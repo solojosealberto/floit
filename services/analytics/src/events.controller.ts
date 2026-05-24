@@ -69,13 +69,20 @@ export class EventsController {
   }
 
   @Get("v1/metrics/funnel")
-  async funnel(@Query("windowHours") windowHoursRaw?: string) {
+  async funnel(
+    @Query("windowHours") windowHoursRaw?: string,
+    @Query("device") deviceRaw?: string,
+  ) {
     const windowHours = this.parseWindowHours(windowHoursRaw);
     const since = new Date(Date.now() - windowHours * 60 * 60 * 1000);
-    const eventRows = await this.events.find({
+    const deviceFilter = this.parseDeviceFilter(deviceRaw);
+    let eventRows = await this.events.find({
       where: { createdAt: MoreThan(since) },
       order: { createdAt: "ASC" },
     });
+    if (deviceFilter) {
+      eventRows = eventRows.filter((e) => e.device === deviceFilter);
+    }
     const rows = eventRows.map((event) => this.toStoredEvent(event));
 
     const byName = new Map<string, number>();
@@ -83,6 +90,8 @@ export class EventsController {
     const sources = new Map<string, number>();
     const devices = new Map<string, number>();
     const venues = new Map<string, number>();
+    const leadSubmitsByVenue = new Map<string, number>();
+    const venueViewsByVenue = new Map<string, number>();
     const ctaExperiment = new Map<
       string,
       { variant: string; assignments: number; ctaClicks: number; leadSubmits: number }
@@ -100,6 +109,20 @@ export class EventsController {
         this.readStringProperty(row, "venueSlug") ??
         this.readStringProperty(row, "slug");
       if (venueSlug) venues.set(venueSlug, (venues.get(venueSlug) ?? 0) + 1);
+      if (row.name === "lead_submit") {
+        const ls =
+          this.readStringProperty(row, "venueSlug") ??
+          this.readStringProperty(row, "slug");
+        if (ls) {
+          leadSubmitsByVenue.set(ls, (leadSubmitsByVenue.get(ls) ?? 0) + 1);
+        }
+      }
+      if (row.name === "venue_view") {
+        const vs = this.readStringProperty(row, "slug");
+        if (vs) {
+          venueViewsByVenue.set(vs, (venueViewsByVenue.get(vs) ?? 0) + 1);
+        }
+      }
 
       const experiment = this.readStringProperty(row, "experiment");
       const ctaVariant = this.readStringProperty(row, "ctaVariant");
@@ -127,6 +150,7 @@ export class EventsController {
 
     return {
       windowHours,
+      device: deviceFilter ?? "all",
       events: rows.length,
       last: rows.at(-1) ?? null,
       byName: this.mapToSortedEntries(byName).map(([name, count]) => ({
@@ -165,6 +189,17 @@ export class EventsController {
       topVenues: this.mapToSortedEntries(venues)
         .slice(0, 12)
         .map(([venueSlug, count]) => ({ venueSlug, count })),
+      venuesLeadPerformance: this.mapToSortedEntries(leadSubmitsByVenue)
+        .slice(0, 5)
+        .map(([venueSlug, leads]) => {
+          const views = venueViewsByVenue.get(venueSlug) ?? 0;
+          return {
+            venueSlug,
+            leads,
+            venueViews: views,
+            convRate: this.safeRate(leads, views),
+          };
+        }),
       experiments: {
         ctaLeadForm: [...ctaExperiment.values()]
           .map((row) => ({
@@ -181,13 +216,20 @@ export class EventsController {
   }
 
   @Get("v1/metrics/timeseries")
-  async timeseries(@Query("windowDays") windowDaysRaw?: string) {
+  async timeseries(
+    @Query("windowDays") windowDaysRaw?: string,
+    @Query("device") deviceRaw?: string,
+  ) {
     const windowDays = this.parseWindowDays(windowDaysRaw);
     const since = new Date(Date.now() - windowDays * 24 * 60 * 60 * 1000);
-    const rows = await this.events.find({
+    const deviceFilter = this.parseDeviceFilter(deviceRaw);
+    let rows = await this.events.find({
       where: { createdAt: MoreThan(since) },
       order: { createdAt: "ASC" },
     });
+    if (deviceFilter) {
+      rows = rows.filter((e) => e.device === deviceFilter);
+    }
     const points = new Map<
       string,
       {
@@ -238,6 +280,7 @@ export class EventsController {
 
     return {
       windowDays,
+      device: deviceFilter ?? "all",
       points: [...points.values()].sort((a, b) => a.date.localeCompare(b.date)),
     };
   }
@@ -360,6 +403,16 @@ export class EventsController {
       },
       points,
     };
+  }
+
+  /** Filtra por `device` almacenado en el evento (`mobile` | `tablet` | `desktop`). */
+  private parseDeviceFilter(
+    raw?: string,
+  ): "mobile" | "tablet" | "desktop" | undefined {
+    const s = raw?.trim().toLowerCase();
+    if (!s || s === "all") return undefined;
+    if (s === "mobile" || s === "tablet" || s === "desktop") return s;
+    return undefined;
   }
 
   private parseWindowDays(raw?: string): number {

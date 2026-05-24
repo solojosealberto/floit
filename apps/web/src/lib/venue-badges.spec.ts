@@ -7,11 +7,15 @@ test("computeVenueBadges asigna badges de cercanía, precio y completitud", () =
   const items = [
     {
       ...capabilityFixture.venues[0],
+      modalities: [...capabilityFixture.venues[0].modalities],
+      amenities: [...capabilityFixture.venues[0].amenities],
       id: "v1",
       distanceM: 300,
     },
     {
       ...capabilityFixture.venues[1],
+      modalities: [...capabilityFixture.venues[1].modalities],
+      amenities: [...capabilityFixture.venues[1].amenities],
       id: "v2",
       distanceM: 1800,
     },

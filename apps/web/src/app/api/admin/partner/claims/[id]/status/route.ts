@@ -4,7 +4,7 @@ import { getAdminAuthHeader } from "@/lib/admin-auth-header";
 type Params = { params: Promise<{ id: string }> };
 
 export async function POST(request: Request, { params }: Params) {
-  const auth = getAdminAuthHeader();
+  const auth = await getAdminAuthHeader();
   const base = process.env.PARTNER_SERVICE_URL ?? "http://localhost:4013";
   if (!auth) {
     return NextResponse.json({ error: "admin_not_configured" }, { status: 503 });

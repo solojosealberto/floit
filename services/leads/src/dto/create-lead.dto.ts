@@ -50,4 +50,9 @@ export class CreateLeadDto {
   @IsString()
   @MaxLength(32)
   consentVersion?: string;
+
+  /** Declarado por el cliente; default `form` en servicio. */
+  @IsOptional()
+  @IsIn(["form", "whatsapp"])
+  entryChannel?: "form" | "whatsapp";
 }

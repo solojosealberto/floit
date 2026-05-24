@@ -95,7 +95,7 @@ try {
 
   if (failures === 0) {
     console.log(
-      "\nPASS  Preflight técnico OK. Continúa con el flujo manual en docs/STAGING_EVIDENCE_SPRINT5.md",
+      "\nPASS  Preflight técnico OK. Continúa con el flujo manual en docs/operations/STAGING_EVIDENCE_SPRINT5.md",
     );
   } else {
     console.error(

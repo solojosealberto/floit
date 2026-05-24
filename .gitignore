@@ -23,9 +23,13 @@ build
 coverage
 .nyc_output
 
-# SQLite local (leads service)
+# SQLite local (stateful services)
 services/leads/data/
+services/partner/data/
 *.sqlite
+
+# Local pnpm shim (Cursor sandbox)
+.cursor-bin/
 
 # Turbo / misc
 .turbo
