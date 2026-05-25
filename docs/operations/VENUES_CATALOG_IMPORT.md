@@ -2,6 +2,19 @@
 
 Pipeline para cargar el CSV de gimnasios en **catalog-service** (`venues` en Postgres) sin perder columnas del Excel/CSV original.
 
+## Staging (Neon vía Railway catalog)
+
+```bash
+export CATALOG_SERVICE_URL=https://floitcatalog-service-production.up.railway.app
+export CATALOG_INTERNAL_API_TOKEN=<token-del-vault>
+pnpm venues:import:staging
+pnpm venues:validate:live
+```
+
+Requiere `GET /health` → `{"ok":true,"service":"catalog"}`. Si responde 502, redeploy del servicio catalog en Railway tras actualizar `main` (bind `0.0.0.0`).
+
+---
+
 ## Requisitos
 
 1. Postgres: `pnpm docker:up`

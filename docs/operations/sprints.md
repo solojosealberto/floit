@@ -519,6 +519,7 @@ Matriz de trazabilidad detallada: [`docs/archive/ALIGNMENT_SPRINTS_0_4.md`](./ar
 | Handover consolidado de proyecto | [`docs/operations/PROJECT_CONTEXT_HANDOVER.md`](./operations/PROJECT_CONTEXT_HANDOVER.md) |
 | Lanzamiento producción | [`docs/operations/PRODUCTION_LAUNCH_PLAN.md`](./operations/PRODUCTION_LAUNCH_PLAN.md) |
 | Alta cuentas prod/staging | [`docs/operations/PRODUCTION_ACCOUNTS_SETUP.md`](./operations/PRODUCTION_ACCOUNTS_SETUP.md) |
+| Estado staging desplegado | [`docs/operations/STAGING_DEPLOYMENT_STATUS.md`](./operations/STAGING_DEPLOYMENT_STATUS.md) |
 | Env staging/prod (plantilla) | [`docs/env/production.example`](./env/production.example) |
 
 ---
@@ -533,6 +534,17 @@ Detalle de ejecución:
 
 - `docs/operations/NEXT_STEPS_RECOMMENDED.md`
 - `docs/product/PLAN_MAESTRO.md`
+
+---
+
+### Actualización operativa (2026-05-25) — staging en proveedores (paso 2 cerrado)
+
+| Área | Entrega |
+|------|---------|
+| Infra | Neon `quegym` (4 DB + PostGIS), Railway `quegym-api` (5 servicios), Auth0, Vercel `floit-web`, GoDaddy CNAME `staging` |
+| URL | https://staging.quegym.com (web desplegada) |
+| Docs | `STAGING_DEPLOYMENT_STATUS.md`; checklist `PRODUCTION_ACCOUNTS_SETUP.md` actualizado |
+| Pendiente | Import catálogo, smoke/gates, evidencias Sprint 4/5, GO/NO-GO, prod `www` |
 
 ---
 

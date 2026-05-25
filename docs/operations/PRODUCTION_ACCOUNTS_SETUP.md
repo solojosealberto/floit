@@ -8,17 +8,20 @@ Plantilla de variables (sin secretos): [`docs/env/production.example`](../env/pr
 
 ## Checklist maestro
 
+> **Estado (2026-05):** pasos 0–7 **completados** según [`STAGING_DEPLOYMENT_STATUS.md`](./STAGING_DEPLOYMENT_STATUS.md). Pendientes: **8–9** y GO staging.
+
 | # | Tarea | Hecho |
 |---|--------|-------|
-| 1 | Cuenta **Neon** + 4 databases + PostGIS | ☐ |
-| 2 | Cuenta **Railway** + proyecto + 5 servicios | ☐ |
-| 3 | Cuenta **Auth0** + apps Partner + M2M Admin API | ☐ |
-| 4 | Cuenta **Vercel** + proyecto monorepo | ☐ |
-| 5 | **GoDaddy** DNS `staging` (+ TTL bajo antes de prod) | ☐ |
-| 6 | Generar tokens S2S (`openssl rand -hex 32`) | ☐ |
-| 7 | Variables en Vercel + Railway (sin commitear) | ☐ |
+| 0 | Generar tokens S2S (`openssl rand -hex 32`) | ✅ |
+| 1 | Cuenta **Neon** + 4 databases + PostGIS | ✅ |
+| 2 | Cuenta **Railway** + proyecto + 5 servicios | ✅ |
+| 3 | Cuenta **Auth0** + apps Partner + M2M Admin API | ✅ |
+| 4 | Cuenta **Vercel** + proyecto monorepo | ✅ |
+| 5 | **GoDaddy** DNS `staging` (+ TTL bajo antes de prod) | ✅ |
+| 6 | Variables en Vercel + Railway (sin commitear) | ✅ |
+| 7 | Web staging `https://staging.quegym.com` responde | ✅ |
 | 8 | Import catálogo en Neon staging | ☐ |
-| 9 | Smoke `staging.quegym.com` | ☐ |
+| 9 | Smoke + gates + evidencias Sprint 4/5 | ☐ |
 
 ---
 
@@ -475,8 +478,12 @@ Registrar resultados en [`STAGING_EVIDENCE_SPRINT4.md`](./STAGING_EVIDENCE_SPRIN
 
 ## 8. Siguiente paso (paso 3)
 
-- Completar checklist maestro (arriba).
-- Documentar URLs finales en [`PROJECT_CONTEXT_HANDOVER.md`](./PROJECT_CONTEXT_HANDOVER.md) (sin secretos).
-- Decisión **GO/NO-GO** staging → solo entonces DNS prod `www`.
+Paso 2 cerrado — ver detalle en [`STAGING_DEPLOYMENT_STATUS.md`](./STAGING_DEPLOYMENT_STATUS.md).
+
+1. **Import catálogo** (`pnpm venues:import` → catalog Railway/Neon).
+2. **Fijar URLs** de microservicios en Vercel y validar `/health`.
+3. **Smoke + gates** contra `https://staging.quegym.com` y APIs Railway.
+4. **Evidencias** Sprint 4/5 + decisión **GO/NO-GO**.
+5. Solo tras GO: DNS prod `www` y cutover §14 de [`PRODUCTION_LAUNCH_PLAN.md`](./PRODUCTION_LAUNCH_PLAN.md).
 
 Referencias: [`PRODUCTION_LAUNCH_PLAN.md`](./PRODUCTION_LAUNCH_PLAN.md), [`oidc-rollout-sprint4.md`](./oidc-rollout-sprint4.md), [`VENUES_CATALOG_IMPORT.md`](./VENUES_CATALOG_IMPORT.md).

@@ -14,8 +14,9 @@ async function bootstrap() {
   );
   app.enableCors({ origin: false });
   const port = Number(process.env.PORT ?? 4014);
-  await app.listen(port);
-  console.log(`analytics-service listening on http://localhost:${port}`);
+  const host = process.env.HOST ?? "0.0.0.0";
+  await app.listen(port, host);
+  console.log(`analytics-service listening on http://${host}:${port}`);
 }
 
 void bootstrap();

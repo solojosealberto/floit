@@ -149,16 +149,37 @@ async function main() {
   }
 
   if (!dryRun) {
-    try {
-      const health = await fetch(`${BASE_URL}/health`, {
-        signal: AbortSignal.timeout(3000),
-      });
-      if (!health.ok) throw new Error(`health ${health.status}`);
-    } catch (e) {
+    const isRemote =
+      BASE_URL.includes("railway.app") || BASE_URL.startsWith("https://");
+    const attempts = isRemote ? 12 : 1;
+    const timeoutMs = isRemote ? 30_000 : 3_000;
+    let lastErr = "unknown";
+    let ok = false;
+    for (let attempt = 1; attempt <= attempts; attempt++) {
+      try {
+        const health = await fetch(`${BASE_URL}/health`, {
+          signal: AbortSignal.timeout(timeoutMs),
+        });
+        const body = await health.text();
+        if (!health.ok) throw new Error(`health HTTP ${health.status}: ${body.slice(0, 120)}`);
+        ok = true;
+        break;
+      } catch (e) {
+        lastErr = e instanceof Error ? e.message : String(e);
+        if (attempt < attempts) {
+          console.warn(
+            `Health intento ${attempt}/${attempts} falló (${lastErr}); reintento en 10s…`,
+          );
+          await new Promise((r) => setTimeout(r, 10_000));
+        }
+      }
+    }
+    if (!ok) {
+      console.error(`catalog-service no disponible en ${BASE_URL} tras ${attempts} intentos.`);
+      console.error(lastErr);
       console.error(
-        `catalog-service no disponible en ${BASE_URL}. Arranca: pnpm docker:up && pnpm dev:services`,
+        "Local: pnpm docker:up && pnpm --filter @floit/catalog-service start. Staging: revisar deploy Railway (logs, DATABASE_URL, redeploy).",
       );
-      console.error(e instanceof Error ? e.message : e);
       process.exit(1);
     }
   }

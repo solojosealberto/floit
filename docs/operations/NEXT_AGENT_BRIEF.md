@@ -17,9 +17,13 @@ Marca visible **QueGym** (rebrand Fase 1). Core MVP funcional (`buscar -> ficha 
 
 ## 3) Objetivo recomendado para la próxima sesión
 
+**Staging infra lista** (`STAGING_DEPLOYMENT_STATUS.md`). Prioridad inmediata: import catálogo + validación API + gates.
+
 Cerrar Sprint 6 operativo (staging):
 
-- habilitar OIDC estricto admin/partner en entorno real,
+- import catálogo Neon (`pnpm venues:import` con `CATALOG_SERVICE_URL` Railway),
+- confirmar URLs microservicios en Vercel y `/health`,
+- habilitar OIDC estricto admin/partner en entorno real donde aplique,
 - ejecutar gates y evidencia:
   - `pnpm sprint4:gate`
   - `pnpm sprint5:flow-checklist`

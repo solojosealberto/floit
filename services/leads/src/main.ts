@@ -11,8 +11,9 @@ async function bootstrap() {
   );
   app.enableCors({ origin: false });
   const port = Number(process.env.PORT ?? 4012);
-  await app.listen(port);
-  console.log(`leads-service listening on http://localhost:${port}`);
+  const host = process.env.HOST ?? "0.0.0.0";
+  await app.listen(port, host);
+  console.log(`leads-service listening on http://${host}:${port}`);
 }
 
 function assertAuthConfig(): void {

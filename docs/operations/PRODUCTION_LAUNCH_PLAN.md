@@ -629,12 +629,16 @@ Railway **no** necesita registros públicos en GoDaddy si solo Vercel consume la
 
 ### 16.8 Cuentas y secretos a crear (checklist paso 2)
 
-- [ ] GoDaddy: 2FA; acceso DNS para equipo técnico.
-- [ ] Vercel: proyecto `quegym-web`; env Production / Preview.
-- [ ] Railway: proyecto `quegym-api`; 5 servicios; networking privado.
-- [ ] Neon: proyecto; 4 databases; connection strings en Railway + Vercel.
-- [ ] Auth0: tenant; 2 apps; roles; secrets en Vercel.
-- [ ] Vault operativo: Doppler / 1Password / Vercel+Railway secret sync (documentar quién rota S2S).
+**Estado 2026-05:** completado en staging — detalle en [`STAGING_DEPLOYMENT_STATUS.md`](./STAGING_DEPLOYMENT_STATUS.md).
+
+- [x] GoDaddy: DNS `staging` → Vercel (TTL 600 s).
+- [x] Vercel: proyecto `floit-web`; `staging.quegym.com`.
+- [x] Railway: proyecto `quegym-api`; 5 servicios; red privada.
+- [x] Neon: proyecto `quegym`; 4 databases + PostGIS.
+- [x] Auth0: APIs `floit-admin` / `floit-partner`; Partner Web + Admin M2M.
+- [x] Tokens S2S en vault (no en git).
+- [ ] Import catálogo staging + smoke/gates + GO/NO-GO.
+- [ ] Prod `www` y OIDC-only sin passwords locales.
 
 ### 16.9 Coste orientativo MVP (orden de magnitud)
 
@@ -664,10 +668,9 @@ Revisar precios al crear cuentas; no bloquea decisiones D1–D6.
 ## 18. Próximo paso inmediato recomendado
 
 1. ~~Cerrar decisiones D1–D6~~ → **Hecho** (§16).
-2. **Paso 2 — Cuentas e infra:** guía [`PRODUCTION_ACCOUNTS_SETUP.md`](./PRODUCTION_ACCOUNTS_SETUP.md) + [`docs/env/production.example`](../env/production.example).
-3. ~~Migrar SQLite→Postgres (código)~~ → **Hecho** si `DATABASE_URL` está definido (partner, leads, analytics); local sigue con SQLite.
-4. **Prod bootstrap (pendiente):** Dockerfiles opcionales; deploy automático Railway/Vercel.
-4. **Sprint 6 staging:** desplegar stack elegido en `staging.quegym.com`; OIDC Auth0; evidencias Sprint 4/5; `GO/NO-GO`.
-5. **Cutover prod:** GoDaddy `www` → Vercel; import catálogo; checklist §14.
+2. ~~Paso 2 — Cuentas e infra~~ → **Hecho** ([`STAGING_DEPLOYMENT_STATUS.md`](./STAGING_DEPLOYMENT_STATUS.md)).
+3. ~~Migrar SQLite→Postgres (código)~~ → **Hecho** con `DATABASE_URL` en partner/leads/analytics.
+4. **Paso 3 — Staging operativo (ahora):** import catálogo; URLs API en Vercel; smoke + gates; evidencias Sprint 4/5; **GO/NO-GO**.
+5. **Cutover prod:** GoDaddy `www` → Vercel; Neon prod; OIDC-only; checklist §14.
 
 *Actualizar tras primer deploy staging exitoso y tras GO LIVE.*

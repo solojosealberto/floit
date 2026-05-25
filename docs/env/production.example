@@ -2,6 +2,12 @@
 # NO commitear valores reales. Copiar a Vercel / Railway / vault.
 # Decisiones: docs/operations/PRODUCTION_LAUNCH_PLAN.md §16
 # Guía de alta: docs/operations/PRODUCTION_ACCOUNTS_SETUP.md
+# Staging desplegado (inventario): docs/operations/STAGING_DEPLOYMENT_STATUS.md
+#
+# Staging activo (2026-05): NEXT_PUBLIC_SITE_URL=https://staging.quegym.com
+# DNS GoDaddy staging CNAME → df46f0c75f1e085a.vercel-dns-017.com (ver STAGING_DEPLOYMENT_STATUS)
+# Catalog staging (Railway): https://floitcatalog-service-production.up.railway.app
+# Sustituir REPLACE-* por URLs *.up.railway.app reales del proyecto quegym-api
 
 # =============================================================================
 # Vercel — apps/web (staging: staging.quegym.com | prod: www.quegym.com)

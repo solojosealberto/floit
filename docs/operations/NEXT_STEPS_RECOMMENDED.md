@@ -16,18 +16,19 @@ Tras `pnpm venues:load` (~95 venues en local, demos seed retirados de BD):
 3. **Partner QA:** sembrar ownership sobre slugs reales (`LOCAL_TEST_CREDENTIALS.md`), no `oxide-chacao`.
 4. **Admin:** revisar `/admin/duplicados` y fichas con nota «coordenadas aproximadas» en descripción.
 
-## Prioridad 0 — Producción `www.quegym.com` (planificación)
+## Prioridad 0 — Staging operativo → producción `www.quegym.com`
 
-Plan completo: **`docs/operations/PRODUCTION_LAUNCH_PLAN.md`**.
+Plan: **`PRODUCTION_LAUNCH_PLAN.md`**. Infra staging: **`STAGING_DEPLOYMENT_STATUS.md`**.
 
-**Decisiones cerradas (2026-05-21):** D1 Vercel · D2 Railway · D3 Neon · D4 Auth0 · D5 `www.quegym.com` · D6 Postgres (partner/leads/analytics). Detalle §16 de `PRODUCTION_LAUNCH_PLAN.md`.
+**Hecho (2026-05):** Neon `quegym`, Railway `quegym-api` (5 servicios), Auth0, Vercel `floit-web`, DNS `staging.quegym.com` → https://staging.quegym.com (web 200).
 
-Orden obligatorio:
+**Ahora (Paso 3):**
 
-1. **Cuentas** — seguir [`PRODUCTION_ACCOUNTS_SETUP.md`](./PRODUCTION_ACCOUNTS_SETUP.md) (checklist §0–§6).
-2. **Prod bootstrap** — Dockerfiles opcionales; primer deploy staging; validar smoke + `sprint4:gate`.
-3. **Staging** (`staging.quegym.com`) + evidencias Sprint 4/5 + `GO/NO-GO`.
-4. **Cutover** — CNAME `www` → Vercel; `NEXT_PUBLIC_SITE_URL=https://www.quegym.com`.
+1. **`pnpm venues:import`** contra catalog Railway/Neon (ver `VENUES_CATALOG_IMPORT.md`).
+2. **URLs API** en Vercel = dominios Railway finales; validar `/health` × 5.
+3. **`SMOKE_WEB_BASE=https://staging.quegym.com pnpm smoke:platform`** + `sprint4:gate` + Sprint 5 gates.
+4. **Evidencias** `STAGING_EVIDENCE_SPRINT4/5` → **GO/NO-GO**.
+5. **Cutover prod** (solo tras GO): `www.quegym.com`, import prod, OIDC-only, §14 del plan.
 
 ## Prioridad 0b — Rebrand (estado)
 

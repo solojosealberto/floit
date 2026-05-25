@@ -5,8 +5,9 @@ import { AppModule } from "./app.module";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const port = Number(process.env.PORT ?? 4011);
-  await app.listen(port);
-  console.log(`search-service listening on ${port}`);
+  const host = process.env.HOST ?? "0.0.0.0";
+  await app.listen(port, host);
+  console.log(`search-service listening on http://${host}:${port}`);
 }
 
 void bootstrap();

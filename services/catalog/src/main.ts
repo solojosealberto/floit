@@ -15,8 +15,9 @@ async function bootstrap() {
   );
   app.enableCors({ origin: false });
   const port = Number(process.env.PORT ?? 4010);
-  await app.listen(port);
-  console.log(`catalog-service listening on http://localhost:${port}`);
+  const host = process.env.HOST ?? "0.0.0.0";
+  await app.listen(port, host);
+  console.log(`catalog-service listening on http://${host}:${port}`);
 }
 
 void bootstrap();

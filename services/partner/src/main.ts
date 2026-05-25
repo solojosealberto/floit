@@ -23,8 +23,9 @@ async function bootstrap() {
   }
   app.use("/uploads", serveStatic(mediaDir));
   const port = Number(process.env.PORT ?? 4013);
-  await app.listen(port);
-  console.log(`partner-service listening on ${port}`);
+  const host = process.env.HOST ?? "0.0.0.0";
+  await app.listen(port, host);
+  console.log(`partner-service listening on http://${host}:${port}`);
 }
 
 function assertAuthConfig(): void {

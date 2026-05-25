@@ -73,6 +73,7 @@ Decisiones **D1–D6** cerradas: Vercel (web), Railway (APIs), Neon (Postgres), 
 |-----------|-----|
 | [`docs/operations/PRODUCTION_LAUNCH_PLAN.md`](docs/operations/PRODUCTION_LAUNCH_PLAN.md) | Arquitectura, gates, GO LIVE |
 | [`docs/operations/PRODUCTION_ACCOUNTS_SETUP.md`](docs/operations/PRODUCTION_ACCOUNTS_SETUP.md) | Alta Neon → Railway → Auth0 → Vercel → GoDaddy |
+| [`docs/operations/STAGING_DEPLOYMENT_STATUS.md`](docs/operations/STAGING_DEPLOYMENT_STATUS.md) | Estado staging desplegado + paso 3 (import, smoke, GO) |
 | [`docs/env/production.example`](docs/env/production.example) | Variables staging/prod (sin secretos) |
 | [`apps/web/vercel.json`](apps/web/vercel.json) | Build monorepo en Vercel |
 

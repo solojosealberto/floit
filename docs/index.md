@@ -22,6 +22,7 @@ Cambios recientes de producto (referencia rapida): **catálogo Caracas (~95 venu
 - `docs/operations/REBRAND_QUEGYM_PLAN.md` — plan y estado Floit → QueGym (Fase 1 aplicada; Fases 2–4 planificadas)
 - `docs/operations/PRODUCTION_LAUNCH_PLAN.md` — lanzamiento en **www.quegym.com** (decisiones D1–D6, GO LIVE)
 - `docs/operations/PRODUCTION_ACCOUNTS_SETUP.md` — **paso 2:** alta Vercel, Railway, Neon, Auth0, DNS GoDaddy
+- `docs/operations/STAGING_DEPLOYMENT_STATUS.md` — **estado staging** (`staging.quegym.com`, inventario proveedores, paso 3)
 - `docs/env/production.example` — plantilla de variables staging/prod (sin secretos)
 - `docs/operations/WEB_ROUTES_PLATFORM.md` — inventario de rutas web (`apps/web`)
 - `docs/operations/ADMIN_CONFIGURATION_PAGE_PLAN.md` — diseño y planificación de `/admin/configuracion` (auth admin, runbooks, navegación)

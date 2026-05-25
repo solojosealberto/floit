@@ -37,6 +37,7 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - **Admin partner-claims (`#operaciones-y-sync`):** UI rediseñada — **`partner-service-health-panel.tsx`** (OIDC + colas + readiness), **`dlq-failures-panel.tsx`** (sync + outbox con búsqueda, selección, reintentos y modal detalle), **`ownership-partner-venue-panel.tsx`** (filtros + modal), **`ownership-audit-panel.tsx`** (filtros, fecha, CSV, paginación); auditoría carga hasta **200** eventos client-side.
 
 ### Documentation
+- **Staging desplegado (2026-05-25):** paso 2 de cuentas completado (Neon, Railway, Auth0, Vercel, DNS); registro en `STAGING_DEPLOYMENT_STATUS.md`; `https://staging.quegym.com` activo; pendiente import catálogo y gates.
 - **Producción paso 2:** guía `PRODUCTION_ACCOUNTS_SETUP.md`, plantilla `docs/env/production.example`, `apps/web/vercel.json`; servicios partner/leads/analytics aceptan `DATABASE_URL` (Postgres/Neon) con fallback SQLite local.
 - **Producción QueGym (2026-05):** plan `PRODUCTION_LAUNCH_PLAN.md`; **decisiones D1–D6 cerradas** (Vercel + Railway + Neon + Auth0 + `www.quegym.com` + Postgres para servicios stateful).
 - **Rebrand QueGym (2026-05):** plan operativo `docs/operations/REBRAND_QUEGYM_PLAN.md` (Fase 1 aplicada; Fases 2–4 planificadas); sincronización de `docs/index.md`, `sprints.md`, `EPICS_USER_STORIES_STATUS.md`, `PROJECT_CONTEXT_HANDOVER.md`, `NEXT_AGENT_BRIEF.md`, `NEXT_STEPS_RECOMMENDED.md`, `WEB_ROUTES_PLATFORM.md`.
