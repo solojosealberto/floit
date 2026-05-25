@@ -187,6 +187,7 @@ Orden recomendado para la **siguiente sesión operativa**:
 
 ## Referencias
 
+- **Agente navegador (ChatGPT Agent Mode):** [`AGENT_BROWSER_DEPLOYMENT_RUNBOOK.md`](./AGENT_BROWSER_DEPLOYMENT_RUNBOOK.md)
 - Guía alta: [`PRODUCTION_ACCOUNTS_SETUP.md`](./PRODUCTION_ACCOUNTS_SETUP.md)
 - Plan GO LIVE: [`PRODUCTION_LAUNCH_PLAN.md`](./PRODUCTION_LAUNCH_PLAN.md)
 - Import datos: [`VENUES_CATALOG_IMPORT.md`](./VENUES_CATALOG_IMPORT.md)

@@ -13,7 +13,7 @@ Marca visible **QueGym** (rebrand Fase 1). Core MVP funcional (`buscar -> ficha 
 3. `docs/operations/sprints.md`
 4. `docs/operations/EPICS_USER_STORIES_STATUS.md`
 5. `docs/operations/oidc-rollout-sprint4.md`
-6. Despliegue: `docs/operations/PRODUCTION_LAUNCH_PLAN.md` → `PRODUCTION_ACCOUNTS_SETUP.md` → `docs/env/production.example`
+6. Despliegue: `PRODUCTION_LAUNCH_PLAN.md` → `STAGING_DEPLOYMENT_STATUS.md` → **`AGENT_BROWSER_DEPLOYMENT_RUNBOOK.md`** (agente navegador)
 
 ## 3) Objetivo recomendado para la próxima sesión
 
