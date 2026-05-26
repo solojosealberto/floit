@@ -1,43 +1,52 @@
-# Informe agente — Deployment QueGym — 2026-05-25 (actualizado)
+# Informe agente — Deployment QueGym — 2026-05-25 (post-Vercel)
 
 ## Fase completada hasta
 
-- [x] **1** Catalog + import — **95 venues** en Neon vía Railway catalog
-- [ ] **2** Railway URLs + Vercel env — **pendiente** (Vercel no ve catálogo aún)
-- [ ] **3** Smoke / gates / evidencias
+- [x] **1** Catalog + import (95 venues)
+- [x] **2** Vercel env + redeploy — **parcial** (UI discovery OK; search Railway mal configurado)
+- [ ] **3** Smoke / gates completos
 - [ ] **4** Prod
 
-## Catalog
+## URLs Railway (Vercel + verificación)
 
-- **/health:** OK
-- **/health/ready:** `{"ok":true,"service":"catalog","venues":95}`
-- **Import:** `pnpm venues:import:staging` → `Resumen: { created: 95 }`
-- **validate:live:** OK (95/95)
+| Servicio | URL | Estado |
+|----------|-----|--------|
+| catalog | `https://floitcatalog-service-production.up.railway.app` | `/health/ready` → venues **95** |
+| search | `https://floitsearch-service-production.up.railway.app` | `/health` OK; `/v1/search` → **500** |
 
-## URLs Railway
+## Staging UI (tras redeploy Vercel)
 
-- **catalog:** `https://floitcatalog-service-production.up.railway.app`
-- **search / leads / partner / analytics:** anotar en Railway → Vercel (bloque B del runbook)
+| Ruta | Resultado |
+|------|-----------|
+| `/` | 200 OK |
+| `/buscar` | 200 OK — listado con centros (fallback a catalog) |
+| `/gyms/gym-fitness-caracas` | **200 OK** |
+| `/api/compare/search?q=fitness` | 200 pero `items: []` (search 500) |
+| `/admin/login`, `/partner/login` | 200 |
 
-## Staging UI (tras import, sin redeploy Vercel)
+## Acción pendiente (Railway, no Vercel)
 
-- **/buscar:** carga pero listado vacío si `SEARCH_SERVICE_URL` en Vercel no apunta a search Railway
-- **/gyms/gym-fitness-caracas:** 404 en staging (Vercel aún sin `CATALOG_SERVICE_URL` Railway)
-- **/api/compare/search:** `items: []` (mismo motivo — usa search service)
-- **/admin/login**, **/partner/login:** 200
+En **Railway** → servicio **search** → Variables:
+
+```env
+CATALOG_SERVICE_URL=https://floitcatalog-service-production.up.railway.app
+HOST=0.0.0.0
+```
+
+Redeploy search → comprobar:
+
+```bash
+curl -sS "https://floitsearch-service-production.up.railway.app/v1/search?limit=3"
+```
+
+Debe devolver JSON con `items` (no 500).
 
 ## Decisión
 
-**NO-GO** operativo en UI staging (datos OK en catalog; BFF desalineado).
+**NO-GO** formal (gates no corridos; search API roto). **Staging usable** para buscar y fichas.
 
-### Próximo paso humano
+### Próximo paso
 
-1. **Vercel** → `floit-web` → Environment Variables (Preview) → setear:
-   - `CATALOG_SERVICE_URL=https://floitcatalog-service-production.up.railway.app`
-   - `SEARCH_SERVICE_URL=<URL pública del servicio search en Railway>`
-2. **Redeploy** staging.
-3. Probar `https://staging.quegym.com/buscar` y una ficha `/gyms/gym-fitness-caracas`.
-
-### Seguridad
-
-Rotar `CATALOG_INTERNAL_API_TOKEN` si el valor se compartió por chat; actualizar Railway catalog + partner + `docs/env/staging.local`.
+1. Arreglar `CATALOG_SERVICE_URL` en Railway **search** (arriba).
+2. Añadir en Vercel (si falta): `LEADS_SERVICE_URL`, `PARTNER_SERVICE_URL`, `ANALYTICS_SERVICE_URL` cuando existan dominios públicos.
+3. `SMOKE_WEB_BASE=https://staging.quegym.com pnpm smoke:platform` + gates Sprint 4/5.

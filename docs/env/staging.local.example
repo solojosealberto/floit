@@ -10,8 +10,11 @@ CATALOG_INTERNAL_API_TOKEN=
 # Import HTTP directo (opcional si usas pnpm venues:import:staging)
 CATALOG_SERVICE_URL=https://floitcatalog-service-production.up.railway.app
 
-# URLs públicas Railway (para documentar / validar; opcional)
-# SEARCH_SERVICE_URL=https://...
+# Vercel Preview (staging.quegym.com) — ya configuradas 2026-05-25
+# SEARCH_SERVICE_URL=https://floitsearch-service-production.up.railway.app
+
+# Railway search-service: debe tener CATALOG_SERVICE_URL → catalog (mismo host público o red privada)
+# CATALOG_SERVICE_URL=https://floitcatalog-service-production.up.railway.app
 # LEADS_SERVICE_URL=https://...
 # PARTNER_SERVICE_URL=https://...
 # ANALYTICS_SERVICE_URL=https://...
