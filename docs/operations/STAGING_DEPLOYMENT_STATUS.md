@@ -4,7 +4,7 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 
 **URL pública staging:** https://staging.quegym.com (verificado HTTP 200 en web).
 
-**Catalog Railway:** https://floitcatalog-service-production.up.railway.app — `/health` OK; `/health/ready` indica **`relation "venues" does not exist`** (falta schema/sync en Neon o import).
+**Catalog Railway:** https://floitcatalog-service-production.up.railway.app — `/health/ready` → **`venues: 95`** (import OK). Staging web aún puede mostrar listado vacío hasta actualizar env en **Vercel** y redeploy.
 
 ---
 
@@ -29,8 +29,8 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | 4 | Vercel `floit-web` (`apps/web`) | ✅ | Node 20.x |
 | 5 | GoDaddy CNAME `staging` | ✅ | Ver DNS abajo |
 | 6 | Variables Vercel + Railway | ✅ | Vault; no en git |
-| 7 | Import catálogo Neon staging | ☐ | `docs/env/staging.local` + `pnpm staging:bootstrap` (o `DATABASE_SYNC=true` una vez en Railway) |
-| 8 | Smoke + evidencias Sprint 4/5 | ☐ | Tras import y URLs API estables |
+| 7 | Import catálogo Neon staging | ✅ | 2026-05-25 — `pnpm venues:import:staging` → **95 created**; `/health/ready` → `venues:95` |
+| 8 | Smoke + evidencias Sprint 4/5 | ☐ | **Bloqueante:** Vercel debe apuntar `CATALOG_SERVICE_URL` (+ `SEARCH_SERVICE_URL`) a Railway |
 | 9 | Dominio prod `www.quegym.com` | ☐ | Post GO |
 
 ---

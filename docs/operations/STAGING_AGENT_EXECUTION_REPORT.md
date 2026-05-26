@@ -1,91 +1,43 @@
-# Informe agente — Deployment QueGym — 2026-05-25
-
-Ejecución de [`GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md`](./GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md) desde Cursor (terminal + HTTP). Sin acceso a vault, Railway UI ni Vercel.
-
----
+# Informe agente — Deployment QueGym — 2026-05-25 (actualizado)
 
 ## Fase completada hasta
 
-- [ ] **1** Catalog + import (health/ready + venues) — **bloqueado** (falta `docs/env/staging.local`)
-- [ ] **2** Railway URLs + Vercel env — **parcial** (solo catalog URL confirmada)
-- [x] **3** Smoke / gates / evidencias — **ejecutado parcial** (smoke staging web; gates con precondiciones no cumplidas)
-- [ ] **4** Prod — omitido (sin GO)
-
----
+- [x] **1** Catalog + import — **95 venues** en Neon vía Railway catalog
+- [ ] **2** Railway URLs + Vercel env — **pendiente** (Vercel no ve catálogo aún)
+- [ ] **3** Smoke / gates / evidencias
+- [ ] **4** Prod
 
 ## Catalog
 
-| Check | Resultado |
-|-------|-----------|
-| `GET …/health` | `{"ok":true,"service":"catalog"}` |
-| `GET …/health/ready` | `503` — `relation "venues" does not exist` |
-| Import HTTP (`change-me-dev-only`) | `401 invalid_internal_token` |
-| `pnpm staging:bootstrap` | **No ejecutado** — ausente `docs/env/staging.local` |
-| `GET …/v1/venues/gym-fitness-caracas` | `500` (sin tabla/datos) |
+- **/health:** OK
+- **/health/ready:** `{"ok":true,"service":"catalog","venues":95}`
+- **Import:** `pnpm venues:import:staging` → `Resumen: { created: 95 }`
+- **validate:live:** OK (95/95)
 
----
+## URLs Railway
 
-## URLs Railway (sin secretos)
+- **catalog:** `https://floitcatalog-service-production.up.railway.app`
+- **search / leads / partner / analytics:** anotar en Railway → Vercel (bloque B del runbook)
 
-| Servicio | URL | `/health` |
-|----------|-----|-----------|
-| catalog | `https://floitcatalog-service-production.up.railway.app` | OK |
-| search | *desconocida* (patrones `floitsearch-service-production` → 404 Railway) | — |
-| leads | *desconocida* | — |
-| partner | *desconocida* | — |
-| analytics | *desconocida* | — |
+## Staging UI (tras import, sin redeploy Vercel)
 
-**Acción humana:** en Railway `quegym-api` → cada servicio → **Networking → Generate Domain** → anotar en Vercel y en `docs/env/staging.local` (opcional).
-
----
-
-## Staging UI
-
-| Prueba | Resultado | Notas |
-|--------|-----------|-------|
-| `GET /` | **PASS** (200) | `SMOKE_WEB_BASE=https://staging.quegym.com` |
-| `GET /buscar` | **PASS** (200) | HTML OK; sin venues en payload (catálogo vacío) |
-| `GET /gyms/gym-fitness-caracas` | **FAIL** (404) | Esperado sin import |
-| `GET /api/compare/search?q=gym` | **PASS** (200) | `items: []` |
-| `/admin/login` | **PASS** (200) | |
-| `/partner/login` | **PASS** (200) | |
-
----
-
-## Gates (salida resumida)
-
-| Gate | Resultado |
-|------|-----------|
-| `pnpm smoke:platform` (solo `SMOKE_WEB_BASE=staging`) | **FAIL** (7 fallos: APIs locales no levantadas; ficha 404) |
-| `pnpm smoke:platform` (solo `CATALOG_SERVICE_URL` Railway) | **FAIL** (4 fallos: search/leads/partner/analytics no URL; discovery 404 en catalog) |
-| `pnpm sprint4:gate` | **No ejecutado** (requiere `LEADS_HEALTH_URL` + `PARTNER_HEALTH_URL` públicos) |
-| `pnpm sprint5:flow-checklist` | **No ejecutado** |
-| `pnpm sprint5:kpi-gate` | **No ejecutado** |
-
----
+- **/buscar:** carga pero listado vacío si `SEARCH_SERVICE_URL` en Vercel no apunta a search Railway
+- **/gyms/gym-fitness-caracas:** 404 en staging (Vercel aún sin `CATALOG_SERVICE_URL` Railway)
+- **/api/compare/search:** `items: []` (mismo motivo — usa search service)
+- **/admin/login**, **/partner/login:** 200
 
 ## Decisión
 
-**NO-GO** (staging no operativo para discovery/leads/partner).
+**NO-GO** operativo en UI staging (datos OK en catalog; BFF desalineado).
 
-### Bloqueadores
+### Próximo paso humano
 
-1. **Schema Neon:** tabla `venues` no existe → `DATABASE_SYNC=true` o `CATALOG_ENSURE_SCHEMA=true` **una vez** en Railway catalog, **o** `pnpm staging:bootstrap` con `DATABASE_URL` + token en `docs/env/staging.local`.
-2. **Import:** ~95 venues sin cargar (`pnpm staging:bootstrap` / `pnpm venues:import:staging`).
-3. **URLs Railway:** search/leads/partner/analytics sin dominio público documentado; Vercel puede apuntar a placeholders.
-4. **Secrets locales:** falta `docs/env/staging.local` (plantilla: `docs/env/staging.local.example`).
+1. **Vercel** → `floit-web` → Environment Variables (Preview) → setear:
+   - `CATALOG_SERVICE_URL=https://floitcatalog-service-production.up.railway.app`
+   - `SEARCH_SERVICE_URL=<URL pública del servicio search en Railway>`
+2. **Redeploy** staging.
+3. Probar `https://staging.quegym.com/buscar` y una ficha `/gyms/gym-fitness-caracas`.
 
-### Próximo paso humano (una acción concreta)
+### Seguridad
 
-Crear `docs/env/staging.local` con `DATABASE_URL` (Neon `catalog`) y `CATALOG_INTERNAL_API_TOKEN` (vault = mismo valor que Railway catalog), luego en la raíz del repo:
-
-```bash
-export PATH="$(pwd)/.cursor-bin:$PATH"
-pnpm staging:bootstrap
-```
-
-Alternativa sin repo: Railway → catalog → `DATABASE_SYNC=true` → redeploy → verificar `/health/ready` → `DATABASE_SYNC=false` → redeploy → import con token en máquina local.
-
----
-
-*Generado al ejecutar GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md. Actualizar tras bootstrap exitoso.*
+Rotar `CATALOG_INTERNAL_API_TOKEN` si el valor se compartió por chat; actualizar Railway catalog + partner + `docs/env/staging.local`.
