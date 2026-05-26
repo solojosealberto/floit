@@ -143,9 +143,12 @@ export class VenuesService {
 
     const entities = await qb.getMany();
 
-    const promoMap = await this.loadActivePromotionTitles(
-      entities.map((e) => e.id),
-    );
+    let promoMap = new Map<string, string>();
+    try {
+      promoMap = await this.loadActivePromotionTitles(entities.map((e) => e.id));
+    } catch {
+      /* promotions table may be missing on first deploy */
+    }
 
     let ranked: { v: VenueEntity; distanceM?: number }[] = entities.map(
       (v) => ({

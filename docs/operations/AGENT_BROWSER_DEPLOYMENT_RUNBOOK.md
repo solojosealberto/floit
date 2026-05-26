@@ -112,6 +112,26 @@ curl -sS https://floitcatalog-service-production.up.railway.app/health
 
 **Éxito si:** respuesta JSON con `"ok":true` y `"service":"catalog"`.
 
+### Si `/health` OK pero `/health/ready` 503 o `/v1/venues` 500
+
+Tablas no creadas en Neon. En **Variables** del servicio catalog, añadir temporalmente:
+
+| Variable | Valor |
+|----------|--------|
+| `CATALOG_ENSURE_SCHEMA` | `true` |
+| `DATABASE_SYNC` | `true` (alternativa; usar solo una vez) |
+
+**Redeploy** → esperar Success → comprobar `curl …/health/ready` (debe incluir `"venues":0` o mayor) → **quitar** `CATALOG_ENSURE_SCHEMA` y poner `DATABASE_SYNC=false` → redeploy de nuevo.
+
+### Import sin conocer el token (solo staging, temporal)
+
+| Variable | Valor |
+|----------|--------|
+| `CATALOG_ALLOW_DEV_INTERNAL_TOKEN` | `true` |
+| `CATALOG_INTERNAL_API_TOKEN` | `change-me-dev-only` |
+
+Redeploy → ejecutar `pnpm venues:import:staging` con ese token → **rotar** token fuerte y quitar `CATALOG_ALLOW_DEV_INTERNAL_TOKEN`.
+
 ### Si sigue 502
 
 | Error en logs | Acción en navegador |

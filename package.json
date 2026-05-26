@@ -24,6 +24,7 @@
     "venues:audit": "node scripts/venues-import/audit-format.mjs",
     "venues:load": "node scripts/venues-import/normalize.mjs && node scripts/venues-import/import.mjs",
     "venues:import:staging": "node scripts/venues-import/import.mjs",
+    "staging:bootstrap": "node scripts/staging-bootstrap-catalog.mjs",
     "sprint4:readiness": "node scripts/sprint4-readiness.mjs",
     "sprint4:auth-negative": "node scripts/sprint4-auth-negative.mjs",
     "sprint4:gate": "pnpm sprint4:readiness && pnpm sprint4:auth-negative",

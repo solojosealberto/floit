@@ -32,22 +32,39 @@ export default async function BuscarPage(props: {
 
   const catalogBase = process.env.CATALOG_SERVICE_URL ?? "http://localhost:4010";
 
+  const catalogRoot = catalogBase.replace(/\/$/, "");
+
   try {
     const [searchRes, zonesRes, taxRes] = await Promise.all([
       fetch(`${base}/v1/search?${qs.toString()}`, { cache: "no-store" }),
       fetch(`${base}/v1/meta/zones`, { cache: "no-store" }),
-      fetch(
-        `${catalogBase.replace(/\/$/, "")}/v1/meta/taxonomy-attributes?kind=modality`,
-        { cache: "no-store" },
-      ),
+      fetch(`${catalogRoot}/v1/meta/taxonomy-attributes?kind=modality`, {
+        cache: "no-store",
+      }),
     ]);
 
     if (searchRes.ok) {
       data = (await searchRes.json()) as DiscoveryResponse;
+    } else {
+      const catalogSearch = await fetch(
+        `${catalogRoot}/v1/venues?${qs.toString()}`,
+        { cache: "no-store" },
+      );
+      if (catalogSearch.ok) {
+        data = (await catalogSearch.json()) as DiscoveryResponse;
+      }
     }
     if (zonesRes.ok) {
       const z = (await zonesRes.json()) as { zones?: string[] };
       zones = z.zones ?? [];
+    } else {
+      const catalogZones = await fetch(`${catalogRoot}/v1/meta/zones`, {
+        cache: "no-store",
+      });
+      if (catalogZones.ok) {
+        const z = (await catalogZones.json()) as { zones?: string[] };
+        zones = z.zones ?? [];
+      }
     }
     if (taxRes.ok) {
       const tax = (await taxRes.json()) as {

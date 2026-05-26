@@ -1,6 +1,7 @@
 import { Logger, Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { CatalogSchemaBootstrapService } from "./catalog-schema-bootstrap.service";
 import { HealthController } from "./health.controller";
 import { InternalApiGuard } from "./internal-api.guard";
 import { SeedModule } from "./seed/seed.module";
@@ -55,6 +56,6 @@ const DEFAULT_LOCAL_DATABASE_URL =
     SeedModule,
   ],
   controllers: [HealthController],
-  providers: [InternalApiGuard],
+  providers: [InternalApiGuard, CatalogSchemaBootstrapService],
 })
 export class AppModule {}

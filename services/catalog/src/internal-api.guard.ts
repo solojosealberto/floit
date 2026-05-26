@@ -14,7 +14,10 @@ export class InternalApiGuard implements CanActivate {
   canActivate(ctx: ExecutionContext): boolean {
     const configured = this.config.get<string>("CATALOG_INTERNAL_API_TOKEN")?.trim();
     const isNonProduction = this.config.get<string>("NODE_ENV")?.trim() !== "production";
-    const expected = configured || (isNonProduction ? "change-me-dev-only" : "");
+    const allowDevImport =
+      this.config.get<string>("CATALOG_ALLOW_DEV_INTERNAL_TOKEN")?.trim() === "true";
+    const expected =
+      configured || (isNonProduction || allowDevImport ? "change-me-dev-only" : "");
     if (!expected) {
       throw new UnauthorizedException("internal_api_not_configured");
     }

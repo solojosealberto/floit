@@ -12,6 +12,7 @@ build
 # Env
 .env
 .env.*.local
+docs/env/staging.local
 
 # IDE / OS
 .DS_Store
