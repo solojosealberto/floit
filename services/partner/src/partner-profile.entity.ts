@@ -40,9 +40,9 @@ export class PartnerProfileEntity {
   @Column({ type: "simple-json", nullable: true })
   photoUrls!: string[] | null;
 
-  @CreateDateColumn({ type: "datetime" })
+  @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: "datetime" })
+  @UpdateDateColumn({ type: "timestamptz" })
   updatedAt!: Date;
 }

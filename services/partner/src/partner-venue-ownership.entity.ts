@@ -22,9 +22,9 @@ export class PartnerVenueOwnershipEntity {
   @Column({ type: "varchar", length: 24, default: "active" })
   status!: "active" | "revoked";
 
-  @CreateDateColumn({ type: "datetime" })
+  @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: "datetime" })
+  @UpdateDateColumn({ type: "timestamptz" })
   updatedAt!: Date;
 }

@@ -20,6 +20,6 @@ export class PartnerOwnershipAuditEntity {
   @Column({ type: "varchar", length: 500, nullable: true })
   reason!: string | null;
 
-  @CreateDateColumn({ type: "datetime" })
+  @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 }

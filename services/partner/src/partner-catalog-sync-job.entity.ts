@@ -11,7 +11,7 @@ export class PartnerCatalogSyncJobEntity {
   @Column({ type: "integer", default: 0 })
   attempts!: number;
 
-  @Column({ type: "datetime" })
+  @Column({ type: "timestamptz" })
   nextAttemptAt!: Date;
 
   @Column({ type: "varchar", length: 512, nullable: true })
@@ -26,6 +26,6 @@ export class PartnerCatalogSyncJobEntity {
   @Column({ type: "text" })
   payload!: string;
 
-  @CreateDateColumn({ type: "datetime" })
+  @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 }

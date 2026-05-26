@@ -37,9 +37,9 @@ export class PartnerClaimEntity {
   @Column({ type: "varchar", length: 24, default: "pending_review" })
   status!: "pending_review" | "approved" | "rejected";
 
-  @CreateDateColumn({ type: "datetime" })
+  @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: "datetime" })
+  @UpdateDateColumn({ type: "timestamptz" })
   updatedAt!: Date;
 }

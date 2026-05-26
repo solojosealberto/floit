@@ -32,9 +32,9 @@ export class PartnerPlanEntity {
   @Column({ type: "boolean", default: true })
   active!: boolean;
 
-  @CreateDateColumn({ type: "datetime" })
+  @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: "datetime" })
+  @UpdateDateColumn({ type: "timestamptz" })
   updatedAt!: Date;
 }

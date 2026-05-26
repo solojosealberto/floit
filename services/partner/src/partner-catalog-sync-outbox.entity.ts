@@ -20,7 +20,7 @@ export class PartnerCatalogSyncOutboxEntity {
   @Column({ type: "integer", default: 0 })
   attempts!: number;
 
-  @Column({ type: "datetime" })
+  @Column({ type: "timestamptz" })
   nextAttemptAt!: Date;
 
   @Column({ type: "varchar", length: 512, nullable: true })
@@ -35,12 +35,12 @@ export class PartnerCatalogSyncOutboxEntity {
   @Column({ type: "text" })
   payload!: string;
 
-  @Column({ type: "datetime", nullable: true })
+  @Column({ type: "timestamptz", nullable: true })
   publishedAt!: Date | null;
 
-  @CreateDateColumn({ type: "datetime" })
+  @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: "datetime" })
+  @UpdateDateColumn({ type: "timestamptz" })
   updatedAt!: Date;
 }

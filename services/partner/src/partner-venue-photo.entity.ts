@@ -37,9 +37,9 @@ export class PartnerVenuePhotoEntity {
   @Column({ type: "varchar", length: 24, default: "active" })
   status!: "active" | "deleted";
 
-  @CreateDateColumn({ type: "datetime" })
+  @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: "datetime" })
+  @UpdateDateColumn({ type: "timestamptz" })
   updatedAt!: Date;
 }
