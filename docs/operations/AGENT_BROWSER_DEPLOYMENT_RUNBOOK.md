@@ -37,7 +37,7 @@ Instrucciones ejecutables para un **agente con navegador** que complete el deplo
 | GoDaddy dominio | `quegym.com` |
 | CNAME staging actual | `staging` → `df46f0c75f1e085a.vercel-dns-017.com` |
 
-**Problema abierto:** catalog en Railway responde **502** → bloquea import y `/buscar` en staging.
+**Problema abierto (2026-05-25):** catalog `/health` **OK**; pendiente **import** (token vault, no `change-me-dev-only`) y URLs de search/leads/partner/analytics en Vercel.
 
 **Fix en código (ya en `main`):** servicios Nest escuchan en `0.0.0.0` (`HOST`). Requiere **redeploy** en Railway.
 

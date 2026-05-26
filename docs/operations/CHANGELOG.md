@@ -37,6 +37,7 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - **Admin partner-claims (`#operaciones-y-sync`):** UI rediseñada — **`partner-service-health-panel.tsx`** (OIDC + colas + readiness), **`dlq-failures-panel.tsx`** (sync + outbox con búsqueda, selección, reintentos y modal detalle), **`ownership-partner-venue-panel.tsx`** (filtros + modal), **`ownership-audit-panel.tsx`** (filtros, fecha, CSV, paginación); auditoría carga hasta **200** eventos client-side.
 
 ### Documentation
+- **Verificación staging (2026-05-25):** catalog Railway `/health` 200; import 401 sin token vault; `/buscar` vacío; smoke:platform falla (servicios + datos).
 - **Staging catalog (2026-05-24):** URL Railway documentada; import bloqueado por 502; fix `HOST=0.0.0.0` en servicios + reintentos health en `venues:import`; `pnpm venues:import:staging`.
 - **Staging desplegado (2026-05-25):** paso 2 de cuentas completado (Neon, Railway, Auth0, Vercel, DNS); registro en `STAGING_DEPLOYMENT_STATUS.md`; `https://staging.quegym.com` activo; pendiente import catálogo y gates.
 - **Producción paso 2:** guía `PRODUCTION_ACCOUNTS_SETUP.md`, plantilla `docs/env/production.example`, `apps/web/vercel.json`; servicios partner/leads/analytics aceptan `DATABASE_URL` (Postgres/Neon) con fallback SQLite local.

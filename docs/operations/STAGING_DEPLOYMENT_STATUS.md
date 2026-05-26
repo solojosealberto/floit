@@ -27,7 +27,7 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | 4 | Vercel `floit-web` (`apps/web`) | ✅ | Node 20.x |
 | 5 | GoDaddy CNAME `staging` | ✅ | Ver DNS abajo |
 | 6 | Variables Vercel + Railway | ✅ | Vault; no en git |
-| 7 | Import catálogo Neon staging | ☐ | Catalog Railway **502** — ver § Catalog staging |
+| 7 | Import catálogo Neon staging | ☐ | Health OK; **bloqueado por token** (401) — ver § Catalog staging |
 | 8 | Smoke + evidencias Sprint 4/5 | ☐ | Tras import y URLs API estables |
 | 9 | Dominio prod `www.quegym.com` | ☐ | Post GO |
 
@@ -110,10 +110,12 @@ Dominio gestionado: **quegym.com**. Producción `www` y forward `@` → **no con
 | Campo | Valor |
 |-------|--------|
 | URL pública | `https://floitcatalog-service-production.up.railway.app` |
-| Health (2026-05-24) | **502** — Application failed to respond |
-| Import | `CATALOG_SERVICE_URL` + `CATALOG_INTERNAL_API_TOKEN` (vault) → `pnpm venues:import:staging` |
+| Health (2026-05-25) | **200 OK** — `{"ok":true,"service":"catalog"}` (502 resuelto tras redeploy / fix `0.0.0.0`) |
+| Venues públicos | **500** en `GET /v1/venues/*` — BD sin datos o error DB (esperado hasta import) |
+| Import (2026-05-25) | **401** con token dev; requiere `CATALOG_INTERNAL_API_TOKEN` del **vault** (Railway) |
+| Staging `/buscar` | **200** HTML pero **sin resultados** (catálogo vacío + URLs search/leads/partner en Vercel por confirmar) |
 
-**Diagnóstico 502:** el proceso Nest no acepta tráfico del proxy (revisar logs Railway). En repo se corrigió bind `HOST=0.0.0.0` en los 5 servicios — **redeploy** `catalog` (idealmente todo `quegym-api`) desde `main` y validar:
+**Diagnóstico 502 (histórico):** el proceso Nest no acepta tráfico del proxy (revisar logs Railway). En repo se corrigió bind `HOST=0.0.0.0` en los 5 servicios — **redeploy** `catalog` (idealmente todo `quegym-api`) desde `main` y validar:
 
 ```bash
 curl -sS https://floitcatalog-service-production.up.railway.app/health
