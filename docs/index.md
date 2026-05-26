@@ -23,7 +23,9 @@ Cambios recientes de producto (referencia rapida): **catálogo Caracas (~95 venu
 - `docs/operations/PRODUCTION_LAUNCH_PLAN.md` — lanzamiento en **www.quegym.com** (decisiones D1–D6, GO LIVE)
 - `docs/operations/PRODUCTION_ACCOUNTS_SETUP.md` — **paso 2:** alta Vercel, Railway, Neon, Auth0, DNS GoDaddy
 - `docs/operations/STAGING_DEPLOYMENT_STATUS.md` — **estado staging** (`staging.quegym.com`, inventario proveedores, paso 3)
-- `docs/operations/AGENT_BROWSER_DEPLOYMENT_RUNBOOK.md` — **runbook para agente en navegador** (ChatGPT Agent Mode: cerrar 502, import, Vercel, GO/NO-GO)
+- `docs/operations/GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md` — **instrucciones para agente GPT** (prompt sistema, fases, informe; arranque recomendado)
+- `docs/operations/STAGING_AGENT_EXECUTION_REPORT.md` — último informe de ejecución del plan de deployment staging
+- `docs/operations/AGENT_BROWSER_DEPLOYMENT_RUNBOOK.md` — runbook detallado en navegador (Railway, Vercel, Auth0; bloques A→H)
 - `docs/env/production.example` — plantilla de variables staging/prod (sin secretos)
 - `docs/operations/WEB_ROUTES_PLATFORM.md` — inventario de rutas web (`apps/web`)
 - `docs/operations/ADMIN_CONFIGURATION_PAGE_PLAN.md` — diseño y planificación de `/admin/configuracion` (auth admin, runbooks, navegación)

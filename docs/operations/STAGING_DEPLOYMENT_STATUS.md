@@ -171,5 +171,7 @@ Orden recomendado para la **siguiente sesión operativa**:
 - Import datos: [`VENUES_CATALOG_IMPORT.md`](./VENUES_CATALOG_IMPORT.md)
 - Plantilla env: [`docs/env/production.example`](../env/production.example)
 - Próximos pasos priorizados: [`NEXT_STEPS_RECOMMENDED.md`](./NEXT_STEPS_RECOMMENDED.md)
+- Agente GPT: [`GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md`](./GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md)
+- Última ejecución agente: [`STAGING_AGENT_EXECUTION_REPORT.md`](./STAGING_AGENT_EXECUTION_REPORT.md) (2026-05-25, **NO-GO**)
 
 *Actualizar este documento al cerrar import, smoke PASS y GO/NO-GO.*

@@ -2,18 +2,9 @@
 
 ## Prompt inicial (copiar en ChatGPT Agent Mode)
 
-```text
-Eres un agente de operaciones. Sigue al pie de la letra el runbook del repositorio floit:
-docs/operations/AGENT_BROWSER_DEPLOYMENT_RUNBOOK.md (bloques A→G en orden; bloque H solo si GO).
+**Usar el prompt completo en:** [`GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md`](./GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md) §1 (incluye estado actual y enlace a este runbook).
 
-Contexto: staging https://staging.quegym.com ya existe; catalog Railway
-https://floitcatalog-service-production.up.railway.app devuelve 502.
-Proyectos: Railway quegym-api, Vercel floit-web, Neon quegym, Auth0, GoDaddy quegym.com.
-
-Reglas: no commitear ni pegar secretos en el chat; usa vault del usuario para tokens;
-tras cada bloque verifica el criterio «Éxito si»; al final rellena la plantilla §3 Informe.
-Si necesitas terminal, pide al usuario ejecutar comandos marcados 🖥️ TERMINAL.
-```
+Resumen: seguir bloques **A→G** aquí abajo; bloque **H** solo tras **GO** staging.
 
 Instrucciones ejecutables para un **agente con navegador** que complete el deployment de staging y prepare producción. Diseñado para **ChatGPT Agent Mode** (o equivalente): cada bloque tiene objetivo, pasos en UI, criterio de éxito y qué hacer si falla.
 
@@ -37,7 +28,7 @@ Instrucciones ejecutables para un **agente con navegador** que complete el deplo
 | GoDaddy dominio | `quegym.com` |
 | CNAME staging actual | `staging` → `df46f0c75f1e085a.vercel-dns-017.com` |
 
-**Problema abierto (2026-05-25):** catalog `/health` **OK**; pendiente **import** (token vault, no `change-me-dev-only`) y URLs de search/leads/partner/analytics en Vercel.
+**Problema abierto (2026-05-25):** catalog `/health` **OK**; `/health/ready` → **`venues` no existe** (schema/import); pendiente URLs search/leads/partner/analytics en Vercel. Ver [`GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md`](./GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md).
 
 **Fix en código (ya en `main`):** servicios Nest escuchan en `0.0.0.0` (`HOST`). Requiere **redeploy** en Railway.
 
@@ -438,4 +429,4 @@ Al terminar (o al bloquear), responder con esta plantilla:
 
 ---
 
-*Última actualización: 2026-05-25 — catalog Railway 502 pendiente; fix `0.0.0.0` en `main`.*
+*Última actualización: 2026-05-25 — ver prompt maestro en `GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md`.*
