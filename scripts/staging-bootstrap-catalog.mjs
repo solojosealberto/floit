@@ -24,8 +24,11 @@ const args = new Set(process.argv.slice(2));
 const importOnly = args.has("--import-only");
 
 function loadStagingEnv() {
+  if (process.env.DATABASE_URL?.trim() && process.env.CATALOG_INTERNAL_API_TOKEN?.trim()) {
+    return;
+  }
   if (!existsSync(STAGING_ENV)) {
-    console.error(`Falta ${STAGING_ENV}`);
+    console.error(`Falta ${STAGING_ENV} o export DATABASE_URL + CATALOG_INTERNAL_API_TOKEN`);
     console.error("Copia docs/env/staging.local.example → docs/env/staging.local");
     process.exit(1);
   }
@@ -186,13 +189,15 @@ async function main() {
     );
   }
 
-  await run("node", ["scripts/venues-import/validate.mjs", "--live"], {
-    env: { CATALOG_SERVICE_URL: railwayCatalog },
-  }).catch(() =>
-    run("node", ["scripts/venues-import/validate.mjs", "--live"], {
+  try {
+    await run("node", ["scripts/venues-import/validate.mjs", "--live"], {
+      env: { CATALOG_SERVICE_URL: railwayCatalog },
+    });
+  } catch {
+    await run("node", ["scripts/venues-import/validate.mjs", "--live"], {
       env: { CATALOG_SERVICE_URL: LOCAL_CATALOG },
-    }),
-  );
+    }).catch(() => console.warn("validate:live omitido"));
+  }
 
   console.log("\n=== Listo. Actualiza Vercel: CATALOG + SEARCH → URLs Railway; redeploy web ===\n");
 }

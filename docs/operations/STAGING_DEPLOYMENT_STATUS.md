@@ -110,9 +110,10 @@ Dominio gestionado: **quegym.com**. Producción `www` y forward `@` → **no con
 | Campo | Valor |
 |-------|--------|
 | URL pública | `https://floitcatalog-service-production.up.railway.app` |
-| Health (2026-05-25) | **200 OK** — `{"ok":true,"service":"catalog"}` (502 resuelto tras redeploy / fix `0.0.0.0`) |
-| Venues públicos | **500** en `GET /v1/venues/*` — BD sin datos o error DB (esperado hasta import) |
-| Import (2026-05-25) | **401** con token dev; requiere `CATALOG_INTERNAL_API_TOKEN` del **vault** (Railway) |
+| Health (2026-05-25) | **200 OK** — `{"ok":true,"service":"catalog"}` |
+| Health ready | `GET /health/ready` → si `relation "venues" does not exist`, aplicar **CATALOG_ENSURE_SCHEMA=true** + redeploy (una vez) |
+| Venues públicos | **500** hasta schema + import |
+| Import (2026-05-25) | **401** hasta alinear token Railway con vault **o** flags staging temporales (ver runbook agente) |
 | Staging `/buscar` | **200** HTML pero **sin resultados** (catálogo vacío + URLs search/leads/partner en Vercel por confirmar) |
 
 **Diagnóstico 502 (histórico):** el proceso Nest no acepta tráfico del proxy (revisar logs Railway). En repo se corrigió bind `HOST=0.0.0.0` en los 5 servicios — **redeploy** `catalog` (idealmente todo `quegym-api`) desde `main` y validar:
