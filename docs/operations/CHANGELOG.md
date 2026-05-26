@@ -16,6 +16,12 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ## [Unreleased]
 
+### Fixed
+- **Partner-service Railway:** dependencia directa **`express`** en `services/partner/package.json` — corrige crash al arranque (`Cannot find module 'express'`) por import de `serveStatic` en `main.ts` con aislamiento pnpm en deploy.
+
+### Documentation
+- **Staging paso 3 (2026-05-26):** sincronización de `STAGING_DEPLOYMENT_STATUS.md`, `STAGING_AGENT_EXECUTION_REPORT.md`, `GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md`, `docs/env/production.example` (URLs Railway), `sprints.md`, `PROJECT_CONTEXT_HANDOVER.md`, `EPICS_USER_STORIES_STATUS.md`, `NEXT_STEPS_RECOMMENDED.md`, `NEXT_AGENT_BRIEF.md`, `docs/index.md` — import 95 venues, discovery staging OK, health 3/5, NO-GO formal pendiente.
+
 ### Added
 - **Importación masiva de catálogo Caracas:** pipeline `scripts/venues-import/` (`normalize.mjs`, `import.mjs`, `validate.mjs`, `audit-format.mjs`); artefactos en `data/` (`venues-caracas.source.csv`, `venues-caracas.normalized.json`, `venues-geocode-cache.json`); comandos raíz `pnpm venues:normalize`, `venues:import`, `venues:load`, `venues:validate`, `venues:validate:live`, `venues:audit`. Guía: `docs/operations/VENUES_CATALOG_IMPORT.md`.
 - **`POST /v1/internal/venues` ampliado:** alta/actualización idempotente por `slug` con campos opcionales de ficha (`description`, precios, contacto, `photoUrls`, scores); respuesta incluye `updated` cuando se fusiona un venue existente (`CreateInternalVenue` en `openapi/catalog.yaml`).

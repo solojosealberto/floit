@@ -15,12 +15,12 @@ NODE_ENV=production
 NEXT_PUBLIC_SITE_URL=https://staging.quegym.com
 
 # URLs de microservicios (Railway — HTTPS público staging o private networking)
-# Staging (2026-05): https://floitcatalog-service-production.up.railway.app
-CATALOG_SERVICE_URL=https://REPLACE-catalog.up.railway.app
-SEARCH_SERVICE_URL=https://REPLACE-search.up.railway.app
-LEADS_SERVICE_URL=https://REPLACE-leads.up.railway.app
-PARTNER_SERVICE_URL=https://REPLACE-partner.up.railway.app
-ANALYTICS_SERVICE_URL=https://REPLACE-analytics.up.railway.app
+# Staging Railway (2026-05-26) — sustituir si regeneras dominios
+CATALOG_SERVICE_URL=https://floitcatalog-service-production.up.railway.app
+SEARCH_SERVICE_URL=https://floitsearch-service-production.up.railway.app
+LEADS_SERVICE_URL=https://floitleads-service-production.up.railway.app
+PARTNER_SERVICE_URL=https://floitpartner-service-production.up.railway.app
+ANALYTICS_SERVICE_URL=https://floitanalytics-service-production.up.railway.app
 
 # --- Admin BFF (servidor) ---
 # Producción objetivo: solo Bearer M2M; staging puede usar API token + login local

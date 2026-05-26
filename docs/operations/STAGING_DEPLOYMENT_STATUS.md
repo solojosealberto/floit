@@ -7,7 +7,8 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 **Catalog Railway:** https://floitcatalog-service-production.up.railway.app — `venues: 95`.  
 **Search Railway:** https://floitsearch-service-production.up.railway.app — `/v1/search` OK (`meta.total: 95`) tras `CATALOG_SERVICE_URL` → catalog.  
 **Vercel staging:** catalog + search configurados; `/buscar`, fichas y `/api/compare/search` OK (2026-05-26).  
-**Pendiente:** dominios públicos leads / partner / analytics en Railway → variables en Vercel.
+**URLs leads / partner / analytics (Railway):** registradas 2026-05-26 — **salud HTTP aún NO OK** (ver tabla Railway abajo).  
+**Pendiente:** arrancar servicios en Railway + `LEADS_*` / `PARTNER_*` / `ANALYTICS_*` en Vercel → redeploy.
 
 ---
 
@@ -32,8 +33,9 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | 4 | Vercel `floit-web` (`apps/web`) | ✅ | Node 20.x |
 | 5 | GoDaddy CNAME `staging` | ✅ | Ver DNS abajo |
 | 6 | Variables Vercel + Railway | ✅ | Vault; no en git |
-| 7 | Import catálogo Neon staging | ✅ | 2026-05-25 — `pnpm venues:import:staging` → **95 created**; `/health/ready` → `venues:95` |
-| 8 | Smoke + evidencias Sprint 4/5 | ☐ | Discovery OK; faltan URLs públicas **leads/partner/analytics** en Railway + Vercel |
+| 7 | Import catálogo Neon staging | ✅ | 2026-05-26 — **95 created**; `/health/ready` → `venues:95` |
+| 7b | Fix crash partner Railway (`express`) | ✅ código | `services/partner/package.json` — **redeploy Railway** pendiente |
+| 8 | Smoke + evidencias Sprint 4/5 | ☐ | Discovery OK; leads/partner **502**, analytics **404** en `/health` |
 | 9 | Dominio prod `www.quegym.com` | ☐ | Post GO |
 
 ---
@@ -58,17 +60,21 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | Red privada | Habilitada entre servicios |
 | Repo | `https://github.com/solojosealberto/floit` |
 
-| Servicio | Paquete | Puerto | URL pública staging (Railway) |
-|----------|---------|--------|-------------------------------|
-| catalog | `@floit/catalog-service` | 4010 | `https://floitcatalog-service-production.up.railway.app` |
+| Servicio | Paquete | Puerto | URL pública staging | `/health` (2026-05-26) |
+|----------|---------|--------|----------------------|-------------------------|
+| catalog | `@floit/catalog-service` | 4010 | `https://floitcatalog-service-production.up.railway.app` | OK |
+| search | `@floit/search-service` | 4011 | `https://floitsearch-service-production.up.railway.app` | OK |
+| leads | `@floit/leads-service` | 4012 | `https://floitleads-service-production.up.railway.app` | **502** — app no responde |
+| partner | `@floit/partner-service` | 4013 | `https://floitpartner-service-production.up.railway.app` | **502** — app no responde |
+| analytics | `@floit/analytics-service` | 4014 | `https://floitanalytics-service-production.up.railway.app` | **404** — Application not found |
 
 | Servicio | DB / deps |
 |----------|-----------|
 | catalog | Neon `catalog`; `DATABASE_SYNC=false`, `SEED_ON_BOOT=false` |
-| search | `@floit/search-service` | 4011 | `CATALOG_SERVICE_URL` → catalog (red privada) |
-| leads | `@floit/leads-service` | 4012 | Neon `leads`; OIDC admin strict en servicio |
-| partner | `@floit/partner-service` | 4013 | Neon `partner`; tokens S2S + OIDC |
-| analytics | `@floit/analytics-service` | 4014 | Neon `analytics` |
+| search | `CATALOG_SERVICE_URL` → catalog (HTTPS público o red privada) |
+| leads | Neon `leads`; `DATABASE_SYNC=true` (1ª vez) → `false`; OIDC admin si `ADMIN_AUTH_REQUIRE_OIDC=true` |
+| partner | Neon `partner`; tokens S2S + OIDC; `CATALOG_SERVICE_URL` interno o público |
+| analytics | Neon `analytics`; verificar servicio desplegado y dominio generado |
 
 **Build / start (todos):** raíz monorepo — `pnpm install --frozen-lockfile && pnpm --filter <paquete> build` → `pnpm --filter <paquete> start`.
 
@@ -116,9 +122,10 @@ Dominio gestionado: **quegym.com**. Producción `www` y forward `@` → **no con
 
 ## Brechas conocidas (del informe + verificación)
 
-1. **Tabla `venues` ausente en Neon** — `/health/ready` en catalog Railway devuelve `relation "venues" does not exist`. Corregir con `pnpm staging:bootstrap` (local + `DATABASE_URL` en `docs/env/staging.local`) **o** `DATABASE_SYNC=true` en Railway catalog → redeploy → volver a `false`.
-2. **Catálogo sin datos importados** — pendiente `pnpm venues:import:staging` o paso 3 del bootstrap.
-2. **URLs de microservicios en Vercel** — pueden estar en dominios Railway públicos temporales; conviene fijar URLs finales y validar `/health` de cada servicio desde la máquina de ops.
+1. **Partner Railway** — crash conocido **`Cannot find module 'express'`** (import `serveStatic` en `main.ts` sin dep directa). **Corregido en repo** (`express` en `package.json`); **redeploy** el servicio partner tras push a `main`.
+2. **Leads Railway** — dominio OK pero **502**: revisar **Deploy logs** (`DATABASE_URL` Neon `/leads`, OIDC admin, build/start monorepo).
+3. **Analytics Railway** — **404 Application not found**: confirmar que el servicio existe en `quegym-api`, último deploy exitoso y dominio público activo.
+4. **Vercel BFF** — añadir `LEADS_SERVICE_URL`, `PARTNER_SERVICE_URL`, `ANALYTICS_SERVICE_URL` (sin `/` final) y redeploy **después** de `/health` OK en los tres.
 3. **BFF → APIs** — si las URLs en Vercel no apuntan a endpoints alcanzables, `/buscar` y flujos admin/partner fallarán aunque la home cargue (200 en HTML no implica APIs OK).
 4. **Evidencia formal** — `STAGING_EVIDENCE_SPRINT4.md` / `STAGING_EVIDENCE_SPRINT5.md` sin rellenar.
 5. **Prod** — `www.quegym.com`, apex redirect y OIDC-only sin passwords locales: pendiente.

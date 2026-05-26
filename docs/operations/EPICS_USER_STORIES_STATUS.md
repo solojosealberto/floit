@@ -168,6 +168,20 @@ Notas operativas recientes de discovery/comparación (US-2.x):
 
 ---
 
+## Rollout staging `staging.quegym.com` (2026-05-26)
+
+| Capacidad | Estado staging | Notas |
+|-----------|----------------|-------|
+| Discovery (US-1.x) | `Completado` | 95 venues en Neon; search+catalog Railway; Vercel Preview |
+| Ficha / comparar (US-2.x) | `Completado` | `/gyms/*`, `/api/compare/search` verificados en staging |
+| Leads públicos (US-3.1) | `Bloqueado` en staging | `leads-service` Railway 502 hasta env/deploy |
+| Partner / admin ops (US-4.x, 5.x) | `Parcial` | partner Railway 502 (`express` fix en repo; redeploy); admin BFF depende de upstreams |
+| Analytics / Sprint 5 KPIs (US-6.x) | `Bloqueado` en staging | analytics Railway 404; gates no ejecutados |
+
+Evidencia y URLs: `STAGING_DEPLOYMENT_STATUS.md`, `STAGING_AGENT_EXECUTION_REPORT.md`, `GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md`.
+
+---
+
 ## Foco vigente de ejecución (sprint UI actual)
 
 - Scope activo: cierre de UI/UX en páginas faltantes o no mejoradas, priorizadas en `docs/operations/sprints.md`.

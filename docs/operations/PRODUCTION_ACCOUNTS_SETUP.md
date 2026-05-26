@@ -194,9 +194,12 @@ ANALYTICS_SERVICE_URL=http://<analytics-private-host>:4014
 
 **partner**
 
+> **Deploy Railway:** el servicio declara **`express`** como dependencia directa (`main.ts` sirve `/uploads` con `express.static`). Sin ello, el contenedor crashea con `Cannot find module 'express'` (pnpm aislado).
+
 ```env
 NODE_ENV=production
 PORT=4013
+HOST=0.0.0.0
 DATABASE_URL=<DATABASE_URL_PARTNER>
 DATABASE_SYNC=true
 CATALOG_SERVICE_URL=http://<catalog-private-host>:4010

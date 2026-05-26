@@ -537,6 +537,23 @@ Detalle de ejecución:
 
 ---
 
+### Actualización operativa (2026-05-26) — staging paso 3 (parcial)
+
+| Área | Entrega | Estado |
+|------|---------|--------|
+| Catálogo Neon/Railway | `pnpm venues:import:staging` → **95 venues**; `/health/ready` → `venues: 95` | `Completado` |
+| Railway catalog + search | URLs públicas; search con `CATALOG_SERVICE_URL` → catalog HTTPS | `/health` OK |
+| Vercel Preview | `CATALOG_SERVICE_URL`, `SEARCH_SERVICE_URL`; `/buscar`, fichas, `/api/compare/search` | Discovery OK |
+| Railway leads / partner / analytics | URLs documentadas en `STAGING_DEPLOYMENT_STATUS.md` | `/health` **FAIL** (502 leads/partner; 404 analytics) |
+| Fix deploy partner | `express` como dependencia directa en `@floit/partner-service` (`main.ts` importa `serveStatic`) | Código en `main`; **redeploy Railway** pendiente |
+| Smoke | `pnpm smoke:platform` con 5 URLs + `SMOKE_WEB_BASE=staging.quegym.com` | Parcial (3/5 servicios) |
+| Gates Sprint 4/5 | `sprint4:gate`, flow-checklist, kpi-gate | `Pendiente` (requiere health leads/partner) |
+| Decisión | GO parcial discovery; **NO-GO** formal | Ver `STAGING_AGENT_EXECUTION_REPORT.md` |
+
+URLs Railway staging (sin secretos): ver tabla en `STAGING_DEPLOYMENT_STATUS.md` y `docs/env/production.example`.
+
+---
+
 ### Actualización operativa (2026-05-25) — staging en proveedores (paso 2 cerrado)
 
 | Área | Entrega |
@@ -544,7 +561,7 @@ Detalle de ejecución:
 | Infra | Neon `quegym` (4 DB + PostGIS), Railway `quegym-api` (5 servicios), Auth0, Vercel `floit-web`, GoDaddy CNAME `staging` |
 | URL | https://staging.quegym.com (web desplegada) |
 | Docs | `STAGING_DEPLOYMENT_STATUS.md`; checklist `PRODUCTION_ACCOUNTS_SETUP.md` actualizado |
-| Pendiente | Import catálogo, smoke/gates, evidencias Sprint 4/5, GO/NO-GO, prod `www` |
+| Pendiente | ~~Import catálogo~~ (hecho 2026-05-26); smoke/gates, evidencias Sprint 4/5, GO/NO-GO, prod `www` |
 
 ---
 
@@ -571,4 +588,4 @@ Detalle de ejecución:
 
 ---
 
-*Última actualización documental (2026-05-21): **importación catálogo Caracas** (`VENUES_CATALOG_IMPORT.md`, `data/`, `pnpm venues:*`); BD local sin demos seed (95 venues importados). Histórico 2026-05-10: panel admin — **`/admin/configuracion`** (hub auth read-only + docs); **`/admin/partner-claims`**: modal **Ver detalle** (`claim-detail-modal`), lista claims con **`updatedAt`**, y **`#operaciones-y-sync`** rediseñado (`partner-service-health-panel`, `dlq-failures-panel` sync/outbox, `ownership-partner-venue-panel`, `ownership-audit-panel`, `admin-refresh-button`; auditoría hasta 200 eventos). Histórico mismo sprint: **`/admin/leads`** (modal detalle lead), **`/admin/analytics`** (gráficos MVP + detalle técnico), catálogo admin panel compartido con partner. Referencias actualizadas: `WEB_ROUTES_PLATFORM.md`, `LOCALHOST_LINKS_GUIDE.md`, `LOCAL_TEST_CREDENTIALS.md`, `PROJECT_CONTEXT_HANDOVER.md`, `EPICS_USER_STORIES_STATUS.md`, `CHANGELOG.md`, `NEXT_STEPS_RECOMMENDED.md`.*
+*Última actualización documental (2026-05-26): **staging paso 3 parcial** — import 95 venues en Neon/Railway; discovery en `staging.quegym.com` OK; URLs leads/partner/analytics registradas; health 3/5; fix `express` en partner-service para Railway. Histórico 2026-05-21: **importación catálogo Caracas** (`VENUES_CATALOG_IMPORT.md`, `data/`, `pnpm venues:*`); BD local sin demos seed (95 venues importados). Histórico 2026-05-10: panel admin — **`/admin/configuracion`** (hub auth read-only + docs); **`/admin/partner-claims`**: modal **Ver detalle** (`claim-detail-modal`), lista claims con **`updatedAt`**, y **`#operaciones-y-sync`** rediseñado (`partner-service-health-panel`, `dlq-failures-panel` sync/outbox, `ownership-partner-venue-panel`, `ownership-audit-panel`, `admin-refresh-button`; auditoría hasta 200 eventos). Histórico mismo sprint: **`/admin/leads`** (modal detalle lead), **`/admin/analytics`** (gráficos MVP + detalle técnico), catálogo admin panel compartido con partner. Referencias actualizadas: `WEB_ROUTES_PLATFORM.md`, `LOCALHOST_LINKS_GUIDE.md`, `LOCAL_TEST_CREDENTIALS.md`, `PROJECT_CONTEXT_HANDOVER.md`, `EPICS_USER_STORIES_STATUS.md`, `CHANGELOG.md`, `NEXT_STEPS_RECOMMENDED.md`.*

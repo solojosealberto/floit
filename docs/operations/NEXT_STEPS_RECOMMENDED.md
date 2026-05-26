@@ -22,10 +22,12 @@ Plan: **`PRODUCTION_LAUNCH_PLAN.md`**. Infra staging: **`STAGING_DEPLOYMENT_STAT
 
 **Hecho (2026-05):** Neon `quegym`, Railway `quegym-api` (5 servicios), Auth0, Vercel `floit-web`, DNS `staging.quegym.com` → https://staging.quegym.com (web 200).
 
-**Ahora (Paso 3):**
+**Hecho (2026-05-26, paso 3 parcial):** import **95 venues** (`pnpm venues:import:staging`); catalog+search Railway OK; Vercel con catalog+search → discovery/comparar OK; URLs de los 5 servicios en `production.example` / `STAGING_DEPLOYMENT_STATUS.md`; fix **`express`** en `partner-service` para crash Railway.
 
-1. **`pnpm venues:import`** contra catalog Railway/Neon (ver `VENUES_CATALOG_IMPORT.md`).
-2. **URLs API** en Vercel = dominios Railway finales; validar `/health` × 5.
+**Ahora (cerrar paso 3):**
+
+1. **Railway:** redeploy **partner** (commit con `express`); revisar logs **leads** y despliegue **analytics** hasta `curl …/health` → 200 en los tres.
+2. **Vercel Preview:** `LEADS_SERVICE_URL`, `PARTNER_SERVICE_URL`, `ANALYTICS_SERVICE_URL` (sin `/` final) → redeploy web.
 3. **`SMOKE_WEB_BASE=https://staging.quegym.com pnpm smoke:platform`** + `sprint4:gate` + Sprint 5 gates.
 4. **Evidencias** `STAGING_EVIDENCE_SPRINT4/5` → **GO/NO-GO**.
 5. **Cutover prod** (solo tras GO): `www.quegym.com`, import prod, OIDC-only, §14 del plan.

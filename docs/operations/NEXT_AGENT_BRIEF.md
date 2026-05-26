@@ -4,7 +4,7 @@ Documento corto para retomar trabajo sin releer todo el historial.
 
 ## 1) Estado actual en una frase
 
-Marca visible **QueGym** (rebrand Fase 1). Core MVP funcional (`buscar -> ficha -> comparar -> lead`) con operación admin/partner activa, login partner por credenciales OIDC y operación partner 100% venue-scoped en web/BFF (legacy lead-status deprecado `410`); panel partner ya tiene navegación funcional por secciones y edición refinada; **admin taxonomías** (`/admin/taxonomias`) con CRUD en catalog + BFF documentado; **admin configuración** (`/admin/configuracion`) y **solicitudes** (`/admin/partner-claims`: modal detalle claims + paneles `#operaciones-y-sync`) documentados en guías operativas; resta cierre en staging para OIDC-only + gate beta de Sprint 5.
+Marca visible **QueGym** (rebrand Fase 1). Core MVP funcional en **local**; en **staging** discovery/comparar **OK** (95 venues, catalog+search+Vercel). Pendiente: **leads/partner/analytics** Railway (`/health` 502/404), redeploy **partner** tras fix `express`, env Vercel para los 3 BFF, smoke/gates Sprint 4/5 y GO/NO-GO. Admin/partner web documentados; OIDC-only + KPI beta siguen bloqueados por upstreams staging.
 
 ## 2) Prioridad de arranque (orden estricto)
 
@@ -17,12 +17,13 @@ Marca visible **QueGym** (rebrand Fase 1). Core MVP funcional (`buscar -> ficha 
 
 ## 3) Objetivo recomendado para la próxima sesión
 
-**Staging infra lista** (`STAGING_DEPLOYMENT_STATUS.md`). Prioridad inmediata: import catálogo + validación API + gates.
+**Staging paso 3 parcial** (`STAGING_DEPLOYMENT_STATUS.md`, `STAGING_AGENT_EXECUTION_REPORT.md`). Prioridad inmediata: **redeploy partner** + arrancar leads/analytics en Railway → `/health` × 5 → Vercel env → gates.
 
 Cerrar Sprint 6 operativo (staging):
 
-- import catálogo Neon (`pnpm venues:import` con `CATALOG_SERVICE_URL` Railway),
-- confirmar URLs microservicios en Vercel y `/health`,
+- ~~import catálogo Neon~~ (**hecho:** 95 venues, 2026-05-26),
+- confirmar `/health` en **leads, partner, analytics** (URLs ya documentadas; partner: dep `express` en `main`),
+- añadir `LEADS_*`, `PARTNER_*`, `ANALYTICS_*` en Vercel Preview y redeploy,
 - habilitar OIDC estricto admin/partner en entorno real donde aplique,
 - ejecutar gates y evidencia:
   - `pnpm sprint4:gate`

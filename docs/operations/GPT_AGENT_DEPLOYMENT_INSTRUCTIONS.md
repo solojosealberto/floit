@@ -201,6 +201,7 @@ Al terminar o al bloquear, responder **solo** con esta plantilla rellena:
 | `/buscar` vacío en staging | Vercel sin URLs Railway o catálogo vacío | Fase 2 + Fase 1 |
 | Partner login OIDC | Auth0 Password grant deshabilitado | Auth0 → Partner app → Grant Types |
 | Admin leads 401 | Falta M2M `ADMIN_OIDC_ACCESS_TOKEN` en Vercel | Renovar token M2M Auth0 |
+| Partner crash `Cannot find module 'express'` | `main.ts` importa `express`; no estaba en `dependencies` (pnpm aislado en Railway) | Añadir `express` en `services/partner/package.json` y redeploy |
 
 ---
 
@@ -217,4 +218,4 @@ Al terminar o al bloquear, responder **solo** con esta plantilla rellena:
 
 ---
 
-*Última actualización: 2026-05-25 — paso 2 cerrado; bloqueante: schema + import catalog en Neon.*
+*Última actualización: 2026-05-26 — paso 3 parcial: import 95 venues; discovery staging OK; URLs 5 servicios; partner fix `express`; pendiente health leads/analytics + gates.*
