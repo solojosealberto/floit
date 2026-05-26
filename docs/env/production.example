@@ -6,7 +6,6 @@
 #
 # Staging activo (2026-05): NEXT_PUBLIC_SITE_URL=https://staging.quegym.com
 # DNS GoDaddy staging CNAME → df46f0c75f1e085a.vercel-dns-017.com (ver STAGING_DEPLOYMENT_STATUS)
-# Catalog staging (Railway): https://floitcatalog-service-production.up.railway.app
 # Sustituir REPLACE-* por URLs *.up.railway.app reales del proyecto quegym-api
 
 # =============================================================================
@@ -16,6 +15,7 @@ NODE_ENV=production
 NEXT_PUBLIC_SITE_URL=https://staging.quegym.com
 
 # URLs de microservicios (Railway — HTTPS público staging o private networking)
+# Staging (2026-05): https://floitcatalog-service-production.up.railway.app
 CATALOG_SERVICE_URL=https://REPLACE-catalog.up.railway.app
 SEARCH_SERVICE_URL=https://REPLACE-search.up.railway.app
 LEADS_SERVICE_URL=https://REPLACE-leads.up.railway.app

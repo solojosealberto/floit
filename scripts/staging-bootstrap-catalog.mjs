@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * Bootstrap catálogo staging: schema en Neon + import 95 venues.
+ * Bootstrap catálogo staging: schema en Neon + import ~95 venues.
  *
  * Requiere docs/env/staging.local (ver docs/env/staging.local.example):
  *   DATABASE_URL, CATALOG_INTERNAL_API_TOKEN
  *
  * Uso:
  *   pnpm staging:bootstrap
- *   pnpm staging:bootstrap -- --import-only   # solo import (schema ya existe)
+ *   pnpm staging:bootstrap -- --import-only
  */
 import { spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
@@ -162,21 +162,29 @@ async function main() {
   child = null;
 
   console.log("\n=== 4) Validar Railway catalog ===\n");
-  const readyRes = await fetch(`${railwayCatalog}/health/ready`, {
-    signal: AbortSignal.timeout(20_000),
-  });
-  if (readyRes.ok) {
-    console.log("Railway /health/ready:", await readyRes.text());
-  } else {
-    console.warn(
-      "Railway /health/ready aún no OK (redeploy catalog con CATALOG_ENSURE_SCHEMA=true o DATABASE_SYNC=true una vez)",
-    );
+  try {
+    const readyRes = await fetch(`${railwayCatalog}/health/ready`, {
+      signal: AbortSignal.timeout(20_000),
+    });
+    const body = await readyRes.text();
+    if (readyRes.ok) {
+      console.log("Railway /health/ready:", body);
+    } else {
+      console.warn(
+        "Railway /health/ready:",
+        readyRes.status,
+        body.slice(0, 200),
+        "\n→ Redeploy catalog en Railway (mismo DATABASE_URL) o esperar unos segundos.",
+      );
+    }
+  } catch (e) {
+    console.warn("No se pudo validar Railway:", e instanceof Error ? e.message : e);
   }
 
-  console.log("\n=== 5) Import HTTP a Railway (mismo token en Railway) ===\n");
+  console.log("\n=== 5) Import HTTP a Railway (token debe coincidir en Railway) ===\n");
   try {
     await waitUrl(`${railwayCatalog}/health`, { attempts: 5, intervalMs: 3000 });
-    await run("node", ["scripts/venues-import/import.mjs"], {
+    await run("node", ["scripts/venues-import/import.mjs", "--update"], {
       env: {
         CATALOG_SERVICE_URL: railwayCatalog,
         CATALOG_INTERNAL_API_TOKEN: token,
@@ -184,9 +192,7 @@ async function main() {
     });
   } catch (e) {
     console.warn("Import Railway omitido o fallido:", e instanceof Error ? e.message : e);
-    console.warn(
-      "Si 401: alinea CATALOG_INTERNAL_API_TOKEN en Railway con staging.local",
-    );
+    console.warn("Si 401: alinea CATALOG_INTERNAL_API_TOKEN en Railway con staging.local");
   }
 
   try {
@@ -194,12 +200,12 @@ async function main() {
       env: { CATALOG_SERVICE_URL: railwayCatalog },
     });
   } catch {
-    await run("node", ["scripts/venues-import/validate.mjs", "--live"], {
-      env: { CATALOG_SERVICE_URL: LOCAL_CATALOG },
-    }).catch(() => console.warn("validate:live omitido"));
+    console.warn("validate:live contra Railway falló; datos pueden estar solo en Neon hasta redeploy");
   }
 
-  console.log("\n=== Listo. Actualiza Vercel: CATALOG + SEARCH → URLs Railway; redeploy web ===\n");
+  console.log(
+    "\n=== Listo. Actualiza Vercel CATALOG_SERVICE_URL y redeploy web; prueba /buscar ===\n",
+  );
 }
 
 main().catch((err) => {

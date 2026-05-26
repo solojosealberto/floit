@@ -4,6 +4,8 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 
 **URL pública staging:** https://staging.quegym.com (verificado HTTP 200 en web).
 
+**Catalog Railway:** https://floitcatalog-service-production.up.railway.app — `/health` OK; `/health/ready` indica **`relation "venues" does not exist`** (falta schema/sync en Neon o import).
+
 ---
 
 ## Resumen ejecutivo
@@ -27,7 +29,7 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | 4 | Vercel `floit-web` (`apps/web`) | ✅ | Node 20.x |
 | 5 | GoDaddy CNAME `staging` | ✅ | Ver DNS abajo |
 | 6 | Variables Vercel + Railway | ✅ | Vault; no en git |
-| 7 | Import catálogo Neon staging | ☐ | Health OK; **bloqueado por token** (401) — ver § Catalog staging |
+| 7 | Import catálogo Neon staging | ☐ | `docs/env/staging.local` + `pnpm staging:bootstrap` (o `DATABASE_SYNC=true` una vez en Railway) |
 | 8 | Smoke + evidencias Sprint 4/5 | ☐ | Tras import y URLs API estables |
 | 9 | Dominio prod `www.quegym.com` | ☐ | Post GO |
 
@@ -53,9 +55,13 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | Red privada | Habilitada entre servicios |
 | Repo | `https://github.com/solojosealberto/floit` |
 
-| Servicio | Paquete | Puerto | DB / deps |
-|----------|---------|--------|-----------|
-| catalog | `@floit/catalog-service` | 4010 | Neon `catalog`; `DATABASE_SYNC=false`, `SEED_ON_BOOT=false` |
+| Servicio | Paquete | Puerto | URL pública staging (Railway) |
+|----------|---------|--------|-------------------------------|
+| catalog | `@floit/catalog-service` | 4010 | `https://floitcatalog-service-production.up.railway.app` |
+
+| Servicio | DB / deps |
+|----------|-----------|
+| catalog | Neon `catalog`; `DATABASE_SYNC=false`, `SEED_ON_BOOT=false` |
 | search | `@floit/search-service` | 4011 | `CATALOG_SERVICE_URL` → catalog (red privada) |
 | leads | `@floit/leads-service` | 4012 | Neon `leads`; OIDC admin strict en servicio |
 | partner | `@floit/partner-service` | 4013 | Neon `partner`; tokens S2S + OIDC |
@@ -105,40 +111,10 @@ Dominio gestionado: **quegym.com**. Producción `www` y forward `@` → **no con
 
 ---
 
-## Catalog staging (Railway)
-
-| Campo | Valor |
-|-------|--------|
-| URL pública | `https://floitcatalog-service-production.up.railway.app` |
-| Health (2026-05-25) | **200 OK** — `{"ok":true,"service":"catalog"}` |
-| Health ready | `GET /health/ready` → si `relation "venues" does not exist`, aplicar **CATALOG_ENSURE_SCHEMA=true** + redeploy (una vez) |
-| Venues públicos | **500** hasta schema + import |
-| Import (2026-05-25) | **401** hasta alinear token Railway con vault **o** flags staging temporales (ver runbook agente) |
-| Staging `/buscar` | **200** HTML pero **sin resultados** (catálogo vacío + URLs search/leads/partner en Vercel por confirmar) |
-
-**Diagnóstico 502 (histórico):** el proceso Nest no acepta tráfico del proxy (revisar logs Railway). En repo se corrigió bind `HOST=0.0.0.0` en los 5 servicios — **redeploy** `catalog` (idealmente todo `quegym-api`) desde `main` y validar:
-
-```bash
-curl -sS https://floitcatalog-service-production.up.railway.app/health
-# esperado: {"ok":true,"service":"catalog"}
-```
-
-**Import tras health OK:**
-
-```bash
-export CATALOG_SERVICE_URL=https://floitcatalog-service-production.up.railway.app
-export CATALOG_INTERNAL_API_TOKEN=<desde-vault>
-pnpm venues:import:staging
-pnpm venues:validate:live   # CATALOG_SERVICE_URL igual
-```
-
-**Alternativa (sin Railway):** catalog local con `DATABASE_URL` de Neon `catalog` + mismo comando de import apuntando a `http://127.0.0.1:4010`.
-
----
-
 ## Brechas conocidas (del informe + verificación)
 
-1. **Catálogo vacío o parcial en Neon staging** — no se ejecutó aún `pnpm venues:import` contra catalog en Railway/Neon.
+1. **Tabla `venues` ausente en Neon** — `/health/ready` en catalog Railway devuelve `relation "venues" does not exist`. Corregir con `pnpm staging:bootstrap` (local + `DATABASE_URL` en `docs/env/staging.local`) **o** `DATABASE_SYNC=true` en Railway catalog → redeploy → volver a `false`.
+2. **Catálogo sin datos importados** — pendiente `pnpm venues:import:staging` o paso 3 del bootstrap.
 2. **URLs de microservicios en Vercel** — pueden estar en dominios Railway públicos temporales; conviene fijar URLs finales y validar `/health` de cada servicio desde la máquina de ops.
 3. **BFF → APIs** — si las URLs en Vercel no apuntan a endpoints alcanzables, `/buscar` y flujos admin/partner fallarán aunque la home cargue (200 en HTML no implica APIs OK).
 4. **Evidencia formal** — `STAGING_EVIDENCE_SPRINT4.md` / `STAGING_EVIDENCE_SPRINT5.md` sin rellenar.
@@ -153,14 +129,14 @@ Orden recomendado para la **siguiente sesión operativa**:
 ### Bloque A — Datos (bloqueante)
 
 1. Confirmar `catalog` en Railway: `GET /health` y tablas creadas (`DATABASE_SYNC` ya corrió una vez).
-2. Desde entorno local con acceso al token (vault):
+2. Copiar [`docs/env/staging.local.example`](../env/staging.local.example) → `docs/env/staging.local` con `DATABASE_URL` (Neon catalog) + `CATALOG_INTERNAL_API_TOKEN` (vault).
    ```bash
    export PATH="$(pwd)/.cursor-bin:$PATH"
-   pnpm venues:normalize -- --skip-geocode
-   CATALOG_SERVICE_URL=https://<catalog-railway-public>/ \
-   CATALOG_INTERNAL_API_TOKEN=<desde-vault> \
-   pnpm venues:import
+   pnpm staging:bootstrap
    ```
+   Alternativa solo HTTP: `pnpm venues:import:staging` (mismo archivo env).
+
+   Catalog URL: `https://floitcatalog-service-production.up.railway.app`
 3. Validar conteo: `pnpm venues:validate:live` / `pnpm venues:audit` contra URL de catalog staging.
 4. Fijar `DATABASE_SYNC=false` en Railway catalog si aún no está.
 
@@ -190,7 +166,6 @@ Orden recomendado para la **siguiente sesión operativa**:
 
 ## Referencias
 
-- **Agente navegador (ChatGPT Agent Mode):** [`AGENT_BROWSER_DEPLOYMENT_RUNBOOK.md`](./AGENT_BROWSER_DEPLOYMENT_RUNBOOK.md)
 - Guía alta: [`PRODUCTION_ACCOUNTS_SETUP.md`](./PRODUCTION_ACCOUNTS_SETUP.md)
 - Plan GO LIVE: [`PRODUCTION_LAUNCH_PLAN.md`](./PRODUCTION_LAUNCH_PLAN.md)
 - Import datos: [`VENUES_CATALOG_IMPORT.md`](./VENUES_CATALOG_IMPORT.md)

@@ -1,16 +1,16 @@
 # Copiar a docs/env/staging.local (gitignored) — NO commitear
-# Valores desde Neon console + Railway Variables + vault
+# Valores: Neon console + Railway Variables (catalog) + vault
 
-# Neon database catalog (connection string con sslmode=require)
+# Neon database catalog (sslmode=require)
 DATABASE_URL=postgresql://USER:PASSWORD@HOST/catalog?sslmode=require
 
 # Mismo valor que CATALOG_INTERNAL_API_TOKEN en Railway catalog-service
 CATALOG_INTERNAL_API_TOKEN=
 
-# Opcional: import HTTP directo a Railway (default abajo)
+# Import HTTP directo (opcional si usas pnpm venues:import:staging)
 CATALOG_SERVICE_URL=https://floitcatalog-service-production.up.railway.app
 
-# URLs públicas Railway (para validación local / documentación)
+# URLs públicas Railway (para documentar / validar; opcional)
 # SEARCH_SERVICE_URL=https://...
 # LEADS_SERVICE_URL=https://...
 # PARTNER_SERVICE_URL=https://...
