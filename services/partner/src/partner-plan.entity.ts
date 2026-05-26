@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { TIMESTAMP_COLUMN_TYPE } from "./typeorm-column-types";
 
 @Entity({ name: "partner_plans" })
 export class PartnerPlanEntity {
@@ -32,9 +33,9 @@ export class PartnerPlanEntity {
   @Column({ type: "boolean", default: true })
   active!: boolean;
 
-  @CreateDateColumn({ type: "datetime" })
+  @CreateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: "datetime" })
+  @UpdateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   updatedAt!: Date;
 }

@@ -34,7 +34,8 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | 5 | GoDaddy CNAME `staging` | ✅ | Ver DNS abajo |
 | 6 | Variables Vercel + Railway | ✅ | Vault; no en git |
 | 7 | Import catálogo Neon staging | ✅ | 2026-05-26 — **95 created**; `/health/ready` → `venues:95` |
-| 7b | Fix crash partner Railway (`express`) | ✅ código | `services/partner/package.json` — **redeploy Railway** pendiente |
+| 7b | Fix crash partner Railway (`express`) | ✅ | `services/partner/package.json` (commit `08633b0`) |
+| 7c | Fix TypeORM Postgres (`datetime` → `timestamptz`) | ✅ | 8 entidades partner + helper `typeorm-column-types.ts`; leads alineado; Railway PR #1 absorbido en `main` |
 | 8 | Smoke + evidencias Sprint 4/5 | ☐ | Discovery OK; leads/partner **502**, analytics **404** en `/health` |
 | 9 | Dominio prod `www.quegym.com` | ☐ | Post GO |
 
@@ -65,7 +66,7 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | catalog | `@floit/catalog-service` | 4010 | `https://floitcatalog-service-production.up.railway.app` | OK |
 | search | `@floit/search-service` | 4011 | `https://floitsearch-service-production.up.railway.app` | OK |
 | leads | `@floit/leads-service` | 4012 | `https://floitleads-service-production.up.railway.app` | **502** — app no responde |
-| partner | `@floit/partner-service` | 4013 | `https://floitpartner-service-production.up.railway.app` | **502** — app no responde |
+| partner | `@floit/partner-service` | 4013 | `https://floitpartner-service-production.up.railway.app` | Verificar tras deploy `main` (fixes `express` + `timestamptz`) |
 | analytics | `@floit/analytics-service` | 4014 | `https://floitanalytics-service-production.up.railway.app` | **404** — Application not found |
 
 | Servicio | DB / deps |
@@ -122,8 +123,8 @@ Dominio gestionado: **quegym.com**. Producción `www` y forward `@` → **no con
 
 ## Brechas conocidas (del informe + verificación)
 
-1. **Partner Railway** — crash conocido **`Cannot find module 'express'`** (import `serveStatic` en `main.ts` sin dep directa). **Corregido en repo** (`express` en `package.json`); **redeploy** el servicio partner tras push a `main`.
-2. **Leads Railway** — dominio OK pero **502**: revisar **Deploy logs** (`DATABASE_URL` Neon `/leads`, OIDC admin, build/start monorepo).
+1. **Partner Railway** — causas corregidas en `main`: (a) **`Cannot find module 'express'`** — dep directa en `package.json`; (b) **TypeORM `datetime` en Postgres** — columnas de fecha usan `timestamptz` cuando hay `DATABASE_URL` (Neon), vía `TIMESTAMP_COLUMN_TYPE` en `services/partner/src/typeorm-column-types.ts` (8 entidades). Tras auto-deploy, validar `curl …/health`.
+2. **Leads Railway** — si **502**, mismo patrón `datetime`/Postgres: corregido en `services/leads` con el mismo helper; revisar logs y `DATABASE_URL` Neon `/leads`.
 3. **Analytics Railway** — **404 Application not found**: confirmar que el servicio existe en `quegym-api`, último deploy exitoso y dominio público activo.
 4. **Vercel BFF** — añadir `LEADS_SERVICE_URL`, `PARTNER_SERVICE_URL`, `ANALYTICS_SERVICE_URL` (sin `/` final) y redeploy **después** de `/health` OK en los tres.
 3. **BFF → APIs** — si las URLs en Vercel no apuntan a endpoints alcanzables, `/buscar` y flujos admin/partner fallarán aunque la home cargue (200 en HTML no implica APIs OK).

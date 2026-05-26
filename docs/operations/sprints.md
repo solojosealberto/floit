@@ -545,7 +545,7 @@ Detalle de ejecución:
 | Railway catalog + search | URLs públicas; search con `CATALOG_SERVICE_URL` → catalog HTTPS | `/health` OK |
 | Vercel Preview | `CATALOG_SERVICE_URL`, `SEARCH_SERVICE_URL`; `/buscar`, fichas, `/api/compare/search` | Discovery OK |
 | Railway leads / partner / analytics | URLs documentadas en `STAGING_DEPLOYMENT_STATUS.md` | `/health` **FAIL** (502 leads/partner; 404 analytics) |
-| Fix deploy partner | `express` como dependencia directa en `@floit/partner-service` (`main.ts` importa `serveStatic`) | Código en `main`; **redeploy Railway** pendiente |
+| Fix deploy partner | `express` en `package.json`; entidades con `TIMESTAMP_COLUMN_TYPE` (`timestamptz` en Postgres, `datetime` en SQLite) | Código en `main`; verificar `/health` tras auto-deploy |
 | Smoke | `pnpm smoke:platform` con 5 URLs + `SMOKE_WEB_BASE=staging.quegym.com` | Parcial (3/5 servicios) |
 | Gates Sprint 4/5 | `sprint4:gate`, flow-checklist, kpi-gate | `Pendiente` (requiere health leads/partner) |
 | Decisión | GO parcial discovery; **NO-GO** formal | Ver `STAGING_AGENT_EXECUTION_REPORT.md` |

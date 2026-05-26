@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { TIMESTAMP_COLUMN_TYPE } from "./typeorm-column-types";
 
 @Entity({ name: "partner_profiles" })
 @Index(["partnerEmail", "venueSlug"], { unique: true })
@@ -40,9 +41,9 @@ export class PartnerProfileEntity {
   @Column({ type: "simple-json", nullable: true })
   photoUrls!: string[] | null;
 
-  @CreateDateColumn({ type: "datetime" })
+  @CreateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: "datetime" })
+  @UpdateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   updatedAt!: Date;
 }

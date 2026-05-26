@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { TIMESTAMP_COLUMN_TYPE } from "./typeorm-column-types";
 
 @Entity({ name: "leads" })
 export class LeadEntity {
@@ -44,7 +45,7 @@ export class LeadEntity {
   status!: "received" | "contacted" | "closed";
 
   /** Primer momento en que operación/partner atiende el lead (SLA). */
-  @Column({ type: "datetime", nullable: true })
+  @Column({ type: TIMESTAMP_COLUMN_TYPE, nullable: true })
   firstContactedAt!: Date | null;
 
   @Column({ type: "varchar", length: 36, unique: true })
@@ -70,9 +71,9 @@ export class LeadEntity {
   @Column({ type: "text", nullable: true })
   adminNote!: string | null;
 
-  @CreateDateColumn({ type: "datetime" })
+  @CreateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: "datetime" })
+  @UpdateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   updatedAt!: Date;
 }

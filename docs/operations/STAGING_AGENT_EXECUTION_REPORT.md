@@ -4,7 +4,7 @@
 
 - [x] **1** Catalog + import (95 venues)
 - [x] **2** Vercel + Railway catalog/search — **OK** (discovery + comparador)
-- [ ] **3** Smoke / gates — **parcial** (5 URLs conocidas; health 3/5; fix `express` partner en repo)
+- [ ] **3** Smoke / gates — **parcial** (fixes partner en `main`: `express` + TypeORM Postgres; revalidar health tras deploy)
 - [ ] **4** Prod
 
 ## Catalog + Search
@@ -22,7 +22,7 @@
 | catalog | `https://floitcatalog-service-production.up.railway.app` | OK |
 | search | `https://floitsearch-service-production.up.railway.app` | OK |
 | leads | `https://floitleads-service-production.up.railway.app` | **502** — Application failed to respond |
-| partner | `https://floitpartner-service-production.up.railway.app` | **502** — Application failed to respond |
+| partner | `https://floitpartner-service-production.up.railway.app` | Tras fixes `main`: `express` + `timestamptz` — **revalidar** `/health` post-deploy |
 | analytics | `https://floitanalytics-service-production.up.railway.app` | **404** — Application not found |
 
 ## Staging UI

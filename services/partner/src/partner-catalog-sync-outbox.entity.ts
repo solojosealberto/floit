@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { TIMESTAMP_COLUMN_TYPE } from "./typeorm-column-types";
 
 @Entity({ name: "partner_catalog_sync_outbox" })
 export class PartnerCatalogSyncOutboxEntity {
@@ -20,7 +21,7 @@ export class PartnerCatalogSyncOutboxEntity {
   @Column({ type: "integer", default: 0 })
   attempts!: number;
 
-  @Column({ type: "datetime" })
+  @Column({ type: TIMESTAMP_COLUMN_TYPE })
   nextAttemptAt!: Date;
 
   @Column({ type: "varchar", length: 512, nullable: true })
@@ -35,12 +36,12 @@ export class PartnerCatalogSyncOutboxEntity {
   @Column({ type: "text" })
   payload!: string;
 
-  @Column({ type: "datetime", nullable: true })
+  @Column({ type: TIMESTAMP_COLUMN_TYPE, nullable: true })
   publishedAt!: Date | null;
 
-  @CreateDateColumn({ type: "datetime" })
+  @CreateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: "datetime" })
+  @UpdateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   updatedAt!: Date;
 }

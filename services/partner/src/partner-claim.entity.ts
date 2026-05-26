@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { TIMESTAMP_COLUMN_TYPE } from "./typeorm-column-types";
 
 @Entity({ name: "partner_claims" })
 export class PartnerClaimEntity {
@@ -37,9 +38,9 @@ export class PartnerClaimEntity {
   @Column({ type: "varchar", length: 24, default: "pending_review" })
   status!: "pending_review" | "approved" | "rejected";
 
-  @CreateDateColumn({ type: "datetime" })
+  @CreateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: "datetime" })
+  @UpdateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   updatedAt!: Date;
 }

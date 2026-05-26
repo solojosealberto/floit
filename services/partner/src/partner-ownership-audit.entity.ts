@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { TIMESTAMP_COLUMN_TYPE } from "./typeorm-column-types";
 
 @Entity({ name: "partner_ownership_audit" })
 export class PartnerOwnershipAuditEntity {
@@ -20,6 +21,6 @@ export class PartnerOwnershipAuditEntity {
   @Column({ type: "varchar", length: 500, nullable: true })
   reason!: string | null;
 
-  @CreateDateColumn({ type: "datetime" })
+  @CreateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   createdAt!: Date;
 }

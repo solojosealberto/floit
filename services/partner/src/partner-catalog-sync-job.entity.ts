@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { TIMESTAMP_COLUMN_TYPE } from "./typeorm-column-types";
 
 @Entity({ name: "partner_catalog_sync_jobs" })
 export class PartnerCatalogSyncJobEntity {
@@ -11,7 +12,7 @@ export class PartnerCatalogSyncJobEntity {
   @Column({ type: "integer", default: 0 })
   attempts!: number;
 
-  @Column({ type: "datetime" })
+  @Column({ type: TIMESTAMP_COLUMN_TYPE })
   nextAttemptAt!: Date;
 
   @Column({ type: "varchar", length: 512, nullable: true })
@@ -26,6 +27,6 @@ export class PartnerCatalogSyncJobEntity {
   @Column({ type: "text" })
   payload!: string;
 
-  @CreateDateColumn({ type: "datetime" })
+  @CreateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   createdAt!: Date;
 }

@@ -202,6 +202,7 @@ Al terminar o al bloquear, responder **solo** con esta plantilla rellena:
 | Partner login OIDC | Auth0 Password grant deshabilitado | Auth0 → Partner app → Grant Types |
 | Admin leads 401 | Falta M2M `ADMIN_OIDC_ACCESS_TOKEN` en Vercel | Renovar token M2M Auth0 |
 | Partner crash `Cannot find module 'express'` | `main.ts` importa `express`; no estaba en `dependencies` (pnpm aislado en Railway) | Añadir `express` en `services/partner/package.json` y redeploy |
+| Partner crash TypeORM metadata / no arranca con Neon | Columnas `@Column({ type: "datetime" })` — tipo SQLite, rechazado por PostgreSQL | Usar `timestamptz` en Postgres (`TIMESTAMP_COLUMN_TYPE` en `typeorm-column-types.ts`; 8 entidades partner, 2 en leads) |
 
 ---
 

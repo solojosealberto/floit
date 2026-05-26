@@ -194,7 +194,7 @@ ANALYTICS_SERVICE_URL=http://<analytics-private-host>:4014
 
 **partner**
 
-> **Deploy Railway:** el servicio declara **`express`** como dependencia directa (`main.ts` sirve `/uploads` con `express.static`). Sin ello, el contenedor crashea con `Cannot find module 'express'` (pnpm aislado).
+> **Deploy Railway:** (1) **`express`** como dependencia directa (`main.ts` sirve `/uploads`). (2) Con **`DATABASE_URL`** (Neon `/partner`), las entidades usan **`timestamptz`** — no `datetime` (SQLite); ver `services/partner/src/typeorm-column-types.ts`. Sin esto, TypeORM falla al inicializar metadata en PostgreSQL.
 
 ```env
 NODE_ENV=production

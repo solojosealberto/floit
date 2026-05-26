@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { TIMESTAMP_COLUMN_TYPE } from "./typeorm-column-types";
 
 @Entity({ name: "partner_venue_ownerships" })
 @Index(["partnerEmail", "venueSlug"], { unique: true })
@@ -22,9 +23,9 @@ export class PartnerVenueOwnershipEntity {
   @Column({ type: "varchar", length: 24, default: "active" })
   status!: "active" | "revoked";
 
-  @CreateDateColumn({ type: "datetime" })
+  @CreateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: "datetime" })
+  @UpdateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   updatedAt!: Date;
 }
