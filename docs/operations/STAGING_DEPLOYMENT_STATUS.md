@@ -5,8 +5,9 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 **URL pública staging:** https://staging.quegym.com (verificado HTTP 200 en web).
 
 **Catalog Railway:** https://floitcatalog-service-production.up.railway.app — `venues: 95`.  
-**Search Railway:** https://floitsearch-service-production.up.railway.app — `/health` OK; **`/v1/search` → 500** hasta `CATALOG_SERVICE_URL` en el servicio search (Railway).  
-**Vercel staging:** `CATALOG_SERVICE_URL` + `SEARCH_SERVICE_URL` configurados; `/buscar` y fichas OK (fallback a catalog si search falla).
+**Search Railway:** https://floitsearch-service-production.up.railway.app — `/v1/search` OK (`meta.total: 95`) tras `CATALOG_SERVICE_URL` → catalog.  
+**Vercel staging:** catalog + search configurados; `/buscar`, fichas y `/api/compare/search` OK (2026-05-26).  
+**Pendiente:** dominios públicos leads / partner / analytics en Railway → variables en Vercel.
 
 ---
 
@@ -32,7 +33,7 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | 5 | GoDaddy CNAME `staging` | ✅ | Ver DNS abajo |
 | 6 | Variables Vercel + Railway | ✅ | Vault; no en git |
 | 7 | Import catálogo Neon staging | ✅ | 2026-05-25 — `pnpm venues:import:staging` → **95 created**; `/health/ready` → `venues:95` |
-| 8 | Smoke + evidencias Sprint 4/5 | ☐ | Vercel OK; **search Railway** debe tener `CATALOG_SERVICE_URL` → catalog (hoy `/v1/search` → 500) |
+| 8 | Smoke + evidencias Sprint 4/5 | ☐ | Discovery OK; faltan URLs públicas **leads/partner/analytics** en Railway + Vercel |
 | 9 | Dominio prod `www.quegym.com` | ☐ | Post GO |
 
 ---
