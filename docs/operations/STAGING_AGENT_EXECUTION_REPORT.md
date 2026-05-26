@@ -22,7 +22,7 @@
 | catalog | `https://floitcatalog-service-production.up.railway.app` | OK |
 | search | `https://floitsearch-service-production.up.railway.app` | OK |
 | leads | `https://floitleads-service-production.up.railway.app` | **502** — Application failed to respond |
-| partner | `https://floitpartner-service-production.up.railway.app` | Tras fixes `main`: `express` + `timestamptz` — **revalidar** `/health` post-deploy |
+| partner | `https://floitpartner-service-production.up.railway.app` | **OK** — `/health` 200, `readiness.recommendedForStrictOidc: true` |
 | analytics | `https://floitanalytics-service-production.up.railway.app` | **404** — Application not found |
 
 ## Staging UI
