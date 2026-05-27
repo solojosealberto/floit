@@ -67,7 +67,7 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | search | `@floit/search-service` | 4011 | `https://floitsearch-service-production.up.railway.app` | OK |
 | leads | `@floit/leads-service` | 4012 | `https://floitleads-service-production.up.railway.app` | **OK** (2026-05-26) |
 | partner | `@floit/partner-service` | 4013 | `https://floitpartner-service-production.up.railway.app` | **OK** (2026-05-26, commit `210775e`) |
-| analytics | `@floit/analytics-service` | 4014 | `https://floitanalytics-service-production.up.railway.app` | **502** — fix `timestamptz` en `main` pendiente deploy |
+| analytics | `@floit/analytics-service` | 4014 | `https://floitanalytics-service-production.up.railway.app` | **OK** (2026-05-26, commit `8ce3a63`) |
 
 | Servicio | DB / deps |
 |----------|-----------|
