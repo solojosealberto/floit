@@ -1,3 +1,5 @@
+import { isAdminLocalPasswordLoginEnabled } from "@/lib/admin-local-login";
+
 /**
  * Read-only summary of admin BFF auth configuration for `/admin/configuracion`.
  * Never exposes secret values.
@@ -17,9 +19,7 @@ export function readAdminEnvFlags(): AdminEnvFlags {
     hasOidcAccessToken: Boolean(process.env.ADMIN_OIDC_ACCESS_TOKEN?.trim()),
     strictOidc: process.env.ADMIN_AUTH_REQUIRE_OIDC?.trim() === "true",
     hasLegacyApiToken: Boolean(process.env.ADMIN_API_TOKEN?.trim()),
-    localPasswordLoginEnabled:
-      process.env.ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD?.trim() === "true" &&
-      process.env.NODE_ENV !== "production",
+    localPasswordLoginEnabled: isAdminLocalPasswordLoginEnabled(),
   };
 }
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AdminSidebar } from "@/app/admin/admin-sidebar";
 import { getAdminAuthHeader } from "@/lib/admin-auth-header";
+import { isAdminLocalPasswordLoginEnabled } from "@/lib/admin-local-login";
 import {
   AdminDuplicadosClient,
   type DuplicatePair,
@@ -15,9 +16,7 @@ export const metadata: Metadata = {
 
 export default async function AdminDuplicadosPage() {
   const auth = await getAdminAuthHeader();
-  const localAdminLoginEnabled =
-    process.env.ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD?.trim() === "true" &&
-    process.env.NODE_ENV !== "production";
+  const localAdminLoginEnabled = isAdminLocalPasswordLoginEnabled();
 
   if (!auth) {
     if (localAdminLoginEnabled) redirect("/admin/login");

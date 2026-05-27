@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AdminSidebar } from "@/app/admin/admin-sidebar";
 import { getAdminAuthHeader } from "@/lib/admin-auth-header";
+import { isAdminLocalPasswordLoginEnabled } from "@/lib/admin-local-login";
 import { getAdminEmailFromSession } from "@/lib/admin-session";
 import {
   AdminLeadsClient,
@@ -30,9 +31,7 @@ type SlaSummary = {
 export default async function AdminLeadsPage() {
   const auth = await getAdminAuthHeader();
   const sessionEmail = await getAdminEmailFromSession();
-  const localAdminLoginEnabled =
-    process.env.ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD?.trim() === "true" &&
-    process.env.NODE_ENV !== "production";
+  const localAdminLoginEnabled = isAdminLocalPasswordLoginEnabled();
 
   if (!auth) {
     if (localAdminLoginEnabled) {

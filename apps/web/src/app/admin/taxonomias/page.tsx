@@ -3,6 +3,7 @@ import type { VenueSummary } from "@floit/contracts";
 import { redirect } from "next/navigation";
 import { AdminSidebar } from "@/app/admin/admin-sidebar";
 import { getAdminAuthHeader } from "@/lib/admin-auth-header";
+import { isAdminLocalPasswordLoginEnabled } from "@/lib/admin-local-login";
 import {
   AdminTaxonomiasClient,
   type TaxonomyRow,
@@ -20,9 +21,7 @@ type ClaimRow = {
 
 export default async function AdminTaxonomiasPage() {
   const auth = await getAdminAuthHeader();
-  const localAdminLoginEnabled =
-    process.env.ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD?.trim() === "true" &&
-    process.env.NODE_ENV !== "production";
+  const localAdminLoginEnabled = isAdminLocalPasswordLoginEnabled();
 
   if (!auth) {
     if (localAdminLoginEnabled) redirect("/admin/login");

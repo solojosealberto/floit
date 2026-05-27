@@ -12,6 +12,7 @@ import {
   type PartnerHealthPanelData,
 } from "@/app/admin/partner-claims/partner-service-health-panel";
 import { getAdminAuthHeader } from "@/lib/admin-auth-header";
+import { isAdminLocalPasswordLoginEnabled } from "@/lib/admin-local-login";
 
 export const metadata: Metadata = {
   title: "Claims de partners (admin)",
@@ -66,9 +67,7 @@ export default async function AdminPartnerClaimsPage(props: {
   const auditVenueSlug = typeof sp.auditVenueSlug === "string" ? sp.auditVenueSlug.trim() : "";
   const auth = await getAdminAuthHeader();
   const base = process.env.PARTNER_SERVICE_URL ?? "http://localhost:4013";
-  const localAdminLoginEnabled =
-    process.env.ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD?.trim() === "true" &&
-    process.env.NODE_ENV !== "production";
+  const localAdminLoginEnabled = isAdminLocalPasswordLoginEnabled();
 
   if (!auth) {
     if (localAdminLoginEnabled) {

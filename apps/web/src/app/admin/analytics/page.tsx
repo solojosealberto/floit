@@ -3,6 +3,7 @@ import type { VenueSummary } from "@floit/contracts";
 import { redirect } from "next/navigation";
 import { AdminSidebar } from "@/app/admin/admin-sidebar";
 import { getAdminAuthHeader } from "@/lib/admin-auth-header";
+import { isAdminLocalPasswordLoginEnabled } from "@/lib/admin-local-login";
 import {
   AdminAnalyticsDashboard,
   type CtaExperimentPayload,
@@ -28,9 +29,7 @@ export default async function AdminAnalyticsPage(props: {
   const catalogBase = process.env.CATALOG_SERVICE_URL ?? "http://localhost:4010";
   const partnerBase = process.env.PARTNER_SERVICE_URL ?? "http://localhost:4013";
 
-  const localAdminLoginEnabled =
-    process.env.ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD?.trim() === "true" &&
-    process.env.NODE_ENV !== "production";
+  const localAdminLoginEnabled = isAdminLocalPasswordLoginEnabled();
 
   const searchParams = await props.searchParams;
   const windowHours = Number(searchParams.windowHours ?? "168");

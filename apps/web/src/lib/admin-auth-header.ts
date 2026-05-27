@@ -1,3 +1,4 @@
+import { isAdminLocalPasswordLoginEnabled } from "@/lib/admin-local-login";
 import { getAdminEmailFromSession } from "@/lib/admin-session";
 
 export async function getAdminAuthHeader(): Promise<
@@ -17,9 +18,7 @@ export async function getAdminAuthHeader(): Promise<
   const legacyToken = process.env.ADMIN_API_TOKEN?.trim();
   if (!legacyToken) return null;
 
-  const allowLocalPassword = process.env.ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD?.trim() === "true";
-  const isNonProduction = process.env.NODE_ENV !== "production";
-  if (allowLocalPassword && isNonProduction) {
+  if (isAdminLocalPasswordLoginEnabled()) {
     const expectedEmail = process.env.ADMIN_LOCAL_LOGIN_EMAIL?.trim().toLowerCase();
     const sessionEmail = await getAdminEmailFromSession();
     if (!expectedEmail || !sessionEmail || sessionEmail !== expectedEmail) {

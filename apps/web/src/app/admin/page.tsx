@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { UIBadge, UIButton, UICard } from "@floit/ui";
 import { AdminSidebar } from "@/app/admin/admin-sidebar";
+import { isAdminLocalPasswordLoginEnabled } from "@/lib/admin-local-login";
 import { getAdminAuthHeader } from "@/lib/admin-auth-header";
 
 export const metadata: Metadata = {
@@ -40,9 +41,7 @@ type CatalogList = { items?: Array<{ slug: string }> };
 
 export default async function AdminDashboardPage() {
   const auth = await getAdminAuthHeader();
-  const localAdminLoginEnabled =
-    process.env.ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD?.trim() === "true" &&
-    process.env.NODE_ENV !== "production";
+  const localAdminLoginEnabled = isAdminLocalPasswordLoginEnabled();
   if (!auth) {
     if (localAdminLoginEnabled) redirect("/admin/login");
     return (
