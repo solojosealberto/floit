@@ -65,9 +65,9 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 |----------|---------|--------|----------------------|-------------------------|
 | catalog | `@floit/catalog-service` | 4010 | `https://floitcatalog-service-production.up.railway.app` | OK |
 | search | `@floit/search-service` | 4011 | `https://floitsearch-service-production.up.railway.app` | OK |
-| leads | `@floit/leads-service` | 4012 | `https://floitleads-service-production.up.railway.app` | **502** — app no responde |
+| leads | `@floit/leads-service` | 4012 | `https://floitleads-service-production.up.railway.app` | **OK** (2026-05-26) |
 | partner | `@floit/partner-service` | 4013 | `https://floitpartner-service-production.up.railway.app` | **OK** (2026-05-26, commit `210775e`) |
-| analytics | `@floit/analytics-service` | 4014 | `https://floitanalytics-service-production.up.railway.app` | **404** — Application not found |
+| analytics | `@floit/analytics-service` | 4014 | `https://floitanalytics-service-production.up.railway.app` | **502** — fix `timestamptz` en `main` pendiente deploy |
 
 | Servicio | DB / deps |
 |----------|-----------|

@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { TIMESTAMP_COLUMN_TYPE } from "./typeorm-column-types";
 
 @Entity({ name: "analytics_events" })
 export class AnalyticsEventEntity {
@@ -17,6 +18,6 @@ export class AnalyticsEventEntity {
   @Column({ type: "varchar", length: 400, nullable: true })
   source!: string | null;
 
-  @CreateDateColumn({ type: "datetime" })
+  @CreateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   createdAt!: Date;
 }
