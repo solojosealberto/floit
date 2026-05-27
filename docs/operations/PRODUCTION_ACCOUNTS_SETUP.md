@@ -311,18 +311,21 @@ Ese `access_token` es el valor inicial de **`ADMIN_OIDC_ACCESS_TOKEN`** en Verce
 ### 3.6 Admin UI (estado actual del código)
 
 - **BFF admin** hacia microservicios: usa `ADMIN_OIDC_ACCESS_TOKEN` (M2M) o `x-admin-token` si no strict.
-- **Pantalla `/admin/login`:** formulario local → `ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD` solo si `NODE_ENV !== production'`.
+- **Pantalla `/admin/login`:** formulario local si `isAdminLocalPasswordLoginEnabled()` (`apps/web/src/lib/admin-local-login.ts`): local con `NODE_ENV !== production`; en Vercel con `NODE_ENV=production` solo si `ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD=true` y (`NEXT_PUBLIC_SITE_URL` incluye `staging.` / `localhost`, o `VERCEL_ENV` es `preview`/`development`).
 
 **Staging recomendado (hasta OIDC browser admin):**
 
 ```env
-# Vercel staging
+# Vercel Preview (staging.quegym.com)
+NEXT_PUBLIC_SITE_URL=https://staging.quegym.com
 ADMIN_AUTH_REQUIRE_OIDC=false
-ADMIN_API_TOKEN=<token fuerte>
+ADMIN_API_TOKEN=<mismo valor que ADMIN_API_TOKEN en Railway catalog/leads/partner>
 ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD=true
 ADMIN_LOCAL_LOGIN_EMAIL=ops@quegym.com
-ADMIN_LOCAL_LOGIN_PASSWORD=<solo staging>
+ADMIN_LOCAL_LOGIN_PASSWORD=<solo staging — vault>
 ```
+
+Si `ADMIN_API_TOKEN` no existe en Railway: `openssl rand -hex 32` → replicar en Vercel + los tres servicios admin anteriores.
 
 **Producción (objetivo):** `ADMIN_AUTH_REQUIRE_OIDC=true`, sin passwords locales; implementar flujo OIDC admin en web o usar IdP + M2M solo para APIs y restringir admin UI por IP/Vercel SSO.
 

@@ -7,8 +7,8 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 **Catalog Railway:** https://floitcatalog-service-production.up.railway.app — `venues: 95`.  
 **Search Railway:** https://floitsearch-service-production.up.railway.app — `/v1/search` OK (`meta.total: 95`) tras `CATALOG_SERVICE_URL` → catalog.  
 **Vercel staging:** catalog + search configurados; `/buscar`, fichas y `/api/compare/search` OK (2026-05-26).  
-**URLs leads / partner / analytics (Railway):** registradas 2026-05-26 — **salud HTTP aún NO OK** (ver tabla Railway abajo).  
-**Pendiente:** arrancar servicios en Railway + `LEADS_*` / `PARTNER_*` / `ANALYTICS_*` en Vercel → redeploy.
+**URLs leads / partner / analytics (Railway):** registradas 2026-05-26 — **salud HTTP OK** (`/health` 200 en los tres).  
+**Pendiente:** confirmar `LEADS_*` / `PARTNER_*` / `ANALYTICS_*` en Vercel y cerrar evidencias Sprint 4/5.
 
 ---
 
@@ -17,7 +17,7 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | Fase | Estado | Notas |
 |------|--------|-------|
 | Paso 2 — Cuentas e infra (§0–§5) | **Completado** | Neon, Railway, Auth0, Vercel, DNS `staging` |
-| Paso 3 — Datos y validación | **En curso** | Falta import catálogo + smoke/gates formales |
+| Paso 3 — Datos y validación | **En curso (avanzado)** | Import + health 5/5 + smoke OK; faltan gates/evidencias formales |
 | Paso 4 — Producción `www` | **Pendiente** | Tras GO/NO-GO staging |
 
 ---
@@ -36,7 +36,7 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | 7 | Import catálogo Neon staging | ✅ | 2026-05-26 — **95 created**; `/health/ready` → `venues:95` |
 | 7b | Fix crash partner Railway (`express`) | ✅ | `services/partner/package.json` (commit `08633b0`) |
 | 7c | Fix TypeORM Postgres (`datetime` → `timestamptz`) | ✅ | 8 entidades partner + helper `typeorm-column-types.ts`; leads alineado; Railway PR #1 absorbido en `main` |
-| 8 | Smoke + evidencias Sprint 4/5 | ☐ | Discovery OK; leads/partner **502**, analytics **404** en `/health` |
+| 8 | Smoke + evidencias Sprint 4/5 | ☐ | `smoke:platform` OK (5/5); pendientes evidencias Sprint 4/5 + decisión GO/NO-GO |
 | 9 | Dominio prod `www.quegym.com` | ☐ | Post GO |
 
 ---
@@ -75,7 +75,7 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | search | `CATALOG_SERVICE_URL` → catalog (HTTPS público o red privada) |
 | leads | Neon `leads`; `DATABASE_SYNC=true` (1ª vez) → `false`; OIDC admin si `ADMIN_AUTH_REQUIRE_OIDC=true` |
 | partner | Neon `partner`; tokens S2S + OIDC; `CATALOG_SERVICE_URL` interno o público |
-| analytics | Neon `analytics`; verificar servicio desplegado y dominio generado |
+| analytics | Neon `analytics`; servicio y dominio públicos verificados (`/health` 200) |
 
 **Build / start (todos):** raíz monorepo — `pnpm install --frozen-lockfile && pnpm --filter <paquete> build` → `pnpm --filter <paquete> start`.
 
@@ -108,8 +108,18 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 **Staging — política auth web (acordada):**
 
 - `ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD=true` (hasta OIDC browser admin).
+- `ADMIN_LOCAL_LOGIN_EMAIL` + `ADMIN_LOCAL_LOGIN_PASSWORD` (credenciales del formulario; solo vault).
+- `NEXT_PUBLIC_SITE_URL=https://staging.quegym.com` (requerido para habilitar login local con `NODE_ENV=production` en Vercel; ver `admin-local-login.ts`, commit `7554d6c`).
+- `ADMIN_API_TOKEN` — **mismo valor** en Vercel y en Railway (`catalog`, `leads`, `partner`); generar con `openssl rand -hex 32` si no existe en vault. No confundir con `CATALOG_INTERNAL_API_TOKEN` / `LEADS_INTERNAL_API_TOKEN`.
 - `ADMIN_AUTH_REQUIRE_OIDC=false` en BFF staging.
 - `PARTNER_AUTH_REQUIRE_OIDC=true` en servicios; login partner vía Auth0 Password grant.
+
+**Login admin — troubleshooting (`admin_login_not_enabled`):**
+
+1. Variables en entorno **Preview** (dominio `staging.quegym.com`), no solo Production.
+2. `ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD` exactamente `true` (minúsculas).
+3. Código desplegado ≥ `7554d6c` (fix `admin-local-login.ts`).
+4. Redeploy Vercel tras cambiar env.
 
 ### GoDaddy DNS (D5) — staging
 
@@ -123,12 +133,10 @@ Dominio gestionado: **quegym.com**. Producción `www` y forward `@` → **no con
 
 ## Brechas conocidas (del informe + verificación)
 
-1. **Partner Railway** — causas corregidas en `main`: (a) **`Cannot find module 'express'`** — dep directa en `package.json`; (b) **TypeORM `datetime` en Postgres** — columnas de fecha usan `timestamptz` cuando hay `DATABASE_URL` (Neon), vía `TIMESTAMP_COLUMN_TYPE` en `services/partner/src/typeorm-column-types.ts` (8 entidades). Tras auto-deploy, validar `curl …/health`.
-2. **Leads Railway** — si **502**, mismo patrón `datetime`/Postgres: corregido en `services/leads` con el mismo helper; revisar logs y `DATABASE_URL` Neon `/leads`.
-3. **Analytics Railway** — **404 Application not found**: confirmar que el servicio existe en `quegym-api`, último deploy exitoso y dominio público activo.
-4. **Vercel BFF** — añadir `LEADS_SERVICE_URL`, `PARTNER_SERVICE_URL`, `ANALYTICS_SERVICE_URL` (sin `/` final) y redeploy **después** de `/health` OK en los tres.
-3. **BFF → APIs** — si las URLs en Vercel no apuntan a endpoints alcanzables, `/buscar` y flujos admin/partner fallarán aunque la home cargue (200 en HTML no implica APIs OK).
-4. **Evidencia formal** — `STAGING_EVIDENCE_SPRINT4.md` / `STAGING_EVIDENCE_SPRINT5.md` sin rellenar.
+1. **Vercel BFF** — confirmar `LEADS_SERVICE_URL`, `PARTNER_SERVICE_URL`, `ANALYTICS_SERVICE_URL` (sin `/` final) y redeploy.
+2. **BFF → APIs** — validar rutas admin/partner luego del redeploy (200 HTML no garantiza upstream OK).
+3. **Evidencia formal** — Sprint 4 PASS; Sprint 5 **NO-GO** por `SLA endpoint 401` (falta `LEADS_SLA_AUTH_BEARER` o `LEADS_SLA_ADMIN_TOKEN` en gates).
+4. **Admin UI staging** — validar login `/admin/login` tras deploy `7554d6c` + env Preview; luego E2E `/admin/leads`.
 5. **Prod** — `www.quegym.com`, apex redirect y OIDC-only sin passwords locales: pendiente.
 
 ---
@@ -183,6 +191,7 @@ Orden recomendado para la **siguiente sesión operativa**:
 - Plantilla env: [`docs/env/production.example`](../env/production.example)
 - Próximos pasos priorizados: [`NEXT_STEPS_RECOMMENDED.md`](./NEXT_STEPS_RECOMMENDED.md)
 - Agente GPT: [`GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md`](./GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md)
-- Última ejecución agente: [`STAGING_AGENT_EXECUTION_REPORT.md`](./STAGING_AGENT_EXECUTION_REPORT.md) (2026-05-25, **NO-GO**)
+- Última ejecución agente: [`STAGING_AGENT_EXECUTION_REPORT.md`](./STAGING_AGENT_EXECUTION_REPORT.md) (2026-05-26)
+- Login admin staging: `apps/web/src/lib/admin-local-login.ts` (`7554d6c`)
 
-*Actualizar este documento al cerrar import, smoke PASS y GO/NO-GO.*
+*Actualizado 2026-05-27: health 5/5, smoke PASS, fix login admin Vercel staging; Sprint 4 PASS, Sprint 5 NO-GO (SLA 401).*

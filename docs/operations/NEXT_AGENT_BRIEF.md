@@ -4,7 +4,7 @@ Documento corto para retomar trabajo sin releer todo el historial.
 
 ## 1) Estado actual en una frase
 
-Marca visible **QueGym** (rebrand Fase 1). Core MVP funcional en **local**; en **staging** discovery/comparar **OK** (95 venues, catalog+search+Vercel). Pendiente: **leads/partner/analytics** Railway (`/health` 502/404), redeploy **partner** tras fix `express`, env Vercel para los 3 BFF, smoke/gates Sprint 4/5 y GO/NO-GO. Admin/partner web documentados; OIDC-only + KPI beta siguen bloqueados por upstreams staging.
+Marca visible **QueGym** (rebrand Fase 1). Core MVP funcional en **staging** con servicios Railway **5/5 saludables** y `smoke:platform` OK (95 venues, discovery/ficha/comparar). Login admin: fix `7554d6c` + env Preview (`ADMIN_LOCAL_*`, `NEXT_PUBLIC_SITE_URL`). Pendiente: `LEADS_SLA_*` para Sprint 5, E2E `/admin/login`, decisión GO/NO-GO formal.
 
 ## 2) Prioridad de arranque (orden estricto)
 
@@ -17,12 +17,12 @@ Marca visible **QueGym** (rebrand Fase 1). Core MVP funcional en **local**; en *
 
 ## 3) Objetivo recomendado para la próxima sesión
 
-**Staging paso 3 parcial** (`STAGING_DEPLOYMENT_STATUS.md`, `STAGING_AGENT_EXECUTION_REPORT.md`). Prioridad inmediata: **redeploy partner** + arrancar leads/analytics en Railway → `/health` × 5 → Vercel env → gates.
+**Staging paso 3 técnicamente estable** (`STAGING_DEPLOYMENT_STATUS.md`, `STAGING_AGENT_EXECUTION_REPORT.md`). Prioridad inmediata: validar Vercel con `LEADS_*`/`PARTNER_*`/`ANALYTICS_*` y correr gates + evidencias.
 
 Cerrar Sprint 6 operativo (staging):
 
 - ~~import catálogo Neon~~ (**hecho:** 95 venues, 2026-05-26),
-- confirmar `/health` en **leads, partner, analytics** (URLs ya documentadas; partner: dep `express` en `main`),
+- confirmar `/health` en **leads, partner, analytics** después de cada redeploy (actualmente 200 en los tres),
 - añadir `LEADS_*`, `PARTNER_*`, `ANALYTICS_*` en Vercel Preview y redeploy,
 - habilitar OIDC estricto admin/partner en entorno real donde aplique,
 - ejecutar gates y evidencia:

@@ -8,7 +8,7 @@ Mapa canonico de documentacion para operacion diaria del monorepo **QueGym** (ca
 - `docs/operations/EPICS_USER_STORIES_STATUS.md`
 - `docs/operations/PROJECT_CONTEXT_HANDOVER.md`
 
-Cambios recientes de producto (referencia rapida): **staging `staging.quegym.com` (2026-05-26)** — import **95 venues** en Neon/Railway; discovery/comparar OK en Vercel; URLs de 5 microservicios en `STAGING_DEPLOYMENT_STATUS.md` y `docs/env/production.example`; health pendiente leads/partner/analytics; fix deploy **partner** (`express` en `package.json`); informe `STAGING_AGENT_EXECUTION_REPORT.md`. **Catálogo Caracas** — CSV + `pnpm venues:load` (`VENUES_CATALOG_IMPORT.md`); **rebrand Fase 1** (`REBRAND_QUEGYM_PLAN.md`); **hub admin** `/admin/configuracion`; taxonomías; leads backoffice; métricas `/admin/analytics`; solicitudes `/admin/partner-claims` (modal detalle, `#operaciones-y-sync`); wizard `/partner/claim`. Evidencia en los 3 documentos fuente + `CHANGELOG.md`.
+Cambios recientes de producto (referencia rapida): **staging `staging.quegym.com` (2026-05-27)** — import **95 venues**; `/health` 5/5 + `smoke:platform` OK; login admin Vercel con `admin-local-login.ts` (`7554d6c`); Sprint 4 gate PASS, Sprint 5 pendiente (SLA 401). Inventario: `STAGING_DEPLOYMENT_STATUS.md`, `STAGING_AGENT_EXECUTION_REPORT.md`, `docs/env/production.example`. **Catálogo Caracas** — `VENUES_CATALOG_IMPORT.md`; **rebrand Fase 1**; hub `/admin/configuracion`; taxonomías; leads; analytics; partner-claims (`#operaciones-y-sync`); `/partner/claim`. Evidencia: `sprints.md`, `PROJECT_CONTEXT_HANDOVER.md`, `EPICS_USER_STORIES_STATUS.md`, `CHANGELOG.md`.
 
 ## Producto (documentos rectores)
 

@@ -211,7 +211,9 @@ curl -sS https://<ANALYTICS_URL>/health
 | `ANALYTICS_SERVICE_URL` | URL analytics |
 | `ADMIN_AUTH_REQUIRE_OIDC` | `false` |
 | `ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD` | `true` (solo staging) |
-| `ADMIN_API_TOKEN` | desde vault (staging) |
+| `ADMIN_LOCAL_LOGIN_EMAIL` | correo del operador (vault) |
+| `ADMIN_LOCAL_LOGIN_PASSWORD` | contraseña staging (vault) |
+| `ADMIN_API_TOKEN` | mismo valor en Railway `catalog`/`leads`/`partner` (vault o `openssl rand -hex 32`) |
 | `ADMIN_OIDC_ACCESS_TOKEN` | token M2M Auth0 (renovar si expiró) |
 | `ADMIN_OIDC_ISSUER` | `https://<tenant>.us.auth0.com/` |
 | `ADMIN_OIDC_AUDIENCE` | `floit-admin` |
@@ -289,7 +291,9 @@ Ejecutar y anotar PASS/FAIL:
 | E9 | https://staging.quegym.com/partner/login | Pantalla login partner |
 | E10 | Login partner Auth0 (usuario de prueba en Auth0) | Entra a /partner/venues o panel |
 
-Si E6–E10 fallan por 401: revisar `ADMIN_OIDC_ACCESS_TOKEN` / M2M en Vercel (bloque C) y Auth0.
+Si E6 devuelve `?error=admin_login_not_enabled`: deploy web ≥ `7554d6c`, variables en **Preview**, `NEXT_PUBLIC_SITE_URL=https://staging.quegym.com`, `ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD=true`, `ADMIN_LOCAL_*` definidos → redeploy.
+
+Si E6–E10 fallan por 401 tras login: revisar `ADMIN_API_TOKEN` (Vercel = Railway) o `ADMIN_OIDC_ACCESS_TOKEN` (M2M Auth0).
 
 ---
 

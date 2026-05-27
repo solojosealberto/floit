@@ -85,12 +85,12 @@ Opcional **fase 2:** peticiones `GET /health` a URLs configuradas (`LEADS_SERVIC
 
 1. **Cabecera:** título «Configuración» + subtítulo «Entorno del backoffice y autenticación del BFF».
 2. **Tarjeta «Sesión»:** email de cookie si existe; si no, mensaje «Sin sesión por formulario (token solo en servidor)».
-3. **Tarjeta «Autenticación hacia APIs»:** chips o lista del modo efectivo; filas sí/no para: token OIDC presente, strict OIDC, token legacy presente, login local habilitado (solo si `NODE_ENV !== production`).
+3. **Tarjeta «Autenticación hacia APIs»:** chips o lista del modo efectivo; filas sí/no para: token OIDC presente, strict OIDC, token legacy presente, login local habilitado (`isAdminLocalPasswordLoginEnabled()` — local o staging Vercel, ver `admin-local-login.ts`).
 4. **Tarjeta «Documentación»:** lista de enlaces (runbook OIDC, credenciales locales, rutas web, guía localhost).
 5. **Tarjeta «Accesos»:** enlaces internos: Dashboard, Catálogo, Taxonomías, Leads, Solicitudes, Métricas (duplica utilidad del sidebar pero refuerza el rol de «hub» como en partner).
 6. **Pie:** recordatorio «Los secretos no se muestran aquí» + enlace **Cerrar sesión**.
 
-**Estados sin auth:** Igual que otras páginas admin: si `getAdminAuthHeader()` es null y no aplica login local, reutilizar el patrón del dashboard (mensaje de configuración de `ADMIN_OIDC_ACCESS_TOKEN` / `ADMIN_API_TOKEN`) o redirigir a `/admin/login` cuando `ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD` esté activo en dev.
+**Estados sin auth:** Igual que otras páginas admin: si `getAdminAuthHeader()` es null y no aplica login local, reutilizar el patrón del dashboard (mensaje de configuración de `ADMIN_OIDC_ACCESS_TOKEN` / `ADMIN_API_TOKEN`) o redirigir a `/admin/login` cuando `isAdminLocalPasswordLoginEnabled()` sea true.
 
 ## 5. Requisitos técnicos
 

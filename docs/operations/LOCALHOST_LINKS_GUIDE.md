@@ -194,6 +194,19 @@ Nota de endurecimiento:
 - `ADMIN_LOCAL_LOGIN_EMAIL=<tu correo admin>`
 - `ADMIN_LOCAL_LOGIN_PASSWORD=<tu contraseña admin>`
 
+Lógica compartida local/staging: `apps/web/src/lib/admin-local-login.ts` (`isAdminLocalPasswordLoginEnabled()`).
+
+### Admin en staging (`staging.quegym.com`)
+
+Variables en **Vercel Preview** (no solo Production):
+
+- `NEXT_PUBLIC_SITE_URL=https://staging.quegym.com`
+- `ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD=true`
+- `ADMIN_LOCAL_LOGIN_EMAIL` / `ADMIN_LOCAL_LOGIN_PASSWORD` (vault; no las de `LOCAL_TEST_CREDENTIALS.md`, que son solo dev)
+- `ADMIN_API_TOKEN` — mismo valor que en Railway (`catalog`, `leads`, `partner`)
+
+Requiere deploy con fix `7554d6c` o posterior. Si aparece `?error=admin_login_not_enabled`, ver troubleshooting en `STAGING_DEPLOYMENT_STATUS.md` (auth web).
+
 ### Partner local (fallback dev)
 
 - `PARTNER_DEV_EMAIL=owner@example.com`

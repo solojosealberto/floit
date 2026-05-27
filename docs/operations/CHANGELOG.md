@@ -17,11 +17,12 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 ## [Unreleased]
 
 ### Fixed
+- **Admin login en Vercel staging (`7554d6c`):** helper `apps/web/src/lib/admin-local-login.ts` — el formulario `/admin/login` ya no exige `NODE_ENV !== production`; en staging habilita login local si `ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD=true` y `NEXT_PUBLIC_SITE_URL` contiene `staging.` (o `VERCEL_ENV` es `preview`/`development`). Corrige `?error=admin_login_not_enabled` tras configurar solo variables en Vercel.
 - **Partner-service Railway:** dependencia directa **`express`** en `services/partner/package.json` — corrige crash al arranque (`Cannot find module 'express'`) por import de `serveStatic` en `main.ts` con aislamiento pnpm en deploy.
 - **Partner/leads + PostgreSQL (Neon):** columnas de fecha pasan de `datetime` (SQLite) a **`timestamptz`** cuando existe `DATABASE_URL`; helper `typeorm-column-types.ts` mantiene `datetime` en SQLite local. Corrige fallo de metadata TypeORM en Railway (diagnóstico Railway PR #1, absorbido en `main`).
 
 ### Documentation
-- **Staging paso 3 (2026-05-26):** sincronización de `STAGING_DEPLOYMENT_STATUS.md`, `STAGING_AGENT_EXECUTION_REPORT.md`, `GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md`, `docs/env/production.example` (URLs Railway), `sprints.md`, `PROJECT_CONTEXT_HANDOVER.md`, `EPICS_USER_STORIES_STATUS.md`, `NEXT_STEPS_RECOMMENDED.md`, `NEXT_AGENT_BRIEF.md`, `docs/index.md` — import 95 venues, discovery staging OK, health 3/5, NO-GO formal pendiente.
+- **Staging paso 3 (2026-05-26):** sincronización de `STAGING_DEPLOYMENT_STATUS.md`, `STAGING_AGENT_EXECUTION_REPORT.md`, `GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md`, `docs/env/production.example` (URLs Railway), `sprints.md`, `PROJECT_CONTEXT_HANDOVER.md`, `EPICS_USER_STORIES_STATUS.md`, `NEXT_STEPS_RECOMMENDED.md`, `NEXT_AGENT_BRIEF.md`, `docs/index.md` — import 95 venues, `/health` 5/5, `smoke:platform` OK; pendiente evidencia formal Sprint 4/5 + GO/NO-GO.
 
 ### Added
 - **Importación masiva de catálogo Caracas:** pipeline `scripts/venues-import/` (`normalize.mjs`, `import.mjs`, `validate.mjs`, `audit-format.mjs`); artefactos en `data/` (`venues-caracas.source.csv`, `venues-caracas.normalized.json`, `venues-geocode-cache.json`); comandos raíz `pnpm venues:normalize`, `venues:import`, `venues:load`, `venues:validate`, `venues:validate:live`, `venues:audit`. Guía: `docs/operations/VENUES_CATALOG_IMPORT.md`.

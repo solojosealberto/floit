@@ -537,18 +537,18 @@ Detalle de ejecución:
 
 ---
 
-### Actualización operativa (2026-05-26) — staging paso 3 (parcial)
+### Actualización operativa (2026-05-26) — staging paso 3 (estado actual)
 
 | Área | Entrega | Estado |
 |------|---------|--------|
 | Catálogo Neon/Railway | `pnpm venues:import:staging` → **95 venues**; `/health/ready` → `venues: 95` | `Completado` |
 | Railway catalog + search | URLs públicas; search con `CATALOG_SERVICE_URL` → catalog HTTPS | `/health` OK |
 | Vercel Preview | `CATALOG_SERVICE_URL`, `SEARCH_SERVICE_URL`; `/buscar`, fichas, `/api/compare/search` | Discovery OK |
-| Railway leads / partner / analytics | URLs documentadas en `STAGING_DEPLOYMENT_STATUS.md` | `/health` **FAIL** (502 leads/partner; 404 analytics) |
-| Fix deploy partner | `express` en `package.json`; entidades con `TIMESTAMP_COLUMN_TYPE` (`timestamptz` en Postgres, `datetime` en SQLite) | Código en `main`; verificar `/health` tras auto-deploy |
-| Smoke | `pnpm smoke:platform` con 5 URLs + `SMOKE_WEB_BASE=staging.quegym.com` | Parcial (3/5 servicios) |
-| Gates Sprint 4/5 | `sprint4:gate`, flow-checklist, kpi-gate | `Pendiente` (requiere health leads/partner) |
-| Decisión | GO parcial discovery; **NO-GO** formal | Ver `STAGING_AGENT_EXECUTION_REPORT.md` |
+| Railway leads + partner + analytics | fixes `express` + TypeORM Postgres (`TIMESTAMP_COLUMN_TYPE`) desplegados en `main` | `/health` OK (5/5 servicios) |
+| Admin login Vercel staging | `admin-local-login.ts` — habilita `/admin/login` con `NODE_ENV=production` en Preview | `Completado` (`7554d6c`) |
+| Smoke | `pnpm smoke:platform` con 5 URLs + `SMOKE_WEB_BASE=staging.quegym.com` | **OK** |
+| Gates Sprint 4/5 | `sprint4:gate`, flow-checklist, kpi-gate | `Pendiente` (evidencia formal y decisión) |
+| Decisión | GO técnico de conectividad/servicios; **NO-GO formal (S5 SLA 401)** | Ver `STAGING_AGENT_EXECUTION_REPORT.md` y `STAGING_EVIDENCE_SPRINT5.md` |
 
 URLs Railway staging (sin secretos): ver tabla en `STAGING_DEPLOYMENT_STATUS.md` y `docs/env/production.example`.
 
@@ -588,4 +588,4 @@ URLs Railway staging (sin secretos): ver tabla en `STAGING_DEPLOYMENT_STATUS.md`
 
 ---
 
-*Última actualización documental (2026-05-26): **staging paso 3 parcial** — import 95 venues en Neon/Railway; discovery en `staging.quegym.com` OK; URLs leads/partner/analytics registradas; health 3/5; fix `express` en partner-service para Railway. Histórico 2026-05-21: **importación catálogo Caracas** (`VENUES_CATALOG_IMPORT.md`, `data/`, `pnpm venues:*`); BD local sin demos seed (95 venues importados). Histórico 2026-05-10: panel admin — **`/admin/configuracion`** (hub auth read-only + docs); **`/admin/partner-claims`**: modal **Ver detalle** (`claim-detail-modal`), lista claims con **`updatedAt`**, y **`#operaciones-y-sync`** rediseñado (`partner-service-health-panel`, `dlq-failures-panel` sync/outbox, `ownership-partner-venue-panel`, `ownership-audit-panel`, `admin-refresh-button`; auditoría hasta 200 eventos). Histórico mismo sprint: **`/admin/leads`** (modal detalle lead), **`/admin/analytics`** (gráficos MVP + detalle técnico), catálogo admin panel compartido con partner. Referencias actualizadas: `WEB_ROUTES_PLATFORM.md`, `LOCALHOST_LINKS_GUIDE.md`, `LOCAL_TEST_CREDENTIALS.md`, `PROJECT_CONTEXT_HANDOVER.md`, `EPICS_USER_STORIES_STATUS.md`, `CHANGELOG.md`, `NEXT_STEPS_RECOMMENDED.md`.*
+*Última actualización documental (2026-05-27): **staging paso 3 estabilizado** — import 95 venues; `/health` 5/5; `smoke:platform` OK; fix login admin Vercel (`7554d6c`). Pendiente: E2E admin UI, credencial SLA Sprint 5, evidencias y GO/NO-GO formal. Histórico 2026-05-21: **importación catálogo Caracas** (`VENUES_CATALOG_IMPORT.md`, `data/`, `pnpm venues:*`); BD local sin demos seed (95 venues importados). Histórico 2026-05-10: panel admin — **`/admin/configuracion`** (hub auth read-only + docs); **`/admin/partner-claims`**: modal **Ver detalle** (`claim-detail-modal`), lista claims con **`updatedAt`**, y **`#operaciones-y-sync`** rediseñado (`partner-service-health-panel`, `dlq-failures-panel` sync/outbox, `ownership-partner-venue-panel`, `ownership-audit-panel`, `admin-refresh-button`; auditoría hasta 200 eventos). Histórico mismo sprint: **`/admin/leads`** (modal detalle lead), **`/admin/analytics`** (gráficos MVP + detalle técnico), catálogo admin panel compartido con partner. Referencias actualizadas: `WEB_ROUTES_PLATFORM.md`, `LOCALHOST_LINKS_GUIDE.md`, `LOCAL_TEST_CREDENTIALS.md`, `PROJECT_CONTEXT_HANDOVER.md`, `EPICS_USER_STORIES_STATUS.md`, `CHANGELOG.md`, `NEXT_STEPS_RECOMMENDED.md`.*

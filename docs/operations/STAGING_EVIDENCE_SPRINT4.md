@@ -14,15 +14,15 @@ Referencias:
 
 | Campo | Valor |
 |---|---|
-| Fecha |  |
+| Fecha | 2026-05-26 |
 | Entorno | staging |
-| Release/commit |  |
-| Responsable técnico |  |
-| Responsable producto/ops |  |
-| Ventana de validación |  |
-| Resultado `pnpm sprint4:readiness` |  |
-| Resultado `pnpm sprint4:auth-negative` |  |
-| Resultado `pnpm sprint4:gate` |  |
+| Release/commit | `3838fe7` (base smoke 5/5) + `main` vigente |
+| Responsable técnico | Agente + operador |
+| Responsable producto/ops | Pendiente firma |
+| Ventana de validación | 2026-05-26 21:50-22:10 UTC-4 |
+| Resultado `pnpm sprint4:readiness` | PASS |
+| Resultado `pnpm sprint4:auth-negative` | PASS |
+| Resultado `pnpm sprint4:gate` | PASS (con URLs staging por env) |
 
 ---
 
@@ -56,15 +56,15 @@ Este ensayo no reemplaza la evidencia formal de staging; reduce riesgo para la v
 
 | Check | Esperado | Resultado | Evidencia |
 |---|---|---|---|
-| Leads: `ADMIN_AUTH_REQUIRE_OIDC=true` | Activo |  |  |
-| Leads: `ADMIN_OIDC_ISSUER` configurado | Sí |  |  |
-| Partner: `ADMIN_AUTH_REQUIRE_OIDC=true` | Activo |  |  |
-| Partner: `PARTNER_AUTH_REQUIRE_OIDC=true` | Activo |  |  |
-| Partner: `ADMIN_OIDC_ISSUER` configurado | Sí |  |  |
-| Partner: `PARTNER_OIDC_ISSUER` configurado | Sí |  |  |
-| Web: `ADMIN_AUTH_REQUIRE_OIDC=true` | Activo |  |  |
-| Web: `PARTNER_AUTH_REQUIRE_OIDC=true` | Activo |  |  |
-| Web: tokens server-side OIDC configurados | Sí |  |  |
+| Leads: `ADMIN_AUTH_REQUIRE_OIDC=true` | Activo | PASS | `leads /health -> adminStrictOidc=true` |
+| Leads: `ADMIN_OIDC_ISSUER` configurado | Sí | PASS | `leads /health -> adminOidcConfigured=true` |
+| Partner: `ADMIN_AUTH_REQUIRE_OIDC=true` | Activo | PASS | `partner /health -> adminStrictOidc=true` |
+| Partner: `PARTNER_AUTH_REQUIRE_OIDC=true` | Activo | PASS | `partner /health -> partnerStrictOidc=true` |
+| Partner: `ADMIN_OIDC_ISSUER` configurado | Sí | PASS | `partner /health -> adminOidcConfigured=true` |
+| Partner: `PARTNER_OIDC_ISSUER` configurado | Sí | PASS | `partner /health -> partnerOidcConfigured=true` |
+| Web: `ADMIN_AUTH_REQUIRE_OIDC=true` | Activo | Pendiente | Requiere validación UI admin en staging |
+| Web: `PARTNER_AUTH_REQUIRE_OIDC=true` | Activo | PASS (servicios) | Partner strict validado en servicio |
+| Web: tokens server-side OIDC configurados | Sí | Pendiente | Validación E2E UI pendiente |
 
 ---
 
@@ -72,15 +72,15 @@ Este ensayo no reemplaza la evidencia formal de staging; reduce riesgo para la v
 
 | Check | Esperado | Resultado | Evidencia |
 |---|---|---|---|
-| Leads `/health` -> `adminStrictOidc=true` | Sí |  |  |
-| Leads `/health` -> `adminOidcConfigured=true` | Sí |  |  |
-| Partner `/health` -> `adminStrictOidc=true` | Sí |  |  |
-| Partner `/health` -> `partnerStrictOidc=true` | Sí |  |  |
-| Partner `/health` -> `adminOidcConfigured=true` | Sí |  |  |
-| Partner `/health` -> `partnerOidcConfigured=true` | Sí |  |  |
-| Partner `/health` -> `readiness.oidcConfigReady=true` | Sí |  |  |
-| Partner `/health` -> `readiness.queuesHealthy=true` | Sí |  |  |
-| Partner `/health` -> `readiness.recommendedForStrictOidc=true` | Sí |  |  |
+| Leads `/health` -> `adminStrictOidc=true` | Sí | PASS | `pnpm sprint4:gate` |
+| Leads `/health` -> `adminOidcConfigured=true` | Sí | PASS | `pnpm sprint4:gate` |
+| Partner `/health` -> `adminStrictOidc=true` | Sí | PASS | `pnpm sprint4:gate` |
+| Partner `/health` -> `partnerStrictOidc=true` | Sí | PASS | `pnpm sprint4:gate` |
+| Partner `/health` -> `adminOidcConfigured=true` | Sí | PASS | `pnpm sprint4:gate` |
+| Partner `/health` -> `partnerOidcConfigured=true` | Sí | PASS | `pnpm sprint4:gate` |
+| Partner `/health` -> `readiness.oidcConfigReady=true` | Sí | PASS | `pnpm sprint4:gate` |
+| Partner `/health` -> `readiness.queuesHealthy=true` | Sí | PASS | `failedQueues=0` |
+| Partner `/health` -> `readiness.recommendedForStrictOidc=true` | Sí | PASS | `pnpm sprint4:gate` |
 
 Comando sugerido para evidencia automatizada:
 
@@ -119,8 +119,8 @@ Comando sugerido para evidencia automatizada:
 
 | Prueba | Esperado | Resultado | Evidencia |
 |---|---|---|---|
-| `x-admin-token` sin bearer en strict=true | 401 |  |  |
-| `x-partner-email` sin bearer en strict=true | 401 |  |  |
+| `x-admin-token` sin bearer en strict=true | 401 | PASS | `pnpm sprint4:auth-negative` contra URLs Railway |
+| `x-partner-email` sin bearer en strict=true | 401 | PASS | `pnpm sprint4:auth-negative` contra URLs Railway |
 
 Comando sugerido para evidencia automatizada:
 
@@ -155,13 +155,13 @@ Gate único recomendado (readiness + pruebas negativas):
 
 | Criterio | Estado |
 |---|---|
-| OIDC-only validado en staging (admin + partner) |  |
-| Fallbacks legacy/dev bloqueados en strict mode |  |
-| Colas y outbox estables (failed=0 al cierre) |  |
-| Operación admin/partner sin regresiones críticas |  |
-| Aprobación conjunta tech + producto/ops |  |
+| OIDC-only validado en staging (admin + partner) | PASS (servicios + guards) |
+| Fallbacks legacy/dev bloqueados en strict mode | PASS |
+| Colas y outbox estables (failed=0 al cierre) | PASS |
+| Operación admin/partner sin regresiones críticas | Pendiente validación E2E manual UI |
+| Aprobación conjunta tech + producto/ops | Pendiente |
 
-**Decisión final:** `GO` / `NO-GO`
+**Decisión final:** `GO técnico condicional` (pendiente firma producto/ops y E2E UI)
 
 **Firmas (nombre/fecha):**
 
