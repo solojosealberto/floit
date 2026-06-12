@@ -8,7 +8,8 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 **Search Railway:** https://floitsearch-service-production.up.railway.app — `/v1/search` OK (`meta.total: 95`) tras `CATALOG_SERVICE_URL` → catalog.  
 **Vercel staging:** catalog + search configurados; `/buscar`, fichas y `/api/compare/search` OK (2026-05-26).  
 **URLs leads / partner / analytics (Railway):** registradas 2026-05-26 — **salud HTTP OK** (`/health` 200 en los tres).  
-**Pendiente:** confirmar `LEADS_*` / `PARTNER_*` / `ANALYTICS_*` en Vercel y cerrar evidencias Sprint 4/5.
+**Auth admin staging:** M2M Auth0 + `ADMIN_OIDC_ACCESS_TOKEN` en Vercel Preview; fix issuer `00fd9f9`. `/admin/leads` operativo.  
+**Pendiente:** E2E manual, tráfico A/B para KPI gate, firma GO/NO-GO producto/ops.
 
 ---
 
@@ -17,7 +18,7 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | Fase | Estado | Notas |
 |------|--------|-------|
 | Paso 2 — Cuentas e infra (§0–§5) | **Completado** | Neon, Railway, Auth0, Vercel, DNS `staging` |
-| Paso 3 — Datos y validación | **En curso (avanzado)** | Import + health 5/5 + smoke OK; faltan gates/evidencias formales |
+| Paso 3 — Datos y validación | **En curso (casi cerrado)** | Import + health 5/5 + smoke OK; gates preflight PASS; KPI A/B + E2E manual pendientes |
 | Paso 4 — Producción `www` | **Pendiente** | Tras GO/NO-GO staging |
 
 ---
@@ -36,7 +37,8 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | 7 | Import catálogo Neon staging | ✅ | 2026-05-26 — **95 created**; `/health/ready` → `venues:95` |
 | 7b | Fix crash partner Railway (`express`) | ✅ | `services/partner/package.json` (commit `08633b0`) |
 | 7c | Fix TypeORM Postgres (`datetime` → `timestamptz`) | ✅ | 8 entidades partner + helper `typeorm-column-types.ts`; leads alineado; Railway PR #1 absorbido en `main` |
-| 8 | Smoke + evidencias Sprint 4/5 | ☐ | `smoke:platform` OK (5/5); pendientes evidencias Sprint 4/5 + decisión GO/NO-GO |
+| 8 | Smoke + evidencias Sprint 4/5 | ☐ | `smoke:platform` OK; `sprint4:gate` + `sprint5:flow-checklist` PASS (2026-05-27); KPI A/B FAIL; GO técnico condicional |
+| 8b | Auth M2M + fix issuer Auth0 | ✅ | `00fd9f9`; `pnpm auth0:m2m-token`; Vercel `ADMIN_OIDC_ACCESS_TOKEN` |
 | 9 | Dominio prod `www.quegym.com` | ☐ | Post GO |
 
 ---
@@ -131,14 +133,13 @@ Dominio gestionado: **quegym.com**. Producción `www` y forward `@` → **no con
 
 ---
 
-## Brechas conocidas (del informe + verificación)
+## Brechas conocidas (actualizado 2026-05-27)
 
-1. **Vercel BFF** — confirmar `LEADS_SERVICE_URL`, `PARTNER_SERVICE_URL`, `ANALYTICS_SERVICE_URL` (sin `/` final) y redeploy.
-2. **BFF → APIs** — validar rutas admin/partner luego del redeploy (200 HTML no garantiza upstream OK).
-3. **Evidencia formal** — Sprint 4 PASS (readiness + auth-negative). Sprint 5 **parcial**: auth M2M Auth0 OK (Bearer pasa guard; legacy 401); **HTTP 500** en `/v1/admin/leads*` y analytics `/v1/metrics/*` → revisar `DATABASE_SYNC=true` una vez en Railway **leads** y **analytics**, redeploy, luego `false`.
-4. **Vercel** — añadir `ADMIN_OIDC_ACCESS_TOKEN` (M2M; `pnpm auth0:m2m-token`) en Preview y redeploy para que `/admin/leads` deje de fallar vía BFF.
-4. **Admin UI staging** — validar login `/admin/login` tras deploy `7554d6c` + env Preview; luego E2E `/admin/leads`.
-5. **Prod** — `www.quegym.com`, apex redirect y OIDC-only sin passwords locales: pendiente.
+1. **KPI gate Sprint 5** — variantes A/B `membership` + `trial` ausentes (~21 eventos; `whatsapp_first` sí). Requiere tráfico QA o sesión instrumentada.
+2. **E2E manual** — checklist §2–3 en `STAGING_EVIDENCE_SPRINT5.md` sin completar (usuario, partner, lead real).
+3. **Token M2M** — expira ~24 h; renovar con `pnpm auth0:m2m-token` y actualizar Vercel Preview `ADMIN_OIDC_ACCESS_TOKEN`.
+4. **Firma GO/NO-GO** — producto/ops pendiente; decisión técnica actual: **GO técnico condicional**.
+5. **Prod** — `www.quegym.com`, apex redirect, OIDC-only sin passwords locales: pendiente post-GO staging.
 
 ---
 
@@ -168,11 +169,12 @@ Orden recomendado para la **siguiente sesión operativa**:
 
 ### Bloque C — Validación y GO staging
 
-1. `SMOKE_WEB_BASE=https://staging.quegym.com pnpm smoke:platform`
-2. `LEADS_HEALTH_URL=... PARTNER_HEALTH_URL=... pnpm sprint4:gate` (URLs públicas Railway)
-3. `pnpm sprint5:flow-checklist` y `pnpm sprint5:kpi-gate` con auth admin resuelto (M2M o token staging)
-4. Rellenar [`STAGING_EVIDENCE_SPRINT4.md`](./STAGING_EVIDENCE_SPRINT4.md) y [`STAGING_EVIDENCE_SPRINT5.md`](./STAGING_EVIDENCE_SPRINT5.md) → decisión **GO/NO-GO**
-5. Checklist visual: [`UI_VISUAL_QA_CHECKLIST.md`](../ux/UI_VISUAL_QA_CHECKLIST.md)
+1. ~~`pnpm smoke:platform`~~ — **OK**
+2. ~~`pnpm sprint4:gate`~~ — **PASS** (2026-05-27)
+3. ~~`pnpm sprint5:flow-checklist`~~ — **PASS** (M2M + `00fd9f9`)
+4. **Siguiente:** E2E manual + tráfico CTA → `pnpm sprint5:staging-gate` (KPI sin relaxed)
+5. Firma producto/ops en [`STAGING_EVIDENCE_SPRINT4.md`](./STAGING_EVIDENCE_SPRINT4.md) y [`STAGING_EVIDENCE_SPRINT5.md`](./STAGING_EVIDENCE_SPRINT5.md)
+6. Checklist visual: [`UI_VISUAL_QA_CHECKLIST.md`](../ux/UI_VISUAL_QA_CHECKLIST.md)
 
 ### Bloque D — Producción (solo tras GO)
 
@@ -192,7 +194,8 @@ Orden recomendado para la **siguiente sesión operativa**:
 - Plantilla env: [`docs/env/production.example`](../env/production.example)
 - Próximos pasos priorizados: [`NEXT_STEPS_RECOMMENDED.md`](./NEXT_STEPS_RECOMMENDED.md)
 - Agente GPT: [`GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md`](./GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md)
-- Última ejecución agente: [`STAGING_AGENT_EXECUTION_REPORT.md`](./STAGING_AGENT_EXECUTION_REPORT.md) (2026-05-26)
+- Última ejecución agente: [`STAGING_AGENT_EXECUTION_REPORT.md`](./STAGING_AGENT_EXECUTION_REPORT.md) (2026-05-27)
+- Gates staging: `pnpm sprint5:staging-gate -- --kpi-relaxed` (vault `docs/env/staging.local`)
 - Login admin staging: `apps/web/src/lib/admin-local-login.ts` (`7554d6c`)
 
-*Actualizado 2026-05-27: health 5/5, smoke PASS, fix login admin Vercel staging; Sprint 4 PASS, Sprint 5 NO-GO (SLA 401).*
+*Actualizado 2026-05-27: auth M2M + fix issuer `00fd9f9`; Sprint 4 PASS; Sprint 5 preflight PASS; KPI A/B FAIL; GO técnico condicional.*

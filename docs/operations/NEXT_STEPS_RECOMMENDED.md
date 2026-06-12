@@ -24,13 +24,15 @@ Plan: **`PRODUCTION_LAUNCH_PLAN.md`**. Infra staging: **`STAGING_DEPLOYMENT_STAT
 
 **Hecho (2026-05-26, paso 3):** import **95 venues** (`pnpm venues:import:staging`); URLs de los 5 servicios Railway documentadas; fixes deploy (`express` + `TIMESTAMP_COLUMN_TYPE` para Postgres) en `main`; `/health` **OK 5/5**; `pnpm smoke:platform` **OK** contra `staging.quegym.com`.
 
-**Ahora (cierre formal):**
+**Hecho (2026-05-27):** auth M2M Auth0 + fix issuer `00fd9f9`; `pnpm sprint5:staging-gate -- --kpi-relaxed` → Sprint 4 + flow-checklist **PASS**; `/admin/leads` operativo; evidencias en `STAGING_EVIDENCE_SPRINT5.md`.
 
-1. **Vercel Preview:** confirmar `LEADS_*` / `PARTNER_*` / `ANALYTICS_*`, login admin (`ADMIN_LOCAL_*`, `NEXT_PUBLIC_SITE_URL`, `ADMIN_API_TOKEN` = Railway) y redeploy web (código ≥ `7554d6c`).
-2. Probar manual `https://staging.quegym.com/admin/login` → `/admin` → `/admin/leads`.
-3. Ejecutar `pnpm sprint4:gate`, `pnpm sprint5:flow-checklist`, `pnpm sprint5:kpi-gate` (con `LEADS_SLA_AUTH_BEARER` o `LEADS_SLA_ADMIN_TOKEN`).
-3. **Evidencias** `STAGING_EVIDENCE_SPRINT4/5` → **GO/NO-GO**.
-4. **Cutover prod** (solo tras GO): `www.quegym.com`, import prod, OIDC-only, §14 del plan.
+**Ahora (cierre formal beta staging):**
+
+1. **Renovar token M2M** periódicamente: `pnpm auth0:m2m-token` → Vercel Preview `ADMIN_OIDC_ACCESS_TOKEN`.
+2. **E2E manual** — completar §2–3 de `STAGING_EVIDENCE_SPRINT5.md` (buscar → ficha → lead → admin → partner SLA).
+3. **Tráfico A/B** — generar eventos con variantes `membership` + `trial` en staging; re-ejecutar `pnpm sprint5:staging-gate` (sin `--kpi-relaxed` cuando haya volumen).
+4. **Firma GO/NO-GO** producto/ops en evidencias Sprint 4/5.
+5. **Cutover prod** (solo tras GO): `www.quegym.com`, import prod, OIDC-only, §14 del plan.
 
 ## Prioridad 0b — Rebrand (estado)
 

@@ -158,6 +158,8 @@ Scripts:
 - `scripts/sprint5-kpi-gate.mjs`
 - `scripts/sprint4-readiness.mjs`
 - `scripts/sprint4-auth-negative.mjs`
+- `scripts/sprint5-staging-gate.mjs` — gate encadenado staging (sprint4 + flow + kpi)
+- `scripts/obtain-auth0-m2m-token.mjs` — `pnpm auth0:m2m-token`
 
 ## 8) Riesgos y deuda abierta (priorizada)
 
@@ -222,9 +224,11 @@ Antes de implementar nuevos cambios:
 - **Rebrand QueGym:** **Fase 1 completada** — copy y metadata visibles vía `apps/web/src/lib/brand.ts`, `QueGymLogo`, header (`floit-main-header.tsx`), partner/admin y OpenAPI `info.title`. Identificadores técnicos legacy **sin cambio** (`@floit/*`, cookies HTTP, `floit_verified`, eventos `floit.*.v1`, tokens CSS `--floit-*`, `localStorage` `floit:*`). Planificación Fases 2–4: **`docs/operations/REBRAND_QUEGYM_PLAN.md`**.
 - **Sprint UI (Sprint 11) cerrado** (mayo 2026): páginas P1/P2 del plan en `sprints.md` (`/partner/planes`, `/partner/fotos`, `/admin/venues`, `/admin/duplicados`, `/admin/moderacion-media`), discovery con taxonomías activas y pulido ficha gym (tabs, descripción, guardar/compartir).
 - **Staging desplegado (2026-05):** infra en Neon `quegym`, Railway `quegym-api`, Auth0, Vercel `floit-web`, DNS **`https://staging.quegym.com`**. Registro: **`STAGING_DEPLOYMENT_STATUS.md`**, informe **`STAGING_AGENT_EXECUTION_REPORT.md`**.
-- **Staging paso 3 (2026-05-26, actualizado):** import **95 venues**; discovery en Vercel OK; URLs 5 servicios documentadas; fixes deploy en `main` (`express` + `TIMESTAMP_COLUMN_TYPE` para Postgres en partner/leads/analytics). **Estado técnico:** `/health` 5/5 + `smoke:platform` OK; Sprint 4 gate PASS. **Pendiente:** credencial admin para gates Sprint 5 (SLA 401), E2E UI admin/partner, evidencias y GO/NO-GO formal. **Prod `www`:** sin cutover DNS.
-- **Admin login staging (2026-05-27):** fix `admin-local-login.ts` (`7554d6c`) — login por formulario en `staging.quegym.com` con `ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD` + `ADMIN_LOCAL_*` + `NEXT_PUBLIC_SITE_URL`; `ADMIN_API_TOKEN` alineado Vercel↔Railway para APIs tras sesión.
-- Objetivo recomendado de la próxima sesión: validar `/admin/login` en staging tras deploy Vercel, configurar `LEADS_SLA_*` para Sprint 5, completar evidencias → GO/NO-GO staging.
+- **Staging paso 3 (2026-05-27):** auth admin desbloqueado — M2M Auth0 + fix issuer `00fd9f9`; `pnpm sprint5:staging-gate -- --kpi-relaxed` → Sprint 4 + flow-checklist **PASS**; KPI A/B **FAIL** (tráfico). `/admin/leads` operativo en staging. Decisión: **GO técnico condicional**. Evidencia: **`STAGING_EVIDENCE_SPRINT5.md`**, **`STAGING_AGENT_EXECUTION_REPORT.md`**.
+- **Staging paso 3 (2026-05-26):** import **95 venues**; discovery OK; `/health` 5/5 + `smoke:platform` OK; Sprint 4 gate PASS; Sprint 5 bloqueado por SLA 401 (resuelto 2026-05-27).
+- **Admin login staging:** fix `admin-local-login.ts` (`7554d6c`) + M2M BFF (`ADMIN_OIDC_ACCESS_TOKEN` en Vercel Preview).
+- **Prod `www`:** sin cutover DNS.
+- Objetivo recomendado de la próxima sesión: E2E manual staging (§2–3 evidencias S5), generar tráfico CTA A/B, firma GO/NO-GO producto/ops.
 - **Estado reciente:** `/admin/leads` renovada con la misma línea gráfica que `/admin` (grid + sidebar), filtros cliente y métricas derivadas de `GET /v1/admin/leads` + SLA + catálogo para etiquetas de centro/zona.
 - **Estado reciente (2026-05-09):** **`/admin/analytics`** ampliada con gráficos MVP coherentes con diseño (apiladas, donut, líneas; detalle técnico colapsable con funnel/SLA/experimento). **`/admin/partner-claims`** renovada con dashboard (KPIs, búsqueda, chips, tabla, paginación, CSV) y bloques operativos anclados (`#operaciones-y-sync`).
 - **Estado reciente (2026-05-10):** UI operativa de **`#operaciones-y-sync`** alineada a diseño (paneles health/DLQ/ownership/auditoría como arriba); modal **Ver detalle** de claims; documentación operativa y guías locales sincronizadas con estos cambios.

@@ -14,7 +14,7 @@ Referencias:
 
 | Campo | Valor |
 |---|---|
-| Fecha | 2026-05-26 |
+| Fecha | 2026-05-27 (actualizado) |
 | Entorno | staging |
 | Release/commit | `3838fe7` (base smoke 5/5) + `main` vigente |
 | Responsable técnico | Agente + operador |
@@ -92,7 +92,7 @@ Comando sugerido para evidencia automatizada:
 
 | Flujo | Esperado | Resultado | Evidencia |
 |---|---|---|---|
-| Abrir `/admin/leads` con token OIDC | 200/UI carga |  |  |
+| Abrir `/admin/leads` con token OIDC | 200/UI carga | **PASS** | 2026-05-27 — login local + M2M BFF; panel operativo |
 | Export CSV leads | descarga válida |  |  |
 | Abrir `/admin/partner-claims` | UI + health + tablas visibles |  |  |
 | Aprobar claim | status actualizado |  |  |
@@ -158,7 +158,7 @@ Gate único recomendado (readiness + pruebas negativas):
 | OIDC-only validado en staging (admin + partner) | PASS (servicios + guards) |
 | Fallbacks legacy/dev bloqueados en strict mode | PASS |
 | Colas y outbox estables (failed=0 al cierre) | PASS |
-| Operación admin/partner sin regresiones críticas | Pendiente validación E2E manual UI |
+| Operación admin/partner sin regresiones críticas | Parcial — `/admin/leads` OK; resto E2E manual pendiente |
 | Aprobación conjunta tech + producto/ops | Pendiente |
 
 **Decisión final:** `GO técnico condicional` (pendiente firma producto/ops y E2E UI)

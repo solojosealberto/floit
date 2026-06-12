@@ -218,6 +218,9 @@ OpenAPI (`openapi/README.md`), `pnpm verify`, `pnpm smoke:local`, [`docs/operati
 | US-6.3 decisión automática A/B | Endpoint dedicado de experimento + criterios de estabilidad/uplift para decisión `GO/NO-GO` en dashboard y gate técnico | `services/analytics/src/events.controller.ts`, `openapi/analytics.yaml`, `apps/web/src/app/admin/analytics/page.tsx`, `scripts/sprint5-kpi-gate.mjs` |
 | US-6.3 multivariante CTA | Evolución a `cta_lead_entrypoint_v2` con variante adicional `whatsapp_first` y evaluación automática comparada vs baseline `membership` | `apps/web/src/app/gyms/[slug]/gym-contact-section.tsx`, `services/analytics/src/events.controller.ts`, `apps/web/src/app/admin/analytics/page.tsx`, `scripts/sprint5-kpi-gate.mjs`, `openapi/analytics.yaml` |
 | Gate técnico KPI Sprint 5 | `pnpm sprint5:kpi-gate` valida umbrales mínimos de funnel + SLA + tamaño mínimo de muestra A/B por variante | `scripts/sprint5-kpi-gate.mjs`, `package.json` |
+| Gate staging encadenado Sprint 5 | `pnpm sprint5:staging-gate` — sprint4 + flow-checklist + kpi-gate con vault `docs/env/staging.local` | `scripts/sprint5-staging-gate.mjs`, `scripts/load-staging-env.mjs`, `package.json` |
+| Token M2M Auth0 para staging | `pnpm auth0:m2m-token` obtiene Bearer para gates y Vercel `ADMIN_OIDC_ACCESS_TOKEN` | `scripts/obtain-auth0-m2m-token.mjs`, `docs/env/staging.local.example` |
+| Fix issuer Auth0 (staging) | Guards aceptan `iss` con o sin barra final (Auth0 emite trailing slash) | `services/*/admin-api.guard.ts`, commit `00fd9f9` |
 | Checklist técnico pre-E2E | `pnpm sprint5:flow-checklist` valida disponibilidad de servicios/endpoints antes de prueba integral | `scripts/sprint5-flow-checklist.mjs`, `package.json`, `docs/operations/STAGING_EVIDENCE_SPRINT5.md` |
 | Navegación operativa | Links a analytics desde admin leads/claims | `apps/web/src/app/admin/leads/page.tsx`, `apps/web/src/app/admin/partner-claims/page.tsx` |
 | Malla QA capability end-to-end | Cobertura `buscar -> ficha -> comparar -> lead` con fixtures reutilizables, unit/integration(testcontainers)/contract/e2e y comando único `pnpm test:capability` | `tests/fixtures/capability-search-profile-compare-lead.ts`, `tests/contracts/openapi-capability.contract.test.ts`, `services/catalog/test/capability-search-profile-compare.integration.spec.ts`, `apps/web/e2e/capability-search-profile-compare-lead.spec.ts`, `apps/web/e2e/lead-flow.spec.ts`, `docs/operations/TEST_MATRIX_SEARCH_PROFILE_COMPARE_LEAD.md`, `package.json` |
@@ -240,10 +243,11 @@ OpenAPI (`openapi/README.md`), `pnpm verify`, `pnpm smoke:local`, [`docs/operati
 
 ### Pendiente (resto Sprint 5)
 
+- ~~Ejecutar `pnpm sprint5:flow-checklist` contra staging~~ — **PASS** (2026-05-27, M2M + fix issuer).
+- Ejecutar `pnpm sprint5:kpi-gate` con umbrales PRD en staging (actualmente **FAIL**: variantes A/B `membership` + `trial` por poco tráfico).
+- Completar checklist manual E2E en `docs/operations/STAGING_EVIDENCE_SPRINT5.md` (§2–3).
 - Añadir variantes adicionales de experimento (copy corto vs largo) sobre baseline actual multivariante.
-- Definir gate beta con umbrales KPI (`QIR`, `search->profile`, `profile->lead`, `SLA`) en staging.
-- Ejecutar `pnpm sprint5:kpi-gate` contra analytics en staging y registrar resultado como criterio de entrada a beta.
-- Ejecutar prueba integral guiada (`pnpm sprint5:flow-checklist` + checklist manual) y completar `docs/operations/STAGING_EVIDENCE_SPRINT5.md`.
+- Firma producto/ops para GO formal beta.
 
 ---
 
@@ -537,7 +541,20 @@ Detalle de ejecución:
 
 ---
 
-### Actualización operativa (2026-05-26) — staging paso 3 (estado actual)
+### Actualización operativa (2026-05-27) — Sprint 5 staging desbloqueado
+
+| Área | Entrega | Estado |
+|------|---------|--------|
+| Auth0 M2M | Token `client_credentials` → audience `floit-admin`; vault `docs/env/staging.local` | `Completado` |
+| Fix issuer JWT | `issuer: [base, base/]` en guards admin (leads, partner, catalog) | `Completado` (`00fd9f9`) |
+| Vercel Preview | `ADMIN_OIDC_ACCESS_TOKEN` para BFF server-side | `Completado` |
+| Gates automatizados | `pnpm sprint5:staging-gate -- --kpi-relaxed` | Sprint 4 **PASS**; flow-checklist **PASS**; kpi-gate **FAIL** (1 check A/B) |
+| Admin UI | `/admin/leads` carga sin 401 tras login | `Completado` |
+| Decisión | **GO técnico condicional** | Ver `STAGING_EVIDENCE_SPRINT5.md` |
+
+---
+
+### Actualización operativa (2026-05-26) — staging paso 3 (estado anterior)
 
 | Área | Entrega | Estado |
 |------|---------|--------|
@@ -547,8 +564,8 @@ Detalle de ejecución:
 | Railway leads + partner + analytics | fixes `express` + TypeORM Postgres (`TIMESTAMP_COLUMN_TYPE`) desplegados en `main` | `/health` OK (5/5 servicios) |
 | Admin login Vercel staging | `admin-local-login.ts` — habilita `/admin/login` con `NODE_ENV=production` en Preview | `Completado` (`7554d6c`) |
 | Smoke | `pnpm smoke:platform` con 5 URLs + `SMOKE_WEB_BASE=staging.quegym.com` | **OK** |
-| Gates Sprint 4/5 | `sprint4:gate`, flow-checklist, kpi-gate | `Pendiente` (evidencia formal y decisión) |
-| Decisión | GO técnico de conectividad/servicios; **NO-GO formal (S5 SLA 401)** | Ver `STAGING_AGENT_EXECUTION_REPORT.md` y `STAGING_EVIDENCE_SPRINT5.md` |
+| Gates Sprint 4/5 | `sprint4:gate`, flow-checklist, kpi-gate | `Parcial` — preflight PASS (2026-05-27); KPI A/B pendiente tráfico |
+| Decisión | GO técnico condicional | Ver `STAGING_EVIDENCE_SPRINT5.md` |
 
 URLs Railway staging (sin secretos): ver tabla en `STAGING_DEPLOYMENT_STATUS.md` y `docs/env/production.example`.
 
@@ -588,4 +605,4 @@ URLs Railway staging (sin secretos): ver tabla en `STAGING_DEPLOYMENT_STATUS.md`
 
 ---
 
-*Última actualización documental (2026-05-27): **staging paso 3 estabilizado** — import 95 venues; `/health` 5/5; `smoke:platform` OK; fix login admin Vercel (`7554d6c`). Pendiente: E2E admin UI, credencial SLA Sprint 5, evidencias y GO/NO-GO formal. Histórico 2026-05-21: **importación catálogo Caracas** (`VENUES_CATALOG_IMPORT.md`, `data/`, `pnpm venues:*`); BD local sin demos seed (95 venues importados). Histórico 2026-05-10: panel admin — **`/admin/configuracion`** (hub auth read-only + docs); **`/admin/partner-claims`**: modal **Ver detalle** (`claim-detail-modal`), lista claims con **`updatedAt`**, y **`#operaciones-y-sync`** rediseñado (`partner-service-health-panel`, `dlq-failures-panel` sync/outbox, `ownership-partner-venue-panel`, `ownership-audit-panel`, `admin-refresh-button`; auditoría hasta 200 eventos). Histórico mismo sprint: **`/admin/leads`** (modal detalle lead), **`/admin/analytics`** (gráficos MVP + detalle técnico), catálogo admin panel compartido con partner. Referencias actualizadas: `WEB_ROUTES_PLATFORM.md`, `LOCALHOST_LINKS_GUIDE.md`, `LOCAL_TEST_CREDENTIALS.md`, `PROJECT_CONTEXT_HANDOVER.md`, `EPICS_USER_STORIES_STATUS.md`, `CHANGELOG.md`, `NEXT_STEPS_RECOMMENDED.md`.*
+*Última actualización documental (2026-05-27): **Sprint 5 staging desbloqueado** — M2M Auth0 + fix issuer `00fd9f9`; `sprint5:flow-checklist` PASS; KPI A/B FAIL (tráfico); GO técnico condicional. Histórico 2026-05-26: staging paso 3 — import 95 venues; `/health` 5/5; `smoke:platform` OK. Histórico 2026-05-21: **importación catálogo Caracas** (`VENUES_CATALOG_IMPORT.md`, `data/`, `pnpm venues:*`); BD local sin demos seed (95 venues importados).*

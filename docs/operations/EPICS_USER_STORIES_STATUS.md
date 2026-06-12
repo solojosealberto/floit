@@ -168,17 +168,21 @@ Notas operativas recientes de discovery/comparación (US-2.x):
 
 ---
 
-## Rollout staging `staging.quegym.com` (2026-05-26)
+## Rollout staging `staging.quegym.com` (2026-05-27)
 
 | Capacidad | Estado staging | Notas |
 |-----------|----------------|-------|
 | Discovery (US-1.x) | `Completado` | 95 venues en Neon; search+catalog Railway; Vercel Preview |
 | Ficha / comparar (US-2.x) | `Completado` | `/gyms/*`, `/api/compare/search` verificados en staging |
-| Leads públicos (US-3.1) | `Completado` (infra staging) | `leads-service` Railway `/health` 200 |
-| Partner / admin ops (US-4.x, 5.x) | `Parcial` | partner Railway `/health` 200; login admin staging documentado (`admin-local-login.ts`, `7554d6c`); falta E2E UI admin/partner + evidencias |
-| Analytics / Sprint 5 KPIs (US-6.x) | `Parcial` | analytics Railway `/health` 200; faltan gates Sprint 5 en staging |
+| Leads públicos (US-3.1) | `Completado` (infra staging) | `leads-service` Railway `/health` 200; admin API con M2M |
+| Partner / admin ops (US-4.x, 5.x) | `Parcial` | `/admin/leads` operativo (M2M + `00fd9f9`); E2E manual partner/admin pendiente |
+| Analytics / Sprint 5 KPIs (US-6.x) | `Parcial` | Preflight PASS; KPI A/B membership+trial FAIL por tráfico (~21 eventos) |
 
-Evidencia y URLs: `STAGING_DEPLOYMENT_STATUS.md`, `STAGING_AGENT_EXECUTION_REPORT.md`, `GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md`.
+Evidencia: `STAGING_EVIDENCE_SPRINT5.md`, `STAGING_DEPLOYMENT_STATUS.md`, `STAGING_AGENT_EXECUTION_REPORT.md`.
+
+---
+
+## Rollout staging (histórico 2026-05-26)
 
 ---
 
