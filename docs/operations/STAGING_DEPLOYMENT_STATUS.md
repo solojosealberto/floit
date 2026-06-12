@@ -135,7 +135,8 @@ Dominio gestionado: **quegym.com**. Producción `www` y forward `@` → **no con
 
 1. **Vercel BFF** — confirmar `LEADS_SERVICE_URL`, `PARTNER_SERVICE_URL`, `ANALYTICS_SERVICE_URL` (sin `/` final) y redeploy.
 2. **BFF → APIs** — validar rutas admin/partner luego del redeploy (200 HTML no garantiza upstream OK).
-3. **Evidencia formal** — Sprint 4 PASS; Sprint 5 **NO-GO** por `SLA endpoint 401` (falta `LEADS_SLA_AUTH_BEARER` o `LEADS_SLA_ADMIN_TOKEN` en gates).
+3. **Evidencia formal** — Sprint 4 PASS (readiness + auth-negative). Sprint 5 **parcial**: auth M2M Auth0 OK (Bearer pasa guard; legacy 401); **HTTP 500** en `/v1/admin/leads*` y analytics `/v1/metrics/*` → revisar `DATABASE_SYNC=true` una vez en Railway **leads** y **analytics**, redeploy, luego `false`.
+4. **Vercel** — añadir `ADMIN_OIDC_ACCESS_TOKEN` (M2M; `pnpm auth0:m2m-token`) en Preview y redeploy para que `/admin/leads` deje de fallar vía BFF.
 4. **Admin UI staging** — validar login `/admin/login` tras deploy `7554d6c` + env Preview; luego E2E `/admin/leads`.
 5. **Prod** — `www.quegym.com`, apex redirect y OIDC-only sin passwords locales: pendiente.
 

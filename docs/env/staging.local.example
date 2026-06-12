@@ -18,3 +18,21 @@ CATALOG_SERVICE_URL=https://floitcatalog-service-production.up.railway.app
 # LEADS_SERVICE_URL=https://...
 # PARTNER_SERVICE_URL=https://...
 # ANALYTICS_SERVICE_URL=https://...
+
+# --- Vercel Preview (staging.quegym.com) — login admin formulario ---
+# ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD=true
+# ADMIN_LOCAL_LOGIN_EMAIL=
+# ADMIN_LOCAL_LOGIN_PASSWORD=
+# ADMIN_API_TOKEN=  # mismo valor en Railway catalog/leads/partner
+
+# --- Auth0 M2M (QueGym Admin BFF) — gates Sprint 5 + Vercel ADMIN_OIDC_ACCESS_TOKEN ---
+# AUTH0_DOMAIN=REPLACE.us.auth0.com
+# AUTH0_M2M_CLIENT_ID=
+# AUTH0_M2M_CLIENT_SECRET=
+# AUTH0_M2M_AUDIENCE=floit-admin
+# ADMIN_OIDC_ISSUER=https://REPLACE.us.auth0.com/   # alternativa a AUTH0_DOMAIN
+# LEADS_SLA_AUTH_BEARER=                            # token ya obtenido (copiar también a Vercel)
+
+# Obtener token: pnpm auth0:m2m-token
+# Gates staging:  pnpm sprint5:staging-gate
+# Gates staging (KPI relajados): pnpm sprint5:staging-gate -- --kpi-relaxed

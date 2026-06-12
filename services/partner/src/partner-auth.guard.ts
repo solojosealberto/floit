@@ -45,17 +45,20 @@ export class PartnerAuthGuard implements CanActivate {
     const token = auth.startsWith("Bearer ") ? auth.slice(7).trim() : "";
     if (!token) throw new UnauthorizedException("missing_partner_token");
 
-    const issuer = issuerRaw.replace(/\/$/, "");
+    const issuerBase = issuerRaw.replace(/\/$/, "");
     const audience =
       this.config.get<string>("PARTNER_OIDC_AUDIENCE")?.trim() || "floit-partner";
     const jwksUrl =
       this.config.get<string>("PARTNER_OIDC_JWKS_URL")?.trim() ||
-      `${issuer}/.well-known/jwks.json`;
+      `${issuerBase}/.well-known/jwks.json`;
     const jose = await this.getJose();
     const jwks = await this.getOrCreateJwks(jwksUrl);
 
     try {
-      const verified = await jose.jwtVerify(token, jwks as never, { issuer, audience });
+      const verified = await jose.jwtVerify(token, jwks as never, {
+        issuer: [issuerBase, `${issuerBase}/`],
+        audience,
+      });
       const emailRaw = verified.payload.email;
       const subRaw = verified.payload.sub;
       if (typeof emailRaw !== "string" || typeof subRaw !== "string") {

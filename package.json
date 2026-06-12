@@ -30,6 +30,8 @@
     "sprint4:gate": "pnpm sprint4:readiness && pnpm sprint4:auth-negative",
     "sprint5:flow-checklist": "node scripts/sprint5-flow-checklist.mjs",
     "sprint5:kpi-gate": "node scripts/sprint5-kpi-gate.mjs",
+    "auth0:m2m-token": "node scripts/obtain-auth0-m2m-token.mjs",
+    "sprint5:staging-gate": "node scripts/sprint5-staging-gate.mjs",
     "lint": "pnpm -r run lint",
     "typecheck": "pnpm -r run typecheck",
     "verify": "pnpm run lint && pnpm run typecheck && pnpm run build",

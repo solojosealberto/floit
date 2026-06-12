@@ -54,17 +54,20 @@ export class AdminApiGuard implements CanActivate {
     const token = auth.startsWith("Bearer ") ? auth.slice(7).trim() : "";
     if (!token) throw new UnauthorizedException("missing_bearer_token");
 
-    const issuer = issuerRaw.replace(/\/$/, "");
+    const issuerBase = issuerRaw.replace(/\/$/, "");
     const audience =
       this.config.get<string>("ADMIN_OIDC_AUDIENCE")?.trim() || "floit-admin";
     const jwksUrl =
       this.config.get<string>("ADMIN_OIDC_JWKS_URL")?.trim() ||
-      `${issuer}/.well-known/jwks.json`;
+      `${issuerBase}/.well-known/jwks.json`;
     const jose = await this.getJose();
     const jwks = await this.getOrCreateJwks(jwksUrl);
 
     try {
-      const verified = await jose.jwtVerify(token, jwks as never, { issuer, audience });
+      const verified = await jose.jwtVerify(token, jwks as never, {
+        issuer: [issuerBase, `${issuerBase}/`],
+        audience,
+      });
       const payload = verified.payload as { sub?: string; email?: string };
       const withIdentity = req as Request & { adminIdentity?: AdminIdentity };
       withIdentity.adminIdentity = {
