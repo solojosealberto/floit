@@ -218,7 +218,7 @@ Evidencia: `STAGING_EVIDENCE_SPRINT5.md`, `STAGING_DEPLOYMENT_STATUS.md`, `STAGI
 | Campos UI kit | `packages/ui/src/input.tsx`, `select.tsx` | Borde mint sutil en `:focus-visible` |
 | Aplicado en | home, `/buscar`, partner/admin login | Wrappers con clase `qg-field` |
 
-**Próximo paso:** deploy UX a **staging** + QA (`UI_VISUAL_QA_CHECKLIST.md` §2b, §4 focus, comparador); `pnpm venues:import:staging`; cierre beta (KPI A/B, GO/NO-GO).
+**Próximo paso:** QA visual en **staging** (`UI_VISUAL_QA_CHECKLIST.md` §2b, §4 focus, comparador); cierre beta (KPI A/B, E2E manual, GO/NO-GO). Deploy UX + import catálogo **OK** (2026-06-14).
 
 ---
 
@@ -226,7 +226,8 @@ Evidencia: `STAGING_EVIDENCE_SPRINT5.md`, `STAGING_DEPLOYMENT_STATUS.md`, `STAGI
 
 - **Completado (2026-05-27):** Rebrand Fase 2 visual + copy verbal en repo (`REBRAND_QUEGYM_PLAN.md`, `QUEGYM_BRAND_COPY_PLAN.md`, `pnpm copy:verify`).
 - **Completado (2026-05-27):** Sprint **UX-A/B/C** — confianza catálogo y conversión en repo (`QUEGYM_UX_V0_IMPROVEMENT_PLAN.md`): tarjetas unificadas, `/buscar` + ficha + home + shell móvil, Lucide/skeletons, pipeline import re-normalizado (95 venues, 100% descripción limpia en JSON), **comparador** (`CompareActiveBar` + `CompareGrid` móvil), **focus formularios** (`.qg-field` / `.qg-input` en `globals.css`).
-- **Pendiente:** deploy UX a **staging** + QA visual/copy (`UI_VISUAL_QA_CHECKLIST.md`); `pnpm venues:import:staging` con JSON normalizado.
-- **Siguiente línea de trabajo recomendada:** cierre beta staging (deploy UX → tráfico KPI A/B → E2E manual §2–3 → firma GO/NO-GO); opcional spike UX-V0-801.
+- **Completado (2026-06-14):** deploy UX a **staging.quegym.com** (Vercel); import catálogo `{ updated: 95 }`.
+- **Pendiente:** QA visual/copy en staging (`UI_VISUAL_QA_CHECKLIST.md`).
+- **Siguiente línea de trabajo recomendada:** cierre beta staging (QA visual → tráfico KPI A/B → E2E manual §2–3 → firma GO/NO-GO); opcional spike UX-V0-801.
 - Scope histórico cerrado: partner planes/fotos, admin duplicados/moderación, taxonomías en buscar, ficha gym tabs/guardar/compartir (ver filas US arriba).
 - Fuera del scope MVP transaccional actual: `/checkout`, `/reservas` (solo placeholder/backlog).

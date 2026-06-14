@@ -447,7 +447,8 @@ Plan: **`docs/ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`**, estado en **`docs/op
   - **Focus formularios (polish):** clases `.qg-field` (`:focus-within` en contenedor redondeado) y `.qg-input` en `globals.css`; inputs internos sin outline cuadrado; `UITextInput`/`UISelect` en `@floit/ui` alineados; home, `/buscar`, logins partner/admin.
   - **Pipeline:** `pnpm venues:normalize` + `pnpm venues:audit:ui` — 95 venues, **100% descripción limpia** en JSON, 51.6% listos UI (≥0.55).
   - **Componentes clave:** `packages/ui/src/venue-image.tsx`, `venue-card-grid.tsx`, `compare-active-bar.tsx`, `compare-grid.tsx`, `discovery-filter-link.tsx`, `buscar/loading.tsx`, `globals.css` (`.qg-field`, `.qg-input`).
-  - **Pendiente:** deploy web + import catálogo en Neon/staging; QA visual staging; spike UX-V0-801 opcional.
+  - **Pendiente:** QA visual staging; spike UX-V0-801 opcional.
+  - **Deploy staging (2026-06-14):** `main` → Vercel Production success; import `{ updated: 95 }`; `smoke:platform` OK contra `staging.quegym.com`.
 
 ### Consolidado rebrand 2026-05-26 / 2026-05-27
 

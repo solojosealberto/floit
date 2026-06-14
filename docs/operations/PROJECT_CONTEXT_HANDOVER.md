@@ -231,8 +231,9 @@ Antes de implementar nuevos cambios:
   - Tarjetas unificadas (`VenueCardGrid`), `/buscar` + ficha + home + nav móvil, Lucide/skeletons.
   - **Comparador:** `CompareActiveBar` en `/buscar` (fix visibilidad móvil y desaparición al hover); `CompareGrid` sticky en `/comparar` (grilla móvil alineada a wireframe v0).
   - **Focus campos:** `.qg-field` (focus en contenedor redondeado) y `.qg-input`; sin borde cuadrado grueso en inputs transparentes (home, buscar, logins).
-  - Catálogo JSON re-normalizado: `pnpm venues:audit:ui` → **100% descripción limpia** (95 venues); **import en Neon/staging pendiente**.
-- **Pendiente:** deploy web UX a staging; QA visual/copy (`UI_VISUAL_QA_CHECKLIST.md`).
+  - Catálogo JSON re-normalizado: `pnpm venues:audit:ui` → **100% descripción limpia** (95 venues); **import Neon staging OK** (2026-06-14, `{ updated: 95 }`).
+- **Completado (2026-06-14):** deploy web UX a **staging.quegym.com** (Vercel `d684837`); verificado copy «Encuentra tu próximo», tokens `quegym-accent`, `data-theme`.
+- **Pendiente:** QA visual/copy en staging (`UI_VISUAL_QA_CHECKLIST.md` §2b, §4, comparador móvil); E2E manual §2–3; tráfico KPI A/B.
 - **Identificadores técnicos legacy** sin cambio (`@floit/*`, cookies, `floit_verified`, eventos) — Fase 3 planificada.
 - **Sprint UI (Sprint 11) cerrado** (mayo 2026): páginas P1/P2 del plan en `sprints.md` (`/partner/planes`, `/partner/fotos`, `/admin/venues`, `/admin/duplicados`, `/admin/moderacion-media`), discovery con taxonomías activas y pulido ficha gym (tabs, descripción, guardar/compartir).
 - **Staging desplegado (2026-05):** infra en Neon `quegym`, Railway `quegym-api`, Auth0, Vercel `floit-web`, DNS **`https://staging.quegym.com`**. Registro: **`STAGING_DEPLOYMENT_STATUS.md`**, informe **`STAGING_AGENT_EXECUTION_REPORT.md`**.
@@ -240,7 +241,7 @@ Antes de implementar nuevos cambios:
 - **Staging paso 3 (2026-05-26):** import **95 venues**; discovery OK; `/health` 5/5 + `smoke:platform` OK; Sprint 4 gate PASS; Sprint 5 bloqueado por SLA 401 (resuelto 2026-05-27).
 - **Admin login staging:** fix `admin-local-login.ts` (`7554d6c`) + M2M BFF (`ADMIN_OIDC_ACCESS_TOKEN` en Vercel Preview).
 - **Prod `www`:** sin cutover DNS.
-- Objetivo recomendado de la próxima sesión: **deploy UX a staging** + import catálogo Neon + QA visual (`UI_VISUAL_QA_CHECKLIST.md`) + E2E manual §2–3 + tráfico KPI A/B + firma GO/NO-GO.
+- Objetivo recomendado de la próxima sesión: **QA visual staging** (`UI_VISUAL_QA_CHECKLIST.md`) + E2E manual §2–3 + tráfico KPI A/B + firma GO/NO-GO.
 - **Estado reciente:** `/admin/leads` renovada con la misma línea gráfica que `/admin` (grid + sidebar), filtros cliente y métricas derivadas de `GET /v1/admin/leads` + SLA + catálogo para etiquetas de centro/zona.
 - **Estado reciente (2026-05-09):** **`/admin/analytics`** ampliada con gráficos MVP coherentes con diseño (apiladas, donut, líneas; detalle técnico colapsable con funnel/SLA/experimento). **`/admin/partner-claims`** renovada con dashboard (KPIs, búsqueda, chips, tabla, paginación, CSV) y bloques operativos anclados (`#operaciones-y-sync`).
 - **Estado reciente (2026-05-10):** UI operativa de **`#operaciones-y-sync`** alineada a diseño (paneles health/DLQ/ownership/auditoría como arriba); modal **Ver detalle** de claims; documentación operativa y guías locales sincronizadas con estos cambios.
