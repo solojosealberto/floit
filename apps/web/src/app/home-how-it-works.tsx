@@ -25,7 +25,7 @@ export function HomeHowItWorks() {
   return (
     <section className="mt-10 px-1 md:px-4">
       <p className="text-xs font-medium uppercase tracking-widest text-quegym-highlight">
-        // Proceso
+        Proceso
       </p>
       <h2 className="mt-2 font-display text-2xl font-semibold text-quegym-primary md:text-3xl">
         Cómo funciona QueGym
