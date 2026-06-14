@@ -46,29 +46,29 @@ export default async function LeadEstadoPage(props: {
         </h1>
         <UIBadge>{statusLabel}</UIBadge>
       </div>
-      <UICard className="bg-neutral-50 dark:bg-neutral-900">
+      <UICard>
         <dl className="flex flex-col gap-3 text-sm">
           <div>
-            <dt className="text-neutral-500">Estado</dt>
-            <dd className="font-medium">{statusLabel}</dd>
+            <dt className="text-quegym-secondary">Estado</dt>
+            <dd className="font-medium text-quegym-primary">{statusLabel}</dd>
           </div>
           <div>
-            <dt className="text-neutral-500">Tipo</dt>
-            <dd className="font-medium">{formatIntent(data.intent)}</dd>
+            <dt className="text-quegym-secondary">Tipo</dt>
+            <dd className="font-medium text-quegym-primary">{formatIntent(data.intent)}</dd>
           </div>
           <div>
-            <dt className="text-neutral-500">Centro</dt>
-            <dd className="font-medium">{data.venueSlug ?? "—"}</dd>
+            <dt className="text-quegym-secondary">Centro</dt>
+            <dd className="font-medium text-quegym-primary">{data.venueSlug ?? "—"}</dd>
           </div>
           {data.createdAt ? (
             <div>
-              <dt className="text-neutral-500">Recibida</dt>
-              <dd className="font-medium">{formatDate(data.createdAt)}</dd>
+              <dt className="text-quegym-secondary">Recibida</dt>
+              <dd className="font-medium text-quegym-primary">{formatDate(data.createdAt)}</dd>
             </div>
           ) : null}
         </dl>
       </UICard>
-      <p className="text-sm text-neutral-600 dark:text-neutral-400">
+      <p className="text-sm text-quegym-secondary">
         Seguimiento en modo demo local. El estado puede pasar de recibida a en
         contacto y luego cerrada.
       </p>

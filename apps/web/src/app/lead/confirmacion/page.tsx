@@ -15,17 +15,17 @@ export default async function LeadConfirmacionPage(props: {
 
   return (
     <main className="mx-auto flex max-w-lg flex-col gap-6 px-4 py-12">
-      <UICard className="flex flex-col gap-4 bg-neutral-50 dark:bg-neutral-900">
+      <UICard className="qg-surface flex flex-col gap-4 bg-quegym-subtle">
         <div className="flex items-center justify-center">
           <UIBadge variant="success">Solicitud enviada</UIBadge>
         </div>
-        <h1 className="text-center text-2xl font-semibold tracking-tight">
+        <h1 className="text-center font-display text-2xl font-semibold tracking-tight text-quegym-primary">
           ¡Tu solicitud fue recibida!
         </h1>
         <UIBanner variant="success">
           El centro recibirá tus datos de contacto y debería responder pronto.
         </UIBanner>
-        <p className="text-center text-neutral-600 dark:text-neutral-400">
+        <p className="text-center text-quegym-secondary">
           Puedes hacer seguimiento del estado de esta solicitud y seguir
           explorando más centros en Caracas.
         </p>
@@ -33,7 +33,7 @@ export default async function LeadConfirmacionPage(props: {
         {token ? (
           <p className="text-center text-sm">
             <Link
-              className="font-medium underline"
+              className="qg-link-hover qg-motion font-medium text-quegym-highlight underline"
               href={`/lead/estado/${encodeURIComponent(token)}`}
             >
               Ver estado de mi solicitud

@@ -420,9 +420,52 @@ Plan completo y fases siguientes: **`docs/operations/REBRAND_QUEGYM_PLAN.md`**.
 - `Completado` **QueGym Admin** en login y sidebar admin.
 - `Completado` OpenAPI `info.title` con prefijo QueGym en los cinco YAML.
 - `Completado` E2E `partner-claim.spec.ts` (heading «Tu centro en QueGym»).
-- `Sin cambio` (intencional Fase 1): tokens CSS `--floit-*`, claves `localStorage` `floit:*`, `@floit/*`, cookies HTTP `floit_*`, `floit_verified`, eventos `floit.*.v1`, OIDC audience `floit-admin`, CSV `floit-leads.csv`.
-- `Pendiente` (Fase 2 planificada): tokens `--quegym-*`, migración `localStorage`, favicon dinámico, `applicationName` PWA — ver plan de rebranding.
-- `Pendiente` (Fase 3 planificada): paquetes `@quegym/*`, cookies, eventos v2, enum verificación, OIDC — ver plan de rebranding.
+- `Sin cambio` (intencional Fase 1): tokens CSS `--floit-*`, claves `localStorage` legacy `floit:*` (migradas al leer), `@floit/*`, cookies HTTP `floit_*`, `floit_verified`, eventos `floit.*.v1`, OIDC audience `floit-admin`.
+- `Completado` (Fase 2): migración `localStorage` canónico, favicon `icon.tsx`, export `quegym-leads.csv`.
+
+### Avance — Rebrand Fase 2 (QueGym visual)
+
+Plan: **`docs/ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`**, estado en **`docs/operations/REBRAND_QUEGYM_PLAN.md`**.
+
+- `Completado` Tokens dual-theme `--qg-*` + alias `--floit-*` en `globals.css`; Tailwind `quegym.*`.
+- `Completado` Toggle dark/light (`theme.ts`, `theme-script.tsx`, `theme-toggle.tsx`) en header público, admin sidebar, partner layout y login admin.
+- `Completado` Tipografías Inter + Barlow Semi Condensed en layout raíz.
+- `Completado` Home, `/buscar`, `/favoritos`, `/gyms/[slug]` migrados a tokens semánticos.
+- `Completado` (2026-05-27) **Accent unificado Mint `#12B76A`:** `--qg-accent` = `--qg-highlight`; CTAs, logo Q, favicon.
+- `Completado` (2026-05-27) Partner login/claim — tokens QueGym (Ink/Green) vs `#0a1430`; `/comparar` sin HEX hardcodeado; favicon `icon.tsx` + `apple-icon.tsx`.
+- `Completado` (2026-05-27) Migración `localStorage` canónico (`storage-keys.ts`: favoritos, comparar, duplicados).
+- `Completado` (2026-05-27) Partner claim wizard + `/partner` entry; `/privacidad` y `/lead/*`.
+- `Completado` (2026-05-27) Partner panel interno (`partner-panel-client`, venues, config, leads); admin shells (`admin-sidebar` + páginas internas); login admin alineado a partner.
+- `Completado` (2026-05-27) Export CSV admin renombrado a `quegym-leads.csv`.
+- `Completado` (2026-05-27) **Copy verbal (Fase 7):** tuteo venezolano en home, metadata SEO, `/buscar`, partner claim/panel/config, admin leads/catálogo; constantes `BRAND_*` en `brand.ts`; gate `pnpm copy:verify` + CI; plan [`docs/ux/QUEGYM_BRAND_COPY_PLAN.md`](../ux/QUEGYM_BRAND_COPY_PLAN.md).
+- `Pendiente` QA **staging** dual-theme + copy manual ([`UI_VISUAL_QA_CHECKLIST.md`](../ux/UI_VISUAL_QA_CHECKLIST.md)).
+- `Completado` (2026-05-27) **Sprint UX-A/B/C** — mejora confianza catálogo y conversión (repo local). Plan: [`docs/ux/QUEGYM_UX_V0_IMPROVEMENT_PLAN.md`](../ux/QUEGYM_UX_V0_IMPROVEMENT_PLAN.md).
+  - **UX-A:** `VenueImage` + fallback iniciales, `VenueCardGrid`/`VenueCard` unificados, `VenuePriceDisplay` variant `card`, descripción sanitizada (`venue-description.ts`), aspect ratio imagen `3/1` móvil / `16/9` desktop.
+  - **UX-B:** `/buscar` tarjetas reales, chips filtros activos removibles (`ActiveFilterChip`), drawer nav móvil, contador comparar en header, ranking `relevanceScore` con peso completitud en catalog, `DiscoveryFilterLink` + skeletons (`useTransition`).
+  - **UX-C:** Home «Cómo funciona» + destacados con skeleton, footer público (`site-footer.tsx`), Lucide en rutas públicas, mapas sin emoji, popups sin rating fake, paridad `/favoritos`.
+  - **Comparador (cierre UX):** `CompareActiveBar` en `/buscar` (fix barra que desaparecía: fuera de `overflow-hidden`/`qg-motion:hover`; visible en móvil); `CompareGrid` en `/comparar` (grilla sticky columna etiquetas + cabeceras centros, scroll horizontal móvil; reemplaza tarjetas apiladas).
+  - **Focus formularios (polish):** clases `.qg-field` (`:focus-within` en contenedor redondeado) y `.qg-input` en `globals.css`; inputs internos sin outline cuadrado; `UITextInput`/`UISelect` en `@floit/ui` alineados; home, `/buscar`, logins partner/admin.
+  - **Pipeline:** `pnpm venues:normalize` + `pnpm venues:audit:ui` — 95 venues, **100% descripción limpia** en JSON, 51.6% listos UI (≥0.55).
+  - **Componentes clave:** `packages/ui/src/venue-image.tsx`, `venue-card-grid.tsx`, `compare-active-bar.tsx`, `compare-grid.tsx`, `discovery-filter-link.tsx`, `buscar/loading.tsx`, `globals.css` (`.qg-field`, `.qg-input`).
+  - **Pendiente:** deploy web + import catálogo en Neon/staging; QA visual staging; spike UX-V0-801 opcional.
+
+### Consolidado rebrand 2026-05-26 / 2026-05-27
+
+| Entrega | Documentación |
+|---------|----------------|
+| Paleta verde bosque + accent Mint `#12B76A` | `QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md` §1–3 |
+| Toggle dark/light + anti-FOUC | `theme.ts`, `theme-script.tsx`, `theme-toggle.tsx` |
+| Elevación Apple (`qg-surface`, `qg-btn-primary`, …) | `globals.css` §7 |
+| Focus campos (`.qg-field`, `.qg-input`) | `globals.css`; home, buscar, logins; `@floit/ui` input/select |
+| Rutas públicas + lead/privacidad + comparar | Fases 1–5 UI |
+| Partner login/claim/entry + panel + venues | Fase 4–6 UI |
+| Admin sidebar theme-aware + páginas internas | Fase 6 UI |
+| `localStorage` `quegym:*` + migración `floit:*` | `storage-keys.ts` |
+| Favicon / apple-icon Mint | `app/icon.tsx`, `apple-icon.tsx` |
+| Export `quegym-leads.csv` | BFF + `admin-leads.controller.ts` |
+| Copy Venezuela (sin voseo) | `QUEGYM_BRAND_COPY_PLAN.md` C0–C5 |
+
+Referencias de marca: [propuestademarca.netlify.app](https://propuestademarca.netlify.app/) · [quegymconmarcaaplicada.netlify.app](https://quegymconmarcaaplicada.netlify.app/)
 
 ### Plan de acciones funcionales `/gyms/[slug]` (siguiente iteración)
 

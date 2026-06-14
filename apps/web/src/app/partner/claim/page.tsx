@@ -6,7 +6,7 @@ import { ClaimWizard } from "./claim-wizard";
 export const metadata: Metadata = {
   title: `Dar de alta o reclamar tu centro | ${BRAND_PARTNERS}`,
   description:
-    `Reclamá la ficha de tu gimnasio en ${BRAND_NAME} o registrá un centro nuevo. Revisión en 1–2 días hábiles.`,
+    `Reclama la ficha de tu gimnasio en ${BRAND_NAME} o registra un centro nuevo. Revisión en 1–2 días hábiles.`,
   robots: { index: false, follow: false },
 };
 

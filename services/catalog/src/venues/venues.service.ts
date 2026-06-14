@@ -560,7 +560,7 @@ function relevanceScore(
   query: ListVenuesQueryDto,
   distanceM?: number,
 ): number {
-  let s = (v.completenessScore ?? 0) * 38;
+  let s = (v.completenessScore ?? 0) * 45;
   s += (v.popularityScore ?? 0.5) * 24;
   if (distanceM !== undefined) {
     s += Math.max(0, 30 - Math.min(distanceM / 450, 30));
@@ -571,7 +571,7 @@ function relevanceScore(
     if (v.zone.toLowerCase().includes(q)) s += 8;
     if (v.address.toLowerCase().includes(q)) s += 5;
   }
-  if ((v.completenessScore ?? 0) < 0.55) s -= 10;
+  if ((v.completenessScore ?? 0) < 0.55) s -= 18;
   return s;
 }
 

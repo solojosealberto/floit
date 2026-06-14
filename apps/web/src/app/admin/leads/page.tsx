@@ -38,14 +38,14 @@ export default async function AdminLeadsPage() {
       redirect("/admin/login");
     }
     return (
-      <main className="mx-auto max-w-4xl px-4 py-12 text-sm text-neutral-600">
-        <h1 className="text-lg font-semibold text-neutral-900">Leads</h1>
+      <main className="mx-auto max-w-4xl px-4 py-12 text-sm text-quegym-secondary">
+        <h1 className="text-lg font-semibold text-quegym-primary">Leads</h1>
         <p className="mt-2">
           Configura{" "}
-          <code className="rounded bg-neutral-100 px-1">ADMIN_OIDC_ACCESS_TOKEN</code>{" "}
+          <code className="rounded bg-quegym-subtle px-1">ADMIN_OIDC_ACCESS_TOKEN</code>{" "}
           (recomendado) o{" "}
-          <code className="rounded bg-neutral-100 px-1">ADMIN_API_TOKEN</code> en{" "}
-          <code className="rounded bg-neutral-100 px-1">apps/web</code>.
+          <code className="rounded bg-quegym-subtle px-1">ADMIN_API_TOKEN</code> en{" "}
+          <code className="rounded bg-quegym-subtle px-1">apps/web</code>.
         </p>
       </main>
     );
@@ -128,7 +128,7 @@ export default async function AdminLeadsPage() {
       <main className="mx-auto max-w-4xl px-4 py-12 text-sm">
         <h1 className="text-lg font-semibold">Leads</h1>
         <p className="mt-2 text-red-600">No se pudo cargar: {err}</p>
-        <p className="mt-1 text-neutral-500">
+        <p className="mt-1 text-quegym-secondary">
           Verifica que leads esté en marcha y que el token OIDC/audiencia coincidan.
         </p>
       </main>
@@ -145,7 +145,7 @@ export default async function AdminLeadsPage() {
     sessionEmail ?? process.env.ADMIN_LOCAL_LOGIN_EMAIL?.trim() ?? undefined;
 
   return (
-    <main className="min-h-screen bg-[#f7f9fc] p-3 md:p-4">
+    <main className="min-h-screen bg-quegym-page p-3 md:p-4">
       <div className="grid gap-4 md:grid-cols-[260px_1fr]">
         <AdminSidebar
           active="leads"
@@ -153,7 +153,7 @@ export default async function AdminLeadsPage() {
           leadsBadge={leadsNavBadge}
           userEmail={displayEmail}
         />
-        <section className="rounded-2xl border border-neutral-200 bg-white p-4 md:p-6">
+        <section className="qg-surface qg-motion rounded-2xl border border-quegym-border bg-quegym-elevated p-4 md:p-6">
           <AdminLeadsClient
             items={items}
             venueBySlug={venueBySlug}

@@ -173,7 +173,7 @@ export function buildAddress(name, zone, mapsLink) {
   return `${name}, ${canonZone}, Caracas, Venezuela`.slice(0, 320);
 }
 
-export function buildDescription(source, extras = {}) {
+export function buildDescription(source) {
   const lines = [];
   if (!isMissingValue(source.category)) lines.push(`Tipo: ${source.category.trim()}`);
   if (!isMissingValue(source.activities))
@@ -187,24 +187,23 @@ export function buildDescription(source, extras = {}) {
   if (!isMissingValue(source.priceRef))
     lines.push(`Referencia de precio: ${source.priceRef.trim()}`);
   if (!isMissingValue(source.plans)) lines.push(`Planes: ${source.plans.trim()}`);
-  if (!isMissingValue(source.rating))
-    lines.push(`Calificación (fuente): ${source.rating.trim()}`);
-  if (extras.geocodeNote) lines.push(`Ubicación: ${extras.geocodeNote}`);
   const body = lines.join("\n");
-  const footer = "\n\n— Catálogo QueGym (importación normalizada).";
-  return (body ? body + footer : footer.trim()).slice(0, 7900);
+  return body ? body.slice(0, 7900) : null;
 }
 
 export function computeCompleteness(record) {
-  let score = 0.2;
-  if (record.lat != null && record.lng != null) score += 0.15;
-  if (record.contactPhone || record.contactWhatsapp) score += 0.1;
-  if (record.photoUrls?.length) score += 0.15;
-  if (record.priceMin != null) score += 0.1;
-  if (record.modalities?.length) score += 0.1;
-  if (record.amenities?.length) score += 0.1;
-  if (!isMissingValue(record.source?.schedule)) score += 0.05;
-  if (!isMissingValue(record.source?.instagram)) score += 0.05;
+  let score = 0.15;
+  if (record.lat != null && record.lng != null) score += 0.12;
+  if (record.zone?.trim()) score += 0.05;
+  if (record.contactPhone || record.contactWhatsapp) score += 0.12;
+  if (record.photoUrls?.length) score += 0.18;
+  if (record.priceMin != null) score += 0.12;
+  if (record.priceMax != null && record.priceMax !== record.priceMin) score += 0.03;
+  if (record.modalities?.length) score += 0.08;
+  if (record.amenities?.length) score += 0.08;
+  if (record.description?.includes("Tipo:")) score += 0.04;
+  if (!isMissingValue(record.source?.schedule)) score += 0.04;
+  if (!isMissingValue(record.source?.instagram)) score += 0.04;
   return Math.min(1, Math.round(score * 100) / 100);
 }
 

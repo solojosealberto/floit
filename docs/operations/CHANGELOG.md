@@ -16,12 +16,26 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ## [Unreleased]
 
+### Changed
+- **Rebrand Fase 7 — copy C5 (2026-05-27):** script `scripts/verify-brand-copy.mjs` + `pnpm copy:verify` (CI); E2E smoke valida hero «Encuentra tu próximo gym en Caracas».
+- **Rebrand Fase 7 — copy C1 (2026-05-27):** home + metadata SEO con tuteo venezolano; constantes `BRAND_*` en `page.tsx` y `layout.tsx`.
+- **Rebrand Fase 7 — copy C2–C4 (2026-05-27):** `/buscar`, partner claim/panel/config, admin leads/catálogo — anti-voseo.
+- **Rebrand Fase 2 — partner + admin shells (2026-05-27):** `/partner/panel`, venues, config y leads; `admin-sidebar` theme-aware + páginas `/admin/*`; login admin alineado a partner; elevación `qg-surface` en shells operativos.
+- **Rebrand Fase 2 — export CSV (2026-05-27):** descarga admin renombrada a `quegym-leads.csv` (BFF + `leads` service); constante `EXPORT_LEADS_CSV_FILENAME` en `brand.ts`.
+- **Rebrand Fase 2 — storage canónico (2026-05-27):** `apps/web/src/lib/storage-keys.ts`; migración `floit:*` → `quegym:*` (favoritos, comparar, duplicados admin).
+- **Rebrand Fase 2 — rutas secundarias (2026-05-27):** `/privacidad`, `/lead/confirmacion`, `/lead/estado`, `/partner/claim` (wizard), `/partner` entry; `UICard` con elevación global.
+- **UX elevación Apple (2026-05-27):** utilidades `qg-surface`, `qg-btn-primary`, `qg-fab`, etc. en `globals.css`; sombras dual-theme + hover lift/scale en home, buscar, comparar, favoritos, ficha gym, partner login y header.
+- **Rebrand Fase 2 — accent Mint (2026-05-27):** `--qg-accent` y `--floit-color-primary` apuntan a Mint `#12B76A` (antes Green `#00875A`); favicon/icon actualizados. Afecta botones, toggles, chips sólidos, logo Q, focus ring y todos los usos de `quegym-accent` / `bg-[var(--qg-accent)]`.
+- **Rebrand Fase 2 — UI visual QueGym (2026-05-27):** paleta dark **verde bosque** en `globals.css` (`--qg-bg-page` `#050a05`, elevated `#141c14`, input `#162116`, secundario `#8a968a`); tokens `hero`, `banner`, `highlight-hover`; refinamiento home (hero continuo, banner partner, logo Q circular), cards destacadas, `/buscar` (chips Mint, barra elevated), ficha gym (tabs Mint, CTAs); focus ring adaptado en light. Partner login/claim migrados a tokens QueGym; `/comparar` sin HEX hardcodeado; favicon `icon.tsx` + `apple-icon.tsx`; `applicationName` en layout. Plan: `docs/ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`.
+
 ### Fixed
 - **Admin login en Vercel staging (`7554d6c`):** helper `apps/web/src/lib/admin-local-login.ts` — el formulario `/admin/login` ya no exige `NODE_ENV !== production`; en staging habilita login local si `ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD=true` y `NEXT_PUBLIC_SITE_URL` contiene `staging.` (o `VERCEL_ENV` es `preview`/`development`). Corrige `?error=admin_login_not_enabled` tras configurar solo variables en Vercel.
 - **Partner-service Railway:** dependencia directa **`express`** en `services/partner/package.json` — corrige crash al arranque (`Cannot find module 'express'`) por import de `serveStatic` en `main.ts` con aislamiento pnpm en deploy.
 - **Partner/leads + PostgreSQL (Neon):** columnas de fecha pasan de `datetime` (SQLite) a **`timestamptz`** cuando existe `DATABASE_URL`; helper `typeorm-column-types.ts` mantiene `datetime` en SQLite local. Corrige fallo de metadata TypeORM en Railway (diagnóstico Railway PR #1, absorbido en `main`).
 
 ### Documentation
+- **Plan UX post-v0 (2026-05-27):** [`docs/ux/QUEGYM_UX_V0_IMPROVEMENT_PLAN.md`](../ux/QUEGYM_UX_V0_IMPROVEMENT_PLAN.md) — backlog Sprint UX-A/B/C (confianza catálogo, ficha, nav móvil); trazabilidad en sprints, handover, EPICS.
+- **Rebrand consolidado (2026-05-27):** `sprints.md`, `PROJECT_CONTEXT_HANDOVER.md`, `EPICS_USER_STORIES_STATUS.md`, `REBRAND_QUEGYM_PLAN.md`, `QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`, `QUEGYM_BRAND_COPY_PLAN.md`, `UI_VISUAL_QA_CHECKLIST.md`, `docs/index.md`, `AGENTS.md`.
 - **Staging paso 3 (2026-05-26):** sincronización de `STAGING_DEPLOYMENT_STATUS.md`, `STAGING_AGENT_EXECUTION_REPORT.md`, `GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md`, `docs/env/production.example` (URLs Railway), `sprints.md`, `PROJECT_CONTEXT_HANDOVER.md`, `EPICS_USER_STORIES_STATUS.md`, `NEXT_STEPS_RECOMMENDED.md`, `NEXT_AGENT_BRIEF.md`, `docs/index.md` — import 95 venues, `/health` 5/5, `smoke:platform` OK; pendiente evidencia formal Sprint 4/5 + GO/NO-GO.
 
 ### Added

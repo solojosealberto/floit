@@ -43,11 +43,11 @@ export default async function PartnerLeadsPage({ searchParams }: Props) {
       redirect("/partner/login");
     }
     return (
-      <main className="mx-auto max-w-4xl px-4 py-12 text-sm text-neutral-600">
-        <h1 className="text-lg font-semibold text-neutral-900">Leads partner</h1>
+      <main className="mx-auto max-w-4xl px-4 py-12 text-sm text-quegym-secondary">
+        <h1 className="text-lg font-semibold text-quegym-primary">Leads partner</h1>
         <p className="mt-2">
-          Configura <code className="rounded bg-neutral-100 px-1">PARTNER_OIDC_ACCESS_TOKEN</code>{" "}
-          (recomendado) o <code className="rounded bg-neutral-100 px-1">PARTNER_DEV_EMAIL</code>.
+          Configura <code className="rounded bg-quegym-subtle px-1">PARTNER_OIDC_ACCESS_TOKEN</code>{" "}
+          (recomendado) o <code className="rounded bg-quegym-subtle px-1">PARTNER_DEV_EMAIL</code>.
         </p>
       </main>
     );
@@ -55,8 +55,8 @@ export default async function PartnerLeadsPage({ searchParams }: Props) {
 
   if (!venueSlug) {
     return (
-      <main className="mx-auto max-w-4xl px-4 py-12 text-sm text-neutral-600">
-        <h1 className="text-lg font-semibold text-neutral-900">Leads partner</h1>
+      <main className="mx-auto max-w-4xl px-4 py-12 text-sm text-quegym-secondary">
+        <h1 className="text-lg font-semibold text-quegym-primary">Leads partner</h1>
         <p className="mt-2">Selecciona primero un centro para ver sus leads.</p>
         <Link href="/partner/venues" className="mt-3 inline-block underline">
           Ir a mis centros
@@ -90,7 +90,7 @@ export default async function PartnerLeadsPage({ searchParams }: Props) {
       <div className="mb-6 flex flex-col gap-2">
         <UIBadge>Partner ops</UIBadge>
         <h1 className="text-xl font-semibold tracking-tight">Bandeja de leads</h1>
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-quegym-secondary">
           Leads filtrados por ownership de claims aprobados.
         </p>
         <div className="flex flex-wrap gap-2 text-sm">
@@ -108,14 +108,14 @@ export default async function PartnerLeadsPage({ searchParams }: Props) {
 
       {err ? <UIBanner variant="error">No se pudo cargar: {err}</UIBanner> : null}
 
-      <UICard className="mb-3 bg-neutral-50 text-sm text-neutral-600">
+      <UICard className="mb-3 bg-quegym-subtle text-sm text-quegym-secondary">
         Centro activo: {venueSlug}
       </UICard>
 
       <UITableContainer>
         <UITable className="min-w-[800px] text-left text-sm">
           <thead>
-            <tr className="border-b border-neutral-200 bg-neutral-50">
+            <tr className="border-b border-quegym-border bg-quegym-subtle">
               <th className="px-3 py-2 font-medium">Fecha</th>
               <th className="px-3 py-2 font-medium">Centro</th>
               <th className="px-3 py-2 font-medium">Intent</th>
@@ -129,14 +129,14 @@ export default async function PartnerLeadsPage({ searchParams }: Props) {
           <tbody>
             {items.length === 0 ? (
               <tr>
-                <UITableCell colSpan={8} className="px-3 py-8 text-center text-neutral-500">
+                <UITableCell colSpan={8} className="px-3 py-8 text-center text-quegym-secondary">
                   No hay leads para tus centros aprobados.
                 </UITableCell>
               </tr>
             ) : (
               items.map((it) => (
-                <tr key={it.id} className="border-b border-neutral-100">
-                  <UITableCell className="px-3 py-2 text-neutral-500">{formatTime(it.createdAt)}</UITableCell>
+                <tr key={it.id} className="border-b border-quegym-border">
+                  <UITableCell className="px-3 py-2 text-quegym-secondary">{formatTime(it.createdAt)}</UITableCell>
                   <UITableCell className="px-3 py-2">{it.venueSlug}</UITableCell>
                   <UITableCell className="px-3 py-2">{it.intent}</UITableCell>
                   <UITableCell className="px-3 py-2">{it.name}</UITableCell>
@@ -155,7 +155,7 @@ export default async function PartnerLeadsPage({ searchParams }: Props) {
                             type="submit"
                             variant="secondary"
                             size="sm"
-                            className="!border-neutral-300 !bg-white !text-neutral-800 hover:!bg-neutral-100"
+                            className="!border-quegym-border !bg-quegym-elevated !text-quegym-primary hover:!bg-quegym-subtle"
                             formAction={`/api/partner/me/venues/${encodeURIComponent(venueSlug)}/leads/${encodeURIComponent(it.id)}/status`}
                           >
                             Marcar contactado
@@ -172,14 +172,14 @@ export default async function PartnerLeadsPage({ searchParams }: Props) {
                             type="submit"
                             variant="secondary"
                             size="sm"
-                            className="!border-neutral-300 !bg-white !text-neutral-800 hover:!bg-neutral-100"
+                            className="!border-quegym-border !bg-quegym-elevated !text-quegym-primary hover:!bg-quegym-subtle"
                             formAction={`/api/partner/me/venues/${encodeURIComponent(venueSlug)}/leads/${encodeURIComponent(it.id)}/status`}
                           >
                             Marcar cerrado
                           </UIButton>
                         </form>
                       ) : (
-                        <span className="text-xs text-neutral-500">Cerrado</span>
+                        <span className="text-xs text-quegym-secondary">Cerrado</span>
                       )}
                     </div>
                   </UITableCell>

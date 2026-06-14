@@ -143,22 +143,22 @@ export function AdminLeadsClient(props: Props) {
 
   return (
     <>
-      <header className="mb-6 flex flex-col gap-4 border-b border-neutral-200 pb-4 sm:flex-row sm:items-start sm:justify-between">
+      <header className="mb-6 flex flex-col gap-4 border-b border-quegym-border pb-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-xs font-medium text-neutral-500">Admin &gt; Leads</p>
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-neutral-900 md:text-[26px]">
+          <p className="text-xs font-medium text-quegym-secondary">Admin &gt; Leads</p>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-quegym-primary md:text-[26px]">
             Gestión de leads
           </h1>
-          <p className="mt-2 text-sm text-neutral-600">
-            <span className="font-medium text-neutral-800">{props.leadsToday}</span> leads
+          <p className="mt-2 text-sm text-quegym-secondary">
+            <span className="font-medium text-quegym-primary">{props.leadsToday}</span> leads
             hoy ·{" "}
-            <span className="font-medium text-neutral-800">{props.suspiciousTotal}</span>{" "}
+            <span className="font-medium text-quegym-primary">{props.suspiciousTotal}</span>{" "}
             sospechosos · Tasa atención (24h):{" "}
-            <span className="font-medium text-emerald-700">{attention}</span>
+            <span className="font-medium text-quegym-highlight">{attention}</span>
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-500">
+          <span className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-quegym-border bg-quegym-elevated text-quegym-secondary">
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -169,14 +169,14 @@ export function AdminLeadsClient(props: Props) {
             </svg>
             <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500" />
           </span>
-          <span className="rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-xs font-medium text-neutral-700">
+          <span className="rounded-full border border-quegym-border bg-quegym-subtle px-3 py-1.5 text-xs font-medium text-quegym-primary">
             Admin
           </span>
           <Link href="/api/admin/leads/export" className="inline-flex">
             <UIButton
               variant="secondary"
               size="sm"
-              className="!rounded-xl gap-1.5 border-neutral-200 font-semibold"
+              className="!rounded-xl gap-1.5 border-quegym-border font-semibold"
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
@@ -210,7 +210,7 @@ export function AdminLeadsClient(props: Props) {
           </svg>
           <div>
             <p className="font-medium">
-              {props.suspiciousTotal} leads sospechosos (heurística anti-abuso por IP). Revisá
+              {props.suspiciousTotal} leads sospechosos (heurística anti-abuso por IP). Revisa
               antes de reenviar al partner.{" "}
               <button
                 type="button"
@@ -224,7 +224,7 @@ export function AdminLeadsClient(props: Props) {
         </div>
       ) : null}
 
-      <div className="mb-5 flex flex-wrap gap-2 rounded-2xl border border-neutral-200 bg-neutral-50/80 p-1.5">
+      <div className="mb-5 flex flex-wrap gap-2 rounded-2xl border border-quegym-border bg-quegym-subtle/80 p-1.5">
         {tabs.map((t) => (
           <button
             key={t.id}
@@ -232,12 +232,12 @@ export function AdminLeadsClient(props: Props) {
             onClick={() => setTab(t.id)}
             className={`rounded-xl px-3 py-2 text-xs font-medium transition ${
               tab === t.id
-                ? "bg-neutral-900 text-white shadow-sm"
-                : "text-neutral-600 hover:bg-white"
+                ? "bg-quegym-accent text-white"
+                : "text-quegym-secondary hover:bg-quegym-elevated"
             }`}
           >
             {t.label}{" "}
-            <span className={tab === t.id ? "text-white/80" : "text-neutral-400"}>
+            <span className={tab === t.id ? "text-white/80" : "text-quegym-secondary"}>
               ({t.count})
             </span>
           </button>
@@ -247,7 +247,7 @@ export function AdminLeadsClient(props: Props) {
       <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center">
         <div className="relative min-w-[200px] flex-1">
           <svg
-            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400"
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-quegym-secondary"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -261,7 +261,7 @@ export function AdminLeadsClient(props: Props) {
           </svg>
           <input
             type="search"
-            className="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-10 pr-3 text-sm outline-none ring-neutral-900/10 placeholder:text-neutral-400 focus:ring-2"
+            className="w-full rounded-xl border border-quegym-border bg-quegym-elevated py-2.5 pl-10 pr-3 text-sm outline-none ring-quegym-accent/10 placeholder:text-quegym-secondary focus:ring-2"
             placeholder="Buscar…"
             value={q}
             onChange={(e) => setQ(e.target.value)}
@@ -276,7 +276,7 @@ export function AdminLeadsClient(props: Props) {
 
       <div className="mb-5 flex flex-wrap gap-2">
         <select
-          className="min-w-[140px] rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800"
+          className="min-w-[140px] rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2.5 text-sm text-quegym-primary"
           value={gym}
           onChange={(e) => setGym(e.target.value)}
         >
@@ -288,7 +288,7 @@ export function AdminLeadsClient(props: Props) {
           ))}
         </select>
         <select
-          className="min-w-[120px] rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800"
+          className="min-w-[120px] rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2.5 text-sm text-quegym-primary"
           value={zone}
           onChange={(e) => setZone(e.target.value)}
         >
@@ -300,7 +300,7 @@ export function AdminLeadsClient(props: Props) {
           ))}
         </select>
         <select
-          className="min-w-[140px] rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800"
+          className="min-w-[140px] rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2.5 text-sm text-quegym-primary"
           value={channel}
           onChange={(e) => setChannel(e.target.value)}
         >
@@ -309,7 +309,7 @@ export function AdminLeadsClient(props: Props) {
           <option value="wa">WhatsApp</option>
         </select>
         <select
-          className="min-w-[120px] rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800"
+          className="min-w-[120px] rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2.5 text-sm text-quegym-primary"
           value={estadoFilter}
           onChange={(e) => setEstadoFilter(e.target.value)}
         >
@@ -319,7 +319,7 @@ export function AdminLeadsClient(props: Props) {
           <option value="closed">Cerrado</option>
         </select>
         <select
-          className="min-w-[140px] rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800"
+          className="min-w-[140px] rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2.5 text-sm text-quegym-primary"
           value={fecha}
           onChange={(e) => setFecha(e.target.value as "all" | "today" | "week")}
         >
@@ -329,25 +329,25 @@ export function AdminLeadsClient(props: Props) {
         </select>
       </div>
 
-      <UICard className="mb-6 overflow-hidden border-neutral-200 p-0 shadow-sm">
+      <UICard className="mb-6 overflow-hidden border-quegym-border p-0">
         <UITableContainer className="rounded-2xl border-0 shadow-none">
           <UITable className="min-w-[960px] text-left text-sm">
             <thead>
-              <tr className="border-b border-neutral-200 bg-neutral-50/80">
-                <th className="px-4 py-3 font-medium text-neutral-700">Fecha/hora</th>
-                <th className="px-4 py-3 font-medium text-neutral-700">Usuario</th>
-                <th className="px-4 py-3 font-medium text-neutral-700">Gimnasio</th>
-                <th className="px-4 py-3 font-medium text-neutral-700">Interés</th>
-                <th className="px-4 py-3 font-medium text-neutral-700">Canal</th>
-                <th className="px-4 py-3 font-medium text-neutral-700">Estado</th>
-                <th className="px-4 py-3 font-medium text-neutral-700">IP / Device</th>
-                <th className="px-4 py-3 font-medium text-neutral-700">Acciones</th>
+              <tr className="border-b border-quegym-border bg-quegym-subtle/80">
+                <th className="px-4 py-3 font-medium text-quegym-primary">Fecha/hora</th>
+                <th className="px-4 py-3 font-medium text-quegym-primary">Usuario</th>
+                <th className="px-4 py-3 font-medium text-quegym-primary">Gimnasio</th>
+                <th className="px-4 py-3 font-medium text-quegym-primary">Interés</th>
+                <th className="px-4 py-3 font-medium text-quegym-primary">Canal</th>
+                <th className="px-4 py-3 font-medium text-quegym-primary">Estado</th>
+                <th className="px-4 py-3 font-medium text-quegym-primary">IP / Device</th>
+                <th className="px-4 py-3 font-medium text-quegym-primary">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {tabFiltered.length === 0 ? (
                 <tr>
-                  <UITableCell colSpan={8} className="px-4 py-12 text-center text-neutral-500">
+                  <UITableCell colSpan={8} className="px-4 py-12 text-center text-quegym-secondary">
                     No hay leads en esta vista. Ajustá filtros o pestañas.
                   </UITableCell>
                 </tr>
@@ -359,16 +359,16 @@ export function AdminLeadsClient(props: Props) {
                   return (
                     <tr
                       key={row.id}
-                      className={`border-b border-neutral-100 ${
-                        suspiciousRow ? "bg-rose-50/90" : "bg-white"
+                      className={`border-b border-quegym-border ${
+                        suspiciousRow ? "bg-rose-50/90" : "bg-quegym-elevated"
                       }`}
                     >
-                      <UITableCell className="whitespace-nowrap px-4 py-3 text-neutral-600">
+                      <UITableCell className="whitespace-nowrap px-4 py-3 text-quegym-secondary">
                         {formatLeadWhen(row.createdAt)}
                       </UITableCell>
                       <UITableCell className="px-4 py-3">
-                        <p className="font-medium text-neutral-900">{row.name}</p>
-                        <p className="text-xs text-neutral-500">
+                        <p className="font-medium text-quegym-primary">{row.name}</p>
+                        <p className="text-xs text-quegym-secondary">
                           {row.phone}
                           {row.email ? ` · ${row.email}` : ""}
                         </p>
@@ -376,13 +376,13 @@ export function AdminLeadsClient(props: Props) {
                       <UITableCell className="max-w-[140px] px-4 py-3">
                         <Link
                           href={`/gyms/${encodeURIComponent(row.venueSlug)}`}
-                          className="font-medium text-neutral-900 underline decoration-neutral-300 underline-offset-2 hover:decoration-neutral-900"
+                          className="font-medium text-quegym-primary underline decoration-quegym-border underline-offset-2 hover:decoration-quegym-accent"
                           title={venueName}
                         >
                           {truncate(venueName, 18)}
                         </Link>
                       </UITableCell>
-                      <UITableCell className="px-4 py-3 text-neutral-800">
+                      <UITableCell className="px-4 py-3 text-quegym-primary">
                         {intentLabel(row.intent)}
                       </UITableCell>
                       <UITableCell className="px-4 py-3">
@@ -391,7 +391,7 @@ export function AdminLeadsClient(props: Props) {
                       <UITableCell className="px-4 py-3">
                         <StatusBadge row={row} />
                       </UITableCell>
-                      <UITableCell className="whitespace-nowrap px-4 py-3 text-xs text-neutral-500">
+                      <UITableCell className="whitespace-nowrap px-4 py-3 text-xs text-quegym-secondary">
                         {maskIp(row.clientIp)} · {deviceLabel(row.clientUserAgent)}
                       </UITableCell>
                       <UITableCell className="px-4 py-3">
@@ -414,9 +414,9 @@ export function AdminLeadsClient(props: Props) {
         </UITableContainer>
       </UICard>
 
-      <section className="rounded-2xl border border-neutral-200 bg-neutral-50/50 p-4 md:p-5">
+      <section className="qg-surface qg-motion rounded-2xl border border-quegym-border bg-quegym-subtle/50 p-4 md:p-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-base font-semibold text-neutral-900">DLQ notificaciones</h2>
+          <h2 className="text-base font-semibold text-quegym-primary">DLQ notificaciones</h2>
           <form method="post" action="/api/admin/notifications/retry?limit=50">
             <UIButton type="submit" variant="secondary" size="sm" className="!rounded-xl">
               Reintentar 50
@@ -426,21 +426,21 @@ export function AdminLeadsClient(props: Props) {
         {props.failures.length === 0 ? (
           <UIBanner variant="info">Sin fallos acumulados.</UIBanner>
         ) : (
-          <div className="overflow-x-auto rounded-xl border border-neutral-200 bg-white">
+          <div className="overflow-x-auto rounded-xl border border-quegym-border bg-quegym-elevated">
             <table className="w-full min-w-[700px] text-left text-sm">
               <thead>
-                <tr className="border-b border-neutral-200 bg-neutral-50/80">
-                  <th className="px-3 py-2 font-medium text-neutral-700">Fallo</th>
-                  <th className="px-3 py-2 font-medium text-neutral-700">Centro</th>
-                  <th className="px-3 py-2 font-medium text-neutral-700">Intent</th>
-                  <th className="px-3 py-2 font-medium text-neutral-700">Intentos</th>
-                  <th className="px-3 py-2 font-medium text-neutral-700">Error</th>
+                <tr className="border-b border-quegym-border bg-quegym-subtle/80">
+                  <th className="px-3 py-2 font-medium text-quegym-primary">Fallo</th>
+                  <th className="px-3 py-2 font-medium text-quegym-primary">Centro</th>
+                  <th className="px-3 py-2 font-medium text-quegym-primary">Intent</th>
+                  <th className="px-3 py-2 font-medium text-quegym-primary">Intentos</th>
+                  <th className="px-3 py-2 font-medium text-quegym-primary">Error</th>
                 </tr>
               </thead>
               <tbody>
                 {props.failures.map((f) => (
-                  <tr key={f.id} className="border-b border-neutral-100">
-                    <td className="px-3 py-2 text-neutral-500">{formatIsoShort(f.failedAt)}</td>
+                  <tr key={f.id} className="border-b border-quegym-border">
+                    <td className="px-3 py-2 text-quegym-secondary">{formatIsoShort(f.failedAt)}</td>
                     <td className="px-3 py-2">{f.lead.venueSlug}</td>
                     <td className="px-3 py-2">{f.lead.intent}</td>
                     <td className="px-3 py-2">{f.attempts}</td>
@@ -468,7 +468,7 @@ export function AdminLeadsClient(props: Props) {
 function ChannelPill(props: { channel: "form" | "wa" }) {
   if (props.channel === "wa") {
     return (
-      <span className="inline-flex rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-800">
+      <span className="inline-flex rounded-full bg-quegym-highlight-soft px-2.5 py-0.5 text-xs font-medium text-quegym-highlight">
         WhatsApp
       </span>
     );
@@ -510,13 +510,13 @@ function StatusBadge({ row }: { row: LeadRow }) {
   }
   if (row.status === "contacted") {
     return (
-      <span className="inline-flex rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-900">
+      <span className="inline-flex rounded-full bg-quegym-highlight-soft px-2.5 py-0.5 text-xs font-medium text-quegym-highlight">
         Atendido
       </span>
     );
   }
   return (
-    <span className="inline-flex rounded-full bg-neutral-200 px-2.5 py-0.5 text-xs font-medium text-neutral-800">
+    <span className="inline-flex rounded-full bg-quegym-subtle px-2.5 py-0.5 text-xs font-medium text-quegym-primary">
       Cerrado
     </span>
   );

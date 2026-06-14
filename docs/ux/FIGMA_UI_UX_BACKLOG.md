@@ -2,6 +2,8 @@
 
 Backlog ejecutable para implementar las interfaces de `Floit Wireframe v.0.2` en `apps/web`, sin romper funcionalidad MVP.
 
+> **Nuevo (2026-05-27):** mejoras UX post-auditoría staging (confianza catálogo, ficha, nav móvil) viven en **[`QUEGYM_UX_V0_IMPROVEMENT_PLAN.md`](./QUEGYM_UX_V0_IMPROVEMENT_PLAN.md)** — tickets `UX-V0-*`. Priorizar ese plan antes de nuevos ítems wireframe legacy.
+
 ## Convenciones
 
 - Escala de estimacion: `S` (0.5-1 dia), `M` (1-2 dias), `L` (2-3 dias).

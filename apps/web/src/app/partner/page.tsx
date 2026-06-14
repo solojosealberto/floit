@@ -27,11 +27,11 @@ export default async function PartnerEntryPage() {
     }
     return (
       <main className="mx-auto max-w-3xl px-4 py-10">
-        <UICard className="space-y-3 border-neutral-200 bg-white">
-          <h1 className="text-lg font-semibold text-neutral-900">
+        <UICard className="space-y-3 border-quegym-border">
+          <h1 className="text-lg font-semibold text-quegym-primary">
             Acceso partner requerido
           </h1>
-          <p className="text-sm text-neutral-600">
+          <p className="text-sm text-quegym-secondary">
             Inicia sesión para acceder al panel de partner.
           </p>
           <Link href="/partner/login">
@@ -76,18 +76,16 @@ export default async function PartnerEntryPage() {
 
   return (
     <main className="mx-auto min-h-screen max-w-lg px-4 py-6 md:max-w-2xl md:py-10">
-      <header className="mb-6 flex items-center justify-between gap-3 border-b border-neutral-200/80 pb-4">
+      <header className="mb-6 flex items-center justify-between gap-3 border-b border-quegym-border pb-4">
         <div className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0F172A] text-sm font-bold text-white">
-            F
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-quegym-accent text-sm font-bold text-white shadow-[var(--qg-shadow-accent)]">
+            Q
           </span>
-          <span className="text-sm font-medium text-neutral-500">Partner</span>
+          <span className="text-sm font-medium text-quegym-secondary">Partner</span>
         </div>
-        <h1 className="text-base font-bold text-neutral-900 md:text-lg">
-          Mi cuenta
-        </h1>
+        <h1 className="text-base font-bold text-quegym-primary md:text-lg">Mi cuenta</h1>
         <span
-          className="relative flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-500"
+          className="relative flex h-10 w-10 items-center justify-center rounded-full border border-quegym-border bg-quegym-elevated text-quegym-secondary"
           aria-hidden
         >
           <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -102,19 +100,19 @@ export default async function PartnerEntryPage() {
         </span>
       </header>
 
-      <section className="mb-8 flex items-start justify-between gap-3 border-b border-neutral-200/80 pb-6">
+      <section className="mb-8 flex items-start justify-between gap-3 border-b border-quegym-border pb-6">
         <div>
-          <p className="text-xs text-neutral-500">Partner workspace</p>
-          <p className="mt-1 text-xl font-bold tracking-tight text-[#0F172A] md:text-2xl">
+          <p className="text-xs text-quegym-secondary">Partner workspace</p>
+          <p className="mt-1 font-display text-xl font-bold tracking-tight text-quegym-primary md:text-2xl">
             {displayName}
           </p>
-          <p className="mt-0.5 text-sm text-neutral-600">
+          <p className="mt-0.5 text-sm text-quegym-secondary">
             {partnerEmail ?? "Sesión partner activa"}
           </p>
         </div>
         <Link
           href="/partner/configuracion"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-600 transition hover:bg-neutral-50"
+          className="qg-btn-ghost qg-motion flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-quegym-border bg-quegym-elevated text-quegym-secondary"
           aria-label="Configuración"
         >
           <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -135,9 +133,9 @@ export default async function PartnerEntryPage() {
       </section>
 
       <div className="flex flex-col items-center text-center">
-        <div className="mb-5 flex h-24 w-24 items-center justify-center rounded-2xl bg-neutral-100 md:h-28 md:w-28">
+        <div className="qg-surface-subtle mb-5 flex h-24 w-24 items-center justify-center rounded-2xl bg-quegym-subtle md:h-28 md:w-28">
           <svg
-            className="h-12 w-12 text-neutral-400"
+            className="h-12 w-12 text-quegym-secondary"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -150,32 +148,32 @@ export default async function PartnerEntryPage() {
             />
           </svg>
         </div>
-        <h2 className="text-xl font-bold text-[#0F172A] md:text-2xl">
+        <h2 className="font-display text-xl font-bold text-quegym-primary md:text-2xl">
           No tienes centros registrados
         </h2>
-        <p className="mt-3 max-w-md text-sm leading-relaxed text-neutral-600 md:text-base">
+        <p className="mt-3 max-w-md text-sm leading-relaxed text-quegym-secondary md:text-base">
           Comienza reclamando tu gimnasio existente o registra uno nuevo para
           empezar a recibir leads.
         </p>
         <Link href="/partner/claim" className="mt-8 block w-full max-w-md">
-          <UIButton className="w-full justify-center rounded-xl bg-[#0F172A] py-3.5 text-base font-semibold hover:bg-[#0F172A]/90">
+          <UIButton className="w-full justify-center rounded-xl py-3.5 text-base font-semibold">
             + Agregar mi primer centro
           </UIButton>
         </Link>
       </div>
 
-      <UICard className="mt-10 border-neutral-200 bg-[#F8FAFC] p-5 md:p-6">
-        <h3 className="text-base font-semibold text-neutral-900">
+      <UICard className="qg-surface mt-10 bg-quegym-subtle p-5 md:p-6">
+        <h3 className="text-base font-semibold text-quegym-primary">
           ¿Qué puedes hacer con {BRAND_NAME}?
         </h3>
-        <ul className="mt-4 space-y-3 text-left text-sm text-neutral-700">
+        <ul className="mt-4 space-y-3 text-left text-sm text-quegym-primary">
           {[
             "Aumenta tu visibilidad en Caracas",
             "Recibe leads de clientes potenciales",
             "Gestiona múltiples centros desde un panel",
           ].map((line) => (
             <li key={line} className="flex gap-3">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-quegym-accent text-white">
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                 </svg>

@@ -1,9 +1,16 @@
-const KEY = "floit:favorites";
+import {
+  QG_STORAGE,
+  readStorageItem,
+  writeStorageItem,
+} from "./storage-keys";
+
+const KEY = QG_STORAGE.favorites;
+const LEGACY = QG_STORAGE.legacy.favorites;
 
 export function readFavoriteSlugs(): string[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = window.localStorage.getItem(KEY);
+    const raw = readStorageItem(KEY, LEGACY);
     if (!raw) return [];
     const data = JSON.parse(raw) as unknown;
     if (!Array.isArray(data)) return [];
@@ -15,7 +22,7 @@ export function readFavoriteSlugs(): string[] {
 
 export function writeFavoriteSlugs(slugs: string[]): void {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(KEY, JSON.stringify([...new Set(slugs)]));
+  writeStorageItem(KEY, JSON.stringify([...new Set(slugs)]));
 }
 
 export function toggleFavoriteSlug(slug: string): boolean {

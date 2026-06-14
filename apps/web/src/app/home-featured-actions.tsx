@@ -16,7 +16,7 @@ export function HomeFeaturedActions({ slug }: Props) {
     <div className="flex items-center gap-2 pt-1">
       <Link
         href={`/comparar?c=${encodeURIComponent(slug)}`}
-        className="rounded-lg border border-neutral-300 px-2.5 py-1 text-xs text-neutral-700 hover:bg-neutral-50"
+        className="qg-chip qg-motion rounded-lg border border-quegym-border px-2.5 py-1 text-xs text-quegym-primary"
       >
         Comparar
       </Link>
@@ -26,10 +26,10 @@ export function HomeFeaturedActions({ slug }: Props) {
           toggleFavoriteSlug(slug);
           setTick((v) => v + 1);
         }}
-        className={`rounded-lg px-2.5 py-1 text-xs ${
+        className={`qg-chip qg-motion rounded-lg px-2.5 py-1 text-xs ${
           isFav
             ? "border border-rose-300 bg-rose-50 text-rose-700"
-            : "border border-neutral-300 text-neutral-700 hover:bg-neutral-50"
+            : "border border-quegym-border text-quegym-primary"
         }`}
       >
         {isFav ? "Guardado" : "Guardar"}

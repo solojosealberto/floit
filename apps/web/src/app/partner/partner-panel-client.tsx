@@ -192,7 +192,7 @@ export function PartnerPanelClient(props: {
         if (pRes.status === 422) {
           throw new Error(
             (body as { message?: string }).message?.includes("venue_delegate")
-              ? "Este centro no tiene titular en partner. Configurá ADMIN_CATALOG_DELEGATE_EMAIL en el servicio partner o aprobá un claim primero."
+              ? "Este centro no tiene titular en partner. Configura ADMIN_CATALOG_DELEGATE_EMAIL en el servicio partner o aprueba un claim primero."
               : formatUpstreamError(body, `HTTP ${pRes.status}`),
           );
         }
@@ -633,34 +633,34 @@ export function PartnerPanelClient(props: {
   );
   const leadsReceivedCount = leads.filter((it) => it.status === "received").length;
   const leadsContactedCount = leads.filter((it) => it.status === "contacted").length;
-  const lightCardClass = "!border-neutral-200 !bg-white !text-neutral-900";
+  const lightCardClass = "!border-quegym-border !bg-quegym-elevated !text-quegym-primary";
   const lightInputClass =
-    "!border-neutral-300 !bg-white !text-neutral-900 placeholder:!text-neutral-500";
+    "!border-quegym-border !bg-quegym-elevated !text-quegym-primary placeholder:!text-quegym-secondary";
   const lightSecondaryButtonClass =
-    "!border-neutral-300 !bg-white !text-neutral-800 hover:!bg-neutral-100";
-  const lightPrimaryButtonClass = "!bg-neutral-900 !text-white hover:!bg-neutral-800";
+    "!border-quegym-border !bg-quegym-elevated !text-quegym-primary hover:!bg-quegym-subtle";
+  const lightPrimaryButtonClass = "!bg-quegym-accent !text-white hover:!bg-quegym-accent-hover";
   const menuButtonClass = (section: PanelSection) =>
     [
       "flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm transition",
       activeSection === section
-        ? "bg-[#0a1430] font-medium text-white"
-        : "text-neutral-700 hover:bg-neutral-100",
+        ? "bg-quegym-accent font-medium text-white"
+        : "text-quegym-primary hover:bg-quegym-subtle",
     ].join(" ");
 
   return (
     <main className="mx-auto max-w-[1240px] px-2 py-3 sm:px-3 sm:py-4">
-      <div className="overflow-hidden rounded-[22px] border border-neutral-200 bg-white shadow-[0_10px_28px_rgba(15,23,42,0.06)]">
+      <div className="qg-surface qg-motion overflow-hidden rounded-[22px] border border-quegym-border bg-quegym-elevated">
         <div className="grid min-h-[calc(100vh-3.5rem)] md:grid-cols-[236px_1fr]">
-          <aside className="border-r border-neutral-200 bg-[#F8F9FB] p-3">
+          <aside className="border-r border-quegym-border bg-quegym-subtle p-3">
             <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#0a1430] text-xs font-semibold text-white">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-quegym-accent text-xs font-semibold text-white">
                 Q
               </div>
               <div>
-                <p className="text-sm font-semibold text-neutral-900">
+                <p className="text-sm font-semibold text-quegym-primary">
                   {variant === "admin" ? BRAND_ADMIN : BRAND_PARTNERS}
                 </p>
-                <p className="text-[11px] text-neutral-500">
+                <p className="text-[11px] text-quegym-secondary">
                   {variant === "admin"
                     ? "Catálogo · operación"
                     : profile.partnerEmail || "Cuenta partner"}
@@ -668,8 +668,8 @@ export function PartnerPanelClient(props: {
               </div>
             </div>
             <UICard className="mb-4 p-2.5">
-              <p className="truncate text-sm font-semibold text-neutral-900">{profile.businessName || "Centro partner"}</p>
-              <p className="text-[11px] text-neutral-500">{photosVenueSlug || "Sin venue"}</p>
+              <p className="truncate text-sm font-semibold text-quegym-primary">{profile.businessName || "Centro partner"}</p>
+              <p className="text-[11px] text-quegym-secondary">{photosVenueSlug || "Sin venue"}</p>
             </UICard>
             <UIButton
               type="button"
@@ -717,13 +717,13 @@ export function PartnerPanelClient(props: {
             </nav>
           </aside>
 
-          <section className="bg-[#FCFCFD] p-4 sm:p-5">
+          <section className="bg-quegym-page p-4 sm:p-5">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h1 className="text-[34px] font-semibold tracking-tight text-neutral-900">
+                <h1 className="text-[34px] font-semibold tracking-tight text-quegym-primary">
                   Bienvenido, {profile.businessName || (variant === "admin" ? "Operador" : "Partner")}
                 </h1>
-                <p className="text-sm text-neutral-500">
+                <p className="text-sm text-quegym-secondary">
                   {activeSection === "dashboard"
                     ? "Panel de control"
                     : activeSection === "perfil"
@@ -740,7 +740,7 @@ export function PartnerPanelClient(props: {
               </div>
               <div className="flex flex-wrap gap-2">
                 <Link href={`/gyms/${encodeURIComponent(photosVenueSlug || "oxide-chacao")}`}>
-                  <UIButton variant="secondary" size="sm" className="!rounded-full !border-neutral-300 !bg-white !px-4 !text-neutral-700">Ver mi ficha pública</UIButton>
+                  <UIButton variant="secondary" size="sm" className="!rounded-full !border-quegym-border !bg-quegym-elevated !px-4 !text-quegym-primary">Ver mi ficha pública</UIButton>
                 </Link>
                 <UIButton size="sm" onClick={() => setActiveSection("perfil")} className="!rounded-full !px-5">Editar perfil</UIButton>
               </div>
@@ -768,10 +768,10 @@ export function PartnerPanelClient(props: {
 
             {activeSection === "dashboard" ? (
             <div className="mb-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-              <UICard className="p-4"><p className="text-xs text-neutral-500">Leads esta semana</p><p className="mt-1 text-3xl font-semibold text-neutral-900">{leadsWeek}</p><p className="text-xs text-emerald-600">↑ +3 vs sem. ant.</p></UICard>
-              <UICard className="p-4"><p className="text-xs text-neutral-500">Leads este mes</p><p className="mt-1 text-3xl font-semibold text-neutral-900">{leadsMonth}</p><p className="text-xs text-emerald-600">↑ +8 vs mes ant.</p></UICard>
-              <UICard className="p-4"><p className="text-xs text-neutral-500">Vistas del perfil</p><p className="mt-1 text-3xl font-semibold text-neutral-900">{Math.max(142, leads.length * 12)}</p><p className="text-xs text-neutral-500">últimos 7 días</p></UICard>
-              <UICard className="p-4"><p className="text-xs text-neutral-500">Planes activos</p><p className="mt-1 text-3xl font-semibold text-neutral-900">{activePlans}</p><p className="text-xs text-neutral-500">{Math.max(0, plans.length - activePlans)} oculto</p></UICard>
+              <UICard className="p-4"><p className="text-xs text-quegym-secondary">Leads esta semana</p><p className="mt-1 text-3xl font-semibold text-quegym-primary">{leadsWeek}</p><p className="text-xs text-quegym-highlight">↑ +3 vs sem. ant.</p></UICard>
+              <UICard className="p-4"><p className="text-xs text-quegym-secondary">Leads este mes</p><p className="mt-1 text-3xl font-semibold text-quegym-primary">{leadsMonth}</p><p className="text-xs text-quegym-highlight">↑ +8 vs mes ant.</p></UICard>
+              <UICard className="p-4"><p className="text-xs text-quegym-secondary">Vistas del perfil</p><p className="mt-1 text-3xl font-semibold text-quegym-primary">{Math.max(142, leads.length * 12)}</p><p className="text-xs text-quegym-secondary">últimos 7 días</p></UICard>
+              <UICard className="p-4"><p className="text-xs text-quegym-secondary">Planes activos</p><p className="mt-1 text-3xl font-semibold text-quegym-primary">{activePlans}</p><p className="text-xs text-quegym-secondary">{Math.max(0, plans.length - activePlans)} oculto</p></UICard>
             </div>
             ) : null}
 
@@ -779,7 +779,7 @@ export function PartnerPanelClient(props: {
             <div className="mb-6 grid gap-4 xl:grid-cols-[1.5fr_1fr]">
               <UICard className="p-4">
                 <div className="mb-3 flex items-center justify-between">
-                  <h2 className="text-base font-semibold text-neutral-900">Leads recientes</h2>
+                  <h2 className="text-base font-semibold text-quegym-primary">Leads recientes</h2>
                   <Link
                     href={
                       variant === "admin"
@@ -792,25 +792,25 @@ export function PartnerPanelClient(props: {
                 </div>
                 <div className="space-y-2">
                   {recentLeads.length === 0 ? (
-                    <p className="text-sm text-neutral-500">Aún no tienes leads recientes para este centro.</p>
+                    <p className="text-sm text-quegym-secondary">Aún no tienes leads recientes para este centro.</p>
                   ) : (
                     recentLeads.map((lead) => (
-                      <div key={lead.id} className="flex items-center justify-between rounded-2xl border border-neutral-200 bg-white px-3 py-2.5">
+                      <div key={lead.id} className="flex items-center justify-between rounded-2xl border border-quegym-border bg-quegym-elevated px-3 py-2.5">
                         <div className="flex min-w-0 items-center gap-3">
-                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-xs font-semibold text-neutral-600">
+                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-quegym-subtle text-xs font-semibold text-quegym-secondary">
                             {lead.name.charAt(0).toUpperCase()}
                           </div>
                           <div className="min-w-0">
-                            <p className="truncate text-sm font-medium text-neutral-900">{lead.name}</p>
-                            <p className="truncate text-xs text-neutral-500">{lead.phone} · {lead.intent}</p>
+                            <p className="truncate text-sm font-medium text-quegym-primary">{lead.name}</p>
+                            <p className="truncate text-xs text-quegym-secondary">{lead.phone} · {lead.intent}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2 text-right">
                           <div>
-                            <p className="text-xs font-medium text-emerald-700">{lead.status}</p>
-                            <p className="text-xs text-neutral-500">{formatLeadDate(lead.createdAt)}</p>
+                            <p className="text-xs font-medium text-quegym-highlight">{lead.status}</p>
+                            <p className="text-xs text-quegym-secondary">{formatLeadDate(lead.createdAt)}</p>
                           </div>
-                          <UIButton size="sm" variant="secondary" className="!h-8 !rounded-xl !border-neutral-300 !bg-white !px-3 !text-xs">
+                          <UIButton size="sm" variant="secondary" className="!h-8 !rounded-xl !border-quegym-border !bg-quegym-elevated !px-3 !text-xs">
                             Ver →
                           </UIButton>
                         </div>
@@ -821,7 +821,7 @@ export function PartnerPanelClient(props: {
               </UICard>
 
               <UICard className="p-4">
-                <h2 className="mb-3 text-base font-semibold text-neutral-900">Estado del perfil</h2>
+                <h2 className="mb-3 text-base font-semibold text-quegym-primary">Estado del perfil</h2>
                 <ul className="space-y-2 text-sm">
                   <li className={statusLine(profileChecklist[0])}>Info básica</li>
                   <li className={statusLine(profileChecklist[1])}>Horarios completos</li>
@@ -838,16 +838,16 @@ export function PartnerPanelClient(props: {
       <div className="space-y-4">
         <div className={`grid gap-4 ${activeSection === "fotos" ? "" : "xl:grid-cols-[1.7fr_0.9fr]"}`}>
           <div className="space-y-4">
-            <UICard className={`bg-neutral-50 ${lightCardClass}`}>
+            <UICard className={`bg-quegym-subtle ${lightCardClass}`}>
               <div className="mb-3 flex items-center justify-between">
                 <h2 className="text-base font-semibold">Galería de fotos</h2>
-                <span className="text-xs text-neutral-500">Centro: {photosVenueSlug || "sin seleccionar"}</span>
+                <span className="text-xs text-quegym-secondary">Centro: {photosVenueSlug || "sin seleccionar"}</span>
               </div>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {Array.from({ length: 4 }).map((_, idx) => {
                   const photo = photos[idx];
                   return (
-                    <div key={`slot-${idx}`} className="flex h-[118px] items-center justify-center overflow-hidden rounded-[14px] border border-neutral-200 bg-white text-xs text-neutral-500">
+                    <div key={`slot-${idx}`} className="flex h-[118px] items-center justify-center overflow-hidden rounded-[14px] border border-quegym-border bg-quegym-elevated text-xs text-quegym-secondary">
                       {photo ? (
                         <img
                           src={photo.url}
@@ -861,7 +861,7 @@ export function PartnerPanelClient(props: {
                     </div>
                   );
                 })}
-                <label className="flex h-[118px] cursor-pointer flex-col items-center justify-center gap-1 rounded-[14px] border border-dashed border-neutral-300 bg-white text-xs text-neutral-500 hover:bg-neutral-50">
+                <label className="flex h-[118px] cursor-pointer flex-col items-center justify-center gap-1 rounded-[14px] border border-dashed border-quegym-border bg-quegym-elevated text-xs text-quegym-secondary hover:bg-quegym-subtle">
                   <span className="text-base">⇪</span>
                   Subir
                   <input
@@ -881,7 +881,7 @@ export function PartnerPanelClient(props: {
                 <UIButton type="submit" disabled={uploadingPhoto || !photosVenueSlug.trim()} className={lightPrimaryButtonClass}>
                   {uploadingPhoto ? "Subiendo…" : "Subir"}
                 </UIButton>
-                <span className="text-xs text-neutral-500">
+                <span className="text-xs text-quegym-secondary">
                   JPG/PNG/WEBP, hasta 5MB
                 </span>
               </form>
@@ -889,10 +889,10 @@ export function PartnerPanelClient(props: {
 
             {activeSection === "perfil" ? (
             <>
-            <UICard className={`bg-neutral-50 ${lightCardClass}`}>
+            <UICard className={`bg-quegym-subtle ${lightCardClass}`}>
               <h2 className="mb-3 text-base font-semibold">Información básica</h2>
               {variant === "partner" ? (
-                <div className="mb-4 grid gap-3 rounded-xl border border-neutral-200 bg-white p-3 md:grid-cols-[1fr_auto]">
+                <div className="mb-4 grid gap-3 rounded-xl border border-quegym-border bg-quegym-elevated p-3 md:grid-cols-[1fr_auto]">
                   <UITextInput
                     value={venueSlugDraft}
                     onChange={(e) => setVenueSlugDraft(e.target.value)}
@@ -913,7 +913,7 @@ export function PartnerPanelClient(props: {
               <form id="partner-profile-form" className="grid gap-3 text-sm" onSubmit={onSaveProfile}>
                 <div className="grid gap-3 md:grid-cols-2">
                   <label className="space-y-1">
-                    <span className="text-xs font-medium text-neutral-600">Nombre comercial *</span>
+                    <span className="text-xs font-medium text-quegym-secondary">Nombre comercial *</span>
                     <UITextInput
                       name="businessName"
                       value={profileForm.businessName}
@@ -923,7 +923,7 @@ export function PartnerPanelClient(props: {
                     />
                   </label>
                   <label className="space-y-1">
-                    <span className="text-xs font-medium text-neutral-600">Tipo de centro</span>
+                    <span className="text-xs font-medium text-quegym-secondary">Tipo de centro</span>
                     <UITextInput
                       name="scheduleSummary"
                       value={profileForm.scheduleSummary}
@@ -969,7 +969,7 @@ export function PartnerPanelClient(props: {
               </form>
             </UICard>
 
-            <UICard className={`bg-neutral-50 ${lightCardClass}`}>
+            <UICard className={`bg-quegym-subtle ${lightCardClass}`}>
               <h2 className="mb-3 text-base font-semibold">Horarios de atención</h2>
               <div className="grid gap-2 sm:grid-cols-2">
                 {[
@@ -978,7 +978,7 @@ export function PartnerPanelClient(props: {
                   ["Domingo", "7:00am - 2:00pm"],
                   ["Feriados", "Horario reducido"],
                 ].map(([label, value], i) => (
-                  <div key={label} className={`rounded-xl border px-3 py-2 text-sm ${i < 2 ? "border-amber-200 bg-amber-50/60 text-amber-800" : "border-neutral-200 bg-white text-neutral-700"}`}>
+                  <div key={label} className={`rounded-xl border px-3 py-2 text-sm ${i < 2 ? "border-amber-200 bg-amber-50/60 text-amber-800" : "border-quegym-border bg-quegym-elevated text-quegym-primary"}`}>
                     <span className="font-medium">{label}</span>{" "}
                     <span className="ml-1">{value}</span>
                     <span className="float-right text-xs">{i < 2 ? "◷" : "✓"}</span>
@@ -987,19 +987,19 @@ export function PartnerPanelClient(props: {
               </div>
             </UICard>
 
-            <UICard className={`bg-neutral-50 ${lightCardClass}`}>
+            <UICard className={`bg-quegym-subtle ${lightCardClass}`}>
               <h2 className="mb-3 text-base font-semibold">Modalidades</h2>
               <div className="mb-5 flex flex-wrap gap-2">
                 {["Musculación", "Cardio", "Funcional", "TRX", "Spinning", "Yoga", "Pilates", "Boxing"].map((m, idx) => (
-                  <span key={m} className={`rounded-full border px-3 py-1 text-[13px] ${idx < 4 ? "border-[#0a1430] bg-[#0a1430] text-white" : "border-neutral-200 bg-white text-neutral-600"}`}>
+                  <span key={m} className={`rounded-full border px-3 py-1 text-[13px] ${idx < 4 ? "border-quegym-accent bg-quegym-accent text-white" : "border-quegym-border bg-quegym-elevated text-quegym-secondary"}`}>
                     {idx < 4 ? "✓ " : ""}{m}
                   </span>
                 ))}
               </div>
-              <h3 className="mb-2 text-sm font-semibold text-neutral-800">Amenidades</h3>
+              <h3 className="mb-2 text-sm font-semibold text-quegym-primary">Amenidades</h3>
               <div className="flex flex-wrap gap-2">
                 {["Estacionamiento", "Sauna", "Duchas", "Aire acondicionado", "Piscina", "Cafetería", "Wifi"].map((a, idx) => (
-                  <span key={a} className={`rounded-full border px-3 py-1 text-[13px] ${idx < 4 ? "border-[#0a1430] bg-[#0a1430] text-white" : "border-neutral-200 bg-white text-neutral-600"}`}>
+                  <span key={a} className={`rounded-full border px-3 py-1 text-[13px] ${idx < 4 ? "border-quegym-accent bg-quegym-accent text-white" : "border-quegym-border bg-quegym-elevated text-quegym-secondary"}`}>
                     {idx < 4 ? "✓ " : ""}{a}
                   </span>
                 ))}
@@ -1012,10 +1012,10 @@ export function PartnerPanelClient(props: {
           {activeSection === "perfil" ? (
           <div className="space-y-3 xl:sticky xl:top-4 xl:h-fit">
             <UICard className={lightCardClass}>
-              <h3 className="text-sm font-semibold text-neutral-900">Estado de publicación</h3>
-              <p className="mt-2 text-sm text-emerald-700">● Perfil publicado y activo</p>
+              <h3 className="text-sm font-semibold text-quegym-primary">Estado de publicación</h3>
+              <p className="mt-2 text-sm text-quegym-highlight">● Perfil publicado y activo</p>
               <p className="mt-1 text-xs text-amber-700">◷ {Math.max(0, profileChecklist.length - completedChecklist)} cambios en revisión (desc. + horarios)</p>
-              <p className="mt-1 text-xs text-neutral-500">Última publicación: hoy 10:45am</p>
+              <p className="mt-1 text-xs text-quegym-secondary">Última publicación: hoy 10:45am</p>
             </UICard>
             <UICard className="border-amber-200 bg-amber-50/60">
               <p className="text-sm font-medium text-amber-900">Completitud del perfil</p>
@@ -1042,7 +1042,7 @@ export function PartnerPanelClient(props: {
             >
               Descartar cambios
             </UIButton>
-            <p className="text-xs text-neutral-500">
+            <p className="text-xs text-quegym-secondary">
               ◷ Los cambios quedan en revisión antes de publicarse públicamente en el catálogo de {BRAND_NAME}.
             </p>
           </div>
@@ -1053,11 +1053,11 @@ export function PartnerPanelClient(props: {
 
       {activeSection === "planes" ? (
       <div className="grid gap-4 xl:grid-cols-[1.65fr_0.85fr]">
-        <UICard className={`bg-neutral-50 ${lightCardClass}`}>
+        <UICard className={`bg-quegym-subtle ${lightCardClass}`}>
           <div className="mb-4 flex items-start justify-between gap-3">
             <div>
-              <h2 className="text-[30px] font-semibold leading-tight text-neutral-900">Planes y precios referenciales</h2>
-              <p className="mt-1 text-sm text-neutral-500">
+              <h2 className="text-[30px] font-semibold leading-tight text-quegym-primary">Planes y precios referenciales</h2>
+              <p className="mt-1 text-sm text-quegym-secondary">
                 Los precios se muestran como orientativos. El usuario contactará al centro para confirmar.
               </p>
             </div>
@@ -1070,7 +1070,7 @@ export function PartnerPanelClient(props: {
             </UIButton>
           </div>
 
-          <div className="mb-2 grid grid-cols-[1.6fr_0.8fr_0.7fr_0.5fr_0.55fr] gap-2 px-3 text-xs font-medium text-neutral-500">
+          <div className="mb-2 grid grid-cols-[1.6fr_0.8fr_0.7fr_0.5fr_0.55fr] gap-2 px-3 text-xs font-medium text-quegym-secondary">
             <span>Nombre y descripción</span>
             <span>Periodicidad</span>
             <span>Precio ref.</span>
@@ -1080,7 +1080,7 @@ export function PartnerPanelClient(props: {
 
           <div className="space-y-2">
             {plans.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-neutral-300 px-4 py-8 text-center text-sm text-neutral-500">
+              <div className="rounded-2xl border border-dashed border-quegym-border px-4 py-8 text-center text-sm text-quegym-secondary">
                 No hay planes aún.
               </div>
             ) : (
@@ -1088,20 +1088,20 @@ export function PartnerPanelClient(props: {
                 <article
                   key={p.id}
                   className={`grid grid-cols-[1.6fr_0.8fr_0.7fr_0.5fr_0.55fr] items-center gap-2 rounded-2xl border px-3 py-3 ${
-                    idx === 0 ? "border-neutral-900 bg-white" : "border-neutral-200 bg-white"
+                    idx === 0 ? "border-quegym-accent bg-quegym-elevated" : "border-quegym-border bg-quegym-elevated"
                   }`}
                 >
                   <div className="min-w-0">
-                    <p className="truncate text-[28px]/none text-sm font-semibold text-neutral-900">{p.name}</p>
-                    <p className="truncate text-xs text-neutral-500">
+                    <p className="truncate text-[28px]/none text-sm font-semibold text-quegym-primary">{p.name}</p>
+                    <p className="truncate text-xs text-quegym-secondary">
                       {p.description?.trim() || "Sin descripción"}
                     </p>
                   </div>
-                  <p className="text-sm text-neutral-700">{p.period || "Mensual"}</p>
-                  <p className="text-lg font-semibold text-neutral-800">
+                  <p className="text-sm text-quegym-primary">{p.period || "Mensual"}</p>
+                  <p className="text-lg font-semibold text-quegym-primary">
                     {p.priceLabel?.trim() ? `$${p.priceLabel.replace(/[^0-9.,]/g, "") || p.priceLabel}` : "Consultar"}
                   </p>
-                  <p className={`text-sm ${p.active ? "text-emerald-600" : "text-neutral-400"}`}>
+                  <p className={`text-sm ${p.active ? "text-quegym-highlight" : "text-quegym-secondary"}`}>
                     {p.active ? "●" : "●"}
                   </p>
                   <div className="flex items-center gap-1">
@@ -1109,7 +1109,7 @@ export function PartnerPanelClient(props: {
                       type="button"
                       title={p.active ? "Ocultar plan" : "Publicar plan"}
                       onClick={() => void togglePlan(p)}
-                      className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 bg-white text-xs text-neutral-600 hover:bg-neutral-50"
+                      className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-quegym-border bg-quegym-elevated text-xs text-quegym-secondary hover:bg-quegym-subtle"
                     >
                       {p.active ? "👁" : "⊘"}
                     </button>
@@ -1117,7 +1117,7 @@ export function PartnerPanelClient(props: {
                       type="button"
                       disabled
                       title="Editar (próximamente)"
-                      className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 bg-white text-xs text-neutral-400"
+                      className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-quegym-border bg-quegym-elevated text-xs text-quegym-secondary"
                     >
                       ✎
                     </button>
@@ -1130,20 +1130,20 @@ export function PartnerPanelClient(props: {
           <button
             type="button"
             onClick={() => setShowPlanForm(true)}
-            className="mt-3 inline-flex w-full items-center justify-center rounded-2xl border border-dashed border-neutral-300 px-4 py-3 text-sm font-medium text-neutral-500 hover:bg-neutral-100"
+            className="mt-3 inline-flex w-full items-center justify-center rounded-2xl border border-dashed border-quegym-border px-4 py-3 text-sm font-medium text-quegym-secondary hover:bg-quegym-subtle"
           >
             + Agregar nuevo plan
           </button>
         </UICard>
 
         {showPlanForm ? (
-          <UICard className={`h-fit bg-neutral-50 ${lightCardClass}`}>
+          <UICard className={`h-fit bg-quegym-subtle ${lightCardClass}`}>
             <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-neutral-900">Nuevo plan</h3>
+              <h3 className="text-lg font-semibold text-quegym-primary">Nuevo plan</h3>
               <button
                 type="button"
                 onClick={() => setShowPlanForm(false)}
-                className="rounded-full border border-neutral-300 px-2 py-0.5 text-xs text-neutral-600 hover:bg-neutral-100"
+                className="rounded-full border border-quegym-border px-2 py-0.5 text-xs text-quegym-secondary hover:bg-quegym-subtle"
               >
                 ×
               </button>
@@ -1151,7 +1151,7 @@ export function PartnerPanelClient(props: {
             <form className="space-y-3" onSubmit={onCreatePlan}>
               <input type="hidden" name="venueSlug" value={photosVenueSlug} />
               <label className="block space-y-1">
-                <span className="text-xs font-medium text-neutral-700">Nombre del plan *</span>
+                <span className="text-xs font-medium text-quegym-primary">Nombre del plan *</span>
                 <UITextInput
                   name="name"
                   required
@@ -1160,21 +1160,21 @@ export function PartnerPanelClient(props: {
                 />
               </label>
               <label className="block space-y-1">
-                <span className="text-xs font-medium text-neutral-700">Descripción breve</span>
+                <span className="text-xs font-medium text-quegym-primary">Descripción breve</span>
                 <textarea
                   name="description"
                   rows={2}
                   placeholder="¿Qué incluye este plan?"
-                  className={`w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 placeholder:text-neutral-500`}
+                  className={`w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 text-sm text-quegym-primary placeholder:text-quegym-secondary`}
                 />
               </label>
               <div className="grid grid-cols-2 gap-2">
                 <label className="space-y-1">
-                  <span className="text-xs font-medium text-neutral-700">Periodicidad *</span>
+                  <span className="text-xs font-medium text-quegym-primary">Periodicidad *</span>
                   <select
                     name="period"
                     defaultValue="Mensual"
-                    className={`h-[44px] w-full rounded-xl border border-neutral-300 bg-white px-3 text-sm text-neutral-800`}
+                    className={`h-[44px] w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 text-sm text-quegym-primary`}
                   >
                     <option value="Mensual">Mensual</option>
                     <option value="3 meses">3 meses</option>
@@ -1183,7 +1183,7 @@ export function PartnerPanelClient(props: {
                   </select>
                 </label>
                 <label className="space-y-1">
-                  <span className="text-xs font-medium text-neutral-700">Precio referencial</span>
+                  <span className="text-xs font-medium text-quegym-primary">Precio referencial</span>
                   <UITextInput
                     name="priceLabel"
                     placeholder='0.00 (o "Consultar")'
@@ -1210,35 +1210,35 @@ export function PartnerPanelClient(props: {
 
 
       {activeSection === "leads" ? (
-      <UICard className={`bg-neutral-50 ${lightCardClass}`}>
+      <UICard className={`bg-quegym-subtle ${lightCardClass}`}>
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-[30px] font-semibold leading-tight text-neutral-900">Leads recibidos</h2>
-            <p className="text-sm text-neutral-500">
+            <h2 className="text-[30px] font-semibold leading-tight text-quegym-primary">Leads recibidos</h2>
+            <p className="text-sm text-quegym-secondary">
               {leadsReceivedCount} nuevos sin atender · {leadsContactedCount} atendidos
             </p>
           </div>
           <div className="flex items-center gap-2">
             <button
               type="button"
-              className="rounded-xl border border-neutral-200 bg-white px-3 py-1.5 text-sm text-neutral-600"
+              className="rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-1.5 text-sm text-quegym-secondary"
             >
               Filtrar ▾
             </button>
             <button
               type="button"
-              className="rounded-xl border border-neutral-200 bg-white px-3 py-1.5 text-sm text-neutral-600"
+              className="rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-1.5 text-sm text-quegym-secondary"
             >
               Exportar
             </button>
           </div>
         </div>
-        <div className="mb-4 inline-flex rounded-xl border border-neutral-200 bg-white p-1 text-sm">
+        <div className="mb-4 inline-flex rounded-xl border border-quegym-border bg-quegym-elevated p-1 text-sm">
           <button
             type="button"
             onClick={() => setLeadFilter("received")}
             className={`rounded-lg px-3 py-1.5 ${
-              leadFilter === "received" ? "bg-neutral-100 font-medium text-neutral-900" : "text-neutral-600"
+              leadFilter === "received" ? "bg-quegym-subtle font-medium text-quegym-primary" : "text-quegym-secondary"
             }`}
           >
             Nuevos ({leadsReceivedCount})
@@ -1247,7 +1247,7 @@ export function PartnerPanelClient(props: {
             type="button"
             onClick={() => setLeadFilter("contacted")}
             className={`rounded-lg px-3 py-1.5 ${
-              leadFilter === "contacted" ? "bg-neutral-100 font-medium text-neutral-900" : "text-neutral-600"
+              leadFilter === "contacted" ? "bg-quegym-subtle font-medium text-quegym-primary" : "text-quegym-secondary"
             }`}
           >
             Atendidos ({leadsContactedCount})
@@ -1256,15 +1256,15 @@ export function PartnerPanelClient(props: {
             type="button"
             onClick={() => setLeadFilter("all")}
             className={`rounded-lg px-3 py-1.5 ${
-              leadFilter === "all" ? "bg-neutral-100 font-medium text-neutral-900" : "text-neutral-600"
+              leadFilter === "all" ? "bg-quegym-subtle font-medium text-quegym-primary" : "text-quegym-secondary"
             }`}
           >
             Todos ({leads.length})
           </button>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
-          <div className="grid grid-cols-[1.2fr_0.9fr_1fr_0.7fr_0.8fr_0.7fr_0.55fr] gap-2 border-b border-neutral-200 px-4 py-3 text-xs font-medium text-neutral-500">
+        <div className="overflow-hidden rounded-2xl border border-quegym-border bg-quegym-elevated">
+          <div className="grid grid-cols-[1.2fr_0.9fr_1fr_0.7fr_0.8fr_0.7fr_0.55fr] gap-2 border-b border-quegym-border px-4 py-3 text-xs font-medium text-quegym-secondary">
             <span>Nombre</span>
             <span>Interés</span>
             <span>Contacto</span>
@@ -1274,36 +1274,36 @@ export function PartnerPanelClient(props: {
             <span>Acciones</span>
           </div>
           {leadsFiltered.length === 0 ? (
-            <p className="px-4 py-8 text-center text-sm text-neutral-500">
+            <p className="px-4 py-8 text-center text-sm text-quegym-secondary">
               No hay leads para este filtro.
             </p>
           ) : (
-            <div className="divide-y divide-neutral-100">
+            <div className="divide-y divide-quegym-border">
               {leadsFiltered.map((lead) => (
                 <div
                   key={lead.id}
-                  className="grid grid-cols-[1.2fr_0.9fr_1fr_0.7fr_0.8fr_0.7fr_0.55fr] items-center gap-2 px-4 py-3 text-sm text-neutral-800"
+                  className="grid grid-cols-[1.2fr_0.9fr_1fr_0.7fr_0.8fr_0.7fr_0.55fr] items-center gap-2 px-4 py-3 text-sm text-quegym-primary"
                 >
                   <div className="flex min-w-0 items-center gap-2">
-                    <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-neutral-100 text-xs text-neutral-500">
+                    <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-quegym-subtle text-xs text-quegym-secondary">
                       {lead.name.charAt(0).toUpperCase()}
                     </span>
                     <span className="truncate font-medium">{lead.name}</span>
                   </div>
-                  <span className="truncate text-neutral-600">{lead.intent}</span>
-                  <span className="truncate text-neutral-600">{lead.phone || lead.email || "—"}</span>
-                  <span className={`truncate font-medium ${detectLeadChannel(lead) === "WhatsApp" ? "text-emerald-600" : "text-blue-600"}`}>
+                  <span className="truncate text-quegym-secondary">{lead.intent}</span>
+                  <span className="truncate text-quegym-secondary">{lead.phone || lead.email || "—"}</span>
+                  <span className={`truncate font-medium ${detectLeadChannel(lead) === "WhatsApp" ? "text-quegym-highlight" : "text-blue-600"}`}>
                     {detectLeadChannel(lead)}
                   </span>
-                  <span className="text-neutral-500">{formatLeadDate(lead.createdAt)}</span>
+                  <span className="text-quegym-secondary">{formatLeadDate(lead.createdAt)}</span>
                   <span>
                     <span
                       className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
                         lead.status === "received"
-                          ? "bg-[#0a1430] text-white"
+                          ? "bg-quegym-accent text-white"
                           : lead.status === "contacted"
-                            ? "bg-emerald-100 text-emerald-700"
-                            : "bg-neutral-200 text-neutral-700"
+                            ? "bg-quegym-highlight-soft text-quegym-highlight"
+                            : "bg-quegym-subtle text-quegym-primary"
                       }`}
                     >
                       {lead.status === "received"
@@ -1316,7 +1316,7 @@ export function PartnerPanelClient(props: {
                   <div className="flex items-center gap-1">
                     <button
                       type="button"
-                      className="inline-flex h-8 items-center justify-center rounded-xl border border-neutral-200 bg-white px-3 text-xs font-medium text-neutral-600 hover:bg-neutral-50"
+                      className="inline-flex h-8 items-center justify-center rounded-xl border border-quegym-border bg-quegym-elevated px-3 text-xs font-medium text-quegym-secondary hover:bg-quegym-subtle"
                     >
                       Ver
                     </button>
@@ -1325,7 +1325,7 @@ export function PartnerPanelClient(props: {
                         type="button"
                         disabled={updatingLeadId === lead.id}
                         onClick={() => void updateLeadStatus(lead, "contacted")}
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 text-sm text-emerald-600 hover:bg-emerald-100"
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-quegym-highlight/30 bg-quegym-highlight-soft text-sm text-quegym-highlight hover:bg-quegym-highlight-hover"
                         title="Marcar atendido"
                       >
                         ✓
@@ -1341,17 +1341,17 @@ export function PartnerPanelClient(props: {
       ) : null}
 
       {activeSection === "config" && variant === "partner" ? (
-      <div className="grid gap-0 rounded-2xl border border-neutral-200 bg-white lg:grid-cols-[240px_1fr]">
-        <aside className="border-r border-neutral-200 p-4">
-          <h2 className="mb-4 text-[30px] font-semibold leading-tight text-neutral-900">Configuración</h2>
+      <div className="grid gap-0 rounded-2xl border border-quegym-border bg-quegym-elevated lg:grid-cols-[240px_1fr]">
+        <aside className="border-r border-quegym-border p-4">
+          <h2 className="mb-4 text-[30px] font-semibold leading-tight text-quegym-primary">Configuración</h2>
           <div className="space-y-1">
             <button
               type="button"
               onClick={() => openConfigView("account")}
               className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm ${
                 configView === "account"
-                  ? "bg-neutral-100 font-medium text-neutral-900"
-                  : "text-neutral-600 hover:bg-neutral-50"
+                  ? "bg-quegym-subtle font-medium text-quegym-primary"
+                  : "text-quegym-secondary hover:bg-quegym-subtle"
               }`}
             >
               <span>Cuenta</span>
@@ -1368,12 +1368,12 @@ export function PartnerPanelClient(props: {
                 type="button"
                 onClick={() => openConfigView(id as ConfigView)}
                 className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm ${
-                  configView === id ? "bg-neutral-100 font-medium text-neutral-900" : "text-neutral-600 hover:bg-neutral-50"
+                  configView === id ? "bg-quegym-subtle font-medium text-quegym-primary" : "text-quegym-secondary hover:bg-quegym-subtle"
                 }`}
               >
                 <span>{label}</span>
                 {id === "gyms" ? (
-                  <span className="text-xs text-neutral-400">2</span>
+                  <span className="text-xs text-quegym-secondary">2</span>
                 ) : null}
                 {id === "billing" ? (
                   <span className="rounded border border-blue-200 px-1.5 py-0.5 text-[10px] text-blue-600">Pronto</span>
@@ -1387,40 +1387,40 @@ export function PartnerPanelClient(props: {
           {configView === "account" ? (
             <div className="space-y-4">
               <div>
-                <h3 className="text-[34px] font-semibold leading-tight text-neutral-900">Cuenta y acceso</h3>
-                <p className="text-sm text-neutral-500">Administra tu email, contraseña y seguridad</p>
+                <h3 className="text-[34px] font-semibold leading-tight text-quegym-primary">Cuenta y acceso</h3>
+                <p className="text-sm text-quegym-secondary">Administra tu email, contraseña y seguridad</p>
               </div>
               <UICard className={lightCardClass}>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[28px]/none text-base font-medium text-neutral-800">Correo electrónico</p>
-                    <p className="text-sm text-neutral-500">Tu correo para acceder al panel de partners</p>
+                    <p className="text-[28px]/none text-base font-medium text-quegym-primary">Correo electrónico</p>
+                    <p className="text-sm text-quegym-secondary">Tu correo para acceder al panel de partners</p>
                   </div>
                   <Link href={`/partner/configuracion/cambiar-correo?venueSlug=${encodeURIComponent(photosVenueSlug || "")}&configView=account`}>
                     <UIButton variant="secondary" size="sm" className={lightSecondaryButtonClass}>Cambiar</UIButton>
                   </Link>
                 </div>
-                <div className="mt-3 rounded-xl border border-neutral-200 bg-neutral-100 px-3 py-2 text-neutral-700">
+                <div className="mt-3 rounded-xl border border-quegym-border bg-quegym-subtle px-3 py-2 text-quegym-primary">
                   {profile.partnerEmail || "admin@evolvefitness.com"}
                 </div>
               </UICard>
               <UICard className={lightCardClass}>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-base font-medium text-neutral-800">Contraseña</p>
-                    <p className="text-sm text-neutral-500">Acceso por enlace mágico / configuración local</p>
+                    <p className="text-base font-medium text-quegym-primary">Contraseña</p>
+                    <p className="text-sm text-quegym-secondary">Acceso por enlace mágico / configuración local</p>
                   </div>
                   <UIButton variant="secondary" size="sm" className={lightSecondaryButtonClass}>Configurar</UIButton>
                 </div>
-                <div className="mt-3 rounded-xl border border-neutral-200 bg-neutral-100 px-3 py-2 text-neutral-600">
+                <div className="mt-3 rounded-xl border border-quegym-border bg-quegym-subtle px-3 py-2 text-quegym-secondary">
                   No configurada - Acceso por enlace mágico
                 </div>
               </UICard>
               <UICard className={lightCardClass}>
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-base font-medium text-neutral-800">Autenticación de dos factores</p>
-                    <p className="text-sm text-neutral-500">Agregá una capa extra de seguridad con código SMS o app.</p>
+                    <p className="text-base font-medium text-quegym-primary">Autenticación de dos factores</p>
+                    <p className="text-sm text-quegym-secondary">Agrega una capa extra de seguridad con código SMS o app.</p>
                   </div>
                   <span className="rounded border border-blue-200 px-2 py-1 text-xs font-medium text-blue-600">Próximamente</span>
                 </div>
@@ -1445,16 +1445,16 @@ export function PartnerPanelClient(props: {
             </div>
           ) : configView === "gyms" ? (
             <div className="space-y-3">
-              <h3 className="text-2xl font-semibold text-neutral-900">Mis centros</h3>
-              <p className="text-sm text-neutral-500">Cambia de centro o agrega uno nuevo.</p>
+              <h3 className="text-2xl font-semibold text-quegym-primary">Mis centros</h3>
+              <p className="text-sm text-quegym-secondary">Cambia de centro o agrega uno nuevo.</p>
               <Link href={`/partner/configuracion/mis-centros?venueSlug=${encodeURIComponent(photosVenueSlug || "")}&configView=gyms`}>
                 <UIButton>Abrir vista de centros</UIButton>
               </Link>
             </div>
           ) : (
             <div className="space-y-3">
-              <h3 className="text-2xl font-semibold text-neutral-900">Configuración</h3>
-              <p className="text-sm text-neutral-500">
+              <h3 className="text-2xl font-semibold text-quegym-primary">Configuración</h3>
+              <p className="text-sm text-quegym-secondary">
                 Esta sección se irá habilitando por etapas del panel partner.
               </p>
               <div className="flex flex-wrap gap-2">
@@ -1484,7 +1484,7 @@ export function PartnerPanelClient(props: {
 }
 
 function statusLine(ok: boolean): string {
-  return ok ? "text-emerald-700" : "text-neutral-500";
+  return ok ? "text-quegym-highlight" : "text-quegym-secondary";
 }
 
 function formatLeadDate(iso: string): string {

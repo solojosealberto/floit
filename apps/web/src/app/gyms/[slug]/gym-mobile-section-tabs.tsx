@@ -35,15 +35,15 @@ export function GymMobileSectionTabs({ sections }: Props) {
   }, [sectionIds]);
 
   return (
-    <div className="flex items-center justify-between border-b border-neutral-200 pb-2 text-xs text-neutral-500">
+    <div className="flex items-center gap-4 overflow-x-auto border-b border-quegym-border pb-0 text-xs">
       {sections.map((item) => (
         <a
           key={item.id}
           href={`#${item.id}`}
           className={
             activeId === item.id
-              ? "font-semibold text-neutral-800"
-              : "hover:text-neutral-700"
+              ? "shrink-0 border-b-2 border-quegym-highlight pb-2 font-semibold text-quegym-highlight"
+              : "shrink-0 pb-2 text-quegym-secondary hover:text-quegym-primary"
           }
         >
           {item.label}

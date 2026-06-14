@@ -6,12 +6,12 @@ export function UIEmptyState(props: {
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-dashed border-neutral-300 px-4 py-8 text-center dark:border-neutral-700">
-      <p className="text-sm font-medium text-neutral-700 dark:text-neutral-200">
+    <div className="rounded-xl border border-dashed border-[var(--qg-border)] px-4 py-8 text-center">
+      <p className="text-sm font-medium text-[var(--qg-text-primary)]">
         {props.title}
       </p>
       {props.description ? (
-        <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
+        <p className="mt-1 text-sm text-[var(--qg-text-secondary)]">
           {props.description}
         </p>
       ) : null}
@@ -19,4 +19,3 @@ export function UIEmptyState(props: {
     </div>
   );
 }
-

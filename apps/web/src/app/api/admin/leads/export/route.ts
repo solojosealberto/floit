@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAdminAuthHeader } from "@/lib/admin-auth-header";
+import { EXPORT_LEADS_CSV_FILENAME } from "@/lib/brand";
 
 /** Proxy seguro: el token admin no sale al navegador; solo usa variables de servidor. */
 export async function GET() {
@@ -31,7 +32,7 @@ export async function GET() {
       status: 200,
       headers: {
         "content-type": "text/csv; charset=utf-8",
-        "content-disposition": 'attachment; filename="floit-leads.csv"',
+        "content-disposition": `attachment; filename="${EXPORT_LEADS_CSV_FILENAME}"`,
       },
     });
   } catch {

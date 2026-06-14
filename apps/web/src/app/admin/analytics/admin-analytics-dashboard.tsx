@@ -122,11 +122,11 @@ function formatRangeEnd(windowHours: number): string {
 }
 
 /** Stacked leads: WhatsApp (oscuro) · Formulario (gris) — alineado a diseño QueGym */
-const CHART_WHATSAPP = "#0a1430";
+const CHART_WHATSAPP = "#12B76A";
 const CHART_FORM = "#cbd5e1";
 
 const DEVICE_PALETTE: Record<string, string> = {
-  mobile: "#0a1430",
+  mobile: "#12B76A",
   desktop: "#64748b",
   tablet: "#cbd5e1",
   bot: "#94a3b8",
@@ -177,16 +177,16 @@ function KpiCard(props: {
   hint?: string;
 }) {
   return (
-    <UICard className="rounded-2xl border border-neutral-200 p-4 shadow-sm">
-      <p className="text-xs font-medium text-neutral-500">{props.label}</p>
-      <p className="mt-2 text-2xl font-semibold tracking-tight text-neutral-900">
+    <UICard className="rounded-2xl border border-quegym-border p-4">
+      <p className="text-xs font-medium text-quegym-secondary">{props.label}</p>
+      <p className="mt-2 text-2xl font-semibold tracking-tight text-quegym-primary">
         {props.value}
       </p>
       {props.sub ? (
-        <p className="mt-1 text-xs text-neutral-500">{props.sub}</p>
+        <p className="mt-1 text-xs text-quegym-secondary">{props.sub}</p>
       ) : null}
       {props.hint ? (
-        <p className="mt-2 text-xs text-neutral-400">{props.hint}</p>
+        <p className="mt-2 text-xs text-quegym-secondary">{props.hint}</p>
       ) : null}
     </UICard>
   );
@@ -244,7 +244,7 @@ function LineComparisonChart(props: {
 
   if (props.points.length === 0) {
     return (
-      <p className="py-8 text-center text-sm text-neutral-500">
+      <p className="py-8 text-center text-sm text-quegym-secondary">
         Sin puntos en la ventana para esta combinación de filtros.
       </p>
     );
@@ -256,7 +256,7 @@ function LineComparisonChart(props: {
   return (
     <svg
       viewBox="0 0 560 220"
-      className="h-auto w-full max-w-full text-neutral-900"
+      className="h-auto w-full max-w-full text-quegym-primary"
       role="img"
       aria-label="Vistas de ficha y leads por día"
     >
@@ -276,7 +276,7 @@ function LineComparisonChart(props: {
         <path
           d={pathVenue}
           fill="none"
-          stroke="#0a1430"
+          stroke="#12B76A"
           strokeWidth="2"
           strokeLinejoin="round"
         />
@@ -291,7 +291,7 @@ function LineComparisonChart(props: {
           strokeLinejoin="round"
         />
       ) : null}
-      <text x="52" y="22" className="fill-neutral-400 text-[10px]">
+      <text x="52" y="22" className="fill-quegym-secondary text-[10px]">
         máx. {maxY}
       </text>
       {props.points.map((p, i) =>
@@ -301,19 +301,19 @@ function LineComparisonChart(props: {
             x={padL + i * xStep}
             y="208"
             textAnchor="middle"
-            className="fill-neutral-500 text-[9px]"
+            className="fill-quegym-secondary text-[9px]"
           >
             {formatChartDayLabel(p.date)}
           </text>
         ) : null,
       )}
       <g transform="translate(52, 188)">
-        <line x1="0" y1="6" x2="24" y2="6" stroke="#0a1430" strokeWidth="2" />
-        <text x="30" y="10" className="fill-neutral-600 text-[10px]">
+        <line x1="0" y1="6" x2="24" y2="6" stroke="#12B76A" strokeWidth="2" />
+        <text x="30" y="10" className="fill-quegym-secondary text-[10px]">
           Vistas de ficha
         </text>
         <line x1="130" y1="6" x2="154" y2="6" stroke="#64748b" strokeWidth="2" strokeDasharray="4 3" />
-        <text x="160" y="10" className="fill-neutral-600 text-[10px]">
+        <text x="160" y="10" className="fill-quegym-secondary text-[10px]">
           Leads generados
         </text>
       </g>
@@ -345,7 +345,7 @@ function StackedLeadsChart(props: { points: LeadsDailyPayload["points"] }) {
 
   if (bars.length === 0) {
     return (
-      <p className="py-8 text-center text-sm text-neutral-500">
+      <p className="py-8 text-center text-sm text-quegym-secondary">
         Sin leads en la ventana temporal (leads-service).
       </p>
     );
@@ -382,7 +382,7 @@ function StackedLeadsChart(props: { points: LeadsDailyPayload["points"] }) {
               height={hF}
               fill={CHART_FORM}
               rx="2"
-              className="ring-1 ring-neutral-200/60"
+              className="ring-1 ring-quegym-border/60"
             />
             <rect
               x={20 + b.x}
@@ -395,7 +395,7 @@ function StackedLeadsChart(props: { points: LeadsDailyPayload["points"] }) {
           </g>
         );
       })}
-      <text x="52" y="26" className="fill-neutral-400 text-[10px]">
+      <text x="52" y="26" className="fill-quegym-secondary text-[10px]">
         máx. {bars[0]?.max ?? 0} leads / día
       </text>
     </svg>
@@ -435,7 +435,7 @@ function DeviceDonutChart(props: { devices: { device: string; count: number }[] 
 
   if (rows.length === 0) {
     return (
-      <p className="py-6 text-center text-sm text-neutral-500">
+      <p className="py-6 text-center text-sm text-quegym-secondary">
         Sin datos de dispositivo.
       </p>
     );
@@ -457,18 +457,18 @@ function DeviceDonutChart(props: { devices: { device: string; count: number }[] 
           x="100"
           y="96"
           textAnchor="middle"
-          className="fill-neutral-500 text-[10px] font-medium uppercase tracking-wide"
+          className="fill-quegym-secondary text-[10px] font-medium uppercase tracking-wide"
         >
           Eventos
         </text>
-        <text x="100" y="118" textAnchor="middle" className="fill-neutral-900 text-lg font-semibold">
+        <text x="100" y="118" textAnchor="middle" className="fill-quegym-primary text-lg font-semibold">
           {rows.reduce((a, r) => a + r.count, 0).toLocaleString("es-VE")}
         </text>
       </svg>
       <ul className="w-full min-w-[180px] space-y-2.5 text-sm">
         {rows.map((r) => (
           <li key={r.device} className="flex items-center justify-between gap-3">
-            <span className="flex min-w-0 items-center gap-2 text-neutral-700">
+            <span className="flex min-w-0 items-center gap-2 text-quegym-primary">
               <span
                 className="h-2.5 w-2.5 shrink-0 rounded-full ring-1 ring-black/5"
                 style={{ backgroundColor: r.color }}
@@ -476,7 +476,7 @@ function DeviceDonutChart(props: { devices: { device: string; count: number }[] 
               />
               <span className="truncate capitalize">{deviceLabelEs(r.device)}</span>
             </span>
-            <span className="shrink-0 tabular-nums text-neutral-600">
+            <span className="shrink-0 tabular-nums text-quegym-secondary">
               {(r.pct * 100).toFixed(0)}%
             </span>
           </li>
@@ -497,16 +497,16 @@ function FunnelStageChart(props: {
         const pct = (s.value / base) * 100;
         return (
           <div key={s.key}>
-            <div className="mb-1 flex justify-between gap-2 text-xs text-neutral-600">
+            <div className="mb-1 flex justify-between gap-2 text-xs text-quegym-secondary">
               <span className="min-w-0 truncate">{s.label}</span>
-              <span className="shrink-0 tabular-nums font-medium text-neutral-900">
+              <span className="shrink-0 tabular-nums font-medium text-quegym-primary">
                 {s.value.toLocaleString("es-VE")}{" "}
-                <span className="font-normal text-neutral-400">({pct.toFixed(0)}%)</span>
+                <span className="font-normal text-quegym-secondary">({pct.toFixed(0)}%)</span>
               </span>
             </div>
-            <div className="h-3 overflow-hidden rounded-full bg-neutral-100">
+            <div className="h-3 overflow-hidden rounded-full bg-quegym-subtle">
               <div
-                className="h-3 rounded-full bg-gradient-to-r from-[#0a1430]/85 to-[#64748b]/90 transition-all"
+                className="h-3 rounded-full bg-gradient-to-r from-[#12B76A]/85 to-[#64748b]/90 transition-all"
                 style={{ width: `${Math.min(100, pct)}%` }}
               />
             </div>
@@ -529,8 +529,8 @@ function ExperimentSubmitRateChart(props: {
   if (props.rows.length === 0) return null;
 
   return (
-    <div className="mt-4 space-y-3 border-t border-neutral-100 pt-4">
-      <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+    <div className="mt-4 space-y-3 border-t border-quegym-border pt-4">
+      <p className="text-xs font-medium uppercase tracking-wide text-quegym-secondary">
         Tasa de envío / asignación (comparación)
       </p>
       {props.rows.map((row) => {
@@ -540,24 +540,24 @@ function ExperimentSubmitRateChart(props: {
         return (
           <div key={row.variant}>
             <div className="mb-1 flex flex-wrap items-center justify-between gap-2 text-xs">
-              <span className="font-medium text-neutral-800">{row.variant}</span>
-              <span className="tabular-nums text-neutral-600">
+              <span className="font-medium text-quegym-primary">{row.variant}</span>
+              <span className="tabular-nums text-quegym-secondary">
                 {formatPct(row.submitRateFromAssignments)}
                 {isWinner ? (
-                  <span className="ml-2 inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-800 ring-1 ring-emerald-200/80">
+                  <span className="ml-2 inline-flex rounded-full bg-quegym-highlight-soft px-2 py-0.5 text-[10px] font-semibold text-quegym-highlight ring-1 ring-quegym-highlight/30">
                     Mejor en ventana
                   </span>
                 ) : null}
               </span>
             </div>
             <div
-              className={`h-2.5 overflow-hidden rounded-full bg-neutral-100 ${
-                isWinner ? "ring-1 ring-emerald-200/90" : ""
+              className={`h-2.5 overflow-hidden rounded-full bg-quegym-subtle ${
+                isWinner ? "ring-1 ring-quegym-highlight/30" : ""
               }`}
             >
               <div
                 className={`h-2.5 rounded-full transition-all ${
-                  isWinner ? "bg-emerald-600" : "bg-[#0a1430]/80"
+                  isWinner ? "bg-quegym-accent" : "bg-quegym-accent/80"
                 }`}
                 style={{ width: `${w}%` }}
               />
@@ -592,12 +592,12 @@ function DailyPersistedBars(props: { points: TimeseriesPayload["points"] }) {
 
   return (
     <div className="mb-5">
-      <p className="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-500">
+      <p className="mb-2 text-xs font-medium uppercase tracking-wide text-quegym-secondary">
         Leads persistidos por día (mini barras)
       </p>
-      <svg viewBox="0 0 560 100" className="h-auto w-full max-w-full text-neutral-900" role="img">
+      <svg viewBox="0 0 560 100" className="h-auto w-full max-w-full text-quegym-primary" role="img">
         <rect x="8" y="8" width="544" height="84" fill="#fafafa" rx="6" stroke="#e5e7eb" />
-        <text x="20" y="26" className="fill-neutral-400 text-[10px]">
+        <text x="20" y="26" className="fill-quegym-secondary text-[10px]">
           máx. {max} / día
         </text>
         {bars.map((b, i) => (
@@ -645,28 +645,28 @@ function SlaComplianceDonut(props: { sla: LeadsSlaPayload }) {
         {ratePath ? <path d={ratePath} fill="#059669" opacity="0.92" /> : null}
         {restPath ? <path d={restPath} fill="#e5e7eb" /> : null}
         <circle cx="80" cy="80" r="38" fill="#fafafa" />
-        <text x="80" y="76" textAnchor="middle" className="fill-neutral-500 text-[9px] font-medium uppercase">
+        <text x="80" y="76" textAnchor="middle" className="fill-quegym-secondary text-[9px] font-medium uppercase">
           SLA ≤{props.sla.targetMinutes}m
         </text>
-        <text x="80" y="98" textAnchor="middle" className="fill-neutral-900 text-xl font-semibold">
+        <text x="80" y="98" textAnchor="middle" className="fill-quegym-primary text-xl font-semibold">
           {formatPct(rate)}
         </text>
       </svg>
-      <div className="grid flex-1 grid-cols-2 gap-2 text-xs text-neutral-600 sm:grid-cols-1">
+      <div className="grid flex-1 grid-cols-2 gap-2 text-xs text-quegym-secondary sm:grid-cols-1">
         <p>
-          <span className="text-neutral-500">Resp. media:</span>{" "}
-          <span className="font-medium text-neutral-800">
+          <span className="text-quegym-secondary">Resp. media:</span>{" "}
+          <span className="font-medium text-quegym-primary">
             {props.sla.averageFirstResponseMinutes != null
               ? `${props.sla.averageFirstResponseMinutes} min`
               : "N/D"}
           </span>
         </p>
         <p className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-emerald-600" aria-hidden />
+          <span className="h-2 w-2 rounded-full bg-quegym-accent" aria-hidden />
           Dentro del SLA ({props.sla.contactedWithinTarget} de {props.sla.totalLeads} leads)
         </p>
         <p className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-neutral-300" aria-hidden />
+          <span className="h-2 w-2 rounded-full bg-quegym-subtle" aria-hidden />
           Resto de la ventana (incl. sin contacto a tiempo)
         </p>
       </div>
@@ -680,12 +680,12 @@ function DataTable(props: {
   rows: (string | number)[][];
 }) {
   return (
-    <UICard className="rounded-2xl border border-neutral-200 p-4 shadow-sm">
-      <h3 className="mb-3 text-sm font-semibold text-neutral-900">{props.title}</h3>
+    <UICard className="rounded-2xl border border-quegym-border p-4">
+      <h3 className="mb-3 text-sm font-semibold text-quegym-primary">{props.title}</h3>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[240px] text-sm">
           <thead>
-            <tr className="border-b border-neutral-100 text-left text-xs font-semibold uppercase tracking-wide text-neutral-500">
+            <tr className="border-b border-quegym-border text-left text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
               {props.columns.map((c) => (
                 <th key={c} className="pb-2 pr-3">
                   {c}
@@ -695,11 +695,11 @@ function DataTable(props: {
           </thead>
           <tbody>
             {props.rows.map((row, i) => (
-              <tr key={i} className="border-b border-neutral-50">
+              <tr key={i} className="border-b border-quegym-border">
                 {row.map((cell, j) => (
                   <td
                     key={j}
-                    className={`py-2 pr-3 ${j > 0 ? "text-right tabular-nums" : "text-neutral-800"}`}
+                    className={`py-2 pr-3 ${j > 0 ? "text-right tabular-nums" : "text-quegym-primary"}`}
                   >
                     {cell}
                   </td>
@@ -714,7 +714,7 @@ function DataTable(props: {
 }
 
 const tableHeadRowClass =
-  "border-b border-neutral-100 text-left text-xs font-semibold uppercase tracking-wide text-neutral-500";
+  "border-b border-quegym-border text-left text-xs font-semibold uppercase tracking-wide text-quegym-secondary";
 
 function TechnicalSubcard(props: {
   title: string;
@@ -722,11 +722,11 @@ function TechnicalSubcard(props: {
   children: ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+    <div className="rounded-xl border border-quegym-border bg-quegym-elevated p-4">
       <div className="mb-3">
-        <h3 className="text-sm font-semibold text-neutral-900">{props.title}</h3>
+        <h3 className="text-sm font-semibold text-quegym-primary">{props.title}</h3>
         {props.description ? (
-          <p className="mt-1 text-xs text-neutral-500">{props.description}</p>
+          <p className="mt-1 text-xs text-quegym-secondary">{props.description}</p>
         ) : null}
       </div>
       {props.children}
@@ -798,19 +798,19 @@ export function AdminAnalyticsDashboard(props: {
     <div className="space-y-6">
       <header className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <p className="text-xs font-medium text-neutral-500">Admin &gt; Métricas</p>
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-neutral-900">
+          <p className="text-xs font-medium text-quegym-secondary">Admin &gt; Métricas</p>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-quegym-primary">
             Dashboard de métricas MVP
           </h1>
-          <p className="mt-1 text-sm text-neutral-600">
+          <p className="mt-1 text-sm text-quegym-secondary">
             Datos del período seleccionado · {dateLabel} · Caracas / Distrito Capital
           </p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <label className="flex items-center gap-2 text-sm text-neutral-600">
+          <label className="flex items-center gap-2 text-sm text-quegym-secondary">
             <span className="whitespace-nowrap">Período</span>
             <select
-              className="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm"
+              className="rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 text-sm"
               value={String(props.windowHours)}
               onChange={(e) => {
                 const v = e.target.value;
@@ -822,10 +822,10 @@ export function AdminAnalyticsDashboard(props: {
               <option value="720">Últimos 30 días</option>
             </select>
           </label>
-          <label className="flex items-center gap-2 text-sm text-neutral-600">
+          <label className="flex items-center gap-2 text-sm text-quegym-secondary">
             <span className="whitespace-nowrap">Dispositivo</span>
             <select
-              className="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm"
+              className="rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 text-sm"
               value={props.device}
               onChange={(e) => {
                 const d = e.target.value;
@@ -853,13 +853,13 @@ export function AdminAnalyticsDashboard(props: {
         <p className="font-medium">Eventos instrumentados (referencia)</p>
         <p className="mt-1 text-sky-900/90">
           En producción se espera capturar:{" "}
-          <code className="rounded bg-white/80 px-1">discovery_view</code> (búsqueda),{" "}
-          <code className="rounded bg-white/80 px-1">filter_apply</code>,{" "}
-          <code className="rounded bg-white/80 px-1">venue_view</code> (ficha),{" "}
-          <code className="rounded bg-white/80 px-1">compare_open</code>,{" "}
-          <code className="rounded bg-white/80 px-1">cta_click</code>,{" "}
-          <code className="rounded bg-white/80 px-1">lead_submit</code>,{" "}
-          <code className="rounded bg-white/80 px-1">direct_contact_click</code>. Los totales
+          <code className="rounded bg-quegym-elevated/80 px-1">discovery_view</code> (búsqueda),{" "}
+          <code className="rounded bg-quegym-elevated/80 px-1">filter_apply</code>,{" "}
+          <code className="rounded bg-quegym-elevated/80 px-1">venue_view</code> (ficha),{" "}
+          <code className="rounded bg-quegym-elevated/80 px-1">compare_open</code>,{" "}
+          <code className="rounded bg-quegym-elevated/80 px-1">cta_click</code>,{" "}
+          <code className="rounded bg-quegym-elevated/80 px-1">lead_submit</code>,{" "}
+          <code className="rounded bg-quegym-elevated/80 px-1">direct_contact_click</code>. Los totales
           dependen de tráfico real; el gráfico apilado Formulario/WhatsApp usa datos persistidos
           en <strong>leads-service</strong> (sin filtro por dispositivo).
         </p>
@@ -921,24 +921,24 @@ export function AdminAnalyticsDashboard(props: {
       </section>
 
       <section className="grid gap-4 lg:grid-cols-2">
-        <UICard className="rounded-2xl border border-neutral-200 p-4 shadow-sm md:p-5">
+        <UICard className="rounded-2xl border border-quegym-border p-4 md:p-5">
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <h2 className="text-sm font-semibold text-neutral-900">
+              <h2 className="text-sm font-semibold text-quegym-primary">
                 Leads por día (formulario vs WhatsApp)
               </h2>
-              <p className="mt-1 text-xs text-neutral-500">
+              <p className="mt-1 text-xs text-quegym-secondary">
                 Fuente: leads persistidos por canal (misma ventana; sin filtro por dispositivo).
               </p>
             </div>
-            <div className="flex shrink-0 flex-wrap items-center gap-4 text-xs text-neutral-600">
+            <div className="flex shrink-0 flex-wrap items-center gap-4 text-xs text-quegym-secondary">
               <span className="inline-flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-[#0a1430]" aria-hidden />
+                <span className="h-2.5 w-2.5 rounded-full bg-quegym-accent" aria-hidden />
                 WhatsApp
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <span
-                  className="h-2.5 w-2.5 rounded-full bg-[#cbd5e1] ring-1 ring-neutral-200"
+                  className="h-2.5 w-2.5 rounded-full bg-[#cbd5e1] ring-1 ring-quegym-border"
                   aria-hidden
                 />
                 Formulario
@@ -947,22 +947,22 @@ export function AdminAnalyticsDashboard(props: {
           </div>
           <StackedLeadsChart points={leadsDaily.points} />
         </UICard>
-        <UICard className="rounded-2xl border border-neutral-200 p-4 shadow-sm md:p-5">
-          <h2 className="text-sm font-semibold text-neutral-900">
+        <UICard className="rounded-2xl border border-quegym-border p-4 md:p-5">
+          <h2 className="text-sm font-semibold text-quegym-primary">
             Distribución por dispositivo
           </h2>
-          <p className="mb-4 text-xs text-neutral-500">
+          <p className="mb-4 text-xs text-quegym-secondary">
             Eventos analytics · filtro actual ({data.device ?? "all"}).
           </p>
           <DeviceDonutChart devices={data.segments.devices} />
         </UICard>
       </section>
 
-      <UICard className="rounded-2xl border border-neutral-200 p-4 shadow-sm md:p-5">
-        <h2 className="mb-2 text-sm font-semibold text-neutral-900">
+      <UICard className="rounded-2xl border border-quegym-border p-4 md:p-5">
+        <h2 className="mb-2 text-sm font-semibold text-quegym-primary">
           Vistas de ficha y leads por día
         </h2>
-        <p className="mb-4 text-xs text-neutral-500">
+        <p className="mb-4 text-xs text-quegym-secondary">
           Leyenda dentro del gráfico · línea continua: vistas de ficha · discontinua: leads (evento).
         </p>
         <LineComparisonChart points={timeseries.points} />
@@ -1010,16 +1010,16 @@ export function AdminAnalyticsDashboard(props: {
         />
       </section>
 
-      <details className="group overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm transition-shadow open:shadow-md">
-        <summary className="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 text-left hover:bg-neutral-50/90 [&::-webkit-details-marker]:hidden">
+      <details className="group overflow-hidden rounded-2xl border border-quegym-border bg-quegym-elevated transition-shadow open:shadow-none">
+        <summary className="flex cursor-pointer list-none items-start justify-between gap-4 px-5 py-4 text-left hover:bg-quegym-subtle/90 [&::-webkit-details-marker]:hidden">
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+            <p className="text-xs font-medium uppercase tracking-wide text-quegym-secondary">
               Referencia técnica
             </p>
-            <h2 className="mt-1 text-sm font-semibold text-neutral-900">
+            <h2 className="mt-1 text-sm font-semibold text-quegym-primary">
               Detalle técnico: funnel, experimento A/B y SLA
             </h2>
-            <p className="mt-1 text-xs text-neutral-500">
+            <p className="mt-1 text-xs text-quegym-secondary">
               Conteos raw, variantes del experimento y SLA — mismo período y filtro que el dashboard.
             </p>
           </div>
@@ -1028,7 +1028,7 @@ export function AdminAnalyticsDashboard(props: {
             viewBox="0 0 20 20"
             fill="currentColor"
             aria-hidden
-            className="mt-1 h-5 w-5 shrink-0 text-neutral-400 transition-transform duration-200 group-open:rotate-180"
+            className="mt-1 h-5 w-5 shrink-0 text-quegym-secondary transition-transform duration-200 group-open:rotate-180"
           >
             <path
               fillRule="evenodd"
@@ -1038,18 +1038,18 @@ export function AdminAnalyticsDashboard(props: {
           </svg>
         </summary>
 
-        <div className="border-t border-neutral-100 bg-[#f7f9fc]/90 px-4 pb-5 pt-4 md:px-5">
+        <div className="border-t border-quegym-border bg-quegym-page/90 px-4 pb-5 pt-4 md:px-5">
           <div className="grid gap-5 lg:grid-cols-2">
             <TechnicalSubcard
               title="Funnel (conteos)"
               description="Agregados en analytics para la ventana actual."
             >
-              <p className="mb-3 text-xs text-neutral-500">
+              <p className="mb-3 text-xs text-quegym-secondary">
                 Anchura relativa a Discovery · caída entre etapas principales.
               </p>
               <FunnelStageChart steps={funnelSteps} />
-              <div className="mt-6 overflow-x-auto border-t border-neutral-100 pt-4">
-                <p className="mb-3 text-xs font-medium uppercase tracking-wide text-neutral-500">
+              <div className="mt-6 overflow-x-auto border-t border-quegym-border pt-4">
+                <p className="mb-3 text-xs font-medium uppercase tracking-wide text-quegym-secondary">
                   Tabla de referencia
                 </p>
                 <table className="w-full min-w-[260px] text-sm">
@@ -1060,51 +1060,51 @@ export function AdminAnalyticsDashboard(props: {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-b border-neutral-50">
-                      <td className="py-2 pr-3 text-neutral-700">Discovery views</td>
-                      <td className="py-2 text-right font-medium tabular-nums text-neutral-900">
+                    <tr className="border-b border-quegym-border">
+                      <td className="py-2 pr-3 text-quegym-primary">Discovery views</td>
+                      <td className="py-2 text-right font-medium tabular-nums text-quegym-primary">
                         {f.discoveryViews}
                       </td>
                     </tr>
-                    <tr className="border-b border-neutral-50">
-                      <td className="py-2 pr-3 text-neutral-700">Filter applies</td>
-                      <td className="py-2 text-right font-medium tabular-nums text-neutral-900">
+                    <tr className="border-b border-quegym-border">
+                      <td className="py-2 pr-3 text-quegym-primary">Filter applies</td>
+                      <td className="py-2 text-right font-medium tabular-nums text-quegym-primary">
                         {f.filterApplies}
                       </td>
                     </tr>
-                    <tr className="border-b border-neutral-50">
-                      <td className="py-2 pr-3 text-neutral-700">Venue views</td>
-                      <td className="py-2 text-right font-medium tabular-nums text-neutral-900">
+                    <tr className="border-b border-quegym-border">
+                      <td className="py-2 pr-3 text-quegym-primary">Venue views</td>
+                      <td className="py-2 text-right font-medium tabular-nums text-quegym-primary">
                         {f.venueViews}
                       </td>
                     </tr>
-                    <tr className="border-b border-neutral-50">
-                      <td className="py-2 pr-3 text-neutral-700">Compare opens</td>
-                      <td className="py-2 text-right font-medium tabular-nums text-neutral-900">
+                    <tr className="border-b border-quegym-border">
+                      <td className="py-2 pr-3 text-quegym-primary">Compare opens</td>
+                      <td className="py-2 text-right font-medium tabular-nums text-quegym-primary">
                         {f.compareOpens}
                       </td>
                     </tr>
-                    <tr className="border-b border-neutral-50">
-                      <td className="py-2 pr-3 text-neutral-700">CTA clicks</td>
-                      <td className="py-2 text-right font-medium tabular-nums text-neutral-900">
+                    <tr className="border-b border-quegym-border">
+                      <td className="py-2 pr-3 text-quegym-primary">CTA clicks</td>
+                      <td className="py-2 text-right font-medium tabular-nums text-quegym-primary">
                         {f.ctaClicks}
                       </td>
                     </tr>
-                    <tr className="border-b border-neutral-50">
-                      <td className="py-2 pr-3 text-neutral-700">Lead submits</td>
-                      <td className="py-2 text-right font-medium tabular-nums text-neutral-900">
+                    <tr className="border-b border-quegym-border">
+                      <td className="py-2 pr-3 text-quegym-primary">Lead submits</td>
+                      <td className="py-2 text-right font-medium tabular-nums text-quegym-primary">
                         {f.leadSubmits}
                       </td>
                     </tr>
-                    <tr className="border-b border-neutral-50">
-                      <td className="py-2 pr-3 text-neutral-700">Direct contact clicks</td>
-                      <td className="py-2 text-right font-medium tabular-nums text-neutral-900">
+                    <tr className="border-b border-quegym-border">
+                      <td className="py-2 pr-3 text-quegym-primary">Direct contact clicks</td>
+                      <td className="py-2 text-right font-medium tabular-nums text-quegym-primary">
                         {f.directContacts}
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pr-3 text-neutral-700">Lead persisted</td>
-                      <td className="py-2 text-right font-medium tabular-nums text-neutral-900">
+                      <td className="py-2 pr-3 text-quegym-primary">Lead persisted</td>
+                      <td className="py-2 text-right font-medium tabular-nums text-quegym-primary">
                         {f.leadPersisted}
                       </td>
                     </tr>
@@ -1118,30 +1118,30 @@ export function AdminAnalyticsDashboard(props: {
               description="Fuente: leads-service vía API admin."
             >
               {!props.leadsSla ? (
-                <p className="text-sm text-neutral-500">
+                <p className="text-sm text-quegym-secondary">
                   Sin datos (auth admin o leads-service).
                 </p>
               ) : (
                 <>
                   <SlaComplianceDonut sla={props.leadsSla} />
                   <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-xl border border-neutral-100 bg-neutral-50/90 px-3 py-2.5">
-                      <p className="text-xs font-medium text-neutral-500">Leads ventana</p>
-                      <p className="mt-1 text-lg font-semibold tabular-nums tracking-tight text-neutral-900">
+                    <div className="rounded-xl border border-quegym-border bg-quegym-subtle/90 px-3 py-2.5">
+                      <p className="text-xs font-medium text-quegym-secondary">Leads ventana</p>
+                      <p className="mt-1 text-lg font-semibold tabular-nums tracking-tight text-quegym-primary">
                         {props.leadsSla.totalLeads}
                       </p>
                     </div>
-                    <div className="rounded-xl border border-neutral-100 bg-neutral-50/90 px-3 py-2.5">
-                      <p className="text-xs font-medium text-neutral-500">Contactados</p>
-                      <p className="mt-1 text-lg font-semibold tabular-nums tracking-tight text-neutral-900">
+                    <div className="rounded-xl border border-quegym-border bg-quegym-subtle/90 px-3 py-2.5">
+                      <p className="text-xs font-medium text-quegym-secondary">Contactados</p>
+                      <p className="mt-1 text-lg font-semibold tabular-nums tracking-tight text-quegym-primary">
                         {props.leadsSla.contactedLeads}
                       </p>
                     </div>
-                    <div className="rounded-xl border border-neutral-100 bg-neutral-50/90 px-3 py-2.5">
-                      <p className="text-xs font-medium text-neutral-500">
+                    <div className="rounded-xl border border-quegym-border bg-quegym-subtle/90 px-3 py-2.5">
+                      <p className="text-xs font-medium text-quegym-secondary">
                         ≤{props.leadsSla.targetMinutes} min
                       </p>
-                      <p className="mt-1 text-lg font-semibold tabular-nums tracking-tight text-neutral-900">
+                      <p className="mt-1 text-lg font-semibold tabular-nums tracking-tight text-quegym-primary">
                         {props.leadsSla.contactedWithinTarget}
                       </p>
                     </div>
@@ -1157,7 +1157,7 @@ export function AdminAnalyticsDashboard(props: {
               description="Variantes asignadas en la ventana temporal."
             >
               {data.experiments.ctaLeadForm.length === 0 ? (
-                <p className="text-sm text-neutral-500">Sin variantes en la ventana.</p>
+                <p className="text-sm text-quegym-secondary">Sin variantes en la ventana.</p>
               ) : (
                 <>
                   <div className="overflow-x-auto">
@@ -1174,8 +1174,8 @@ export function AdminAnalyticsDashboard(props: {
                     </thead>
                     <tbody>
                       {data.experiments.ctaLeadForm.map((row) => (
-                        <tr key={row.variant} className="border-b border-neutral-50">
-                          <td className="py-2 pr-3 text-neutral-800">{row.variant}</td>
+                        <tr key={row.variant} className="border-b border-quegym-border">
+                          <td className="py-2 pr-3 text-quegym-primary">{row.variant}</td>
                           <td className="py-2 pr-3 text-right tabular-nums">{row.assignments}</td>
                           <td className="py-2 pr-3 text-right tabular-nums">{row.ctaClicks}</td>
                           <td className="py-2 pr-3 text-right tabular-nums">{row.leadSubmits}</td>
@@ -1207,14 +1207,14 @@ export function AdminAnalyticsDashboard(props: {
               description="Una fila por día en la ventana mostrada arriba."
             >
               {timeseries.points.length === 0 ? (
-                <p className="text-sm text-neutral-500">Sin puntos.</p>
+                <p className="text-sm text-quegym-secondary">Sin puntos.</p>
               ) : (
                 <>
                 <DailyPersistedBars points={timeseries.points} />
-                <div className="overflow-x-auto rounded-lg border border-neutral-100 bg-white">
+                <div className="overflow-x-auto rounded-lg border border-quegym-border bg-quegym-elevated">
                   <table className="min-w-[760px] w-full text-sm">
                     <thead>
-                      <tr className={`${tableHeadRowClass} bg-neutral-50/80`}>
+                      <tr className={`${tableHeadRowClass} bg-quegym-subtle/80`}>
                         <th className="px-3 py-2">Fecha</th>
                         <th className="px-3 py-2 text-right">Discovery</th>
                         <th className="px-3 py-2 text-right">Ficha</th>
@@ -1226,24 +1226,24 @@ export function AdminAnalyticsDashboard(props: {
                     </thead>
                     <tbody>
                       {timeseries.points.map((point) => (
-                        <tr key={point.date} className="border-b border-neutral-50 last:border-0">
-                          <td className="px-3 py-2 text-neutral-800">{point.date}</td>
-                          <td className="px-3 py-2 text-right tabular-nums text-neutral-700">
+                        <tr key={point.date} className="border-b border-quegym-border last:border-0">
+                          <td className="px-3 py-2 text-quegym-primary">{point.date}</td>
+                          <td className="px-3 py-2 text-right tabular-nums text-quegym-primary">
                             {point.discoveryViews}
                           </td>
-                          <td className="px-3 py-2 text-right tabular-nums text-neutral-700">
+                          <td className="px-3 py-2 text-right tabular-nums text-quegym-primary">
                             {point.venueViews}
                           </td>
-                          <td className="px-3 py-2 text-right tabular-nums text-neutral-700">
+                          <td className="px-3 py-2 text-right tabular-nums text-quegym-primary">
                             {point.compareOpens}
                           </td>
-                          <td className="px-3 py-2 text-right tabular-nums text-neutral-700">
+                          <td className="px-3 py-2 text-right tabular-nums text-quegym-primary">
                             {point.ctaClicks}
                           </td>
-                          <td className="px-3 py-2 text-right tabular-nums text-neutral-700">
+                          <td className="px-3 py-2 text-right tabular-nums text-quegym-primary">
                             {point.leadSubmits}
                           </td>
-                          <td className="px-3 py-2 text-right tabular-nums text-neutral-700">
+                          <td className="px-3 py-2 text-right tabular-nums text-quegym-primary">
                             {point.leadPersisted}
                           </td>
                         </tr>
@@ -1260,21 +1260,21 @@ export function AdminAnalyticsDashboard(props: {
               description="Enlaces a fichas públicas."
             >
               {data.topVenues.length === 0 ? (
-                <p className="text-sm text-neutral-500">Sin datos.</p>
+                <p className="text-sm text-quegym-secondary">Sin datos.</p>
               ) : (
-                <ul className="divide-y divide-neutral-100 rounded-lg border border-neutral-100 bg-neutral-50/40">
+                <ul className="divide-y divide-quegym-border rounded-lg border border-quegym-border bg-quegym-subtle/40">
                   {data.topVenues.map((item) => (
                     <li
                       key={item.venueSlug}
                       className="flex items-center justify-between gap-3 px-3 py-2.5 text-sm first:rounded-t-lg last:rounded-b-lg"
                     >
                       <Link
-                        className="min-w-0 truncate font-medium text-[#0a1430] underline decoration-neutral-300 underline-offset-2 hover:decoration-[#0a1430]"
+                        className="min-w-0 truncate font-medium text-quegym-accent underline decoration-quegym-border underline-offset-2 hover:decoration-quegym-accent"
                         href={`/gyms/${item.venueSlug}`}
                       >
                         {props.venueNames[item.venueSlug] ?? item.venueSlug}
                       </Link>
-                      <span className="shrink-0 tabular-nums text-neutral-600">{item.count}</span>
+                      <span className="shrink-0 tabular-nums text-quegym-secondary">{item.count}</span>
                     </li>
                   ))}
                 </ul>
@@ -1315,8 +1315,8 @@ function ExperimentStableSummaryBars(props: {
   const maxRate = Math.max(0.06, ...rows.map((r) => r.rate));
 
   return (
-    <div className="mt-4 border-t border-neutral-100 pt-4">
-      <p className="mb-3 text-xs font-medium uppercase tracking-wide text-neutral-500">
+    <div className="mt-4 border-t border-quegym-border pt-4">
+      <p className="mb-3 text-xs font-medium uppercase tracking-wide text-quegym-secondary">
         Tasa submit / asignación (resumen por variante)
       </p>
       <div className="space-y-2.5">
@@ -1326,24 +1326,24 @@ function ExperimentStableSummaryBars(props: {
           return (
             <div key={row.id}>
               <div className="mb-1 flex flex-wrap items-center justify-between gap-2 text-xs">
-                <span className="font-medium text-neutral-800">{row.label}</span>
-                <span className="tabular-nums text-neutral-600">
+                <span className="font-medium text-quegym-primary">{row.label}</span>
+                <span className="tabular-nums text-quegym-secondary">
                   {formatPct(row.rate)}
-                  <span className="ml-2 text-neutral-400">n={row.assignments}</span>
+                  <span className="ml-2 text-quegym-secondary">n={row.assignments}</span>
                   {hi ? (
-                    <span className="ml-2 inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-800 ring-1 ring-emerald-200/80">
+                    <span className="ml-2 inline-flex rounded-full bg-quegym-highlight-soft px-2 py-0.5 text-[10px] font-semibold text-quegym-highlight ring-1 ring-quegym-highlight/30">
                       Prioritaria (trial vs WA)
                     </span>
                   ) : null}
                 </span>
               </div>
               <div
-                className={`h-2 overflow-hidden rounded-full bg-neutral-100 ${
-                  hi ? "ring-1 ring-emerald-200/90" : ""
+                className={`h-2 overflow-hidden rounded-full bg-quegym-subtle ${
+                  hi ? "ring-1 ring-quegym-highlight/30" : ""
                 }`}
               >
                 <div
-                  className={`h-2 rounded-full ${hi ? "bg-emerald-600" : "bg-[#0a1430]/75"}`}
+                  className={`h-2 rounded-full ${hi ? "bg-quegym-accent" : "bg-quegym-accent/75"}`}
                   style={{ width: `${w}%` }}
                 />
               </div>
@@ -1378,38 +1378,38 @@ function DecisionBlock(props: { experiment: CtaExperimentPayload }) {
 
   return (
     <div
-      className={`rounded-xl border border-neutral-200 bg-white p-4 shadow-sm ${
-        isGo ? "border-l-4 border-l-emerald-500" : "border-l-4 border-l-amber-400"
+      className={`rounded-xl border border-quegym-border bg-quegym-elevated p-4 ${
+        isGo ? "border-l-4 border-l-quegym-accent" : "border-l-4 border-l-amber-400"
       }`}
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+          <p className="text-xs font-medium uppercase tracking-wide text-quegym-secondary">
             Decisión automática A/B
           </p>
-          <h3 className="mt-1 text-sm font-semibold text-neutral-900">
+          <h3 className="mt-1 text-sm font-semibold text-quegym-primary">
             Criterios GO / NO-GO (US-6.3)
           </h3>
         </div>
         <span
           className={`inline-flex shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${
             isGo
-              ? "bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200/80"
+              ? "bg-quegym-highlight-soft text-quegym-highlight ring-1 ring-quegym-highlight/30"
               : "bg-amber-50 text-amber-900 ring-1 ring-amber-200/80"
           }`}
         >
           {isGo ? "GO" : "NO-GO"}
         </span>
       </div>
-      <p className="mt-3 text-sm text-neutral-700">
-        <span className={isGo ? "font-medium text-emerald-800" : "font-medium text-amber-900"}>
+      <p className="mt-3 text-sm text-quegym-primary">
+        <span className={isGo ? "font-medium text-quegym-highlight" : "font-medium text-amber-900"}>
           {isGo
             ? `GO — ${bestName} como ganador provisional`
             : "NO-GO — seguir recolectando datos"}
         </span>
       </p>
       <ExperimentStableSummaryBars experiment={props.experiment} highlightVariant={bestName} />
-      <ul className="mt-3 space-y-1.5 border-t border-neutral-100 pt-3 text-sm text-neutral-600">
+      <ul className="mt-3 space-y-1.5 border-t border-quegym-border pt-3 text-sm text-quegym-secondary">
         <li>
           Asignaciones: membership={membership.assignments}, trial={trial.assignments},
           whatsapp_first={whatsapp.assignments}

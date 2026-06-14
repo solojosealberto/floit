@@ -17,7 +17,7 @@ export function HomeFavoritesLink() {
   return (
     <Link
       href="/favoritos"
-      className="rounded-xl border border-neutral-300 px-3 py-2 text-xs font-medium text-neutral-700 hover:bg-neutral-50"
+      className="rounded-xl border border-quegym-border px-3 py-2 text-xs font-medium text-quegym-primary hover:border-quegym-accent"
     >
       Favoritos ({count})
     </Link>

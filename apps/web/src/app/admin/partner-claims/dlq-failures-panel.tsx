@@ -103,10 +103,10 @@ export function DlqFailuresPanel(props: Props) {
   const bulkLimit = selectionCount === 0 ? 0 : Math.min(selectionCount, 50);
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm ring-1 ring-black/5">
+    <div className="overflow-hidden rounded-2xl border border-quegym-border bg-quegym-elevated qg-surface-subtle qg-motion">
       <div className={`flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-white md:px-5 ${headerBg}`}>
         <div className="flex min-w-0 items-start gap-3">
-          <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
+          <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-quegym-elevated/15">
             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -126,7 +126,7 @@ export function DlqFailuresPanel(props: Props) {
             type="button"
             disabled={busy || selectionCount === 0}
             onClick={() => void postRetry(bulkLimit)}
-            className="inline-flex items-center rounded-lg border border-white/40 bg-white/10 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex items-center rounded-lg border border-white/40 bg-quegym-elevated/10 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-quegym-elevated/15 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <svg className="mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
@@ -142,17 +142,17 @@ export function DlqFailuresPanel(props: Props) {
             type="button"
             disabled={busy}
             onClick={() => void postRetry(50)}
-            className="inline-flex items-center rounded-lg border border-white/40 bg-white/10 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-white/15 disabled:opacity-50"
+            className="inline-flex items-center rounded-lg border border-white/40 bg-quegym-elevated/10 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-quegym-elevated/15 disabled:opacity-50"
           >
             Reintentar 50
           </button>
-          <AdminRefreshButton className="inline-flex items-center rounded-lg border border-white/40 bg-white/10 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-white/15" />
+          <AdminRefreshButton className="inline-flex items-center rounded-lg border border-white/40 bg-quegym-elevated/10 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-quegym-elevated/15" />
         </div>
       </div>
 
-      <div className="border-t border-neutral-100 bg-neutral-50/50 px-4 py-3 md:px-5">
+      <div className="border-t border-quegym-border bg-quegym-subtle/50 px-4 py-3 md:px-5">
         <div className="relative max-w-2xl">
-          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400">
+          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-quegym-secondary">
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -162,11 +162,11 @@ export function DlqFailuresPanel(props: Props) {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Buscar por partner email o venue slug…"
-            className="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-11 pr-4 text-sm text-neutral-900 placeholder:text-neutral-500 focus:border-[#0a1430]/35 focus:outline-none focus:ring-2 focus:ring-[#0a1430]/15"
+            className="w-full rounded-xl border border-quegym-border bg-quegym-elevated py-2.5 pl-11 pr-4 text-sm text-quegym-primary placeholder:text-quegym-secondary focus:border-quegym-accent/35 focus:outline-none focus:ring-2 focus:ring-quegym-accent/15"
             aria-label="Filtrar DLQ"
           />
         </div>
-        <p className="mt-2 text-[11px] text-neutral-500">
+        <p className="mt-2 text-[11px] text-quegym-secondary">
           El servicio reencola hasta N trabajos en estado fallido (orden interno por fecha). La selección solo determina N
           (mínimo 1 cuando hay filas marcadas), no IDs concretos.
         </p>
@@ -174,51 +174,51 @@ export function DlqFailuresPanel(props: Props) {
 
       <div className="overflow-x-auto px-2 pb-4 md:px-4">
         {filtered.length === 0 ? (
-          <p className="px-2 py-10 text-center text-sm text-neutral-600 md:px-4">
+          <p className="px-2 py-10 text-center text-sm text-quegym-secondary md:px-4">
             {items.length === 0 ? "Sin trabajos en DLQ." : "Ningún resultado para la búsqueda."}
           </p>
         ) : (
           <table className="w-full min-w-[880px] border-collapse text-left text-sm">
             <thead>
-              <tr className="border-b border-neutral-200 bg-white">
+              <tr className="border-b border-quegym-border bg-quegym-elevated">
                 <th className="px-3 py-3">
                   <input
                     type="checkbox"
                     checked={allSelected}
                     onChange={toggleAll}
-                    className="h-4 w-4 rounded border-neutral-300"
+                    className="h-4 w-4 rounded border-quegym-border"
                     aria-label="Seleccionar todas las filas visibles"
                   />
                 </th>
-                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                   Partner
                 </th>
-                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">Venue</th>
-                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">Venue</th>
+                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                   Intentos
                 </th>
-                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                   Último error
                 </th>
-                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">Fecha</th>
-                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">Acciones</th>
+                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">Fecha</th>
+                <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((row) => (
-                <tr key={row.id} className="border-b border-neutral-100 bg-white hover:bg-neutral-50/80">
+                <tr key={row.id} className="border-b border-quegym-border bg-quegym-elevated hover:bg-quegym-subtle/80">
                   <td className="px-3 py-3 align-middle">
                     <input
                       type="checkbox"
                       checked={selected.has(row.id)}
                       onChange={() => toggle(row.id)}
-                      className="h-4 w-4 rounded border-neutral-300"
+                      className="h-4 w-4 rounded border-quegym-border"
                       aria-label={`Seleccionar ${row.id}`}
                     />
                   </td>
                   <td className="px-3 py-3 align-middle">
-                    <span className="flex items-center gap-2 text-neutral-900">
-                      <svg className="h-4 w-4 shrink-0 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <span className="flex items-center gap-2 text-quegym-primary">
+                      <svg className="h-4 w-4 shrink-0 text-quegym-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -230,8 +230,8 @@ export function DlqFailuresPanel(props: Props) {
                     </span>
                   </td>
                   <td className="px-3 py-3 align-middle">
-                    <span className="flex items-center gap-2 font-medium text-neutral-900">
-                      <svg className="h-4 w-4 shrink-0 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <span className="flex items-center gap-2 font-medium text-quegym-primary">
+                      <svg className="h-4 w-4 shrink-0 text-quegym-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -252,10 +252,10 @@ export function DlqFailuresPanel(props: Props) {
                       {row.lastError ?? "unknown_error"}
                     </span>
                   </td>
-                  <td className="px-3 py-3 align-middle text-neutral-800">
+                  <td className="px-3 py-3 align-middle text-quegym-primary">
                     <div className="flex flex-col gap-0.5">
                       <span>{formatDateShort(row.createdAt)}</span>
-                      <span className="text-xs text-neutral-500">{formatRelativeShort(row.createdAt)}</span>
+                      <span className="text-xs text-quegym-secondary">{formatRelativeShort(row.createdAt)}</span>
                     </div>
                   </td>
                   <td className="px-3 py-3 align-middle">
@@ -265,7 +265,7 @@ export function DlqFailuresPanel(props: Props) {
                         disabled={busy}
                         title="Reintentar un lote de hasta 1 trabajo fallido"
                         onClick={() => void postRetry(1)}
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-sky-600 text-white shadow-sm transition hover:bg-sky-700 disabled:opacity-50"
+                        className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-sky-600 text-white transition hover:bg-sky-700 disabled:opacity-50"
                       >
                         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path
@@ -279,7 +279,7 @@ export function DlqFailuresPanel(props: Props) {
                       <button
                         type="button"
                         onClick={() => setDetail(row)}
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 bg-white text-neutral-700 shadow-sm hover:bg-neutral-50"
+                        className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-quegym-border bg-quegym-elevated text-quegym-primary hover:bg-quegym-subtle"
                         title="Ver detalle"
                       >
                         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -313,14 +313,14 @@ export function DlqFailuresPanel(props: Props) {
           <div
             role="dialog"
             aria-modal="true"
-            className="relative z-[111] w-full max-w-md rounded-2xl bg-white p-5 shadow-2xl ring-1 ring-black/10"
+            className="relative z-[111] w-full max-w-md rounded-2xl bg-quegym-elevated p-5 shadow-2xl ring-1 ring-black/10"
           >
             <div className="flex items-start justify-between gap-2">
-              <h3 className="text-base font-semibold text-neutral-900">Detalle DLQ</h3>
+              <h3 className="text-base font-semibold text-quegym-primary">Detalle DLQ</h3>
               <button
                 type="button"
                 onClick={() => setDetail(null)}
-                className="rounded-lg p-1 text-neutral-500 hover:bg-neutral-100"
+                className="rounded-lg p-1 text-quegym-secondary hover:bg-quegym-subtle"
                 aria-label="Cerrar"
               >
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -330,27 +330,27 @@ export function DlqFailuresPanel(props: Props) {
             </div>
             <dl className="mt-4 space-y-2 text-sm">
               <div>
-                <dt className="text-xs text-neutral-500">ID</dt>
-                <dd className="font-mono text-xs text-neutral-900">{detail.id}</dd>
+                <dt className="text-xs text-quegym-secondary">ID</dt>
+                <dd className="font-mono text-xs text-quegym-primary">{detail.id}</dd>
               </div>
               <div>
-                <dt className="text-xs text-neutral-500">Partner</dt>
-                <dd className="break-all text-neutral-900">{detail.partnerEmail}</dd>
+                <dt className="text-xs text-quegym-secondary">Partner</dt>
+                <dd className="break-all text-quegym-primary">{detail.partnerEmail}</dd>
               </div>
               <div>
-                <dt className="text-xs text-neutral-500">Venue</dt>
-                <dd className="text-neutral-900">{detail.venueSlug}</dd>
+                <dt className="text-xs text-quegym-secondary">Venue</dt>
+                <dd className="text-quegym-primary">{detail.venueSlug}</dd>
               </div>
               <div>
-                <dt className="text-xs text-neutral-500">Intentos</dt>
-                <dd className="text-neutral-900">{detail.attempts}</dd>
+                <dt className="text-xs text-quegym-secondary">Intentos</dt>
+                <dd className="text-quegym-primary">{detail.attempts}</dd>
               </div>
               <div>
-                <dt className="text-xs text-neutral-500">Creado</dt>
-                <dd className="text-neutral-900">{formatDateTimeLong(detail.createdAt)}</dd>
+                <dt className="text-xs text-quegym-secondary">Creado</dt>
+                <dd className="text-quegym-primary">{formatDateTimeLong(detail.createdAt)}</dd>
               </div>
               <div>
-                <dt className="text-xs text-neutral-500">Último error</dt>
+                <dt className="text-xs text-quegym-secondary">Último error</dt>
                 <dd className="whitespace-pre-wrap break-words text-red-800">{detail.lastError ?? "—"}</dd>
               </div>
             </dl>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { mapPinMarkerHtml } from "@/lib/map-marker-html";
 import "leaflet/dist/leaflet.css";
 
 type Props = {
@@ -34,7 +35,7 @@ export function GymLocationMap({ lat, lng, name, className }: Props) {
 
       const markerIcon = L.divIcon({
         className: "floit-gym-map-marker",
-        html: '<div style="width:28px;height:28px;border-radius:9999px;background:#0f172a;color:white;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid white;box-shadow:0 6px 14px rgba(15,23,42,.3);">📍</div>',
+        html: mapPinMarkerHtml(false, 28),
         iconSize: [28, 28],
         iconAnchor: [14, 28],
       });
@@ -53,7 +54,7 @@ export function GymLocationMap({ lat, lng, name, className }: Props) {
   return (
     <div
       ref={el}
-      className={`w-full rounded-xl border border-neutral-200 bg-neutral-100 ${className ?? "h-40"}`}
+      className={`w-full rounded-xl border border-quegym-border bg-quegym-subtle ${className ?? "h-40"}`}
       role="presentation"
     />
   );

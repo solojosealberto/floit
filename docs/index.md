@@ -8,7 +8,7 @@ Mapa canonico de documentacion para operacion diaria del monorepo **QueGym** (ca
 - `docs/operations/EPICS_USER_STORIES_STATUS.md`
 - `docs/operations/PROJECT_CONTEXT_HANDOVER.md`
 
-Cambios recientes de producto (referencia rapida): **staging `staging.quegym.com` (2026-05-27)** — import **95 venues**; `/health` 5/5 + `smoke:platform` OK; login admin Vercel con `admin-local-login.ts` (`7554d6c`); Sprint 4 gate PASS, Sprint 5 pendiente (SLA 401). Inventario: `STAGING_DEPLOYMENT_STATUS.md`, `STAGING_AGENT_EXECUTION_REPORT.md`, `docs/env/production.example`. **Catálogo Caracas** — `VENUES_CATALOG_IMPORT.md`; **rebrand Fase 1**; hub `/admin/configuracion`; taxonomías; leads; analytics; partner-claims (`#operaciones-y-sync`); `/partner/claim`. Evidencia: `sprints.md`, `PROJECT_CONTEXT_HANDOVER.md`, `EPICS_USER_STORIES_STATUS.md`, `CHANGELOG.md`.
+Cambios recientes de producto (referencia rapida): **rebrand Fase 2 UI + copy (2026-05-27)** — tokens dual-theme, partner/admin shells, copy venezolano, `pnpm copy:verify`; **staging `staging.quegym.com`** — import **95 venues**; `/health` 5/5 + `smoke:platform` OK; login admin Vercel (`7554d6c`); Sprint 4 gate PASS. Inventario: `STAGING_DEPLOYMENT_STATUS.md`, `REBRAND_QUEGYM_PLAN.md`, `QUEGYM_BRAND_COPY_PLAN.md`. Evidencia: `sprints.md`, `PROJECT_CONTEXT_HANDOVER.md`, `EPICS_USER_STORIES_STATUS.md`, `CHANGELOG.md`.
 
 ## Producto (documentos rectores)
 
@@ -19,7 +19,7 @@ Cambios recientes de producto (referencia rapida): **staging `staging.quegym.com
 
 ## Operacion y runbooks
 
-- `docs/operations/REBRAND_QUEGYM_PLAN.md` — plan y estado Floit → QueGym (Fase 1 aplicada; Fases 2–4 planificadas)
+- `docs/operations/REBRAND_QUEGYM_PLAN.md` — plan y estado Floit → QueGym (**Fase 2 visual + copy completada** 2026-05-27; Fase 3 técnica planificada)
 - `docs/operations/PRODUCTION_LAUNCH_PLAN.md` — lanzamiento en **www.quegym.com** (decisiones D1–D6, GO LIVE)
 - `docs/operations/PRODUCTION_ACCOUNTS_SETUP.md` — **paso 2:** alta Vercel, Railway, Neon, Auth0, DNS GoDaddy
 - `docs/operations/STAGING_DEPLOYMENT_STATUS.md` — **estado staging** (`staging.quegym.com`, inventario proveedores, paso 3)
@@ -45,6 +45,9 @@ Cambios recientes de producto (referencia rapida): **staging `staging.quegym.com
 
 ## UX y Figma
 
+- [`docs/ux/QUEGYM_UX_V0_IMPROVEMENT_PLAN.md`](./ux/QUEGYM_UX_V0_IMPROVEMENT_PLAN.md) — **backlog UX confianza/conversión** (auditoría v0 staging; Sprint UX-A/B/C)
+- [`docs/ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`](./ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md) — tokens, toggle, fases UI (incl. Fase 7 copy)
+- [`docs/ux/QUEGYM_BRAND_COPY_PLAN.md`](./ux/QUEGYM_BRAND_COPY_PLAN.md) — tono verbal Venezuela, anti-voseo
 - `docs/ux/FIGMA_UI_UX_MIGRATION_PLAN.md`
 - `docs/ux/FIGMA_UI_UX_BACKLOG.md`
 - `docs/ux/FIGMA_SCREEN_INVENTORY.md`

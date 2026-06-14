@@ -21,8 +21,8 @@ export default async function AdminCatalogVenuePanelPage({
   if (!auth) {
     if (localAdminLoginEnabled) redirect("/admin/login");
     return (
-      <main className="mx-auto max-w-4xl px-4 py-12 text-sm text-neutral-600">
-        <h1 className="text-lg font-semibold text-neutral-900">Panel catálogo</h1>
+      <main className="mx-auto max-w-4xl px-4 py-12 text-sm text-quegym-secondary">
+        <h1 className="text-lg font-semibold text-quegym-primary">Panel catálogo</h1>
         <p className="mt-2">Configura credenciales admin en apps/web.</p>
       </main>
     );
@@ -31,10 +31,10 @@ export default async function AdminCatalogVenuePanelPage({
   const { venueSlug } = await params;
 
   return (
-    <main className="min-h-screen bg-[#f7f9fc] p-3 md:p-4">
+    <main className="min-h-screen bg-quegym-page p-3 md:p-4">
       <div className="grid gap-4 md:grid-cols-[260px_1fr]">
         <AdminSidebar active="catalog" />
-        <section className="min-w-0 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-2 md:p-3">
+        <section className="min-w-0 overflow-hidden qg-surface qg-motion rounded-2xl border border-quegym-border bg-quegym-elevated p-2 md:p-3">
           <AdminCatalogVenuePanelSection venueSlug={venueSlug} />
         </section>
       </div>

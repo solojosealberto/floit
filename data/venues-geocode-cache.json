@@ -256,5 +256,311 @@
     "lng": -66.87070138888888,
     "method": "coords-text",
     "query": "10° 26' 48.4926\" N 66° 52' 14.525\" W"
+  },
+  "gold-s-gym-sede-c-c-san-ignacio": {
+    "lat": 10.4930309,
+    "lng": -66.8545356,
+    "method": "nominatim-zone",
+    "query": "Chacao, Caracas, Venezuela"
+  },
+  "black-rock-gym": {
+    "lat": 10.4350067,
+    "lng": -66.8734682,
+    "method": "nominatim-zone",
+    "query": "Baruta, Caracas, Venezuela"
+  },
+  "arabito-fitness-gym": {
+    "lat": 10.5010211,
+    "lng": -66.9602804,
+    "method": "nominatim-zone",
+    "query": "Libertador, Caracas, Venezuela"
+  },
+  "rock-and-rolls-fit-sede-c-c-galerias-avila": {
+    "lat": 10.5010211,
+    "lng": -66.9602804,
+    "method": "nominatim-zone",
+    "query": "Libertador, Caracas, Venezuela"
+  },
+  "gimnasio-emporio": {
+    "lat": 10.5010211,
+    "lng": -66.9602804,
+    "method": "nominatim-zone",
+    "query": "Libertador, Caracas, Venezuela"
+  },
+  "the-teaser-pilates": {
+    "lat": 10.5010211,
+    "lng": -66.9602804,
+    "method": "nominatim-zone",
+    "query": "Libertador, Caracas, Venezuela"
+  },
+  "jan-pilates-vip": {
+    "lat": 10.5010211,
+    "lng": -66.9602804,
+    "method": "nominatim-zone",
+    "query": "Libertador, Caracas, Venezuela"
+  },
+  "nia-pilates": {
+    "lat": 10.4350067,
+    "lng": -66.8734682,
+    "method": "nominatim-zone",
+    "query": "Baruta, Caracas, Venezuela"
+  },
+  "clubf24h": {
+    "lat": 10.5010211,
+    "lng": -66.9602804,
+    "method": "nominatim-zone",
+    "query": "Libertador, Caracas, Venezuela"
+  },
+  "silver-back": {
+    "lat": 10.4350067,
+    "lng": -66.8734682,
+    "method": "nominatim-zone",
+    "query": "Baruta, Caracas, Venezuela"
+  },
+  "the-gym-route": {
+    "lat": 10.5010211,
+    "lng": -66.9602804,
+    "method": "nominatim-zone",
+    "query": "Libertador, Caracas, Venezuela"
+  },
+  "cafiplus": {
+    "lat": 10.4350067,
+    "lng": -66.8734682,
+    "method": "nominatim-zone",
+    "query": "Baruta, Caracas, Venezuela"
+  },
+  "titaniumfitnessc": {
+    "lat": 10.4350067,
+    "lng": -66.8734682,
+    "method": "nominatim-zone",
+    "query": "Baruta, Caracas, Venezuela"
+  },
+  "gim398": {
+    "lat": 10.4350067,
+    "lng": -66.8734682,
+    "method": "nominatim-zone",
+    "query": "Baruta, Caracas, Venezuela"
+  },
+  "darwich-gym": {
+    "lat": 10.5010211,
+    "lng": -66.9602804,
+    "method": "nominatim-zone",
+    "query": "Libertador, Caracas, Venezuela"
+  },
+  "mfc-gym": {
+    "lat": 10.5053197,
+    "lng": -66.8322988,
+    "method": "nominatim-zone",
+    "query": "Sucre, Caracas, Venezuela"
+  },
+  "enervit-gym": {
+    "lat": 10.4941766,
+    "lng": -66.7631814,
+    "method": "nominatim-zone",
+    "query": "Guarenas, Caracas, Venezuela"
+  },
+  "metropolis-gym": {
+    "lat": 10.5053197,
+    "lng": -66.8322988,
+    "method": "nominatim-zone",
+    "query": "Sucre, Caracas, Venezuela"
+  },
+  "goat": {
+    "lat": 10.4727643,
+    "lng": -66.8811269,
+    "method": "nominatim-zone",
+    "query": "Guatire, Caracas, Venezuela"
+  },
+  "plaza-gym": {
+    "lat": 10.4727643,
+    "lng": -66.8811269,
+    "method": "nominatim-zone",
+    "query": "Guatire, Caracas, Venezuela"
+  },
+  "iron-fit-center": {
+    "lat": 10.4727643,
+    "lng": -66.8811269,
+    "method": "nominatim-zone",
+    "query": "Guatire, Caracas, Venezuela"
+  },
+  "naos-fit-gym": {
+    "lat": 10.4727643,
+    "lng": -66.8811269,
+    "method": "nominatim-zone",
+    "query": "Guatire, Caracas, Venezuela"
+  },
+  "707-gym": {
+    "lat": 10.4930309,
+    "lng": -66.8545356,
+    "method": "nominatim-zone",
+    "query": "Chacao, Caracas, Venezuela"
+  },
+  "alma-yoga-caracas": {
+    "lat": 10.4930309,
+    "lng": -66.8545356,
+    "method": "nominatim-zone",
+    "query": "Chacao, Caracas, Venezuela"
+  },
+  "ananda-pilates": {
+    "lat": 10.4350067,
+    "lng": -66.8734682,
+    "method": "nominatim-zone",
+    "query": "Baruta, Caracas, Venezuela"
+  },
+  "club-pilates-ccs": {
+    "lat": 10.4350067,
+    "lng": -66.8734682,
+    "method": "nominatim-zone",
+    "query": "Baruta, Caracas, Venezuela"
+  },
+  "vizcaya-studio": {
+    "lat": 10.4930309,
+    "lng": -66.8545356,
+    "method": "nominatim-zone",
+    "query": "Chacao, Caracas, Venezuela"
+  },
+  "pilates-total-control": {
+    "lat": 10.4930309,
+    "lng": -66.8545356,
+    "method": "nominatim-zone",
+    "query": "Chacao, Caracas, Venezuela"
+  },
+  "vive-pilates-studio": {
+    "lat": 10.4930309,
+    "lng": -66.8545356,
+    "method": "nominatim-zone",
+    "query": "Chacao, Caracas, Venezuela"
+  },
+  "212-studio-pilates": {
+    "lat": 10.4930309,
+    "lng": -66.8545356,
+    "method": "nominatim-zone",
+    "query": "Chacao, Caracas, Venezuela"
+  },
+  "xtremebike-zone": {
+    "lat": 10.5010211,
+    "lng": -66.9602804,
+    "method": "nominatim-zone",
+    "query": "Libertador, Caracas, Venezuela"
+  },
+  "studio-bike": {
+    "lat": 10.4350067,
+    "lng": -66.8734682,
+    "method": "nominatim-zone",
+    "query": "Baruta, Caracas, Venezuela"
+  },
+  "indoobikecenter": {
+    "lat": 10.5010211,
+    "lng": -66.9602804,
+    "method": "nominatim-zone",
+    "query": "Libertador, Caracas, Venezuela"
+  },
+  "top-training-sucre": {
+    "lat": 10.5053197,
+    "lng": -66.8322988,
+    "method": "nominatim-zone",
+    "query": "Sucre, Caracas, Venezuela"
+  },
+  "ride-bike-studio": {
+    "lat": 10.4930309,
+    "lng": -66.8545356,
+    "method": "nominatim-zone",
+    "query": "Chacao, Caracas, Venezuela"
+  },
+  "ccs-padel-club": {
+    "lat": 10.4930309,
+    "lng": -66.8545356,
+    "method": "nominatim-zone",
+    "query": "Chacao, Caracas, Venezuela"
+  },
+  "black-padel": {
+    "lat": 10.4930309,
+    "lng": -66.8545356,
+    "method": "nominatim-zone",
+    "query": "Chacao, Caracas, Venezuela"
+  },
+  "capital-sports-padel-center": {
+    "lat": 10.4350067,
+    "lng": -66.8734682,
+    "method": "nominatim-zone",
+    "query": "Baruta, Caracas, Venezuela"
+  },
+  "the-theaser-pilates-studio": {
+    "lat": 10.4350067,
+    "lng": -66.8734682,
+    "method": "nominatim-zone",
+    "query": "Baruta, Caracas, Venezuela"
+  },
+  "equilibrio-pilates": {
+    "lat": 10.4350067,
+    "lng": -66.8734682,
+    "method": "nominatim-zone",
+    "query": "Baruta, Caracas, Venezuela"
+  },
+  "tropical-shala-hot-studio": {
+    "lat": 10.4350067,
+    "lng": -66.8734682,
+    "method": "nominatim-zone",
+    "query": "Baruta, Caracas, Venezuela"
+  },
+  "zona-pilates": {
+    "lat": 10.4930309,
+    "lng": -66.8545356,
+    "method": "nominatim-zone",
+    "query": "Chacao, Caracas, Venezuela"
+  },
+  "cenit-fitness": {
+    "lat": 10.4350067,
+    "lng": -66.8734682,
+    "method": "nominatim-zone",
+    "query": "Baruta, Caracas, Venezuela"
+  },
+  "speck-corssfit-ccs": {
+    "lat": 10.4930309,
+    "lng": -66.8545356,
+    "method": "nominatim-zone",
+    "query": "Chacao, Caracas, Venezuela"
+  },
+  "caracas-box-crossfit": {
+    "lat": 10.4350067,
+    "lng": -66.8734682,
+    "method": "nominatim-zone",
+    "query": "Baruta, Caracas, Venezuela"
+  },
+  "retraining-studio-caracas": {
+    "lat": 10.4350067,
+    "lng": -66.8734682,
+    "method": "nominatim-zone",
+    "query": "Baruta, Caracas, Venezuela"
+  },
+  "crossfit-58": {
+    "lat": 10.4930309,
+    "lng": -66.8545356,
+    "method": "nominatim-zone",
+    "query": "Chacao, Caracas, Venezuela"
+  },
+  "fenix-fitness": {
+    "lat": 10.5010211,
+    "lng": -66.9602804,
+    "method": "nominatim-zone",
+    "query": "Libertador, Caracas, Venezuela"
+  },
+  "galpon-7": {
+    "lat": 10.5051554,
+    "lng": -66.9504451,
+    "method": "nominatim",
+    "query": "Galpon 7, Libertador, Caracas, Venezuela"
+  },
+  "nexus": {
+    "lat": 10.4350067,
+    "lng": -66.8734682,
+    "method": "nominatim-zone",
+    "query": "Baruta, Caracas, Venezuela"
+  },
+  "blue-box": {
+    "lat": 10.5010211,
+    "lng": -66.9602804,
+    "method": "nominatim-zone",
+    "query": "Libertador, Caracas, Venezuela"
   }
 }

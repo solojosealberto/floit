@@ -85,7 +85,7 @@ flowchart LR
 | Eventos `floit.*.v1` | `packages/contracts`, `contracts/events/` | Consumidores analytics |
 | OIDC `floit-admin`, audiences legacy | env / IdP | Configuración despliegue |
 | Nombres de archivo `floit-main-header.tsx`, `floit-logo.tsx` | Rutas estables | Refactor cosmético → Fase 2+ |
-| Export CSV `floit-leads.csv` | `api/admin/leads/export` | Enlaces guardados por ops |
+| Export CSV `quegym-leads.csv` | `api/admin/leads/export` + `admin-leads.controller` | Descarga admin leads |
 | Carpeta repo `FLOIT v.0.2`, wireframe `Floit Wireframe v.0.2/` | Referencia UX | No es runtime |
 
 ### Verificación Fase 1
@@ -102,26 +102,41 @@ Prueba manual: home, `/partner/login`, `/partner/claim`, `/admin/login`, ficha c
 
 ---
 
-## Fase 2 — Tokens, assets y storage cliente (PLANIFICADA)
+## Fase 2 — Tokens, assets, dual-theme, storage y copy verbal (COMPLETADA)
 
-**Estado:** `Pendiente`. No aplicar junto con Fase 1; requiere migración y QA en dispositivos reales.
+**Estado:** `Completado` (2026-05-27). Plan visual: [`docs/ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`](../ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md). Plan copy: [`docs/ux/QUEGYM_BRAND_COPY_PLAN.md`](../ux/QUEGYM_BRAND_COPY_PLAN.md).
+
+**Objetivo:** sistema visual QueGym (manual de marca) con **dark mode default** + **light mode** con toggle persistente; copy en **tuteo venezolano** (sin voseo), alineado a [propuesta de marca](https://propuestademarca.netlify.app/) y [UI de referencia](https://quegymconmarcaaplicada.netlify.app/).
 
 ### Alcance propuesto
 
-| Ítem | Cambio | Migración |
-|------|--------|-----------|
-| CSS | Variables canónicas `--quegym-*` con alias `--floit-*` en `:root` | Mantener alias ≥ 1 release |
-| `packages/ui` / Tailwind | Referencias a `--quegym-*`, tema `quegym.*` (deprecar `floit`) | Actualizar componentes base |
-| Favicon / apple-touch | `app/icon.tsx`, `app/apple-icon.tsx` (letra Q) | N/A |
-| Layout metadata | `applicationName`, `appleWebApp.title` | N/A |
-| `localStorage` | `quegym:favorites`, `quegym:compare`, `quegym-admin-duplicate-dismissed` | Módulo `storage-keys.ts`: leer legacy `floit:*`, escribir canónico |
-| Export admin | `quegym-leads.csv` | Opcional: dual filename o comunicar a ops |
+| Ítem | Cambio | Estado |
+|------|--------|--------|
+| CSS dual-theme | Tokens semánticos `--qg-*` bajo `[data-theme="dark\|light"]`; alias `--floit-*` | `Completado` |
+| Paleta dark refinada | Fondos `#050a05` / `#141c14` / `#162116`; secundario `#8a968a`; acentos Green/Mint del manual | `Completado` (2026-05-27) |
+| Toggle tema | `quegym:theme` en `localStorage`; botón en header/admin/partner; script anti-FOUC | `Completado` |
+| `packages/ui` / Tailwind | Componentes base + tema `quegym.*` (`hero`, `banner`, `highlight-hover`) | `Completado` |
+| Tipografías | Inter (body) + Barlow Semi Condensed (headlines) | `Completado` |
+| Favicon / apple-touch | `app/icon.tsx`, `app/apple-icon.tsx` (isotipo Q verde) | `Completado` (2026-05-27) |
+| Layout metadata | `applicationName`, SEO title/description copy venezolano | `Completado` (2026-05-27) |
+| `localStorage` | `quegym:favorites`, `quegym:compare`, `quegym-admin-duplicate-dismissed` | `Completado` (2026-05-27) |
+| Export admin | `quegym-leads.csv` | `Completado` (2026-05-27) |
+| Home + header | Hero, buscador, categorías, destacados, banner partner; logo Q circular | `Completado` |
+| Rutas públicas core | `/buscar`, `/comparar`, `/favoritos`, `/gyms/[slug]` — tokens + refinamiento acentos | `Completado` (refinamiento 2026-05-27) |
+| Partner login/claim | Sustituir `#0a1430` legacy por tokens QueGym (Ink/Green) | `Completado` (2026-05-27) |
+| `/comparar` | Eliminar HEX hardcodeado; CTAs Ink/Highlight | `Completado` (2026-05-27) |
+| `/privacidad`, `/lead/*` | Tokens QueGym + elevación | `Completado` (2026-05-27) |
+| Partner claim wizard + entry | Tokens + `qg-surface` | `Completado` (2026-05-27) |
+| Admin/partner paneles internos | Layout operativo; toggle dark/light habilitado | `Completado` (2026-05-27) |
+| **Copy verbal (Fase 2b)** | Tuteo venezolano; sin voseo; constantes `brand.ts`; gate `pnpm copy:verify` | `Completado` (2026-05-27) |
 
 ### Criterios de salida
 
-- QA visual en `/`, `/buscar`, componentes `@floit/ui`.
+- Toggle dark/light persiste, sin FOUC, contraste WCAG AA en ambos temas.
+- QA visual en `/` (dark + light), luego `/buscar`, componentes `@floit/ui`.
 - Favoritos/comparar/duplicados conservan datos tras actualizar (migración probada).
-- Sin regresión en `pnpm verify` y smoke E2E.
+- Sin regresión en `pnpm verify`, `pnpm copy:verify` y smoke E2E.
+- Copy sin voseo en UI (`pnpm copy:verify`).
 
 ### Estimación
 
@@ -187,12 +202,15 @@ No bloquea releases de producto.
 |-------|----------|
 | 2026-05 | Ejecutar solo **Fase 1** para no romper integridad de plataforma. |
 | 2026-05 | Partners = **QueGym Partners**; logo solo texto **QueGym**. |
+| 2026-05-27 | **Accent = Mint:** `--qg-accent` y `--floit-color-primary` → `#12B76A`; Green `#00875A` queda como `--qg-green` (referencia, no CTAs). |
+| 2026-05-27 | **Fase 2 en curso:** paleta dark verde bosque; CTAs y acentos interactivos en Mint `#12B76A`. |
 | 2026-05 | Fase 2 (tokens/storage/favicon) **no** incluida en el mismo ciclo que Fase 1. |
 
 ---
 
 ## Referencias
 
+- Plan UI dual-theme: `docs/ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`
 - Estado de sprint: `docs/operations/sprints.md` (§ Rebrand Fase 1).
 - Épicas: `docs/operations/EPICS_USER_STORIES_STATUS.md`.
 - Handover: `docs/operations/PROJECT_CONTEXT_HANDOVER.md`.

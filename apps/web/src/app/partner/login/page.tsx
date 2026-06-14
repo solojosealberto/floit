@@ -17,11 +17,11 @@ export default async function PartnerLoginPage({ searchParams }: Props) {
   const errorMessage = mapPartnerLoginError(error);
   return (
     <main className="mx-auto flex min-h-[calc(100vh-80px)] w-full max-w-6xl items-center px-4 py-6 sm:py-10">
-      <section className="w-full overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-sm">
+      <section className="qg-surface qg-motion w-full overflow-hidden rounded-3xl border border-quegym-border bg-quegym-elevated">
         <div className="grid md:grid-cols-[1fr_1.15fr]">
-          <aside className="hidden bg-[#0a1430] px-10 py-12 text-white md:flex md:flex-col">
+          <aside className="hidden bg-quegym-ink px-10 py-12 text-white md:flex md:flex-col">
             <div className="mb-16 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-xl font-semibold text-[#0a1430]">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-quegym-accent text-xl font-semibold text-white">
                 Q
               </div>
               <div className="flex items-baseline gap-2">
@@ -37,33 +37,33 @@ export default async function PartnerLoginPage({ searchParams }: Props) {
             </p>
             <ul className="mt-auto space-y-4 pt-12 text-lg text-white/85">
               <li className="flex items-center gap-3">
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-sm">✓</span>
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-quegym-elevated/10 text-sm">✓</span>
                 Recibe leads calificados de {BRAND_NAME}
               </li>
               <li className="flex items-center gap-3">
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-sm">✓</span>
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-quegym-elevated/10 text-sm">✓</span>
                 Actualiza tu perfil sin depender de terceros
               </li>
               <li className="flex items-center gap-3">
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-sm">✓</span>
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-quegym-elevated/10 text-sm">✓</span>
                 Sin costos de configuracion
               </li>
             </ul>
           </aside>
 
           <div className="px-5 py-8 sm:px-8 sm:py-10 md:px-12 md:py-12">
-            <div className="mb-8 border-b border-neutral-200 pb-8 text-center md:hidden">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0a1430] text-3xl font-semibold text-white">
+            <div className="mb-8 border-b border-quegym-border pb-8 text-center md:hidden">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-quegym-accent text-3xl font-semibold text-white">
                 Q
               </div>
-              <h2 className="mt-4 text-3xl font-semibold tracking-tight text-neutral-900">{BRAND_PARTNERS}</h2>
-              <p className="mt-2 text-lg text-neutral-500">Gestiona tu gimnasio desde un panel simple</p>
+              <h2 className="mt-4 text-3xl font-semibold tracking-tight text-quegym-primary">{BRAND_PARTNERS}</h2>
+              <p className="mt-2 text-lg text-quegym-secondary">Gestiona tu gimnasio desde un panel simple</p>
             </div>
 
-            <h1 className="text-4xl font-semibold tracking-tight text-neutral-900 md:text-5xl">
+            <h1 className="text-4xl font-semibold tracking-tight text-quegym-primary md:text-5xl">
               Ingresa a tu panel
             </h1>
-            <p className="mt-3 max-w-xl text-lg leading-relaxed text-neutral-500">
+            <p className="mt-3 max-w-xl text-lg leading-relaxed text-quegym-secondary">
               Accede con tu correo y contrasena para gestionar tu centro en {BRAND_PARTNERS}.
             </p>
 
@@ -74,56 +74,56 @@ export default async function PartnerLoginPage({ searchParams }: Props) {
             ) : null}
 
             <form className="mt-8 space-y-4" method="post" action="/partner/auth/login">
-              <label htmlFor="partner-email" className="block text-xl font-medium text-neutral-700">
+              <label htmlFor="partner-email" className="block text-xl font-medium text-quegym-primary">
                 Correo electronico del administrador
               </label>
-              <div className="flex h-16 items-center gap-3 rounded-2xl border border-neutral-300 bg-white px-5 text-xl text-neutral-400">
+              <div className="qg-field flex h-16 items-center gap-3 rounded-2xl border border-quegym-border bg-quegym-input px-5 text-xl text-quegym-secondary">
                 <span aria-hidden>✉</span>
                 <input
                   id="partner-email"
                   name="email"
                   type="email"
                   placeholder="tu@gimnasio.com"
-                  className="w-full bg-transparent text-xl text-neutral-700 outline-none placeholder:text-neutral-400"
+                  className="w-full bg-transparent text-xl text-quegym-primary outline-none placeholder:text-quegym-secondary"
                   required
                 />
               </div>
-              <label htmlFor="partner-password" className="block text-xl font-medium text-neutral-700">
+              <label htmlFor="partner-password" className="block text-xl font-medium text-quegym-primary">
                 Contrasena
               </label>
-              <div className="flex h-16 items-center gap-3 rounded-2xl border border-neutral-300 bg-white px-5 text-xl text-neutral-400">
+              <div className="qg-field flex h-16 items-center gap-3 rounded-2xl border border-quegym-border bg-quegym-input px-5 text-xl text-quegym-secondary">
                 <span aria-hidden>•</span>
                 <input
                   id="partner-password"
                   name="password"
                   type="password"
                   placeholder="••••••••"
-                  className="w-full bg-transparent text-xl text-neutral-700 outline-none placeholder:text-neutral-400"
+                  className="w-full bg-transparent text-xl text-quegym-primary outline-none placeholder:text-quegym-secondary"
                   required
                 />
               </div>
               <button
                 type="submit"
-                className="inline-flex h-16 w-full items-center justify-center rounded-2xl bg-[#0a1430] px-6 text-2xl font-semibold text-white transition hover:bg-[#101d45]"
+                className="qg-btn-primary qg-motion inline-flex h-16 w-full items-center justify-center rounded-2xl bg-quegym-accent px-6 text-2xl font-semibold text-white transition hover:bg-quegym-accent-hover"
               >
                 Ingresar al panel
               </button>
-              <div className="rounded-2xl border border-neutral-200 bg-neutral-50 px-5 py-4 text-base text-neutral-500">
+              <div className="rounded-2xl border border-quegym-border bg-quegym-subtle px-5 py-4 text-base text-quegym-secondary">
                 Solo correos partner registrados pueden acceder a este panel.
               </div>
             </form>
 
-            <div className="mt-8 border-t border-neutral-200 pt-7 text-center">
-              <p className="text-xl text-neutral-500">Primera vez en {BRAND_PARTNERS}?</p>
+            <div className="mt-8 border-t border-quegym-border pt-7 text-center">
+              <p className="text-xl text-quegym-secondary">Primera vez en {BRAND_PARTNERS}?</p>
               <Link
                 href="/partner/claim"
-                className="mt-4 inline-flex h-14 w-full items-center justify-center rounded-2xl border border-neutral-300 bg-white px-6 text-2xl font-semibold text-neutral-700 transition hover:bg-neutral-50"
+                className="qg-btn-ghost qg-motion mt-4 inline-flex h-14 w-full items-center justify-center rounded-2xl border border-quegym-border bg-quegym-elevated px-6 text-2xl font-semibold text-quegym-primary"
               >
                 Registra o reclama tu centro →
               </Link>
               <Link
                 href="/"
-                className="mt-4 inline-flex w-full items-center justify-center text-base font-medium text-neutral-500 underline-offset-2 hover:underline"
+                className="mt-4 inline-flex w-full items-center justify-center text-base font-medium text-quegym-secondary underline-offset-2 hover:text-quegym-highlight hover:underline"
               >
                 Volver al inicio
               </Link>

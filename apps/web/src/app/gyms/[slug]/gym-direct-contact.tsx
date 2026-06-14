@@ -35,7 +35,7 @@ export function GymDirectContact({
     <section>
       <UICard className="flex flex-col gap-2">
         <h2 className="text-lg font-semibold">Contacto directo</h2>
-        <p className="text-sm text-neutral-600">
+        <p className="text-sm text-quegym-secondary">
           Si el centro publicó canal, puedes usarlo sin pasar por el formulario.
         </p>
         <div className="flex flex-wrap gap-2">
@@ -59,7 +59,7 @@ export function GymDirectContact({
           {contactPhone?.trim() ? (
             <a
               href={`tel:${contactPhone.replace(/\s/g, "")}`}
-            className="inline-flex items-center justify-center rounded-[var(--floit-radius-md)] border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-100"
+            className="inline-flex items-center justify-center rounded-[var(--floit-radius-md)] border border-quegym-border px-4 py-2 text-sm font-medium text-quegym-primary transition-colors hover:bg-quegym-subtle"
               onClick={() => {
                 trackEvent("direct_contact_click", { channel: "phone", slug });
                 trackEvent("cta_click", { channel: "phone", slug });
@@ -71,7 +71,7 @@ export function GymDirectContact({
           {contactEmail?.trim() ? (
             <a
               href={`mailto:${encodeURIComponent(contactEmail.trim())}?subject=${encodeURIComponent(`Consulta desde ${BRAND_NAME} — ${venueName}`)}`}
-            className="inline-flex items-center justify-center rounded-[var(--floit-radius-md)] border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-100"
+            className="inline-flex items-center justify-center rounded-[var(--floit-radius-md)] border border-quegym-border px-4 py-2 text-sm font-medium text-quegym-primary transition-colors hover:bg-quegym-subtle"
               onClick={() => {
                 trackEvent("direct_contact_click", { channel: "email", slug });
                 trackEvent("cta_click", { channel: "email", slug });

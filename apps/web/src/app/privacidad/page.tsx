@@ -12,23 +12,23 @@ export default function PrivacidadPage() {
     <main className="mx-auto flex max-w-lg flex-col gap-4 px-4 py-12">
       <UICard className="space-y-4">
         <UIBadge>Privacidad</UIBadge>
-        <h1 className="text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+        <h1 className="font-display text-xl font-semibold tracking-tight text-quegym-primary">
           Privacidad y tratamiento de datos
         </h1>
-        <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
+        <p className="text-sm leading-relaxed text-quegym-secondary">
           {BRAND_NAME} recopila nombre, teléfono y datos opcionales de contacto para
           compartirlos con el centro que seleccionaste y facilitar una respuesta
           a tu solicitud.
         </p>
-        <p className="text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
+        <p className="text-sm leading-relaxed text-quegym-secondary">
           Los datos se usan para seguimiento del lead y no se comercializan con
           terceros fuera del flujo de contacto solicitado.
         </p>
-        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+        <p className="text-sm text-quegym-secondary">
           Versión de consentimiento actual:{" "}
-          <strong>floit-r2-2026-04</strong>.
+          <strong className="text-quegym-primary">floit-r2-2026-04</strong>.
         </p>
-        <p className="text-xs text-neutral-500">
+        <p className="text-xs text-quegym-secondary">
           Texto de referencia MVP sujeto a revisión legal en staging/producción.
         </p>
       </UICard>

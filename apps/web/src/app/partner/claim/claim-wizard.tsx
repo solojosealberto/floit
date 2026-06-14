@@ -6,14 +6,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BRAND_NAME, BRAND_PARTNERS } from "@/lib/brand";
 import { formatUpstreamError } from "@/lib/format-upstream-error";
 
-/** Alineado con `/partner/login` y marca QueGym Partners */
-const BRAND_NAVY = "border-[#0a1430] bg-[#0a1430] text-white";
-const BRAND_NAVY_HOVER = "hover:bg-[#101d45]";
-const BRAND_FOCUS_RING = "focus-visible:ring-[#0a1430]/30";
-const NAVY_TEXT = "text-[#0a1430]";
-const BTN_PRIMARY = `${BRAND_NAVY} ${BRAND_NAVY_HOVER}`;
-const CARD_SELECTED = "border-[#0a1430] bg-white shadow-sm";
-const CARD_IDLE = "border-neutral-200 bg-white opacity-90 hover:border-neutral-300 hover:opacity-100";
+/** Alineado con `/partner/login` y manual QueGym (Green/Ink) */
+const BRAND_ACCENT = "border-quegym-accent bg-quegym-accent text-white";
+const BRAND_ACCENT_HOVER = "hover:bg-quegym-accent-hover";
+const BRAND_FOCUS_RING = "focus-visible:ring-quegym-accent/30";
+const ACCENT_TEXT = "text-quegym-ink";
+const BTN_PRIMARY = `${BRAND_ACCENT} ${BRAND_ACCENT_HOVER}`;
+const CARD_SELECTED = "border-quegym-accent bg-quegym-elevated";
+const CARD_IDLE =
+  "border-quegym-border bg-quegym-elevated opacity-90 hover:border-quegym-accent/50 hover:opacity-100";
 
 const VENUE_TYPE_OPTIONS: { value: string; label: string }[] = [
   { value: "gym", label: "Gimnasio clásico" },
@@ -93,7 +94,7 @@ function StepCircle({
   if (state === "done") {
     return (
       <span
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-quegym-highlight/30 bg-quegym-highlight-soft text-quegym-highlight"
         aria-hidden
       >
         <svg
@@ -111,14 +112,14 @@ function StepCircle({
   if (state === "current") {
     return (
       <span
-        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${BRAND_NAVY}`}
+        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${BRAND_ACCENT}`}
       >
         {n}
       </span>
     );
   }
   return (
-    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-white text-sm font-medium text-neutral-400">
+    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-quegym-border bg-quegym-elevated text-sm font-medium text-quegym-secondary">
       {n}
     </span>
   );
@@ -139,7 +140,7 @@ function Stepper({ step }: { step: 1 | 2 | 3 }) {
   return (
     <div className="relative px-2">
       <div
-        className="pointer-events-none absolute left-[calc(16.67%+18px)] right-[calc(16.67%+18px)] top-[17px] z-0 h-px bg-neutral-200 sm:left-[calc(16.67%+20px)] sm:right-[calc(16.67%+20px)]"
+        className="pointer-events-none absolute left-[calc(16.67%+18px)] right-[calc(16.67%+18px)] top-[17px] z-0 h-px bg-quegym-subtle sm:left-[calc(16.67%+20px)] sm:right-[calc(16.67%+20px)]"
         aria-hidden
       />
       <div className="relative z-10 flex justify-between gap-2">
@@ -152,10 +153,10 @@ function Stepper({ step }: { step: 1 | 2 | 3 }) {
             <span
               className={`text-center text-[11px] font-medium leading-tight sm:text-xs ${
                 item.state === "current"
-                  ? `font-semibold ${NAVY_TEXT}`
+                  ? `font-semibold ${ACCENT_TEXT}`
                   : item.state === "done"
-                    ? "text-emerald-800"
-                    : "text-neutral-400"
+                    ? "text-quegym-highlight"
+                    : "text-quegym-secondary"
               }`}
             >
               {item.label}
@@ -188,22 +189,22 @@ function PartnerSessionActiveModal({ active }: { active: boolean }) {
   return (
     <dialog
       ref={dialogRef}
-      className="fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-neutral-200 bg-white p-6 shadow-xl backdrop:bg-black/45"
+      className="fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-quegym-border bg-quegym-elevated p-6 shadow-xl backdrop:bg-black/45"
       onClose={() => {
         sessionStorage.setItem(PARTNER_SESSION_MODAL_KEY, "1");
       }}
     >
-      <h2 className="text-lg font-semibold text-neutral-900">
+      <h2 className="text-lg font-semibold text-quegym-primary">
         Sesión partner activa
       </h2>
-      <p className="mt-2 text-sm leading-relaxed text-neutral-600">
-        Detectamos que ya iniciaste sesión. Podés seguir con el alta o reclamo
+      <p className="mt-2 text-sm leading-relaxed text-quegym-secondary">
+        Detectamos que ya iniciaste sesión. Puedes seguir con el alta o reclamo
         de centro sin usar la sección de inicio de sesión.
       </p>
       <div className="mt-6 flex flex-wrap justify-end gap-2">
         <button
           type="button"
-          className="rounded-xl border border-neutral-300 bg-white px-4 py-2.5 text-sm font-semibold text-neutral-800 shadow-sm transition hover:bg-neutral-50"
+          className="qg-btn-ghost qg-motion rounded-xl border border-quegym-border bg-quegym-elevated px-4 py-2.5 text-sm font-semibold text-quegym-primary"
           onClick={dismiss}
         >
           Entendido
@@ -418,12 +419,12 @@ export function ClaimWizard({
               />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-neutral-900 md:text-3xl">
+          <h1 className="text-2xl font-bold tracking-tight text-quegym-primary md:text-3xl">
             Solicitud enviada
           </h1>
-          <p className="mt-3 max-w-md text-sm leading-relaxed text-neutral-600 md:text-base">
+          <p className="mt-3 max-w-md text-sm leading-relaxed text-quegym-secondary md:text-base">
             Recibimos tu solicitud para administrar{" "}
-            <strong className="text-neutral-900">{success.venueLabel}</strong>.
+            <strong className="text-quegym-primary">{success.venueLabel}</strong>.
             Nuestro equipo la revisará y te notificará por correo.
           </p>
 
@@ -458,33 +459,33 @@ export function ClaimWizard({
             </dl>
           </div>
 
-          <div className="mt-4 w-full rounded-2xl bg-neutral-100 px-4 py-4 text-left md:px-6">
-            <p className="text-sm font-semibold text-neutral-900">
+          <div className="mt-4 w-full rounded-2xl bg-quegym-subtle px-4 py-4 text-left md:px-6">
+            <p className="text-sm font-semibold text-quegym-primary">
               ¿Qué pasa ahora?
             </p>
-            <ol className="mt-3 space-y-3 text-sm text-neutral-700">
+            <ol className="mt-3 space-y-3 text-sm text-quegym-primary">
               <li className="flex gap-3">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-neutral-200 text-xs font-semibold text-neutral-700">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-quegym-subtle text-xs font-semibold text-quegym-primary">
                   1
                 </span>
                 <span>
                   {BRAND_NAME} revisa tu evidencia{" "}
-                  <span className="text-neutral-500">(1–2 días hábiles)</span>
+                  <span className="text-quegym-secondary">(1–2 días hábiles)</span>
                 </span>
               </li>
               <li className="flex gap-3">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-neutral-200 text-xs font-semibold text-neutral-700">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-quegym-subtle text-xs font-semibold text-quegym-primary">
                   2
                 </span>
                 <span>Recibirás un correo con el resultado</span>
               </li>
               <li className="flex gap-3">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-neutral-200 text-xs font-semibold text-neutral-700">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-quegym-subtle text-xs font-semibold text-quegym-primary">
                   3
                 </span>
                 <span>
                   Si es aprobado: entrás en{" "}
-                  <Link href="/partner/login" className="font-medium text-[#0a1430] underline">
+                  <Link href="/partner/login" className="font-medium text-quegym-accent underline">
                     {BRAND_PARTNERS}
                   </Link>{" "}
                   con este mismo correo (tu proveedor de acceso debe permitir ese usuario).
@@ -496,7 +497,7 @@ export function ClaimWizard({
           <div className="mt-10 w-full max-w-md space-y-3">
             {returnTo ? (
               <Link href={returnTo} className="block w-full">
-                <UIButton className="w-full justify-center rounded-xl bg-neutral-900 py-3 text-base text-white hover:bg-neutral-800">
+                <UIButton className="w-full justify-center rounded-xl bg-quegym-accent py-3 text-base text-white hover:bg-quegym-accent-hover">
                   Volver al catálogo admin
                 </UIButton>
               </Link>
@@ -504,7 +505,7 @@ export function ClaimWizard({
             <Link href="/" className="block w-full">
               <UIButton
                 variant="secondary"
-                className="w-full justify-center rounded-xl border-neutral-300 py-3 text-base"
+                className="w-full justify-center rounded-xl border-quegym-border py-3 text-base"
               >
                 Volver a {BRAND_NAME}
               </UIButton>
@@ -523,7 +524,7 @@ export function ClaimWizard({
         <div className="flex items-start gap-3">
           <Link
             href="/partner"
-            className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-700 shadow-sm transition hover:bg-neutral-50"
+            className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-quegym-border bg-quegym-elevated text-quegym-primary qg-btn-ghost qg-motion"
             aria-label="Volver a Partners"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -531,16 +532,16 @@ export function ClaimWizard({
             </svg>
           </Link>
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold uppercase tracking-[0.08em] text-neutral-500">
+            <p className="text-xs font-semibold uppercase tracking-[0.08em] text-quegym-secondary">
               {BRAND_PARTNERS}
             </p>
-            <h1 className="mt-1 text-2xl font-bold tracking-tight text-neutral-900 md:text-3xl">
+            <h1 className="mt-1 text-2xl font-bold tracking-tight text-quegym-primary md:text-3xl">
               Tu centro en {BRAND_NAME}
             </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-neutral-600 md:text-base">
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-quegym-secondary md:text-base">
               Mismo formulario para dos situaciones:{" "}
-              <strong className="font-semibold text-neutral-800">reclamar</strong> una ficha que ya existe o{" "}
-              <strong className="font-semibold text-neutral-800">registrar</strong> un centro que todavía no está en el
+              <strong className="font-semibold text-quegym-primary">reclamar</strong> una ficha que ya existe o{" "}
+              <strong className="font-semibold text-quegym-primary">registrar</strong> un centro que todavía no está en el
               directorio.
             </p>
           </div>
@@ -556,33 +557,33 @@ export function ClaimWizard({
       {step === 1 ? (
         <section className="space-y-6 md:space-y-8">
           {!hasPartnerSession ? (
-            <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm md:p-6">
-              <h2 className="text-lg font-semibold text-neutral-900 md:text-xl">
-                ¿Ya tenés cuenta de partner?
+            <div className="qg-surface-subtle qg-motion rounded-2xl border border-quegym-border bg-quegym-elevated p-5 md:p-6">
+              <h2 className="text-lg font-semibold text-quegym-primary md:text-xl">
+                ¿Ya tienes cuenta de partner?
               </h2>
-              <p className="mt-2 max-w-xl text-sm leading-relaxed text-neutral-600 md:text-base">
-                Iniciá sesión para abrir el panel. Esta página es solo para iniciar un{" "}
-                <span className="font-medium text-neutral-800">reclamo</span> o un{" "}
-                <span className="font-medium text-neutral-800">alta nueva</span>.
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-quegym-secondary md:text-base">
+                Inicia sesión para abrir el panel. Esta página es solo para iniciar un{" "}
+                <span className="font-medium text-quegym-primary">reclamo</span> o un{" "}
+                <span className="font-medium text-quegym-primary">alta nueva</span>.
               </p>
               <Link
                 href="/partner/login"
-                className="mt-5 inline-flex w-full items-center justify-center rounded-xl bg-[#0a1430] px-4 py-3 text-base font-semibold text-white transition hover:bg-[#101d45] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a1430]/40 md:w-auto md:min-w-[220px]"
+                className="mt-5 inline-flex w-full items-center justify-center rounded-xl bg-quegym-accent px-4 py-3 text-base font-semibold text-white transition hover:bg-quegym-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-quegym-accent/40 md:w-auto md:min-w-[220px]"
               >
                 Ir al inicio de sesión
               </Link>
             </div>
           ) : null}
 
-          <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm md:p-8">
-            <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-              Paso 1 de 3 · Elegí tu camino
+          <div className="qg-surface qg-motion rounded-3xl border border-quegym-border bg-quegym-elevated p-5 md:p-8">
+            <p className="text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
+              Paso 1 de 3 · Elige tu camino
             </p>
-            <h2 className="mt-2 text-xl font-bold tracking-tight text-neutral-900 md:text-2xl">
+            <h2 className="mt-2 text-xl font-bold tracking-tight text-quegym-primary md:text-2xl">
               ¿Tu centro ya aparece en {BRAND_NAME}?
             </h2>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-neutral-600 md:text-base">
-              Elegí una opción. Después te pedimos el centro o los datos del alta y, al final, tu contacto para la
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-quegym-secondary md:text-base">
+              Elige una opción. Después te pedimos el centro o los datos del alta y, al final, tu contacto para la
               revisión (1–2 días hábiles).
             </p>
 
@@ -596,7 +597,7 @@ export function ClaimWizard({
               >
                 <div
                   className={`mr-3 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl md:h-14 md:w-14 ${
-                    claimMode === "existing" ? BRAND_NAVY : "bg-neutral-100 text-neutral-500"
+                    claimMode === "existing" ? BRAND_ACCENT : "bg-quegym-subtle text-quegym-secondary"
                   }`}
                 >
                   <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -604,20 +605,20 @@ export function ClaimWizard({
                   </svg>
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="font-semibold text-neutral-900">Sí — reclamar ficha</p>
-                  <p className="mt-1 text-sm text-neutral-600">
-                    El centro ya está en el buscador. Validamos que vos podés administrarlo.
+                  <p className="font-semibold text-quegym-primary">Sí — reclamar ficha</p>
+                  <p className="mt-1 text-sm text-quegym-secondary">
+                    El centro ya está en el buscador. Validamos que puedes administrarlo.
                   </p>
                 </div>
                 <div
                   className={`ml-2 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
                     claimMode === "existing"
-                      ? "border-[#0a1430] bg-[#0a1430]"
-                      : "border-neutral-300 bg-white"
+                      ? "border-quegym-accent bg-quegym-accent"
+                      : "border-quegym-border bg-quegym-elevated"
                   }`}
                 >
                   {claimMode === "existing" ? (
-                    <span className="h-2 w-2 rounded-full bg-white" />
+                    <span className="h-2 w-2 rounded-full bg-quegym-elevated" />
                   ) : null}
                 </div>
               </button>
@@ -631,7 +632,7 @@ export function ClaimWizard({
               >
                 <div
                   className={`mr-3 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl md:h-14 md:w-14 ${
-                    claimMode === "new" ? BRAND_NAVY : "bg-neutral-100 text-neutral-500"
+                    claimMode === "new" ? BRAND_ACCENT : "bg-quegym-subtle text-quegym-secondary"
                   }`}
                 >
                   <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -639,26 +640,26 @@ export function ClaimWizard({
                   </svg>
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="font-semibold text-neutral-900">No — registrar centro nuevo</p>
-                  <p className="mt-1 text-sm text-neutral-600">
+                  <p className="font-semibold text-quegym-primary">No — registrar centro nuevo</p>
+                  <p className="mt-1 text-sm text-quegym-secondary">
                     Cargamos los datos básicos; el equipo los revisa antes de publicar la ficha.
                   </p>
                 </div>
                 <div
                   className={`ml-2 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
                     claimMode === "new"
-                      ? "border-[#0a1430] bg-[#0a1430]"
-                      : "border-neutral-300 bg-white"
+                      ? "border-quegym-accent bg-quegym-accent"
+                      : "border-quegym-border bg-quegym-elevated"
                   }`}
                 >
                   {claimMode === "new" ? (
-                    <span className="h-2 w-2 rounded-full bg-white" />
+                    <span className="h-2 w-2 rounded-full bg-quegym-elevated" />
                   ) : null}
                 </div>
               </button>
             </div>
 
-            <div className="mt-8 space-y-3 border-t border-neutral-100 pt-6">
+            <div className="mt-8 space-y-3 border-t border-quegym-border pt-6">
               <button
                 type="button"
                 disabled={!canAdvanceFrom1}
@@ -668,7 +669,7 @@ export function ClaimWizard({
                 Continuar al paso 2
                 <span aria-hidden>→</span>
               </button>
-              <p className="text-center text-xs text-neutral-500">
+              <p className="text-center text-xs text-quegym-secondary">
                 Menos de 5 minutos · El equipo responde por correo en 1–2 días hábiles
               </p>
             </div>
@@ -679,14 +680,14 @@ export function ClaimWizard({
       {step === 2 && claimMode === "existing" ? (
         <section className="space-y-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+            <p className="text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
               Paso 2 · Centro existente
             </p>
-            <h2 className="mt-2 text-2xl font-bold tracking-tight text-neutral-900">
-              Encontrá tu ficha en {BRAND_NAME}
+            <h2 className="mt-2 text-2xl font-bold tracking-tight text-quegym-primary">
+              Encuentra tu ficha en {BRAND_NAME}
             </h2>
-            <p className="mt-2 text-sm text-neutral-600">
-              Buscá por nombre o zona y seleccioná el centro. Luego adjuntá evidencia para validar tu vínculo.
+            <p className="mt-2 text-sm text-quegym-secondary">
+              Busca por nombre o zona y selecciona el centro. Luego adjunta evidencia para validar tu vínculo.
             </p>
           </div>
 
@@ -694,7 +695,7 @@ export function ClaimWizard({
             <span className="sr-only">Buscar</span>
             <div className="relative">
               <svg
-                className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-400"
+                className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-quegym-secondary"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -702,7 +703,7 @@ export function ClaimWizard({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               <input
-                className="w-full rounded-xl border border-neutral-200 bg-neutral-50 py-3 pl-11 pr-3 text-sm outline-none ring-[#0a1430]/20 focus:ring-2"
+                className="w-full rounded-xl border border-quegym-border bg-quegym-subtle py-3 pl-11 pr-3 text-sm outline-none ring-quegym-accent/20 focus:ring-2"
                 placeholder="Nombre del gimnasio…"
                 value={searchQ}
                 onChange={(e) => setSearchQ(e.target.value)}
@@ -712,17 +713,17 @@ export function ClaimWizard({
           </label>
 
           <div>
-            <p className="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-500">
+            <p className="mb-2 text-xs font-medium uppercase tracking-wide text-quegym-secondary">
               Resultados en Caracas
             </p>
             <div className="space-y-2">
               {searchLoading ? (
-                <p className="text-sm text-neutral-500">Buscando…</p>
+                <p className="text-sm text-quegym-secondary">Buscando…</p>
               ) : null}
               {!searchLoading &&
               searchQ.trim().length >= 2 &&
               searchResults.length === 0 ? (
-                <p className="text-sm text-neutral-500">
+                <p className="text-sm text-quegym-secondary">
                   No encontramos coincidencias. Probá con otro término.
                 </p>
               ) : null}
@@ -739,28 +740,28 @@ export function ClaimWizard({
                     }}
                     className={`flex w-full items-center gap-3 rounded-xl border-2 p-3 text-left transition md:p-4 ${
                       selected
-                        ? "border-[#0a1430] bg-white shadow-sm"
-                        : "border-neutral-200 bg-white hover:border-neutral-300"
+                        ? "border-quegym-accent bg-quegym-elevated shadow-sm"
+                        : "border-quegym-border bg-quegym-elevated hover:border-quegym-border"
                     }`}
                   >
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-xs font-medium text-neutral-400">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-quegym-subtle text-xs font-medium text-quegym-secondary">
                       Logo
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="font-semibold text-neutral-900">{hit.name}</p>
+                      <p className="font-semibold text-quegym-primary">{hit.name}</p>
                       {sub ? (
-                        <p className="text-sm text-neutral-500">{sub}</p>
+                        <p className="text-sm text-quegym-secondary">{sub}</p>
                       ) : null}
                     </div>
                     <div
                       className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
                         selected
-                          ? "border-[#0a1430] bg-[#0a1430]"
-                          : "border-neutral-300"
+                          ? "border-quegym-accent bg-quegym-accent"
+                          : "border-quegym-border"
                       }`}
                     >
                       {selected ? (
-                        <span className="h-2 w-2 rounded-full bg-white" />
+                        <span className="h-2 w-2 rounded-full bg-quegym-elevated" />
                       ) : null}
                     </div>
                   </button>
@@ -770,15 +771,15 @@ export function ClaimWizard({
           </div>
 
           <div className="relative py-2">
-            <div className="absolute inset-x-0 top-1/2 h-px bg-neutral-200" />
-            <span className="relative mx-auto block w-fit bg-[#F5F7FA] px-3 text-xs font-medium text-neutral-500">
+            <div className="absolute inset-x-0 top-1/2 h-px bg-quegym-subtle" />
+            <span className="relative mx-auto block w-fit bg-[#F5F7FA] px-3 text-xs font-medium text-quegym-secondary">
               Evidencia de vínculo
             </span>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-semibold text-neutral-900">
-              Adjuntá evidencia de que sos administrador del centro{" "}
+            <label className="mb-2 block text-sm font-semibold text-quegym-primary">
+              Adjunta evidencia de que eres administrador del centro{" "}
               <span className="text-red-600">*</span>
             </label>
             <EvidenceDropZone
@@ -787,14 +788,14 @@ export function ClaimWizard({
               onClear={() => setEvidenceFileName(null)}
             />
             <textarea
-              className="mt-3 w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm outline-none ring-[#0a1430]/20 focus:ring-2"
+              className="mt-3 w-full rounded-xl border border-quegym-border bg-quegym-subtle px-3 py-2 text-sm outline-none ring-quegym-accent/20 focus:ring-2"
               rows={3}
               placeholder="Detalle adicional (opcional si ya subiste archivo)"
               value={evidenceNote}
               onChange={(e) => setEvidenceNote(e.target.value)}
               maxLength={800}
             />
-            <p className="mt-1 text-xs text-neutral-500">
+            <p className="mt-1 text-xs text-quegym-secondary">
               Ejemplos: RIF del negocio, contrato de alquiler, factura, foto
               interna del gimnasio con cartel.
             </p>
@@ -804,7 +805,7 @@ export function ClaimWizard({
             <button
               type="button"
               onClick={() => setStep(1)}
-              className="rounded-xl border border-neutral-300 bg-white px-5 py-3 text-sm font-semibold text-neutral-900 shadow-sm transition hover:bg-neutral-50"
+              className="rounded-xl border border-quegym-border bg-quegym-elevated px-5 py-3 text-sm font-semibold text-quegym-primary qg-btn-ghost qg-motion"
             >
               Atrás
             </button>
@@ -823,24 +824,24 @@ export function ClaimWizard({
       {step === 2 && claimMode === "new" ? (
         <section className="space-y-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+            <p className="text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
               Paso 2 · Centro nuevo
             </p>
-            <h2 className="mt-2 text-2xl font-bold tracking-tight text-neutral-900 md:text-3xl">
+            <h2 className="mt-2 text-2xl font-bold tracking-tight text-quegym-primary md:text-3xl">
               Datos del centro a registrar
             </h2>
-            <p className="mt-2 text-sm text-neutral-600">
-              Completá lo básico para crear la ficha; el equipo la revisa antes de publicarla (1–2 días hábiles).
+            <p className="mt-2 text-sm text-quegym-secondary">
+              Completa lo básico para crear la ficha; el equipo la revisa antes de publicarla (1–2 días hábiles).
             </p>
           </div>
 
           <div className="space-y-4">
             <label className="block">
-              <span className="text-sm font-semibold text-neutral-900">
+              <span className="text-sm font-semibold text-quegym-primary">
                 Nombre comercial del centro <span className="text-red-600">*</span>
               </span>
               <input
-                className="mt-1.5 w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm outline-none ring-[#0a1430]/20 focus:ring-2"
+                className="mt-1.5 w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2.5 text-sm outline-none ring-quegym-accent/20 focus:ring-2"
                 placeholder="Nombre como aparece públicamente"
                 value={businessName}
                 onChange={(e) => setBusinessName(e.target.value)}
@@ -849,12 +850,12 @@ export function ClaimWizard({
 
             <div className="grid gap-4 md:grid-cols-2">
               <label className="block">
-                <span className="text-sm font-semibold text-neutral-900">
+                <span className="text-sm font-semibold text-quegym-primary">
                   Zona / municipio <span className="text-red-600">*</span>
                 </span>
                 {zones.length > 0 ? (
                   <select
-                    className="mt-1.5 w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm outline-none ring-[#0a1430]/20 focus:ring-2"
+                    className="mt-1.5 w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2.5 text-sm outline-none ring-quegym-accent/20 focus:ring-2"
                     value={zone}
                     onChange={(e) => setZone(e.target.value)}
                   >
@@ -867,7 +868,7 @@ export function ClaimWizard({
                   </select>
                 ) : (
                   <input
-                    className="mt-1.5 w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm outline-none ring-[#0a1430]/20 focus:ring-2"
+                    className="mt-1.5 w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2.5 text-sm outline-none ring-quegym-accent/20 focus:ring-2"
                     placeholder="Ej: Chacao, Baruta…"
                     value={zone}
                     onChange={(e) => setZone(e.target.value)}
@@ -875,11 +876,11 @@ export function ClaimWizard({
                 )}
               </label>
               <label className="block">
-                <span className="text-sm font-semibold text-neutral-900">
+                <span className="text-sm font-semibold text-quegym-primary">
                   Tipo de centro <span className="text-red-600">*</span>
                 </span>
                 <select
-                  className="mt-1.5 w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm outline-none ring-[#0a1430]/20 focus:ring-2"
+                  className="mt-1.5 w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2.5 text-sm outline-none ring-quegym-accent/20 focus:ring-2"
                   value={venueType}
                   onChange={(e) => setVenueType(e.target.value)}
                 >
@@ -894,11 +895,11 @@ export function ClaimWizard({
             </div>
 
             <label className="block">
-              <span className="text-sm font-semibold text-neutral-900">
+              <span className="text-sm font-semibold text-quegym-primary">
                 Dirección completa
               </span>
               <input
-                className="mt-1.5 w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm outline-none ring-[#0a1430]/20 focus:ring-2"
+                className="mt-1.5 w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2.5 text-sm outline-none ring-quegym-accent/20 focus:ring-2"
                 placeholder="Av., calle, sector, referencia…"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
@@ -907,7 +908,7 @@ export function ClaimWizard({
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-semibold text-neutral-900">
+            <label className="mb-2 block text-sm font-semibold text-quegym-primary">
               Evidencia de vínculo con el centro{" "}
               <span className="text-red-600">*</span>
             </label>
@@ -917,14 +918,14 @@ export function ClaimWizard({
               onClear={() => setEvidenceFileName(null)}
             />
             <textarea
-              className="mt-3 w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm outline-none ring-[#0a1430]/20 focus:ring-2"
+              className="mt-3 w-full rounded-xl border border-quegym-border bg-quegym-subtle px-3 py-2 text-sm outline-none ring-quegym-accent/20 focus:ring-2"
               rows={3}
               placeholder="RIF, contrato, factura o descripción del respaldo"
               value={evidenceNote}
               onChange={(e) => setEvidenceNote(e.target.value)}
               maxLength={800}
             />
-            <p className="mt-1 text-xs text-neutral-500">
+            <p className="mt-1 text-xs text-quegym-secondary">
               RIF, contrato, factura o foto interna con cartel visible · JPG, PNG,
               PDF · Máx. 5MB
             </p>
@@ -934,7 +935,7 @@ export function ClaimWizard({
             <button
               type="button"
               onClick={() => setStep(1)}
-              className="rounded-xl border border-neutral-300 bg-white px-5 py-3 text-sm font-semibold text-neutral-900 shadow-sm transition hover:bg-neutral-50"
+              className="rounded-xl border border-quegym-border bg-quegym-elevated px-5 py-3 text-sm font-semibold text-quegym-primary qg-btn-ghost qg-motion"
             >
               Atrás
             </button>
@@ -953,16 +954,16 @@ export function ClaimWizard({
       {step === 3 ? (
         <section className="space-y-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+            <p className="text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
               Paso 3 · Quién solicita
             </p>
-            <h2 className="mt-2 text-2xl font-bold tracking-tight text-neutral-900">
+            <h2 className="mt-2 text-2xl font-bold tracking-tight text-quegym-primary">
               Contacto para la revisión
             </h2>
-            <p className="mt-2 text-sm text-neutral-600">
+            <p className="mt-2 text-sm text-quegym-secondary">
               Datos de quien envía el trámite. {BRAND_NAME} usará este correo y teléfono para avisarte el resultado.
               {" "}
-              <strong className="font-medium text-neutral-800">
+              <strong className="font-medium text-quegym-primary">
                 Usa el correo con el que podrás iniciar sesión en {BRAND_PARTNERS}
               </strong>{" "}
               cuando la solicitud sea aprobada (debe coincidir con tu cuenta en el acceso de socios).
@@ -971,57 +972,57 @@ export function ClaimWizard({
 
           <div className="space-y-4">
             <label className="block">
-              <span className="text-sm font-semibold text-neutral-900">
+              <span className="text-sm font-semibold text-quegym-primary">
                 Nombre completo del solicitante{" "}
                 <span className="text-red-600">*</span>
               </span>
               <input
                 required
-                className="mt-1.5 w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2.5 text-sm outline-none ring-[#0a1430]/20 focus:ring-2"
+                className="mt-1.5 w-full rounded-xl border border-quegym-border bg-quegym-subtle px-3 py-2.5 text-sm outline-none ring-quegym-accent/20 focus:ring-2"
                 placeholder="Tu nombre"
                 value={applicantName}
                 onChange={(e) => setApplicantName(e.target.value)}
               />
             </label>
             <label className="block">
-              <span className="text-sm font-semibold text-neutral-900">
+              <span className="text-sm font-semibold text-quegym-primary">
                 Cargo en el centro
               </span>
               <input
-                className="mt-1.5 w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2.5 text-sm outline-none ring-[#0a1430]/20 focus:ring-2"
+                className="mt-1.5 w-full rounded-xl border border-quegym-border bg-quegym-subtle px-3 py-2.5 text-sm outline-none ring-quegym-accent/20 focus:ring-2"
                 placeholder="Ej: Propietario, Gerente, Administrador"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
               />
             </label>
             <label className="block">
-              <span className="text-sm font-semibold text-neutral-900">
+              <span className="text-sm font-semibold text-quegym-primary">
                 Correo electrónico de contacto{" "}
                 <span className="text-red-600">*</span>
               </span>
               <input
                 type="email"
                 required
-                className="mt-1.5 w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2.5 text-sm outline-none ring-[#0a1430]/20 focus:ring-2"
+                className="mt-1.5 w-full rounded-xl border border-quegym-border bg-quegym-subtle px-3 py-2.5 text-sm outline-none ring-quegym-accent/20 focus:ring-2"
                 placeholder="tu@gimnasio.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <p className="mt-1.5 text-xs leading-relaxed text-neutral-500">
+              <p className="mt-1.5 text-xs leading-relaxed text-quegym-secondary">
                 Este correo quedará vinculado a tu centro como partner; entrarás con él en{" "}
-                <Link href="/partner/login" className="font-medium text-[#0a1430] underline">
+                <Link href="/partner/login" className="font-medium text-quegym-accent underline">
                   /partner/login
                 </Link>{" "}
                 tras la aprobación.
               </p>
             </label>
             <label className="block">
-              <span className="text-sm font-semibold text-neutral-900">
+              <span className="text-sm font-semibold text-quegym-primary">
                 Teléfono / WhatsApp <span className="text-red-600">*</span>
               </span>
               <input
                 required
-                className="mt-1.5 w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2.5 text-sm outline-none ring-[#0a1430]/20 focus:ring-2"
+                className="mt-1.5 w-full rounded-xl border border-quegym-border bg-quegym-subtle px-3 py-2.5 text-sm outline-none ring-quegym-accent/20 focus:ring-2"
                 placeholder="+58 412 000 0000"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -1029,14 +1030,14 @@ export function ClaimWizard({
             </label>
           </div>
 
-          <label className="flex cursor-pointer gap-3 rounded-xl border border-neutral-200 bg-white p-4">
+          <label className="flex cursor-pointer gap-3 rounded-xl border border-quegym-border bg-quegym-elevated p-4">
             <input
               type="checkbox"
-              className="mt-1 h-4 w-4 shrink-0 rounded border-neutral-300 text-[#0a1430] focus:ring-[#0a1430]"
+              className="mt-1 h-4 w-4 shrink-0 rounded border-quegym-border text-quegym-accent focus:ring-quegym-accent"
               checked={termsAccepted}
               onChange={(e) => setTermsAccepted(e.target.checked)}
             />
-            <span className="text-sm text-neutral-700">
+            <span className="text-sm text-quegym-primary">
               Declaro que tengo autorización para administrar el centro indicado
               y acepto los{" "}
               <Link href="/privacidad" className="font-medium underline">
@@ -1056,7 +1057,7 @@ export function ClaimWizard({
             <button
               type="button"
               onClick={() => setStep(2)}
-              className="rounded-xl border border-neutral-300 bg-white px-5 py-3 text-sm font-semibold text-neutral-900 shadow-sm sm:order-1"
+              className="rounded-xl border border-quegym-border bg-quegym-elevated px-5 py-3 text-sm font-semibold text-quegym-primary shadow-sm sm:order-1"
             >
               Atrás
             </button>
@@ -1069,7 +1070,7 @@ export function ClaimWizard({
               >
                 {busy ? "Enviando…" : "Enviar solicitud"}
               </button>
-              <p className="text-center text-xs text-neutral-500 sm:text-right">
+              <p className="text-center text-xs text-quegym-secondary sm:text-right">
                 La solicitud será revisada en 1–2 días hábiles
               </p>
             </div>
@@ -1091,10 +1092,10 @@ function EvidenceDropZone({
 }) {
   const id = "claim-evidence-input";
   return (
-    <div className="rounded-2xl border-2 border-dashed border-neutral-200 bg-neutral-50 p-4 md:flex md:items-center md:gap-4 md:p-5">
+    <div className="rounded-2xl border-2 border-dashed border-quegym-border bg-quegym-subtle p-4 md:flex md:items-center md:gap-4 md:p-5">
       <div className="hidden shrink-0 md:block" aria-hidden>
         <svg
-          className="h-10 w-10 text-neutral-400"
+          className="h-10 w-10 text-quegym-secondary"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -1108,10 +1109,10 @@ function EvidenceDropZone({
         </svg>
       </div>
       <div className="min-w-0 flex-1">
-        <p className="font-semibold text-neutral-700">
-          {fileName ? fileName : "Arrastrá o seleccioná un archivo"}
+        <p className="font-semibold text-quegym-primary">
+          {fileName ? fileName : "Arrastra o selecciona un archivo"}
         </p>
-        <p className="mt-1 text-xs text-neutral-500">
+        <p className="mt-1 text-xs text-quegym-secondary">
           RIF, contrato, factura o foto interna con cartel visible · JPG, PNG,
           PDF · Máx. 5MB
         </p>
@@ -1131,14 +1132,14 @@ function EvidenceDropZone({
           <button
             type="button"
             onClick={onClear}
-            className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm font-medium text-neutral-800"
+            className="rounded-lg border border-quegym-border bg-quegym-elevated px-3 py-2 text-sm font-medium text-quegym-primary"
           >
             Quitar
           </button>
         ) : null}
         <label
           htmlFor={id}
-          className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-neutral-900 shadow-sm"
+          className="inline-flex cursor-pointer items-center justify-center rounded-lg border border-quegym-border bg-quegym-elevated px-4 py-2 text-sm font-semibold text-quegym-primary shadow-sm"
         >
           Seleccionar archivo
         </label>

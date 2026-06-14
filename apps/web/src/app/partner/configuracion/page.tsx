@@ -12,21 +12,21 @@ export default async function PartnerConfiguracionPage(props: {
 
   return (
     <main className="mx-auto w-full max-w-[760px] px-4 py-6">
-      <section className="rounded-2xl border border-neutral-200 bg-white p-4">
-        <h1 className="text-2xl font-semibold text-neutral-900">Configuración</h1>
-        <p className="mt-1 text-sm text-neutral-500">
+      <section className="rounded-2xl border border-quegym-border bg-quegym-elevated p-4">
+        <h1 className="text-2xl font-semibold text-quegym-primary">Configuración</h1>
+        <p className="mt-1 text-sm text-quegym-secondary">
           Atajos de configuración partner.
         </p>
         <div className="mt-4 grid gap-2">
           <Link
             href={`/partner/configuracion/mis-centros${query}`}
-            className="rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-100"
+            className="rounded-xl border border-quegym-border bg-quegym-subtle px-3 py-2 text-sm text-quegym-primary hover:bg-quegym-subtle"
           >
             Mis centros
           </Link>
           <Link
             href={`/partner/configuracion/cambiar-correo${query}`}
-            className="rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-100"
+            className="rounded-xl border border-quegym-border bg-quegym-subtle px-3 py-2 text-sm text-quegym-primary hover:bg-quegym-subtle"
           >
             Cambiar correo
           </Link>

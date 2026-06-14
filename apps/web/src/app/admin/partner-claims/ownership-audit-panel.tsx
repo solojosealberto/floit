@@ -129,10 +129,10 @@ export function OwnershipAuditPanel(props: {
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm ring-1 ring-black/5">
+    <div className="overflow-hidden rounded-2xl border border-quegym-border bg-quegym-elevated qg-surface-subtle qg-motion">
       <div className="flex flex-wrap items-center justify-between gap-3 bg-[#0f172a] px-4 py-3 text-white md:px-5">
         <div className="flex min-w-0 items-start gap-3">
-          <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
+          <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-quegym-elevated/10">
             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -152,7 +152,7 @@ export function OwnershipAuditPanel(props: {
             type="button"
             onClick={downloadCsv}
             disabled={filtered.length === 0}
-            className="inline-flex items-center rounded-lg border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex items-center rounded-lg border border-white/35 bg-quegym-elevated/10 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-quegym-elevated/15 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <svg className="mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
@@ -164,13 +164,13 @@ export function OwnershipAuditPanel(props: {
             </svg>
             Exportar CSV
           </button>
-          <AdminRefreshButton className="inline-flex items-center rounded-lg border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-medium text-white hover:bg-white/15" />
+          <AdminRefreshButton className="inline-flex items-center rounded-lg border border-white/35 bg-quegym-elevated/10 px-3 py-1.5 text-sm font-medium text-white hover:bg-quegym-elevated/15" />
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 border-t border-neutral-100 bg-neutral-50/50 px-4 py-3 md:flex-row md:flex-wrap md:items-end md:gap-4 md:px-5">
+      <div className="flex flex-col gap-3 border-t border-quegym-border bg-quegym-subtle/50 px-4 py-3 md:flex-row md:flex-wrap md:items-end md:gap-4 md:px-5">
         <div className="relative min-w-[200px] flex-1">
-          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400">
+          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-quegym-secondary">
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -183,12 +183,12 @@ export function OwnershipAuditPanel(props: {
               setPage(1);
             }}
             placeholder="Filtrar por partner email o venue slug…"
-            className="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-11 pr-4 text-sm text-neutral-900 placeholder:text-neutral-500 focus:border-[#0f172a]/35 focus:outline-none focus:ring-2 focus:ring-[#0f172a]/12"
+            className="w-full rounded-xl border border-quegym-border bg-quegym-elevated py-2.5 pl-11 pr-4 text-sm text-quegym-primary placeholder:text-quegym-secondary focus:border-[#0f172a]/35 focus:outline-none focus:ring-2 focus:ring-[#0f172a]/12"
           />
         </div>
         <div className="flex flex-wrap gap-3">
           <div>
-            <label className="mb-1 block text-[11px] font-medium uppercase tracking-wide text-neutral-500">
+            <label className="mb-1 block text-[11px] font-medium uppercase tracking-wide text-quegym-secondary">
               Acción
             </label>
             <select
@@ -197,14 +197,14 @@ export function OwnershipAuditPanel(props: {
                 setActionFilter(e.target.value as typeof actionFilter);
                 setPage(1);
               }}
-              className="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-[#0f172a]/40 focus:outline-none focus:ring-2 focus:ring-[#0f172a]/12"
+              className="rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 text-sm text-quegym-primary focus:border-[#0f172a]/40 focus:outline-none focus:ring-2 focus:ring-[#0f172a]/12"
             >
               <option value="all">Todas las acciones</option>
               <option value="revoked">Solo revocación</option>
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-[11px] font-medium uppercase tracking-wide text-neutral-500">
+            <label className="mb-1 block text-[11px] font-medium uppercase tracking-wide text-quegym-secondary">
               Fecha
             </label>
             <input
@@ -214,13 +214,13 @@ export function OwnershipAuditPanel(props: {
                 setDateFilter(e.target.value);
                 setPage(1);
               }}
-              className="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-[#0f172a]/40 focus:outline-none focus:ring-2 focus:ring-[#0f172a]/12"
+              className="rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 text-sm text-quegym-primary focus:border-[#0f172a]/40 focus:outline-none focus:ring-2 focus:ring-[#0f172a]/12"
             />
           </div>
           <div className="flex items-end pb-0.5">
             <Link
               href="/admin/partner-claims"
-              className="text-sm font-medium text-[#0a1430] underline decoration-neutral-300 underline-offset-2 hover:decoration-[#0a1430]"
+              className="text-sm font-medium text-quegym-accent underline decoration-quegym-border underline-offset-2 hover:decoration-quegym-accent"
             >
               Limpiar URL
             </Link>
@@ -230,31 +230,31 @@ export function OwnershipAuditPanel(props: {
 
       <div className="overflow-x-auto px-2 pb-4 md:px-4">
         {slice.length === 0 ? (
-          <p className="py-12 text-center text-sm text-neutral-600">
+          <p className="py-12 text-center text-sm text-quegym-secondary">
             {items.length === 0 ? "Sin eventos recientes." : "Sin resultados para los filtros."}
           </p>
         ) : (
           <table className="w-full min-w-[960px] border-collapse text-left text-sm">
             <thead>
-              <tr className="border-b border-neutral-200 bg-white">
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">
+              <tr className="border-b border-quegym-border bg-quegym-elevated">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                   Fecha / hora
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">Acción</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">Partner</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">Venue</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">Acción</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">Partner</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">Venue</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                   Actor (admin)
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">Motivo</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">Motivo</th>
               </tr>
             </thead>
             <tbody>
               {slice.map((a) => (
-                <tr key={a.id} className="border-b border-neutral-100 bg-white hover:bg-neutral-50/80">
-                  <td className="px-4 py-3 align-middle text-neutral-800">
+                <tr key={a.id} className="border-b border-quegym-border bg-quegym-elevated hover:bg-quegym-subtle/80">
+                  <td className="px-4 py-3 align-middle text-quegym-primary">
                     <span className="flex items-center gap-2">
-                      <svg className="h-4 w-4 shrink-0 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="h-4 w-4 shrink-0 text-quegym-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -268,17 +268,17 @@ export function OwnershipAuditPanel(props: {
                   <td className="px-4 py-3 align-middle">
                     <ActionBadge />
                   </td>
-                  <td className="px-4 py-3 align-middle break-all text-neutral-900">{a.partnerEmail}</td>
-                  <td className="px-4 py-3 align-middle font-medium text-neutral-900">{a.venueSlug}</td>
+                  <td className="px-4 py-3 align-middle break-all text-quegym-primary">{a.partnerEmail}</td>
+                  <td className="px-4 py-3 align-middle font-medium text-quegym-primary">{a.venueSlug}</td>
                   <td className="px-4 py-3 align-middle">
                     <span className="flex items-center gap-2">
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-200 text-xs font-semibold text-neutral-700">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-quegym-subtle text-xs font-semibold text-quegym-primary">
                         {actorInitials(a.actor)}
                       </span>
-                      <span className="text-neutral-900">{a.actor}</span>
+                      <span className="text-quegym-primary">{a.actor}</span>
                     </span>
                   </td>
-                  <td className="max-w-xs px-4 py-3 align-middle text-xs text-neutral-700">{a.reason ?? "—"}</td>
+                  <td className="max-w-xs px-4 py-3 align-middle text-xs text-quegym-primary">{a.reason ?? "—"}</td>
                 </tr>
               ))}
             </tbody>
@@ -287,8 +287,8 @@ export function OwnershipAuditPanel(props: {
       </div>
 
       {filtered.length > 0 ? (
-        <div className="flex flex-col gap-3 border-t border-neutral-100 px-4 py-3 sm:flex-row sm:items-center sm:justify-between md:px-5">
-          <p className="text-xs text-neutral-600">
+        <div className="flex flex-col gap-3 border-t border-quegym-border px-4 py-3 sm:flex-row sm:items-center sm:justify-between md:px-5">
+          <p className="text-xs text-quegym-secondary">
             Mostrando {(pageSafe - 1) * PAGE_SIZE + 1}–{Math.min(pageSafe * PAGE_SIZE, filtered.length)} de{" "}
             {filtered.length} eventos
           </p>
@@ -297,14 +297,14 @@ export function OwnershipAuditPanel(props: {
               type="button"
               disabled={pageSafe <= 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-800 disabled:opacity-40"
+              className="rounded-lg border border-quegym-border bg-quegym-elevated px-3 py-1.5 text-xs font-semibold text-quegym-primary disabled:opacity-40"
             >
               Anterior
             </button>
             <div className="flex flex-wrap items-center gap-1">
               {pageButtons.map((item, idx) =>
                 item === "ellipsis" ? (
-                  <span key={`e-${idx}`} className="px-1 text-neutral-400">
+                  <span key={`e-${idx}`} className="px-1 text-quegym-secondary">
                     …
                   </span>
                 ) : (
@@ -315,7 +315,7 @@ export function OwnershipAuditPanel(props: {
                     className={`flex h-8 min-w-[2rem] items-center justify-center rounded-lg text-xs font-semibold ${
                       pageSafe === item
                         ? "bg-[#0f172a] text-white"
-                        : "border border-neutral-200 bg-white text-neutral-800 hover:bg-neutral-50"
+                        : "border border-quegym-border bg-quegym-elevated text-quegym-primary hover:bg-quegym-subtle"
                     }`}
                   >
                     {item}
@@ -327,7 +327,7 @@ export function OwnershipAuditPanel(props: {
               type="button"
               disabled={pageSafe >= totalPages}
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              className="rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-800 disabled:opacity-40"
+              className="rounded-lg border border-quegym-border bg-quegym-elevated px-3 py-1.5 text-xs font-semibold text-quegym-primary disabled:opacity-40"
             >
               Siguiente
             </button>

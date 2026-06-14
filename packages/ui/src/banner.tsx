@@ -17,17 +17,16 @@ export function UIBanner({
       className={cn(
         "rounded-lg border px-3 py-2 text-sm",
         variant === "info" &&
-          "border-sky-200 bg-sky-50 text-sky-900 dark:border-sky-900 dark:bg-sky-950 dark:text-sky-100",
+          "border-[var(--qg-border)] bg-[var(--qg-bg-subtle)] text-[var(--qg-text-primary)]",
         variant === "success" &&
-          "border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-100",
+          "border-[var(--qg-highlight)]/30 bg-[var(--qg-highlight-soft)] text-[var(--qg-highlight)]",
         variant === "warning" &&
-          "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-100",
+          "border-[var(--qg-warning)]/30 bg-[var(--qg-warning)]/10 text-[var(--qg-warning)]",
         variant === "error" &&
-          "border-rose-200 bg-rose-50 text-rose-900 dark:border-rose-900 dark:bg-rose-950 dark:text-rose-100",
+          "border-[var(--qg-error)]/30 bg-[var(--qg-error)]/10 text-[var(--qg-error)]",
         className,
       )}
       {...props}
     />
   );
 }
-

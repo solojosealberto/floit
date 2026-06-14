@@ -7,7 +7,7 @@ export function UISelect({ className, children, ...props }: UISelectProps) {
   return (
     <select
       className={cn(
-        "w-full rounded-[var(--floit-radius-md)] border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100",
+        "w-full rounded-[var(--floit-radius-md)] border border-[var(--qg-border)] bg-[var(--qg-bg-input)] px-3 py-2 text-sm text-[var(--qg-text-primary)] focus-visible:outline-none focus-visible:ring-0 focus-visible:border-[color-mix(in_srgb,var(--qg-accent)_55%,var(--qg-border))] focus-visible:shadow-[0_0_0_1px_color-mix(in_srgb,var(--qg-accent)_38%,transparent)]",
         className,
       )}
       {...props}
@@ -16,4 +16,3 @@ export function UISelect({ className, children, ...props }: UISelectProps) {
     </select>
   );
 }
-

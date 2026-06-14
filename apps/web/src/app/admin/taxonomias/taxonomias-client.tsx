@@ -200,11 +200,11 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <p className="text-xs font-medium text-neutral-500">Admin &gt; Taxonomías</p>
-          <h1 className="mt-1 text-2xl font-semibold text-neutral-900">
+          <p className="text-xs font-medium text-quegym-secondary">Admin &gt; Taxonomías</p>
+          <h1 className="mt-1 text-2xl font-semibold text-quegym-primary">
             Gestión de taxonomías
           </h1>
-          <p className="mt-1 text-sm text-neutral-600">
+          <p className="mt-1 text-sm text-quegym-secondary">
             Modalidades y amenidades usadas en búsqueda, comparación y fichas.
           </p>
         </div>
@@ -254,8 +254,8 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
               onClick={() => setTab("modality")}
               className={`rounded-xl px-4 py-2.5 text-sm font-medium transition ${
                 tab === "modality"
-                  ? "bg-neutral-900 text-white"
-                  : "border border-neutral-200 bg-white text-neutral-800 hover:bg-neutral-50"
+                  ? "bg-quegym-accent text-white"
+                  : "border border-quegym-border bg-quegym-elevated text-quegym-primary hover:bg-quegym-subtle"
               }`}
             >
               Modalidades ({counts.modalities})
@@ -265,24 +265,24 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
               onClick={() => setTab("amenity")}
               className={`rounded-xl px-4 py-2.5 text-sm font-medium transition ${
                 tab === "amenity"
-                  ? "bg-neutral-900 text-white"
-                  : "border border-neutral-200 bg-white text-neutral-800 hover:bg-neutral-50"
+                  ? "bg-quegym-accent text-white"
+                  : "border border-quegym-border bg-quegym-elevated text-quegym-primary hover:bg-quegym-subtle"
               }`}
             >
               Amenidades ({counts.amenities})
             </button>
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
-            <div className="grid grid-cols-[1fr_auto_auto_auto] gap-2 border-b border-neutral-100 bg-neutral-50/80 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-neutral-500 md:px-4">
+          <div className="overflow-hidden rounded-2xl border border-quegym-border bg-quegym-elevated">
+            <div className="grid grid-cols-[1fr_auto_auto_auto] gap-2 border-b border-quegym-border bg-quegym-subtle/80 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-quegym-secondary md:px-4">
               <span>Nombre / slug</span>
               <span className="hidden sm:block">Tipo</span>
               <span className="text-center">Gyms</span>
               <span className="text-right">Activo</span>
             </div>
-            <ul className="divide-y divide-neutral-100">
+            <ul className="divide-y divide-quegym-border">
               {filtered.length === 0 ? (
-                <li className="px-4 py-8 text-center text-sm text-neutral-500">
+                <li className="px-4 py-8 text-center text-sm text-quegym-secondary">
                   No hay atributos en esta pestaña. Crea uno o sincroniza desde datos de
                   centros (seed del catálogo).
                 </li>
@@ -291,13 +291,13 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
                   <li
                     key={row.slug}
                     className={`grid grid-cols-[1fr_auto] gap-x-2 gap-y-2 px-3 py-3 md:grid-cols-[1fr_auto_auto_auto] md:items-center md:px-4 ${
-                      row.active ? "" : "bg-neutral-50/80"
+                      row.active ? "" : "bg-quegym-subtle/80"
                     }`}
                   >
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <span
-                          className={`font-medium ${row.active ? "text-neutral-900" : "text-neutral-500"}`}
+                          className={`font-medium ${row.active ? "text-quegym-primary" : "text-quegym-secondary"}`}
                         >
                           {row.icon ? (
                             <span className="mr-1.5 inline-block">{row.icon}</span>
@@ -305,19 +305,19 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
                           {row.label}
                         </span>
                         {!row.active ? (
-                          <span className="rounded-full bg-neutral-200 px-2 py-0.5 text-xs font-medium text-neutral-700">
+                          <span className="rounded-full bg-quegym-subtle px-2 py-0.5 text-xs font-medium text-quegym-primary">
                             Inactivo
                           </span>
                         ) : null}
                       </div>
-                      <p className="truncate text-xs text-neutral-500">{row.slug}</p>
+                      <p className="truncate text-xs text-quegym-secondary">{row.slug}</p>
                     </div>
                     <span className="hidden sm:block">
                       <span className="inline-flex rounded-full bg-sky-100 px-2.5 py-0.5 text-xs font-medium text-sky-900">
                         {kindLabel(row.kind)}
                       </span>
                     </span>
-                    <span className="text-sm tabular-nums text-neutral-700 md:text-center">
+                    <span className="text-sm tabular-nums text-quegym-primary md:text-center">
                       {row.gymCount}
                     </span>
                     <div className="col-span-2 flex items-center justify-end gap-2 md:col-span-1 md:col-start-4">
@@ -326,11 +326,11 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
                         aria-label={`Activo: ${row.label}`}
                         checked={row.active}
                         onChange={(e) => setActive(row, e.target.checked)}
-                        className="h-5 w-5 cursor-pointer rounded border-neutral-300 accent-emerald-600"
+                        className="h-5 w-5 cursor-pointer rounded border-quegym-border accent-quegym-accent"
                       />
                       <button
                         type="button"
-                        className="rounded-lg p-2 text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
+                        className="rounded-lg p-2 text-quegym-secondary hover:bg-quegym-subtle hover:text-quegym-primary"
                         title="Editar"
                         onClick={() => startEdit(row)}
                       >
@@ -358,17 +358,17 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
         </div>
 
         <aside className="space-y-4 lg:sticky lg:top-4">
-          <UICard id="nuevo-atributo" className="scroll-mt-24 p-5 shadow-sm">
-            <h2 className="text-lg font-semibold text-neutral-900">
+          <UICard id="nuevo-atributo" className="scroll-mt-24 p-5">
+            <h2 className="text-lg font-semibold text-quegym-primary">
               {editingSlug ? "Editar atributo" : "Nuevo atributo"}
             </h2>
             <form className="mt-4 space-y-4" onSubmit={submitForm}>
               <div>
-                <label className="block text-xs font-medium text-neutral-600">
+                <label className="block text-xs font-medium text-quegym-secondary">
                   Nombre visible *
                 </label>
                 <UITextInput
-                  className="mt-1 w-full rounded-xl border border-neutral-200 px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-xl border border-quegym-border px-3 py-2 text-sm"
                   placeholder="Ej: Natación"
                   value={label}
                   onChange={(e) => setLabel(e.target.value)}
@@ -376,32 +376,32 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-neutral-600">
+                <label className="block text-xs font-medium text-quegym-secondary">
                   Slug (URL) *
                 </label>
                 <UITextInput
-                  className="mt-1 w-full rounded-xl border border-neutral-200 px-3 py-2 text-sm disabled:bg-neutral-100"
+                  className="mt-1 w-full rounded-xl border border-quegym-border px-3 py-2 text-sm disabled:bg-quegym-subtle"
                   placeholder="natacion"
                   value={slug}
                   onChange={(e) => setSlug(e.target.value.toLowerCase())}
                   disabled={!!editingSlug}
                   autoComplete="off"
                 />
-                <p className="mt-1 text-xs text-neutral-500">
+                <p className="mt-1 text-xs text-quegym-secondary">
                   Solo minúsculas, sin tildes, sin espacios.
                 </p>
               </div>
               <div>
-                <span className="block text-xs font-medium text-neutral-600">Tipo</span>
-                <div className="mt-2 flex rounded-xl border border-neutral-200 p-1">
+                <span className="block text-xs font-medium text-quegym-secondary">Tipo</span>
+                <div className="mt-2 flex rounded-xl border border-quegym-border p-1">
                   <button
                     type="button"
                     disabled={!!editingSlug}
                     onClick={() => setFormKind("modality")}
                     className={`flex-1 rounded-lg py-2 text-sm font-medium transition ${
                       formKind === "modality"
-                        ? "bg-neutral-900 text-white"
-                        : "text-neutral-700 hover:bg-neutral-50"
+                        ? "bg-quegym-accent text-white"
+                        : "text-quegym-primary hover:bg-quegym-subtle"
                     }`}
                   >
                     Modalidad
@@ -412,8 +412,8 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
                     onClick={() => setFormKind("amenity")}
                     className={`flex-1 rounded-lg py-2 text-sm font-medium transition ${
                       formKind === "amenity"
-                        ? "bg-neutral-900 text-white"
-                        : "text-neutral-700 hover:bg-neutral-50"
+                        ? "bg-quegym-accent text-white"
+                        : "text-quegym-primary hover:bg-quegym-subtle"
                     }`}
                   >
                     Amenidad
@@ -421,11 +421,11 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-medium text-neutral-600">
+                <label className="block text-xs font-medium text-quegym-secondary">
                   Ícono (opcional)
                 </label>
                 <UITextInput
-                  className="mt-1 w-full rounded-xl border border-neutral-200 px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-xl border border-quegym-border px-3 py-2 text-sm"
                   placeholder="Ej: emoji o texto corto"
                   value={icon}
                   onChange={(e) => setIcon(e.target.value)}
@@ -457,22 +457,22 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
             </form>
           </UICard>
 
-          <UICard className="p-5 shadow-sm">
-            <h3 className="text-sm font-semibold text-neutral-900">
+          <UICard className="p-5">
+            <h3 className="text-sm font-semibold text-quegym-primary">
               ¿Dónde se usa este atributo?
             </h3>
-            <ul className="mt-3 space-y-2 text-sm text-neutral-700">
+            <ul className="mt-3 space-y-2 text-sm text-quegym-primary">
               <li className="flex gap-2">
-                <span className="text-emerald-600">✓</span> Filtros de búsqueda
+                <span className="text-quegym-highlight">✓</span> Filtros de búsqueda
               </li>
               <li className="flex gap-2">
-                <span className="text-emerald-600">✓</span> Chips en ficha de gimnasio
+                <span className="text-quegym-highlight">✓</span> Chips en ficha de gimnasio
               </li>
               <li className="flex gap-2">
-                <span className="text-emerald-600">✓</span> Comparador de centros
+                <span className="text-quegym-highlight">✓</span> Comparador de centros
               </li>
               <li className="flex gap-2">
-                <span className="text-emerald-600">✓</span> Formulario del partner panel
+                <span className="text-quegym-highlight">✓</span> Formulario del partner panel
               </li>
             </ul>
           </UICard>

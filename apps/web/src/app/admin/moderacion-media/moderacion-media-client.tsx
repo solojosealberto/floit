@@ -85,13 +85,13 @@ export function ModeracionMediaClient(props: Props) {
 
   return (
     <>
-      <header className="mb-6 flex flex-col gap-4 border-b border-neutral-200 pb-4 sm:flex-row sm:items-start sm:justify-between">
+      <header className="mb-6 flex flex-col gap-4 border-b border-quegym-border pb-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-xs font-medium text-neutral-500">Admin &gt; Moderación</p>
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-neutral-900 md:text-[26px]">
+          <p className="text-xs font-medium text-quegym-secondary">Admin &gt; Moderación</p>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-quegym-primary md:text-[26px]">
             Moderación de media
           </h1>
-          <p className="mt-2 text-sm text-neutral-600">
+          <p className="mt-2 text-sm text-quegym-secondary">
             Reportes de usuarios y revisión visual de fotos publicadas en fichas.
           </p>
         </div>
@@ -100,7 +100,7 @@ export function ModeracionMediaClient(props: Props) {
         </span>
       </header>
 
-      <div className="mb-4 flex flex-wrap gap-2 rounded-2xl border border-neutral-200 bg-neutral-50/80 p-1.5">
+      <div className="mb-4 flex flex-wrap gap-2 rounded-2xl border border-quegym-border bg-quegym-subtle/80 p-1.5">
         {(
           [
             { id: "reportes" as const, label: "Reportes", count: filteredReports.length },
@@ -113,8 +113,8 @@ export function ModeracionMediaClient(props: Props) {
             onClick={() => setTab(t.id)}
             className={`rounded-xl px-3 py-2 text-xs font-medium transition ${
               tab === t.id
-                ? "bg-neutral-900 text-white shadow-sm"
-                : "text-neutral-600 hover:bg-white"
+                ? "bg-quegym-accent text-white"
+                : "text-quegym-secondary hover:bg-quegym-elevated"
             }`}
           >
             {t.label} ({t.count})
@@ -128,13 +128,13 @@ export function ModeracionMediaClient(props: Props) {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Buscar centro, slug o mensaje…"
-          className="min-w-[220px] flex-1 rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm outline-none ring-neutral-900/10 focus:ring-2"
+          className="min-w-[220px] flex-1 rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2.5 text-sm outline-none ring-quegym-accent/10 focus:ring-2"
         />
         {tab === "reportes" ? (
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as "pending" | "all")}
-            className="rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm"
+            className="rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2.5 text-sm"
           >
             <option value="pending">Solo pendientes</option>
             <option value="all">Todos</option>
@@ -148,24 +148,24 @@ export function ModeracionMediaClient(props: Props) {
             <UIBanner variant="success">No hay reportes en este filtro.</UIBanner>
           ) : null}
           {filteredReports.map((r) => (
-            <UICard key={r.id} className="border-neutral-200 bg-white p-4">
+            <UICard key={r.id} className="border-quegym-border bg-quegym-elevated p-4">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                  <p className="text-sm font-semibold text-neutral-900">
+                  <p className="text-sm font-semibold text-quegym-primary">
                     {props.venueNames[r.venueSlug] ?? r.venueSlug}
                   </p>
-                  <p className="text-xs text-neutral-500">
+                  <p className="text-xs text-quegym-secondary">
                     {KIND_LABEL[r.kind] ?? r.kind} ·{" "}
                     {new Date(r.createdAt).toLocaleString("es-VE")}
                   </p>
-                  <p className="mt-2 text-sm text-neutral-700">{r.message}</p>
+                  <p className="mt-2 text-sm text-quegym-primary">{r.message}</p>
                   <span
                     className={`mt-2 inline-block rounded-full px-2 py-0.5 text-[11px] font-medium ${
                       r.status === "pending"
                         ? "bg-amber-100 text-amber-900"
                         : r.status === "reviewed"
-                          ? "bg-emerald-100 text-emerald-800"
-                          : "bg-neutral-100 text-neutral-600"
+                          ? "bg-quegym-highlight-soft text-quegym-highlight"
+                          : "bg-quegym-subtle text-quegym-secondary"
                     }`}
                   >
                     {r.status}
@@ -214,7 +214,7 @@ export function ModeracionMediaClient(props: Props) {
             </div>
           ) : null}
           {filteredMedia.map((m) => (
-            <UICard key={m.venueSlug} className="overflow-hidden border-neutral-200 bg-white p-0">
+            <UICard key={m.venueSlug} className="overflow-hidden border-quegym-border bg-quegym-elevated p-0">
               {m.coverUrl ? (
                 <img
                   src={m.coverUrl}
@@ -222,13 +222,13 @@ export function ModeracionMediaClient(props: Props) {
                   className="h-36 w-full object-cover"
                 />
               ) : (
-                <div className="flex h-36 items-center justify-center bg-neutral-100 text-xs text-neutral-500">
+                <div className="flex h-36 items-center justify-center bg-quegym-subtle text-xs text-quegym-secondary">
                   Sin portada
                 </div>
               )}
               <div className="space-y-2 p-3">
-                <p className="text-sm font-semibold text-neutral-900">{m.venueName}</p>
-                <p className="text-xs text-neutral-500">
+                <p className="text-sm font-semibold text-quegym-primary">{m.venueName}</p>
+                <p className="text-xs text-quegym-secondary">
                   {m.zone} · {m.photoCount} foto{m.photoCount !== 1 ? "s" : ""}
                 </p>
                 <div className="flex flex-wrap gap-2">

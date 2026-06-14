@@ -19,7 +19,7 @@ export default async function PartnerMisCentrosPage(props: {
     if (localPartnerLoginEnabled) redirect("/partner/login");
     return (
       <main className="mx-auto w-full max-w-[420px] px-4 py-6">
-        <div className="rounded-2xl border border-neutral-200 bg-white p-4 text-sm text-neutral-700">
+        <div className="rounded-2xl border border-quegym-border bg-quegym-elevated p-4 text-sm text-quegym-primary">
           Acceso partner requerido para ver tus centros.
         </div>
       </main>
@@ -52,18 +52,18 @@ export default async function PartnerMisCentrosPage(props: {
   return (
     <main className="mx-auto w-full max-w-[420px] px-4 py-4">
       <header className="mb-5 flex items-center justify-between">
-        <Link href={selectedSlug ? `/partner/panel?venueSlug=${encodeURIComponent(selectedSlug)}&section=config&configView=gyms` : "/partner/panel?section=config&configView=gyms"} className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-600">
+        <Link href={selectedSlug ? `/partner/panel?venueSlug=${encodeURIComponent(selectedSlug)}&section=config&configView=gyms` : "/partner/panel?section=config&configView=gyms"} className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-quegym-subtle text-quegym-secondary">
           ‹
         </Link>
-        <h1 className="text-2xl font-semibold text-neutral-900">Mis centros</h1>
-        <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-500">🔔</span>
+        <h1 className="text-2xl font-semibold text-quegym-primary">Mis centros</h1>
+        <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-quegym-subtle text-quegym-secondary">🔔</span>
       </header>
 
       <section className="space-y-4">
         <div>
-          <h2 className="text-xl font-semibold text-neutral-800">Centros que administro</h2>
-          <p className="text-sm text-neutral-500">
-            Cambiá entre tus gimnasios o agregá uno nuevo
+          <h2 className="text-xl font-semibold text-quegym-primary">Centros que administro</h2>
+          <p className="text-sm text-quegym-secondary">
+            Cambia entre tus gimnasios o agrega uno nuevo
           </p>
         </div>
 
@@ -78,36 +78,36 @@ export default async function PartnerMisCentrosPage(props: {
           return (
             <article
               key={item.venueSlug}
-              className={`rounded-2xl border p-3 ${isSelected ? "border-emerald-300 bg-emerald-50/40" : "border-neutral-200 bg-white"}`}
+              className={`rounded-2xl border p-3 ${isSelected ? "border-quegym-highlight/40 bg-quegym-highlight-soft/40" : "border-quegym-border bg-quegym-elevated"}`}
             >
               <div className="flex items-start gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-neutral-200 text-xs text-neutral-500">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-quegym-subtle text-xs text-quegym-secondary">
                   Logo
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="truncate text-lg font-semibold text-neutral-900">
+                    <p className="truncate text-lg font-semibold text-quegym-primary">
                       {formatVenueLabel(item.venueSlug)}
                     </p>
                     {isSelected ? (
-                      <span className="rounded-md border border-emerald-300 bg-white px-2 py-0.5 text-sm text-emerald-700">
+                      <span className="rounded-md border border-quegym-highlight/40 bg-quegym-elevated px-2 py-0.5 text-sm text-quegym-highlight">
                         Activo
                       </span>
                     ) : (
-                      <span className="text-neutral-400">›</span>
+                      <span className="text-quegym-secondary">›</span>
                     )}
                   </div>
-                  <p className="text-sm text-neutral-500">{item.venueSlug}</p>
+                  <p className="text-sm text-quegym-secondary">{item.venueSlug}</p>
                   <div className="mt-2 flex items-center gap-2">
-                    <span className="rounded-md border border-emerald-300 bg-emerald-50 px-2 py-0.5 text-sm text-emerald-700">
+                    <span className="rounded-md border border-quegym-highlight/40 bg-quegym-highlight-soft px-2 py-0.5 text-sm text-quegym-highlight">
                       {item.status === "active" ? "Verificado" : item.status}
                     </span>
                     {isSelected ? (
-                      <span className="text-sm font-medium text-emerald-700">Estás viendo este centro ahora</span>
+                      <span className="text-sm font-medium text-quegym-highlight">Estás viendo este centro ahora</span>
                     ) : (
                       <Link
                         href={`/partner/panel?venueSlug=${encodeURIComponent(item.venueSlug)}&section=config&configView=gyms`}
-                        className="text-sm font-medium text-neutral-500 hover:text-neutral-700"
+                        className="text-sm font-medium text-quegym-secondary hover:text-quegym-primary"
                       >
                         Cambiar
                       </Link>
@@ -118,13 +118,13 @@ export default async function PartnerMisCentrosPage(props: {
               <div className="mt-3 grid grid-cols-2 gap-2">
                 <Link
                   href={`/partner/panel?venueSlug=${encodeURIComponent(item.venueSlug)}&section=perfil`}
-                  className="rounded-xl border border-emerald-300 bg-white px-3 py-2 text-center text-sm font-medium text-emerald-700"
+                  className="rounded-xl border border-quegym-highlight/40 bg-quegym-elevated px-3 py-2 text-center text-sm font-medium text-quegym-highlight"
                 >
                   Editar perfil
                 </Link>
                 <Link
                   href={`/gyms/${encodeURIComponent(item.venueSlug)}`}
-                  className="rounded-xl border border-emerald-300 bg-white px-3 py-2 text-center text-sm font-medium text-emerald-700"
+                  className="rounded-xl border border-quegym-highlight/40 bg-quegym-elevated px-3 py-2 text-center text-sm font-medium text-quegym-highlight"
                 >
                   Ver público
                 </Link>
@@ -133,15 +133,15 @@ export default async function PartnerMisCentrosPage(props: {
           );
         })}
 
-        <div className="flex items-center gap-3 text-neutral-400">
-          <div className="h-px flex-1 bg-neutral-200" />
+        <div className="flex items-center gap-3 text-quegym-secondary">
+          <div className="h-px flex-1 bg-quegym-subtle" />
           <span className="text-sm font-medium">Agregar centro</span>
-          <div className="h-px flex-1 bg-neutral-200" />
+          <div className="h-px flex-1 bg-quegym-subtle" />
         </div>
 
         <Link
           href="/partner/claim"
-          className="rounded-2xl border border-dashed border-neutral-300 bg-white px-4 py-6 text-center text-lg font-semibold text-neutral-500"
+          className="rounded-2xl border border-dashed border-quegym-border bg-quegym-elevated px-4 py-6 text-center text-lg font-semibold text-quegym-secondary"
         >
           Registrar o reclamar nuevo centro
         </Link>

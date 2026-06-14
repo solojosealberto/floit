@@ -74,15 +74,15 @@ export default async function AdminPartnerClaimsPage(props: {
       redirect("/admin/login");
     }
     return (
-      <main className="mx-auto max-w-4xl px-4 py-12 text-sm text-neutral-600">
-        <h1 className="text-lg font-semibold text-neutral-900">Partner claims</h1>
+      <main className="mx-auto max-w-4xl px-4 py-12 text-sm text-quegym-secondary">
+        <h1 className="text-lg font-semibold text-quegym-primary">Partner claims</h1>
         <p className="mt-2">
           Configura{" "}
-          <code className="rounded bg-neutral-100 px-1">
+          <code className="rounded bg-quegym-subtle px-1">
             ADMIN_OIDC_ACCESS_TOKEN
           </code>{" "}
           (recomendado) o{" "}
-          <code className="rounded bg-neutral-100 px-1">ADMIN_API_TOKEN</code>.
+          <code className="rounded bg-quegym-subtle px-1">ADMIN_API_TOKEN</code>.
         </p>
       </main>
     );
@@ -156,10 +156,10 @@ export default async function AdminPartnerClaimsPage(props: {
   }
 
   return (
-    <main className="min-h-screen bg-[#f7f9fc] p-3 md:p-4">
+    <main className="min-h-screen bg-quegym-page p-3 md:p-4">
       <div className="grid gap-4 md:grid-cols-[260px_1fr]">
         <AdminSidebar active="claims" />
-        <section className="min-w-0 rounded-2xl border border-neutral-200 bg-white p-4 text-neutral-900 [color-scheme:light] md:p-6">
+        <section className="min-w-0 qg-surface qg-motion rounded-2xl border border-quegym-border bg-quegym-elevated p-4 text-quegym-primary md:p-6">
           {err ? (
             <UIBanner variant="error" className="mb-6">
               No se pudo cargar claims: {err}. Revisa partner-service y el token admin.

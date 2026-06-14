@@ -7,14 +7,14 @@ Priorización de siguientes iteraciones basada en:
 - `docs/product/PRD.md`
 - `docs/product/BACKLOG.md`
 
-## Prioridad 0b — Calidad catálogo importado (2026-05-21)
+## Prioridad 0b — Calidad catálogo importado (2026-05-27)
 
-Tras `pnpm venues:load` (~95 venues en local, demos seed retirados de BD):
+Tras `pnpm venues:normalize` + `pnpm venues:audit:ui` (95 venues, **100% descripción limpia** en JSON):
 
-1. **Geocodificación:** re-ejecutar `pnpm venues:normalize` (caché en `data/venues-geocode-cache.json`) o integrar API Maps; ~52 venues aún con coords fallback — ver `VENUES_CATALOG_IMPORT.md`.
-2. **Taxonomía:** segunda pasada de mapeo `venueType` / `zone` en `scripts/venues-import/lib/mappings.mjs` y reimport idempotente.
-3. **Partner QA:** sembrar ownership sobre slugs reales (`LOCAL_TEST_CREDENTIALS.md`), no `oxide-chacao`.
-4. **Admin:** revisar `/admin/duplicados` y fichas con nota «coordenadas aproximadas» en descripción.
+1. **Import staging/prod:** `pnpm venues:import:staging` (Neon) o local `pnpm venues:import --update` con catalog en 4010.
+2. **Geocodificación:** caché en `data/venues-geocode-cache.json`; revisar venues con coords fallback — ver `VENUES_CATALOG_IMPORT.md`.
+3. **Completitud UI:** ~51.6% venues ≥0.55 — priorizar partners con fotos/precio/contacto.
+4. **Partner QA:** ownership sobre slugs reales (`LOCAL_TEST_CREDENTIALS.md`), no demos seed.
 
 ## Prioridad 0 — Staging operativo → producción `www.quegym.com`
 
@@ -26,26 +26,31 @@ Plan: **`PRODUCTION_LAUNCH_PLAN.md`**. Infra staging: **`STAGING_DEPLOYMENT_STAT
 
 **Hecho (2026-05-27):** auth M2M Auth0 + fix issuer `00fd9f9`; `pnpm sprint5:staging-gate -- --kpi-relaxed` → Sprint 4 + flow-checklist **PASS**; `/admin/leads` operativo; evidencias en `STAGING_EVIDENCE_SPRINT5.md`.
 
-**Ahora (cierre formal beta staging):**
+**Hecho (2026-05-27):** Sprint **UX-A/B/C** en repo — plan [`QUEGYM_UX_V0_IMPROVEMENT_PLAN.md`](../ux/QUEGYM_UX_V0_IMPROVEMENT_PLAN.md). Incluye `CompareActiveBar` (`/buscar`), `CompareGrid` móvil (`/comparar`), catálogo JSON 100% descripción limpia (`pnpm venues:audit:ui`).
 
-1. **Renovar token M2M** periódicamente: `pnpm auth0:m2m-token` → Vercel Preview `ADMIN_OIDC_ACCESS_TOKEN`.
-2. **E2E manual** — completar §2–3 de `STAGING_EVIDENCE_SPRINT5.md` (buscar → ficha → lead → admin → partner SLA).
-3. **Tráfico A/B** — generar eventos con variantes `membership` + `trial` en staging; re-ejecutar `pnpm sprint5:staging-gate` (sin `--kpi-relaxed` cuando haya volumen).
-4. **Firma GO/NO-GO** producto/ops en evidencias Sprint 4/5.
-5. **Cutover prod** (solo tras GO): `www.quegym.com`, import prod, OIDC-only, §14 del plan.
+**Ahora (deploy UX + cierre formal beta staging):**
+
+1. **Deploy web** a `staging.quegym.com` (Vercel) con rama `main` / PR UX.
+2. **Import catálogo** en Neon: `pnpm venues:import:staging` (ver `VENUES_CATALOG_IMPORT.md`).
+3. **Renovar token M2M** si aplica: `pnpm auth0:m2m-token` → Vercel `ADMIN_OIDC_ACCESS_TOKEN`.
+4. **QA visual UX** — [`UI_VISUAL_QA_CHECKLIST.md`](../ux/UI_VISUAL_QA_CHECKLIST.md) (buscar, comparar móvil, ficha, home, **focus campos §4**, dual-theme).
+5. **E2E manual** — §2–3 de `STAGING_EVIDENCE_SPRINT5.md`.
+6. **Tráfico A/B** → `pnpm sprint5:staging-gate`.
+7. **Firma GO/NO-GO** → cutover prod (§14 `PRODUCTION_LAUNCH_PLAN.md`).
 
 ## Prioridad 0b — Rebrand (estado)
 
 - **Fase 1 (marca visible):** `Completado` — ver `docs/operations/REBRAND_QUEGYM_PLAN.md`.
-- **Fase 2 (tokens, favicon, migración `localStorage`):** `Pendiente` — PR dedicado; no mezclar con OIDC staging.
-- **Fase 3 (identificadores técnicos):** `Pendiente` — coordinar con analytics, DB y despliegue.
+- **Fase 2 (tokens, favicon, migración `localStorage`, copy):** `Completado en repo` (2026-05-27) — QA staging pendiente.
+- **Fase 3 (identificadores técnicos `@floit/*`):** `Pendiente` — coordinar con analytics, DB y despliegue.
 
-## Prioridad 1 — Sprint UI (completado mayo 2026)
+## Prioridad 1 — Sprint UI + UX (completado mayo 2026)
 
 ### 1.0 Estado
 
 - Páginas P1/P2 del Sprint 11 **entregadas** (ver `sprints.md` § Sprint 11 y `WEB_ROUTES_PLATFORM.md`).
-- Siguiente foco recomendado: **Prioridad 2** (OIDC staging, QA visual staging, fases 4–5 ficha gym).
+- Sprint **UX-A/B/C** **entregado en repo** — comparador móvil, tarjetas discovery, pipeline import (ver `EPICS_USER_STORIES_STATUS.md` epic UX-V0).
+- Siguiente foco: **Prioridad 0** (deploy UX staging + cierre beta).
 
 ### 1.1 Páginas — inventario actual
 
@@ -56,8 +61,10 @@ Plan: **`PRODUCTION_LAUNCH_PLAN.md`**. Infra staging: **`STAGING_DEPLOYMENT_STAT
 ### 1.2 Páginas a pulir visualmente en esta ronda
 
 - **`/admin/leads`:** vista operativa alineada a **catálogo** (misma tarjeta blanca y pestañas en barra gris), métricas, banner de sospechosos, filtros y tabla; canal **Formulario / WhatsApp** según `entryChannel` en `leads-service`; dispositivo desde User-Agent reenviado por el BFF (`x-client-user-agent`). **Ver** abre modal de detalle (`LeadDetailModal`) con operación vía **`GET/PATCH /api/admin/leads/[id]`** (servicio: **`/v1/admin/lead/:id`**: estados, `adminNote`, trazabilidad). Export CSV y SLA siguen en `GET /api/admin/leads/export` y métricas dashboard según env.
-- `/buscar` (modo mapa desktop, terminado y validado)
-- `/gyms/[slug]` (CTAs/modales, terminado y validado)
+- `/buscar` (tarjetas unificadas, barra comparador, skeletons, mapa móvil, **focus barra búsqueda**)
+- `/comparar` (grilla sticky móvil/desktop — `CompareGrid`)
+- `/gyms/[slug]` (CTAs/modales, Lucide, descripción sanitizada)
+- Home hero (focus en campos búsqueda/zona con `.qg-field`)
 - páginas nuevas de partner/admin que se creen en este sprint, con consistencia total de design language.
 
 ## Prioridad 2 — Cierre operativo de MVP en staging/prod

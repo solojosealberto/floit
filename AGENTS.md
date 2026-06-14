@@ -2,7 +2,7 @@
 
 ## Producto
 
-**QueGym** — marketplace **discovery + comparación + leads** para centros de fitness en Caracas (MVP). Marca visible en UI: `apps/web/src/lib/brand.ts` (`BRAND_NAME`, `BRAND_PARTNERS`, `BRAND_ADMIN`). **Rebrand:** Fase 1 aplicada; plan y fases siguientes en [`docs/operations/REBRAND_QUEGYM_PLAN.md`](docs/operations/REBRAND_QUEGYM_PLAN.md). Identificadores técnicos legacy `floit_*` / paquetes `@floit/*` se mantienen hasta Fase 3. Fuera del núcleo: checkout multi‑centro, wallet, reservas masivas y pagos complejos (solo pilotos).
+**QueGym** — marketplace **discovery + comparación + leads** para centros de fitness en Caracas (MVP). Marca visible en UI: `apps/web/src/lib/brand.ts` (`BRAND_NAME`, `BRAND_PARTNERS`, `BRAND_ADMIN`, copy canónico `BRAND_HERO_*`). **Rebrand:** Fase 1 + **Fase 2 visual/copy completadas en repo** (2026-05-27); QA staging pendiente — [`REBRAND_QUEGYM_PLAN.md`](docs/operations/REBRAND_QUEGYM_PLAN.md), [`QUEGYM_BRAND_COPY_PLAN.md`](docs/ux/QUEGYM_BRAND_COPY_PLAN.md). Gate copy: `pnpm copy:verify`. Identificadores técnicos legacy `floit_*` / `@floit/*` se mantienen hasta Fase 3.
 
 ## Repo
 

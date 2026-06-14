@@ -66,10 +66,12 @@ async function main() {
       stats.fallbackCoords++;
     }
     if (
-      !r.description?.includes("importación normalizada") &&
-      !r.description?.includes("venues-import")
-    )
+      /Calificación \(fuente\):/i.test(r.description ?? "") ||
+      /Ubicación:\s*cache:/i.test(r.description ?? "") ||
+      /importación normalizada/i.test(r.description ?? "")
+    ) {
       stats.badDescription++;
+    }
     if (!r.modalities?.length) issues.push(`sin modalities: ${r.slug}`);
     if (r.name.length > 240) issues.push(`name > 240: ${r.slug}`);
   }

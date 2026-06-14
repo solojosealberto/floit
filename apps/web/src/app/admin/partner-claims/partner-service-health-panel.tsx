@@ -37,7 +37,7 @@ function StatusGlyph(props: { ok: boolean; warn?: boolean }) {
   }
   if (props.ok) {
     return (
-      <span className="inline-flex h-5 w-5 items-center justify-center text-emerald-600" aria-hidden>
+      <span className="inline-flex h-5 w-5 items-center justify-center text-quegym-highlight" aria-hidden>
         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
         </svg>
@@ -64,8 +64,8 @@ function QueueMiniStat(props: {
     props.tone === "danger"
       ? "border-rose-200 bg-rose-50"
       : props.tone === "success"
-        ? "border-emerald-200 bg-emerald-50"
-        : "border-neutral-200 bg-neutral-100/90";
+        ? "border-quegym-highlight/30 bg-quegym-highlight-soft"
+        : "border-quegym-border bg-quegym-subtle/90";
   const ratio =
     props.tone === "neutral" && props.value > 0
       ? Math.min(100, 35 + (props.value % 40))
@@ -74,14 +74,14 @@ function QueueMiniStat(props: {
         : 100;
   return (
     <div className={`rounded-xl border p-3 ${shell}`}>
-      <p className="text-xs font-medium text-neutral-600">{props.label}</p>
-      <p className="mt-1 text-2xl font-semibold tabular-nums text-neutral-900">{props.value}</p>
+      <p className="text-xs font-medium text-quegym-secondary">{props.label}</p>
+      <p className="mt-1 text-2xl font-semibold tabular-nums text-quegym-primary">{props.value}</p>
       {props.tone === "neutral" ? (
-        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-neutral-200">
+        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-quegym-subtle">
           <div className="h-full rounded-full bg-sky-500/90" style={{ width: `${ratio}%` }} />
         </div>
       ) : null}
-      <p className="mt-2 flex items-center gap-1 text-xs text-neutral-600">
+      <p className="mt-2 flex items-center gap-1 text-xs text-quegym-secondary">
         {props.hintIcon === "alert" ? (
           <svg className="h-3.5 w-3.5 text-rose-600" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -92,17 +92,17 @@ function QueueMiniStat(props: {
           </svg>
         ) : null}
         {props.hintIcon === "trend" ? (
-          <svg className="h-3.5 w-3.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="h-3.5 w-3.5 text-quegym-highlight" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
           </svg>
         ) : null}
         {props.hintIcon === "clock" ? (
-          <svg className="h-3.5 w-3.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="h-3.5 w-3.5 text-quegym-highlight" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         ) : null}
         {props.hintIcon === "check" ? (
-          <svg className="h-3.5 w-3.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="h-3.5 w-3.5 text-quegym-highlight" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         ) : null}
@@ -116,10 +116,10 @@ export function PartnerServiceHealthPanel(props: { health: PartnerHealthPanelDat
   const { health } = props;
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm ring-1 ring-black/5">
+    <div className="overflow-hidden rounded-2xl border border-quegym-border bg-quegym-elevated qg-surface-subtle qg-motion">
       <div className="flex flex-wrap items-center justify-between gap-3 bg-[#0f172a] px-4 py-3 text-white md:px-5">
         <div className="flex min-w-0 items-start gap-3">
-          <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
+          <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-quegym-elevated/10">
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -134,19 +134,19 @@ export function PartnerServiceHealthPanel(props: { health: PartnerHealthPanelDat
             <p className="text-sm text-white/70">Colas, OIDC y sincronización con catálogo</p>
           </div>
         </div>
-        <AdminRefreshButton className="inline-flex items-center rounded-lg border border-white/30 bg-white/5 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-white/10" />
+        <AdminRefreshButton className="inline-flex items-center rounded-lg border border-white/30 bg-quegym-elevated/5 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-quegym-elevated/10" />
       </div>
 
-      <div className="border-t border-neutral-100 bg-[#fafbfc] p-4 md:p-5">
+      <div className="border-t border-quegym-border bg-[#fafbfc] p-4 md:p-5">
         {!health ? (
-          <p className="text-sm text-neutral-600">Sin datos de health. Verifica que partner-service responda en /health.</p>
+          <p className="text-sm text-quegym-secondary">Sin datos de health. Verifica que partner-service responda en /health.</p>
         ) : (
           <>
             <div className="grid gap-4 lg:grid-cols-3">
               {/* Auth OIDC */}
-              <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+              <div className="rounded-xl border border-quegym-border bg-quegym-elevated p-4">
                 <div className="mb-3 flex items-center gap-2">
-                  <svg className="h-5 w-5 text-neutral-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-5 w-5 text-quegym-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -154,19 +154,19 @@ export function PartnerServiceHealthPanel(props: { health: PartnerHealthPanelDat
                       d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                     />
                   </svg>
-                  <span className="text-sm font-semibold text-neutral-900">Auth OIDC</span>
+                  <span className="text-sm font-semibold text-quegym-primary">Auth OIDC</span>
                 </div>
                 <ul className="space-y-3 text-sm">
                   <li className="flex items-center justify-between gap-2">
-                    <span className="text-neutral-600">Admin OIDC</span>
-                    <span className="flex items-center gap-2 font-medium text-neutral-900">
+                    <span className="text-quegym-secondary">Admin OIDC</span>
+                    <span className="flex items-center gap-2 font-medium text-quegym-primary">
                       <StatusGlyph ok={Boolean(health.auth?.adminStrictOidc)} />
                       {health.auth?.adminStrictOidc ? "Strict activo" : "Modo flexible"}
                     </span>
                   </li>
                   <li className="flex items-center justify-between gap-2">
-                    <span className="text-neutral-600">Partner OIDC</span>
-                    <span className="flex items-center gap-2 font-medium text-neutral-900">
+                    <span className="text-quegym-secondary">Partner OIDC</span>
+                    <span className="flex items-center gap-2 font-medium text-quegym-primary">
                       <StatusGlyph
                         ok={Boolean(health.auth?.partnerStrictOidc)}
                         warn={!health.auth?.partnerStrictOidc && Boolean(health.auth?.partnerOidcConfigured)}
@@ -175,8 +175,8 @@ export function PartnerServiceHealthPanel(props: { health: PartnerHealthPanelDat
                     </span>
                   </li>
                   <li className="flex items-center justify-between gap-2">
-                    <span className="text-neutral-600">Emisor configurado</span>
-                    <span className="flex items-center gap-2 font-medium text-neutral-900">
+                    <span className="text-quegym-secondary">Emisor configurado</span>
+                    <span className="flex items-center gap-2 font-medium text-quegym-primary">
                       <StatusGlyph ok={Boolean(health.auth?.adminOidcConfigured && health.auth?.partnerOidcConfigured)} />
                       {health.auth?.adminOidcConfigured && health.auth?.partnerOidcConfigured
                         ? "Admin + Partner"
@@ -187,9 +187,9 @@ export function PartnerServiceHealthPanel(props: { health: PartnerHealthPanelDat
               </div>
 
               {/* catalogSync */}
-              <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+              <div className="rounded-xl border border-quegym-border bg-quegym-elevated p-4">
                 <div className="mb-3 flex items-center gap-2">
-                  <svg className="h-5 w-5 text-neutral-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-5 w-5 text-quegym-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -197,7 +197,7 @@ export function PartnerServiceHealthPanel(props: { health: PartnerHealthPanelDat
                       d="M13 10V3L4 14h7v7l9-11h-7z"
                     />
                   </svg>
-                  <span className="text-sm font-semibold text-neutral-900">Queue catalogSync</span>
+                  <span className="text-sm font-semibold text-quegym-primary">Queue catalogSync</span>
                 </div>
                 <div className="grid gap-2">
                   <QueueMiniStat
@@ -228,9 +228,9 @@ export function PartnerServiceHealthPanel(props: { health: PartnerHealthPanelDat
               </div>
 
               {/* outbox */}
-              <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+              <div className="rounded-xl border border-quegym-border bg-quegym-elevated p-4">
                 <div className="mb-3 flex items-center gap-2">
-                  <svg className="h-5 w-5 text-neutral-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-5 w-5 text-quegym-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -238,7 +238,7 @@ export function PartnerServiceHealthPanel(props: { health: PartnerHealthPanelDat
                       d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4-8-4s-8 1.79-8 4"
                     />
                   </svg>
-                  <span className="text-sm font-semibold text-neutral-900">Queue catalogSyncOutbox</span>
+                  <span className="text-sm font-semibold text-quegym-primary">Queue catalogSyncOutbox</span>
                 </div>
                 <div className="grid gap-2">
                   <QueueMiniStat
@@ -272,14 +272,14 @@ export function PartnerServiceHealthPanel(props: { health: PartnerHealthPanelDat
             <div
               className={`mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border px-4 py-3 ${
                 health.readiness?.recommendedForStrictOidc
-                  ? "border-emerald-200 bg-emerald-50/90"
+                  ? "border-quegym-highlight/30 bg-quegym-highlight-soft/90"
                   : "border-amber-200 bg-amber-50/90"
               }`}
             >
               <div className="flex items-start gap-3">
                 <span
                   className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
-                    health.readiness?.recommendedForStrictOidc ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-800"
+                    health.readiness?.recommendedForStrictOidc ? "bg-quegym-highlight-soft text-quegym-highlight" : "bg-amber-100 text-amber-800"
                   }`}
                 >
                   {health.readiness?.recommendedForStrictOidc ? (
@@ -293,15 +293,15 @@ export function PartnerServiceHealthPanel(props: { health: PartnerHealthPanelDat
                   )}
                 </span>
                 <div>
-                  <p className="font-semibold text-neutral-900">Readiness OIDC-only</p>
-                  <p className="text-sm text-neutral-600">
+                  <p className="font-semibold text-quegym-primary">Readiness OIDC-only</p>
+                  <p className="text-sm text-quegym-secondary">
                     {health.readiness?.recommendedForStrictOidc
                       ? "Listo para activar strict OIDC en producción (colas sanas + issuer configurado)."
                       : "Revisa colas fallidas y variables OIDC antes de forzar strict en producción."}
                   </p>
                 </div>
               </div>
-              <code className="rounded-lg bg-white/80 px-2 py-1 text-xs font-medium text-neutral-800 ring-1 ring-neutral-200/80">
+              <code className="rounded-lg bg-quegym-elevated/80 px-2 py-1 text-xs font-medium text-quegym-primary ring-1 ring-quegym-border/80">
                 recommendedForStrictOidc: {String(Boolean(health.readiness?.recommendedForStrictOidc))}
               </code>
             </div>

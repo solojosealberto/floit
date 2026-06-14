@@ -4,7 +4,7 @@ Documento corto para retomar trabajo sin releer todo el historial.
 
 ## 1) Estado actual en una frase
 
-Staging **GO técnico condicional**: 5/5 servicios OK, Sprint 4 + `sprint5:flow-checklist` PASS (M2M Auth0 + fix issuer `00fd9f9`), `/admin/leads` operativo. Pendiente: tráfico A/B para KPI gate, E2E manual §2–3, firma producto/ops.
+**Repo local:** Sprint UX-A/B/C **cerrado** (confianza catálogo, comparador móvil/desktop, catálogo JSON normalizado). **Staging:** GO técnico condicional — pendiente **deploy UX**, import catálogo re-normalizado en Neon, QA visual, tráfico KPI A/B y firma GO/NO-GO.
 
 ## 2) Prioridad de arranque (orden estricto)
 
@@ -17,15 +17,31 @@ Staging **GO técnico condicional**: 5/5 servicios OK, Sprint 4 + `sprint5:flow-
 
 ## 3) Objetivo recomendado para la próxima sesión
 
-**Cierre formal beta staging** (Sprint 6 operativo):
+**Deploy UX + cierre formal beta staging:**
 
-- ~~Auth M2M + SLA 401~~ (**hecho** 2026-05-27),
-- ~~`pnpm sprint5:flow-checklist` en staging~~ (**PASS**),
-- **Generar tráfico CTA** (membership + trial) y re-ejecutar `pnpm sprint5:staging-gate`,
-- **E2E manual** — §2–3 de `STAGING_EVIDENCE_SPRINT5.md`,
-- **Renovar** `ADMIN_OIDC_ACCESS_TOKEN` en Vercel si expiró (`pnpm auth0:m2m-token`),
-- **Firma GO/NO-GO** producto/ops,
-- Luego: cutover prod según `PRODUCTION_LAUNCH_PLAN.md`.
+1. **Deploy web** a Vercel Preview/staging (`staging.quegym.com`) con cambios UX + comparador.
+2. **Import catálogo** re-normalizado en Neon:
+   ```bash
+   export CATALOG_SERVICE_URL=https://floitcatalog-service-production.up.railway.app
+   export CATALOG_INTERNAL_API_TOKEN=<vault>
+   pnpm venues:import:staging
+   pnpm venues:validate:live
+   ```
+3. **QA manual** — [`docs/ux/UI_VISUAL_QA_CHECKLIST.md`](../ux/UI_VISUAL_QA_CHECKLIST.md):
+   - Home: barra búsqueda — focus sigue curvas del contenedor (§4).
+   - `/buscar`: filtros, skeletons, barra comparador (móvil + desktop).
+   - `/comparar`: grilla sticky, 2–3 centros, CTAs WhatsApp/ficha.
+   - Ficha gym, favoritos, dual-theme.
+4. **E2E manual** — §2–3 de `STAGING_EVIDENCE_SPRINT5.md`.
+5. **Tráfico CTA** A/B → `pnpm sprint5:staging-gate` (sin `--kpi-relaxed` cuando haya volumen).
+6. **Firma GO/NO-GO** producto/ops → cutover prod según `PRODUCTION_LAUNCH_PLAN.md`.
+
+**Hecho en repo (no repetir):**
+
+- ~~Rebrand Fase 2 UI + copy~~ (`pnpm copy:verify`)
+- ~~Sprint UX-A/B/C~~ — ver `sprints.md` § Rebrand Fase 2 / Sprint UX
+- ~~`pnpm sprint5:flow-checklist` staging~~ (PASS)
+- ~~Auth M2M + SLA 401~~ (2026-05-27)
 
 Vault local (gitignored): `docs/env/staging.local` — copiar desde `docs/env/staging.local.example`.
 
@@ -39,12 +55,23 @@ pnpm sprint5:staging-gate                    # umbrales PRD (cuando haya tráfic
 
 ## 4) Checklist técnico de inicio
 
-- `pnpm platform:preflight`
-- `pnpm docker:up` + `pnpm dev:services` + `pnpm dev:web` (solo si trabajo local)
-- Gates staging: `pnpm sprint5:staging-gate` (lee `docs/env/staging.local`)
+- `pnpm --filter @floit/web typecheck`
+- `pnpm copy:verify`
+- Local (opcional): `pnpm docker:up` + `pnpm dev:services` + `pnpm dev:web`
+- Local import: `pnpm venues:import --update` (catalog en **4010**)
 - Guía local: `docs/operations/LOCALHOST_LINKS_GUIDE.md`
 
-## 5) Definition of done mínima por iteración
+## 5) Archivos clave UX (última iteración)
+
+| Área | Archivos |
+|------|----------|
+| Tarjetas | `venue-card-grid.tsx`, `venue-card.tsx`, `packages/ui/src/venue-image.tsx` |
+| Buscar | `buscar/buscar-client.tsx`, `buscar/loading.tsx`, `discovery-filter-link.tsx` |
+| Comparador | `compare-active-bar.tsx`, `compare-grid.tsx`, `comparar/comparar-client.tsx` |
+| Focus / forms | `globals.css` (`.qg-field`, `.qg-input`), `packages/ui/src/input.tsx`, `select.tsx` |
+| Catálogo | `scripts/venues-import/`, `data/venues-caracas.normalized.json` |
+
+## 6) Definition of done mínima por iteración
 
 - contratos alineados (OpenAPI/JSON si aplica),
 - tests verdes de la capability afectada,

@@ -8,3 +8,5 @@ export { UIEmptyState } from "./empty-state";
 export { UITableContainer, UITable, UITableCell } from "./table";
 export { UIBanner } from "./banner";
 export { uiTokens } from "./tokens";
+export { VenueImage, venueInitials, venueModalityTint } from "./venue-image";
+export type { VenueImageProps } from "./venue-image";

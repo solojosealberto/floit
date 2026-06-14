@@ -6,7 +6,7 @@ import { PartnerPanelClient } from "../partner-panel-client";
 function PartnerPanelFallback() {
   return (
     <main className="mx-auto flex min-h-[40vh] max-w-4xl items-center justify-center px-4">
-      <p className="text-sm text-neutral-500">Cargando panel…</p>
+      <p className="text-sm text-quegym-secondary">Cargando panel…</p>
     </main>
   );
 }

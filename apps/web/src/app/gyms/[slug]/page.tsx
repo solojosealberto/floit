@@ -4,6 +4,8 @@ import { BRAND_NAME } from "@/lib/brand";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GymContactSection } from "./gym-contact-section";
+import { GymDescriptionBlock } from "./gym-description-block";
+import { GymGallery } from "./gym-gallery";
 import {
   GymHeaderActionControls,
   GymMobileActionRow,
@@ -11,6 +13,11 @@ import {
 import { GymLocationMap } from "./gym-location-map";
 import { GymMobileSectionTabs } from "./gym-mobile-section-tabs";
 import { VenueViewTracker } from "./venue-view-tracker";
+import { VenueImage } from "@floit/ui";
+import { MessageCircle, Star } from "lucide-react";
+import { VenuePriceDisplay } from "@/components/venue-price-display";
+import { FeatureCheck } from "@/components/feature-check";
+import { parseVenueDescription } from "@/lib/venue-description";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -45,8 +52,9 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     });
     if (!res.ok) return { title: slug };
     const v = (await res.json()) as VenueDetail;
+    const parsed = parseVenueDescription(v.description);
     const desc =
-      v.description?.slice(0, 155) ??
+      parsed.summary?.slice(0, 155) ??
       `${v.name} en ${v.zone}. ${v.venueType}.`;
     return {
       title: v.name,
@@ -107,90 +115,104 @@ export default async function GymPage(props: Props) {
   const amenityList = venue.amenities?.length ? venue.amenities : ["Musculación", "Cardio", "Funcional"];
   const modalityList = venue.modalities?.length ? venue.modalities : ["Musculación", "Funcional"];
   const galleryPhotos = (venue.photoUrls ?? []).filter(Boolean);
-  const mainPhoto = galleryPhotos[0];
-  const extraPhotos = galleryPhotos.slice(1);
 
   return (
-    <main className="mx-auto flex w-full max-w-[1240px] flex-col gap-4 bg-white px-3 py-4 text-neutral-900 lg:px-4">
+    <main className="mx-auto flex w-full max-w-[1240px] flex-col gap-4 bg-quegym-page px-3 py-4 text-quegym-primary lg:px-4">
       <VenueViewTracker slug={venue.slug} />
 
-      <div className="flex items-center justify-between gap-2 border-b border-neutral-200 pb-2">
-        <div className="flex items-center gap-2 text-xs text-neutral-500">
-          <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-neutral-900 text-[11px] font-semibold text-white">
-            F
+      <div className="flex items-center justify-between gap-2 border-b border-quegym-border pb-2">
+        <div className="flex items-center gap-2 text-xs text-quegym-secondary">
+          <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-quegym-accent text-[11px] font-semibold text-white">
+            Q
           </span>
           <Link href="/" className="hover:underline">{BRAND_NAME}</Link>
           <span>›</span>
           <Link href={`/buscar?zone=${encodeURIComponent(venue.zone)}`} className="hover:underline">{venue.zone}</Link>
           <span>›</span>
-          <span className="text-neutral-700">{venue.name}</span>
+          <span className="text-quegym-primary">{venue.name}</span>
         </div>
         <GymHeaderActionControls slug={venue.slug} venueName={venue.name} />
       </div>
 
       <section className="lg:hidden">
-        <div className="overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-sm">
-          <div id="m-galeria" className="relative h-56 scroll-mt-24 bg-neutral-200">
-            {mainPhoto ? (
+        <div className="overflow-hidden rounded-3xl border border-quegym-border bg-quegym-elevated shadow-sm">
+          <div id="m-galeria" className="relative h-56 scroll-mt-24">
+            {galleryPhotos[0] ? (
               <img
-                src={mainPhoto}
+                src={galleryPhotos[0]}
                 alt={`Foto principal de ${venue.name}`}
                 className="absolute inset-0 h-full w-full object-cover"
               />
-            ) : null}
+            ) : (
+              <VenueImage
+                src={null}
+                name={venue.name}
+                modality={modalityList[0] ?? venue.venueType}
+                className="h-full w-full"
+              />
+            )}
             <Link
               href="/buscar"
-              className="absolute left-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-sm text-neutral-700 shadow"
+              className="absolute left-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-quegym-elevated/90 text-sm text-quegym-primary shadow"
             >
               ←
             </Link>
             <a
               href={`/comparar?c=${encodeURIComponent(venue.slug)}`}
-              className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-sm text-neutral-700 shadow"
+              className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-quegym-elevated/90 text-sm text-quegym-primary shadow"
             >
               ⇄
             </a>
-            {!mainPhoto ? (
-              <p className="absolute inset-x-0 top-24 text-center text-xs text-neutral-500">
-                Galería del centro · sin fotos cargadas
-              </p>
+            {galleryPhotos.length > 1 ? (
+              <div className="absolute bottom-4 left-3 flex items-center gap-1.5">
+                {galleryPhotos.slice(1, 4).map((url, idx) => (
+                  <img
+                    key={`${url}-${idx}`}
+                    src={url}
+                    alt={`Miniatura ${idx + 2} de ${venue.name}`}
+                    className="h-6 w-6 rounded-lg border border-white/80 bg-quegym-elevated object-cover"
+                  />
+                ))}
+                {galleryPhotos.length > 4 ? (
+                  <span className="rounded-lg bg-quegym-secondary px-2 py-1 text-[11px] font-medium text-white">
+                    +{galleryPhotos.length - 4}
+                  </span>
+                ) : null}
+              </div>
             ) : null}
-            <div className="absolute bottom-4 left-3 flex items-center gap-1.5">
-              {extraPhotos.slice(0, 3).map((url, idx) => (
-                <img
-                  key={`${url}-${idx}`}
-                  src={url}
-                  alt={`Miniatura ${idx + 2} de ${venue.name}`}
-                  className="h-6 w-6 rounded-lg border border-white/80 bg-white object-cover"
-                />
-              ))}
-              {galleryPhotos.length > 4 ? (
-                <span className="rounded-lg bg-neutral-500 px-2 py-1 text-[11px] font-medium text-white">
-                  +{galleryPhotos.length - 4}
-                </span>
-              ) : null}
-            </div>
-            <span className="absolute bottom-4 right-3 rounded-full bg-black/55 px-2 py-1 text-[11px] text-white">
-              {galleryPhotos.length > 0 ? `1 / ${galleryPhotos.length}` : "0 / 0"}
-            </span>
+            {galleryPhotos.length > 0 ? (
+              <span className="absolute bottom-4 right-3 rounded-full bg-black/55 px-2 py-1 text-[11px] text-white">
+                1 / {galleryPhotos.length}
+              </span>
+            ) : null}
           </div>
 
-          <div className="space-y-3 border-t border-neutral-200 p-4">
-            <h1 className="text-2xl font-semibold leading-tight text-neutral-900">
+          <div className="space-y-3 border-t border-quegym-border p-4">
+            <h1 className="text-2xl font-semibold leading-tight text-quegym-primary">
               {venue.name}
             </h1>
             <div className="flex flex-wrap items-center gap-1.5">
               <UIBadge variant={vBadge.tone === "ok" ? "success" : "neutral"}>
                 {vBadge.label}
               </UIBadge>
-              {allowsTrial ? <UIBadge variant="neutral">⭐ Destacado</UIBadge> : null}
+              {allowsTrial ? (
+                <UIBadge variant="neutral">
+                  <span className="inline-flex items-center gap-1">
+                    <Star className="h-3 w-3 fill-current" aria-hidden />
+                    Destacado
+                  </span>
+                </UIBadge>
+              ) : null}
             </div>
-            <p className="text-xs text-neutral-500">
-              ◉ Av. Luis Roche, 2da Transversal · Altamira
+            <p className="text-xs text-quegym-secondary">
+              {venue.address} · {venue.zone}
             </p>
-            <p className="text-xs text-neutral-600">
-              ★ 4.8 (203) &nbsp; $$$ &nbsp; ◉ Abierto hasta las 11pm
-            </p>
+            <VenuePriceDisplay
+              priceMin={venue.priceMin}
+              priceMax={venue.priceMax}
+              variant="card"
+              className="max-w-xs"
+            />
 
             <GymMobileActionRow
               slug={venue.slug}
@@ -211,117 +233,122 @@ export default async function GymPage(props: Props) {
             />
 
             <div id="m-resumen" className="space-y-2 pt-1 scroll-mt-24">
-              <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+              <p className="text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                 Sobre el centro
               </p>
-              {venue.description ? (
-                <p className="text-sm text-neutral-600">{venue.description}</p>
-              ) : (
-                <p className="text-sm text-neutral-500">
-                  Este centro aún no publicó una descripción detallada.
-                </p>
-              )}
+              <GymDescriptionBlock
+                description={venue.description}
+                fallbackVenueType={venue.venueType}
+                fallbackModalities={modalityList}
+                fallbackAmenities={amenityList}
+              />
             </div>
 
             <div className="space-y-2 pt-1">
               <Link href="#contactar-modal">
-                <UIButton className="w-full">Solicitar información</UIButton>
+                <UIButton className="w-full !bg-quegym-accent-hover hover:!bg-quegym-accent">
+                  Solicitar información
+                </UIButton>
               </Link>
               {whatsappHref ? (
                 <a
                   href={whatsappHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex w-full items-center justify-center rounded-xl bg-[#3FA76A] px-3 py-2.5 text-sm font-medium text-white hover:bg-[#348e5a]"
+                  className="qg-btn-primary qg-motion inline-flex w-full items-center justify-center gap-2 rounded-xl bg-quegym-highlight px-3 py-2.5 text-sm font-medium text-white hover:bg-quegym-highlight-hover"
                 >
-                  ☏ Contactar por WhatsApp ahora
+                  <MessageCircle className="h-4 w-4" aria-hidden />
+                  Contactar por WhatsApp ahora
                 </a>
               ) : null}
               <Link
                 href="#reportar-modal"
-                className="inline-flex w-full items-center justify-center rounded-xl border border-neutral-300 bg-white px-3 py-2.5 text-sm font-medium text-neutral-700 hover:bg-neutral-50"
+                className="inline-flex w-full items-center justify-center rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2.5 text-sm font-medium text-quegym-primary hover:bg-quegym-subtle"
               >
                 Reportar datos incorrectos
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 border-t border-neutral-200 pt-3 text-xs text-neutral-600">
-              <div className="rounded-xl bg-neutral-100 px-3 py-2">
-                <p className="text-[10px] text-neutral-500">Horario L–V</p>
+            <div className="grid grid-cols-2 gap-2 border-t border-quegym-border pt-3 text-xs text-quegym-secondary">
+              <div className="rounded-xl bg-quegym-subtle px-3 py-2">
+                <p className="text-[10px] text-quegym-secondary">Horario L–V</p>
                 <p>5:00am – 11:00pm</p>
               </div>
-              <div className="rounded-xl bg-neutral-100 px-3 py-2">
-                <p className="text-[10px] text-neutral-500">Fin de semana</p>
+              <div className="rounded-xl bg-quegym-subtle px-3 py-2">
+                <p className="text-[10px] text-quegym-secondary">Fin de semana</p>
                 <p>7:00am – 8:00pm</p>
               </div>
             </div>
 
-            <div id="m-servicios" className="space-y-2 border-t border-neutral-200 pt-3 scroll-mt-24">
-              <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+            <div id="m-servicios" className="space-y-2 border-t border-quegym-border pt-3 scroll-mt-24">
+              <p className="text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                 Servicios y amenidades
               </p>
               <div className="flex flex-wrap gap-2">
                 {amenityList.map((item) => (
                   <span
                     key={`m-am-${item}`}
-                    className="rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1 text-xs text-neutral-700"
+                    className="rounded-full border border-quegym-border bg-quegym-subtle px-3 py-1 text-xs text-quegym-primary"
                   >
-                    <span className="text-emerald-600">✓</span> {item}
+                    <FeatureCheck>{item}</FeatureCheck>
                   </span>
                 ))}
               </div>
             </div>
 
-            <div id="m-planes" className="space-y-3 border-t border-neutral-200 pt-3 scroll-mt-24">
-              <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+            <div id="m-planes" className="space-y-3 border-t border-quegym-border pt-3 scroll-mt-24">
+              <p className="text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                 Planes disponibles
               </p>
-              <article className="rounded-2xl border border-neutral-200 bg-white p-3">
-                <p className="text-sm text-neutral-600">Mensualidad básica</p>
-                <p className="text-3xl font-semibold text-neutral-900">
+              <article className="rounded-2xl border border-quegym-border bg-quegym-elevated p-3">
+                <p className="text-sm text-quegym-secondary">Mensualidad básica</p>
+                <p className="text-3xl font-semibold text-quegym-primary">
                   ${venue.priceMin ?? 45}
-                  <span className="ml-1 text-xs font-normal text-neutral-500">/mes</span>
+                  <span className="ml-1 text-xs font-normal text-quegym-secondary">/mes</span>
                 </p>
-                <ul className="mt-2 space-y-1 text-xs text-neutral-600">
-                  <li>✓ Acceso full equipos</li>
-                  <li>✓ Vestuarios incluidos</li>
-                  <li>✓ Lunes a domingo</li>
+                <ul className="mt-2 space-y-1 text-xs text-quegym-secondary">
+                  <li><FeatureCheck>Acceso full equipos</FeatureCheck></li>
+                  <li><FeatureCheck>Vestuarios incluidos</FeatureCheck></li>
+                  <li><FeatureCheck>Lunes a domingo</FeatureCheck></li>
                 </ul>
                 <Link
                   href="#contactar-modal"
-                  className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-neutral-300 px-3 py-2 text-xs"
+                  className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-quegym-border px-3 py-2 text-xs"
                 >
                   Más información
                 </Link>
               </article>
-              <article className="rounded-2xl border border-neutral-900 bg-white p-3 shadow-sm">
-                <p className="text-xs text-neutral-600">⭐ Más popular</p>
-                <p className="text-sm text-neutral-600">Mensualidad premium</p>
-                <p className="text-3xl font-semibold text-neutral-900">
-                  ${venue.priceMax ?? 75}
-                  <span className="ml-1 text-xs font-normal text-neutral-500">/mes</span>
+              <article className="rounded-2xl border border-quegym-accent bg-quegym-elevated p-3 shadow-sm">
+                <p className="inline-flex items-center gap-1 text-xs text-quegym-secondary">
+                  <Star className="h-3 w-3 fill-quegym-highlight text-quegym-highlight" aria-hidden />
+                  Más popular
                 </p>
-                <ul className="mt-2 space-y-1 text-xs text-neutral-600">
-                  <li>✓ Todo lo básico</li>
-                  <li>✓ Clases grupales ilimitadas</li>
-                  <li>✓ Acceso sauna</li>
-                  <li>✓ Estacionamiento</li>
+                <p className="text-sm text-quegym-secondary">Mensualidad premium</p>
+                <p className="text-3xl font-semibold text-quegym-primary">
+                  ${venue.priceMax ?? 75}
+                  <span className="ml-1 text-xs font-normal text-quegym-secondary">/mes</span>
+                </p>
+                <ul className="mt-2 space-y-1 text-xs text-quegym-secondary">
+                  <li><FeatureCheck>Todo lo básico</FeatureCheck></li>
+                  <li><FeatureCheck>Clases grupales ilimitadas</FeatureCheck></li>
+                  <li><FeatureCheck>Acceso sauna</FeatureCheck></li>
+                  <li><FeatureCheck>Estacionamiento</FeatureCheck></li>
                 </ul>
                 <Link
                   href="#contactar-modal"
-                  className="mt-3 inline-flex w-full items-center justify-center rounded-xl bg-neutral-900 px-3 py-2 text-xs font-medium text-white"
+                  className="qg-btn-primary qg-motion mt-3 inline-flex w-full items-center justify-center rounded-xl bg-quegym-accent px-3 py-2 text-xs font-medium text-white"
                 >
                   Solicitar este plan
                 </Link>
               </article>
-              <p className="text-xs text-neutral-500">
+              <p className="text-xs text-quegym-secondary">
                 * Precios orientativos en USD equivalente. Consulta al centro para
                 confirmar.
               </p>
             </div>
 
-            <div id="m-ubicacion" className="space-y-3 border-t border-neutral-200 pt-3 scroll-mt-24">
-              <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
+            <div id="m-ubicacion" className="space-y-3 border-t border-quegym-border pt-3 scroll-mt-24">
+              <p className="text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                 Ubicación
               </p>
               <GymLocationMap
@@ -332,11 +359,11 @@ export default async function GymPage(props: Props) {
               />
               <Link
                 href={`/buscar?lat=${venue.lat}&lng=${venue.lng}&sort=distance`}
-                className="inline-flex text-xs font-medium text-neutral-700 underline"
+                className="inline-flex text-xs font-medium text-quegym-primary underline"
               >
                 Ver en buscar
               </Link>
-              <p className="text-xs text-neutral-500">{venue.address}</p>
+              <p className="text-xs text-quegym-secondary">{venue.address}</p>
             </div>
           </div>
         </div>
@@ -353,80 +380,67 @@ export default async function GymPage(props: Props) {
               { id: "ubicacion", label: "Ubicación" },
             ]}
           />
-          <div id="galeria" className="grid gap-2 scroll-mt-24 md:grid-cols-[2fr_1fr]">
-            {mainPhoto ? (
-              <img
-                src={mainPhoto}
-                alt={`Foto principal de ${venue.name}`}
-                className="h-44 w-full rounded-2xl bg-neutral-200 object-cover md:h-56"
-              />
-            ) : (
-              <div className="flex h-44 items-center justify-center rounded-2xl bg-neutral-200 text-sm text-neutral-500 md:h-56">
-                Foto principal
-              </div>
-            )}
-            <div className="grid gap-2">
-              {extraPhotos[0] ? (
-                <img
-                  src={extraPhotos[0]}
-                  alt={`Foto secundaria de ${venue.name}`}
-                  className="h-[108px] w-full rounded-2xl bg-neutral-200 object-cover"
-                />
-              ) : (
-                <div className="flex h-[108px] items-center justify-center rounded-2xl bg-neutral-200 text-xs text-neutral-500">
-                  Foto 2
-                </div>
-              )}
-              <div className="flex h-[108px] items-center justify-center rounded-2xl bg-neutral-500 text-xs font-medium text-white">
-                {galleryPhotos.length > 0
-                  ? `Ver ${galleryPhotos.length} fotos`
-                  : "Sin fotos cargadas"}
-              </div>
-            </div>
-          </div>
+          <GymGallery
+            name={venue.name}
+            venueType={venue.venueType}
+            modalities={modalityList}
+            photoUrls={galleryPhotos}
+          />
 
-          <UICard id="resumen" className="space-y-3 border-neutral-200 bg-white scroll-mt-24">
+          <UICard id="resumen" className="space-y-3 border-quegym-border bg-quegym-elevated scroll-mt-24">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-[34px] font-semibold leading-none tracking-tight text-neutral-900">
+              <h1 className="text-[34px] font-semibold leading-none tracking-tight text-quegym-primary">
                 {venue.name}
               </h1>
               <UIBadge variant={vBadge.tone === "ok" ? "success" : "neutral"}>
                 {vBadge.label}
               </UIBadge>
-              {allowsTrial ? <UIBadge variant="neutral">⭐ Destacado</UIBadge> : null}
+              {allowsTrial ? (
+                <UIBadge variant="neutral">
+                  <span className="inline-flex items-center gap-1">
+                    <Star className="h-3 w-3 fill-current" aria-hidden />
+                    Destacado
+                  </span>
+                </UIBadge>
+              ) : null}
             </div>
-            <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-500">
-              <span>◉ {venue.address}</span>
+            <div className="flex flex-wrap items-center gap-3 text-xs text-quegym-secondary">
+              <span>{venue.address}</span>
               <span>•</span>
-              <span>◷ Lun–Dom · 5am–11pm</span>
+              <span>{venue.zone}</span>
             </div>
-            <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-600">
-              <span>★ 4.8 (203)</span>
-              <span>{formatPrice(venue)}</span>
-            </div>
+            <VenuePriceDisplay
+              priceMin={venue.priceMin}
+              priceMax={venue.priceMax}
+              variant="card"
+              className="max-w-sm"
+            />
             {venue.activePromotionTitle ? (
               <UIBanner variant="warning">Promo: {venue.activePromotionTitle}</UIBanner>
             ) : null}
-            {venue.description ? (
-              <p className="text-sm text-neutral-600">{venue.description}</p>
-            ) : null}
+            <GymDescriptionBlock
+              description={venue.description}
+              fallbackVenueType={venue.venueType}
+              fallbackModalities={modalityList}
+              fallbackAmenities={amenityList}
+            />
           </UICard>
 
-          <UICard id="servicios" className="space-y-3 border-neutral-200 bg-white scroll-mt-24">
-            <h2 className="text-sm font-semibold text-neutral-700">Servicios y amenidades</h2>
+          <UICard id="servicios" className="space-y-3 border-quegym-border bg-quegym-elevated scroll-mt-24">
+            <h2 className="text-sm font-semibold text-quegym-primary">Servicios y amenidades</h2>
             <div className="flex flex-wrap gap-2">
               {amenityList.map((item) => (
                 <span
                   key={item}
-                  className="rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1 text-xs text-neutral-700"
+                  className="rounded-full border border-quegym-border bg-quegym-subtle px-3 py-1 text-xs text-quegym-primary"
                 >
-                  <span className="text-emerald-600">✓</span> {item}
+                  <FeatureCheck>{item}</FeatureCheck>
                 </span>
               ))}
               {modalityList.map((item) => (
                 <span
                   key={`mod-${item}`}
-                  className="rounded-full border border-neutral-200 bg-white px-3 py-1 text-xs text-neutral-600"
+                  className="rounded-full border border-quegym-border bg-quegym-elevated px-3 py-1 text-xs text-quegym-secondary"
                 >
                   {item}
                 </span>
@@ -434,82 +448,85 @@ export default async function GymPage(props: Props) {
             </div>
           </UICard>
 
-          <UICard id="planes" className="space-y-3 border-neutral-200 bg-white scroll-mt-24">
-            <h2 className="text-sm font-semibold text-neutral-700">Planes disponibles</h2>
+          <UICard id="planes" className="space-y-3 border-quegym-border bg-quegym-elevated scroll-mt-24">
+            <h2 className="text-sm font-semibold text-quegym-primary">Planes disponibles</h2>
             <div className="grid gap-3 md:grid-cols-3">
-              <article className="rounded-2xl border border-neutral-200 bg-white p-3">
-                <p className="text-sm text-neutral-600">Mensualidad básica</p>
-                <p className="text-3xl font-semibold text-neutral-900">
+              <article className="rounded-2xl border border-quegym-border bg-quegym-elevated p-3">
+                <p className="text-sm text-quegym-secondary">Mensualidad básica</p>
+                <p className="text-3xl font-semibold text-quegym-primary">
                   ${venue.priceMin ?? 45}
-                  <span className="ml-1 text-xs font-normal text-neutral-500">/mes</span>
+                  <span className="ml-1 text-xs font-normal text-quegym-secondary">/mes</span>
                 </p>
-                <ul className="mt-2 space-y-1 text-xs text-neutral-600">
-                  <li>✓ Acceso full equipos</li>
-                  <li>✓ Vestuarios</li>
-                  <li>✓ Lun–Dom</li>
+                <ul className="mt-2 space-y-1 text-xs text-quegym-secondary">
+                  <li><FeatureCheck>Acceso full equipos</FeatureCheck></li>
+                  <li><FeatureCheck>Vestuarios</FeatureCheck></li>
+                  <li><FeatureCheck>Lun–Dom</FeatureCheck></li>
                 </ul>
                 <Link
                   href="#contactar-modal"
-                  className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-neutral-300 px-3 py-2 text-xs"
+                  className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-quegym-border px-3 py-2 text-xs"
                 >
                   Más información
                 </Link>
               </article>
-              <article className="rounded-2xl border border-neutral-900 bg-white p-3 shadow-sm">
-                <p className="text-xs text-neutral-600">⭐ Más popular</p>
-                <p className="text-sm text-neutral-600">Mensualidad premium</p>
-                <p className="text-3xl font-semibold text-neutral-900">
-                  ${venue.priceMax ?? 75}
-                  <span className="ml-1 text-xs font-normal text-neutral-500">/mes</span>
+              <article className="rounded-2xl border border-neutral-900 bg-quegym-elevated p-3 shadow-sm">
+                <p className="inline-flex items-center gap-1 text-xs text-quegym-secondary">
+                  <Star className="h-3 w-3 fill-quegym-highlight text-quegym-highlight" aria-hidden />
+                  Más popular
                 </p>
-                <ul className="mt-2 space-y-1 text-xs text-neutral-600">
-                  <li>✓ Todo lo básico</li>
-                  <li>✓ Clases grupales</li>
-                  <li>✓ Acceso sauna + parking</li>
+                <p className="text-sm text-quegym-secondary">Mensualidad premium</p>
+                <p className="text-3xl font-semibold text-quegym-primary">
+                  ${venue.priceMax ?? 75}
+                  <span className="ml-1 text-xs font-normal text-quegym-secondary">/mes</span>
+                </p>
+                <ul className="mt-2 space-y-1 text-xs text-quegym-secondary">
+                  <li><FeatureCheck>Todo lo básico</FeatureCheck></li>
+                  <li><FeatureCheck>Clases grupales</FeatureCheck></li>
+                  <li><FeatureCheck>Acceso sauna + parking</FeatureCheck></li>
                 </ul>
                 <Link
                   href="#contactar-modal"
-                  className="mt-3 inline-flex w-full items-center justify-center rounded-xl bg-neutral-900 px-3 py-2 text-xs font-medium text-white hover:bg-neutral-800"
+                  className="qg-btn-primary qg-motion mt-3 inline-flex w-full items-center justify-center rounded-xl bg-quegym-accent px-3 py-2 text-xs font-medium text-white hover:bg-quegym-accent-hover"
                 >
                   Solicitar este plan
                 </Link>
               </article>
-              <article className="rounded-2xl border border-neutral-200 bg-white p-3">
-                <p className="text-sm text-neutral-600">Trimestral</p>
-                <p className="text-3xl font-semibold text-neutral-900">
+              <article className="rounded-2xl border border-quegym-border bg-quegym-elevated p-3">
+                <p className="text-sm text-quegym-secondary">Trimestral</p>
+                <p className="text-3xl font-semibold text-quegym-primary">
                   ${Math.max((venue.priceMax ?? 75) * 2, 180)}
-                  <span className="ml-1 text-xs font-normal text-neutral-500">/3m</span>
+                  <span className="ml-1 text-xs font-normal text-quegym-secondary">/3m</span>
                 </p>
-                <ul className="mt-2 space-y-1 text-xs text-neutral-600">
-                  <li>✓ Plan premium</li>
-                  <li>✓ 3 meses</li>
-                  <li>✓ Ahorro aplicado</li>
+                <ul className="mt-2 space-y-1 text-xs text-quegym-secondary">
+                  <li><FeatureCheck>Plan premium</FeatureCheck></li>
+                  <li><FeatureCheck>3 meses</FeatureCheck></li>
+                  <li><FeatureCheck>Ahorro aplicado</FeatureCheck></li>
                 </ul>
                 <Link
                   href="#contactar-modal"
-                  className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-neutral-300 px-3 py-2 text-xs"
+                  className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-quegym-border px-3 py-2 text-xs"
                 >
                   Más información
                 </Link>
               </article>
             </div>
-            <p className="text-xs text-neutral-500">
+            <p className="text-xs text-quegym-secondary">
               * Precios orientativos en USD equivalente. Consulta al centro para confirmar.
             </p>
           </UICard>
 
-          <UICard className="space-y-3 border-neutral-200 bg-white">
-            <h2 className="text-sm font-semibold text-neutral-700">Horarios</h2>
-            <div className="grid gap-2 text-xs text-neutral-600 sm:grid-cols-2">
-              <div className="rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2">Lunes – Viernes <span className="float-right">5:00am – 11:00pm</span></div>
-              <div className="rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2">Sábado <span className="float-right">6:00am – 8:00pm</span></div>
-              <div className="rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2">Domingo <span className="float-right">7:00am – 2:00pm</span></div>
-              <div className="rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2">Feriados <span className="float-right">Horario reducido</span></div>
+          <UICard className="space-y-3 border-quegym-border bg-quegym-elevated">
+            <h2 className="text-sm font-semibold text-quegym-primary">Horarios</h2>
+            <div className="grid gap-2 text-xs text-quegym-secondary sm:grid-cols-2">
+              <div className="rounded-lg border border-quegym-border bg-quegym-subtle px-3 py-2">Lunes – Viernes <span className="float-right">5:00am – 11:00pm</span></div>
+              <div className="rounded-lg border border-quegym-border bg-quegym-subtle px-3 py-2">Sábado <span className="float-right">6:00am – 8:00pm</span></div>
+              <div className="rounded-lg border border-quegym-border bg-quegym-subtle px-3 py-2">Domingo <span className="float-right">7:00am – 2:00pm</span></div>
+              <div className="rounded-lg border border-quegym-border bg-quegym-subtle px-3 py-2">Feriados <span className="float-right">Horario reducido</span></div>
             </div>
           </UICard>
 
-          <UICard id="ubicacion" className="space-y-3 border-neutral-200 bg-white scroll-mt-24">
-            <h2 className="text-sm font-semibold text-neutral-700">Ubicación</h2>
+          <UICard id="ubicacion" className="space-y-3 border-quegym-border bg-quegym-elevated scroll-mt-24">
+            <h2 className="text-sm font-semibold text-quegym-primary">Ubicación</h2>
             <GymLocationMap
               lat={venue.lat}
               lng={venue.lng}
@@ -518,43 +535,58 @@ export default async function GymPage(props: Props) {
             />
             <Link
               href={`/buscar?lat=${venue.lat}&lng=${venue.lng}&sort=distance`}
-              className="inline-flex text-xs font-medium text-neutral-700 underline"
+              className="inline-flex text-xs font-medium text-quegym-primary underline"
             >
               Ver en buscar
             </Link>
-            <p className="text-xs text-neutral-500">{venue.address}</p>
+            <p className="text-xs text-quegym-secondary">{venue.address}</p>
           </UICard>
         </section>
 
         <aside className="space-y-3">
-          <UICard className="sticky top-4 space-y-3 border-neutral-200 bg-white">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-neutral-200 text-[10px] text-neutral-500">
-              Logo
+          <UICard className="qg-surface qg-motion sticky top-4 space-y-3 border-quegym-border bg-quegym-elevated">
+            <div className="mx-auto h-14 w-14 overflow-hidden rounded-2xl">
+              <VenueImage
+                src={galleryPhotos[0] ?? null}
+                name={venue.name}
+                modality={modalityList[0] ?? venue.venueType}
+                className="h-full w-full"
+              />
             </div>
             <div className="space-y-1 text-center">
-              <h3 className="text-lg font-semibold text-neutral-900">{venue.name}</h3>
-              <p className="text-xs text-neutral-600">★ 4.8 (203)</p>
+              <h3 className="text-lg font-semibold text-quegym-primary">{venue.name}</h3>
+              <VenuePriceDisplay
+                priceMin={venue.priceMin}
+                priceMax={venue.priceMax}
+                inline
+                className="text-xs"
+                primaryClassName="font-medium text-quegym-highlight"
+                secondaryClassName="text-quegym-secondary"
+              />
             </div>
-            <div className="space-y-1 border-y border-neutral-100 py-2 text-xs text-neutral-500">
+            <div className="space-y-1 border-y border-quegym-border py-2 text-xs text-quegym-secondary">
               <p>{venue.zone}, Caracas · ~800m</p>
               <p>Hoy: 5:00am – 11:00pm</p>
             </div>
             <Link href="#contactar-modal">
-              <UIButton className="w-full">Solicitar información</UIButton>
+              <UIButton className="w-full !bg-quegym-accent-hover hover:!bg-quegym-accent">
+                Solicitar información
+              </UIButton>
             </Link>
             {whatsappHref ? (
               <a
                 href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex w-full items-center justify-center rounded-xl bg-[#3FA76A] px-3 py-2 text-sm font-medium text-white hover:bg-[#348e5a]"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-quegym-highlight px-3 py-2 text-sm font-medium text-white hover:bg-quegym-highlight-hover"
               >
-                ☏ Contactar por WhatsApp ahora
+                <MessageCircle className="h-4 w-4" aria-hidden />
+                Contactar por WhatsApp ahora
               </a>
             ) : null}
             <Link
               href="#reportar-modal"
-              className="inline-flex w-full items-center justify-center rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50"
+              className="inline-flex w-full items-center justify-center rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 text-sm font-medium text-quegym-primary hover:bg-quegym-subtle"
             >
               Reportar datos incorrectos
             </Link>
@@ -562,7 +594,7 @@ export default async function GymPage(props: Props) {
               {phoneHref ? (
                 <a
                   href={phoneHref}
-                  className="inline-flex items-center justify-center rounded-xl border border-neutral-300 bg-white px-3 py-2 text-xs text-neutral-700 hover:bg-neutral-50"
+                  className="inline-flex items-center justify-center rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 text-xs text-quegym-primary hover:bg-quegym-subtle"
                 >
                   ☎ Llamar
                 </a>
@@ -570,7 +602,7 @@ export default async function GymPage(props: Props) {
               {emailHref ? (
                 <a
                   href={emailHref}
-                  className="inline-flex items-center justify-center rounded-xl border border-neutral-300 bg-white px-3 py-2 text-xs text-neutral-700 hover:bg-neutral-50"
+                  className="inline-flex items-center justify-center rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 text-xs text-quegym-primary hover:bg-quegym-subtle"
                 >
                   ✉ Email
                 </a>
@@ -578,11 +610,11 @@ export default async function GymPage(props: Props) {
             </div>
             <Link
               href={`/comparar?c=${encodeURIComponent(venue.slug)}`}
-              className="inline-flex w-full items-center justify-center rounded-xl border border-neutral-300 bg-neutral-50 px-3 py-2 text-xs text-neutral-700 hover:bg-white"
+              className="inline-flex w-full items-center justify-center rounded-xl border border-quegym-border bg-quegym-subtle px-3 py-2 text-xs text-quegym-primary hover:bg-quegym-elevated"
             >
               + Agregar al comparador
             </Link>
-            <p className="text-center text-[11px] text-neutral-400">
+            <p className="text-center text-[11px] text-quegym-secondary">
               {BRAND_NAME} no procesa pagos. Contacta directo con el centro.
             </p>
           </UICard>
@@ -614,12 +646,4 @@ function verificationBadge(status: string | undefined): {
     default:
       return { label: "Información referencial", tone: "ref" };
   }
-}
-
-function formatPrice(v: VenueDetail): string {
-  if (v.priceMin == null && v.priceMax == null) return "Consultar precio";
-  if (v.priceMin != null && v.priceMax != null)
-    return `$${v.priceMin} – $${v.priceMax} / mes (referencial)`;
-  if (v.priceMin != null) return `Desde $${v.priceMin} / mes (referencial)`;
-  return `Hasta $${v.priceMax} / mes (referencial)`;
 }

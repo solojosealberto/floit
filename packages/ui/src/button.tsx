@@ -26,11 +26,11 @@ export function UIButton({
         "inline-flex items-center justify-center gap-2 rounded-[var(--floit-radius-md)] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 disabled:cursor-not-allowed disabled:opacity-50",
         size === "sm" ? "px-3 py-1.5 text-sm" : "px-4 py-2 text-sm",
         variant === "primary" &&
-          "bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200",
+          "qg-btn-primary qg-motion bg-[var(--qg-accent)] text-white hover:bg-[var(--qg-accent-hover)]",
         variant === "secondary" &&
-          "border border-neutral-300 bg-white text-neutral-800 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-800",
+          "qg-btn-ghost qg-motion border border-[var(--qg-border)] bg-[var(--qg-bg-elevated)] text-[var(--qg-text-primary)] hover:border-[var(--qg-accent)]",
         variant === "ghost" &&
-          "bg-transparent text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-900",
+          "bg-transparent text-[var(--qg-text-secondary)] hover:bg-[var(--qg-bg-subtle)] hover:text-[var(--qg-text-primary)]",
         fullWidth && "w-full",
         className,
       )}

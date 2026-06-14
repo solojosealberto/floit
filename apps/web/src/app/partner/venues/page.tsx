@@ -42,9 +42,9 @@ export default async function PartnerVenuesPage(props: {
     if (localPartnerLoginEnabled) redirect("/partner/login");
     return (
       <main className="mx-auto max-w-4xl px-4 py-8">
-        <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-          <h1 className="text-lg font-semibold text-neutral-900">Acceso partner requerido</h1>
-          <p className="mt-1 text-sm text-neutral-600">
+        <div className="qg-surface qg-motion rounded-2xl border border-quegym-border bg-quegym-elevated p-6">
+          <h1 className="text-lg font-semibold text-quegym-primary">Acceso partner requerido</h1>
+          <p className="mt-1 text-sm text-quegym-secondary">
             Inicia sesión para gestionar tus centros.
           </p>
           <Link href="/partner/login" className="mt-4 inline-block">
@@ -183,8 +183,8 @@ export default async function PartnerVenuesPage(props: {
       {/* Partner header */}
       <header className="mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">Partner workspace</p>
-          <h1 className="mt-1 text-3xl font-semibold tracking-tight text-neutral-900">{partnerDisplayName}</h1>
+          <p className="text-xs font-medium uppercase tracking-wide text-quegym-secondary">Partner workspace</p>
+          <h1 className="mt-1 text-3xl font-semibold tracking-tight text-quegym-primary">{partnerDisplayName}</h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Link
@@ -193,7 +193,7 @@ export default async function PartnerVenuesPage(props: {
                 ? `${panelBase(selectedSlug)}&section=config`
                 : "/partner/configuracion"
             }
-            className="inline-flex items-center gap-2 rounded-xl border border-neutral-300 bg-white px-4 py-2.5 text-sm font-medium text-neutral-800 shadow-sm transition hover:bg-neutral-50"
+            className="qg-surface-subtle qg-motion inline-flex items-center gap-2 rounded-xl border border-quegym-border bg-quegym-elevated px-4 py-2.5 text-sm font-medium text-quegym-primary transition hover:bg-quegym-subtle"
           >
             <span aria-hidden>⚙</span>
             Configuración
@@ -201,7 +201,7 @@ export default async function PartnerVenuesPage(props: {
           <form action="/partner/logout" method="post">
             <button
               type="submit"
-              className="inline-flex items-center gap-2 rounded-xl border border-neutral-300 bg-white px-4 py-2.5 text-sm font-medium text-neutral-800 shadow-sm transition hover:bg-neutral-50"
+              className="qg-surface-subtle qg-motion inline-flex items-center gap-2 rounded-xl border border-quegym-border bg-quegym-elevated px-4 py-2.5 text-sm font-medium text-quegym-primary transition hover:bg-quegym-subtle"
             >
               <span aria-hidden>⎋</span>
               Cerrar sesión
@@ -229,7 +229,7 @@ export default async function PartnerVenuesPage(props: {
           label="Leads totales"
           value={String(totalLeads)}
           hint="+12 últimos 30 días"
-          hintClass="text-emerald-600"
+          hintClass="text-quegym-highlight"
         />
         <KpiCard icon="👁" label="Vistas totales" value={String(totalVistas)} hint="Últimos 30 días" />
         <KpiCard
@@ -250,13 +250,13 @@ export default async function PartnerVenuesPage(props: {
       <section>
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h2 className="text-xl font-semibold text-neutral-900">Mis centros</h2>
-            <p className="mt-1 text-sm text-neutral-500">
+            <h2 className="text-xl font-semibold text-quegym-primary">Mis centros</h2>
+            <p className="mt-1 text-sm text-quegym-secondary">
               Gestiona tus centros y accede a cada panel individual.
             </p>
           </div>
           <Link href="/partner/claim">
-            <span className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-neutral-800">
+            <span className="qg-btn-primary inline-flex items-center gap-2 rounded-xl bg-quegym-accent px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-quegym-accent-hover">
               <span className="text-lg leading-none">+</span>
               Agregar / Reclamar centro
             </span>
@@ -265,7 +265,7 @@ export default async function PartnerVenuesPage(props: {
 
         <div className="grid gap-4 sm:grid-cols-2">
           {enriched.length === 0 ? (
-            <div className="rounded-2xl border border-neutral-200 bg-white p-6 text-sm text-neutral-600 shadow-sm sm:col-span-2">
+            <div className="qg-surface qg-motion rounded-2xl border border-quegym-border bg-quegym-elevated p-6 text-sm text-quegym-secondary sm:col-span-2">
               No tienes ownership activo todavía. Usa “Agregar / Reclamar centro” para empezar.
             </div>
           ) : (
@@ -280,7 +280,7 @@ export default async function PartnerVenuesPage(props: {
 
       {/* Acciones rápidas */}
       <section className="mt-12">
-        <h3 className="mb-4 text-lg font-semibold text-neutral-900">Acciones rápidas</h3>
+        <h3 className="mb-4 text-lg font-semibold text-quegym-primary">Acciones rápidas</h3>
         <div className="grid gap-3 sm:grid-cols-3">
           <QuickActionCard
             href={selectedSlug ? `${panelBase(selectedSlug)}&section=config` : "/partner/configuracion"}
@@ -314,16 +314,16 @@ function KpiCard(props: {
   hintClass?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+    <div className="qg-surface qg-motion rounded-2xl border border-quegym-border bg-quegym-elevated p-4">
       <div className="flex items-start justify-between gap-2">
         <span className="text-2xl opacity-90" aria-hidden>
           {props.icon}
         </span>
       </div>
-      <p className="mt-3 text-xs font-medium uppercase tracking-wide text-neutral-500">{props.label}</p>
-      <p className="mt-1 text-3xl font-semibold tabular-nums text-neutral-900">{props.value}</p>
+      <p className="mt-3 text-xs font-medium uppercase tracking-wide text-quegym-secondary">{props.label}</p>
+      <p className="mt-1 text-3xl font-semibold tabular-nums text-quegym-primary">{props.value}</p>
       {props.hint ? (
-        <p className={`mt-1 text-xs ${props.hintClass ?? "text-neutral-500"}`}>{props.hint}</p>
+        <p className={`mt-1 text-xs ${props.hintClass ?? "text-quegym-secondary"}`}>{props.hint}</p>
       ) : null}
     </div>
   );
@@ -348,12 +348,12 @@ function VenueCard(props: {
 
   const borderClass =
     v === "session"
-      ? "border-emerald-400 bg-emerald-50/50 shadow-[0_1px_0_rgba(16,185,129,0.15)]"
+      ? "border-quegym-highlight bg-quegym-highlight-soft qg-surface-subtle qg-motion"
       : v === "review"
-        ? "border-amber-300 bg-white shadow-sm"
-        : "border-neutral-200 bg-white shadow-sm";
+        ? "border-amber-300 bg-quegym-elevated qg-surface-subtle qg-motion"
+        : "border-quegym-border bg-quegym-elevated qg-surface-subtle qg-motion";
 
-  const buildingIcon = v === "session" ? "text-emerald-600" : "text-neutral-400";
+  const buildingIcon = v === "session" ? "text-quegym-highlight" : "text-quegym-secondary";
 
   const metricsMuted = v === "review";
 
@@ -363,10 +363,10 @@ function VenueCard(props: {
         <div className="flex flex-wrap gap-2">
           {v === "session" ? (
             <>
-              <span className="rounded-full bg-emerald-600 px-2.5 py-0.5 text-xs font-semibold text-white">
+              <span className="rounded-full bg-quegym-accent px-2.5 py-0.5 text-xs font-semibold text-white">
                 Activo en sesión
               </span>
-              <span className="rounded-full border border-neutral-200 bg-white px-2.5 py-0.5 text-xs font-medium text-neutral-700">
+              <span className="rounded-full border border-quegym-border bg-quegym-elevated px-2.5 py-0.5 text-xs font-medium text-quegym-primary">
                 Publicado
               </span>
             </>
@@ -375,7 +375,7 @@ function VenueCard(props: {
               En revisión
             </span>
           ) : (
-            <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
+            <span className="rounded-full bg-quegym-highlight-soft px-2.5 py-0.5 text-xs font-semibold text-quegym-highlight">
               Publicado
             </span>
           )}
@@ -385,8 +385,8 @@ function VenueCard(props: {
         </span>
       </div>
 
-      <h3 className="mt-3 text-lg font-semibold text-neutral-900">{venue.displayName}</h3>
-      <p className="text-sm text-neutral-500">{venue.subtitle}</p>
+      <h3 className="mt-3 text-lg font-semibold text-quegym-primary">{venue.displayName}</h3>
+      <p className="text-sm text-quegym-secondary">{venue.subtitle}</p>
 
       {v === "review" ? (
         <div className="mt-3 flex gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs leading-snug text-amber-950">
@@ -413,14 +413,14 @@ function VenueCard(props: {
           <>
             <Link
               href={`${props.panelBase(venue.venueSlug)}&section=dashboard`}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-900 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-quegym-accent py-3 text-sm font-semibold text-white transition hover:bg-quegym-accent-hover"
             >
               Abrir dashboard
               <span aria-hidden>→</span>
             </Link>
             <Link
               href={`/gyms/${encodeURIComponent(venue.venueSlug)}`}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-neutral-300 bg-white py-3 text-sm font-medium text-neutral-800 transition hover:bg-neutral-50"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-quegym-border bg-quegym-elevated py-3 text-sm font-medium text-quegym-primary transition hover:bg-quegym-subtle"
             >
               <span aria-hidden>👁</span>
               Ver público
@@ -430,14 +430,14 @@ function VenueCard(props: {
           <>
             <Link
               href={`${props.panelBase(venue.venueSlug)}&section=dashboard`}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-900 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-quegym-accent py-3 text-sm font-semibold text-white transition hover:bg-quegym-accent-hover"
             >
               Abrir dashboard
               <span aria-hidden>→</span>
             </Link>
             <Link
               href={`/gyms/${encodeURIComponent(venue.venueSlug)}`}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-neutral-300 bg-white py-3 text-sm font-medium text-neutral-800 transition hover:bg-neutral-50"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-quegym-border bg-quegym-elevated py-3 text-sm font-medium text-quegym-primary transition hover:bg-quegym-subtle"
             >
               <span aria-hidden>👁</span>
               Ver público
@@ -446,7 +446,7 @@ function VenueCard(props: {
         ) : (
           <Link
             href={`/partner/venues?venueSlug=${encodeURIComponent(venue.venueSlug)}`}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-neutral-100 py-3 text-sm font-medium text-neutral-800 transition hover:bg-neutral-200"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-quegym-border bg-quegym-subtle py-3 text-sm font-medium text-quegym-primary transition hover:bg-quegym-subtle"
           >
             Cambiar a este centro
             <span aria-hidden>→</span>
@@ -460,24 +460,24 @@ function VenueCard(props: {
 function MetricBox(props: { label: string; value: string; muted?: boolean }) {
   return (
     <div
-      className={`rounded-xl border px-2 py-2 text-center ${props.muted ? "border-neutral-100 bg-neutral-50" : "border-neutral-200 bg-white"}`}
+      className={`rounded-xl border px-2 py-2 text-center ${props.muted ? "border-quegym-border bg-quegym-subtle" : "border-quegym-border bg-quegym-elevated"}`}
     >
-      <p className="text-[10px] font-medium uppercase tracking-wide text-neutral-500">{props.label}</p>
-      <p className="mt-0.5 text-sm font-semibold tabular-nums text-neutral-900">{props.value}</p>
+      <p className="text-[10px] font-medium uppercase tracking-wide text-quegym-secondary">{props.label}</p>
+      <p className="mt-0.5 text-sm font-semibold tabular-nums text-quegym-primary">{props.value}</p>
     </div>
   );
 }
 
 function AddVenuePlaceholderCard() {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-neutral-300 bg-neutral-50/80 px-4 py-10 text-center">
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-neutral-200 bg-white text-3xl font-light text-neutral-400 shadow-sm">
+    <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-quegym-border bg-quegym-subtle/80 px-4 py-10 text-center">
+      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-quegym-border bg-quegym-elevated text-3xl font-light text-quegym-secondary">
         +
       </div>
-      <p className="mt-4 text-base font-semibold text-neutral-800">Agregar nuevo centro</p>
-      <p className="mt-1 max-w-xs text-sm text-neutral-500">Reclama o registra otro gimnasio</p>
+      <p className="mt-4 text-base font-semibold text-quegym-primary">Agregar nuevo centro</p>
+      <p className="mt-1 max-w-xs text-sm text-quegym-secondary">Reclama o registra otro gimnasio</p>
       <Link href="/partner/claim" className="mt-6">
-        <span className="inline-flex rounded-xl bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-neutral-800">
+        <span className="inline-flex rounded-xl bg-quegym-accent px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-quegym-accent-hover">
           Comenzar
         </span>
       </Link>
@@ -489,14 +489,14 @@ function QuickActionCard(props: { href: string; icon: string; title: string; sub
   return (
     <Link
       href={props.href}
-      className="flex gap-3 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm transition hover:border-neutral-300 hover:bg-neutral-50"
+      className="qg-surface-subtle qg-motion flex gap-3 rounded-2xl border border-quegym-border bg-quegym-elevated p-4 transition hover:border-quegym-border hover:bg-quegym-subtle"
     >
       <span className="text-2xl" aria-hidden>
         {props.icon}
       </span>
       <div>
-        <p className="font-semibold text-neutral-900">{props.title}</p>
-        <p className="text-sm text-neutral-500">{props.subtitle}</p>
+        <p className="font-semibold text-quegym-primary">{props.title}</p>
+        <p className="text-sm text-quegym-secondary">{props.subtitle}</p>
       </div>
     </Link>
   );

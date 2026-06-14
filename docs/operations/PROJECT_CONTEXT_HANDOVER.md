@@ -221,14 +221,26 @@ Antes de implementar nuevos cambios:
 
 ### Contexto operativo inmediato
 
-- **Rebrand QueGym:** **Fase 1 completada** — copy y metadata visibles vía `apps/web/src/lib/brand.ts`, `QueGymLogo`, header (`floit-main-header.tsx`), partner/admin y OpenAPI `info.title`. Identificadores técnicos legacy **sin cambio** (`@floit/*`, cookies HTTP, `floit_verified`, eventos `floit.*.v1`, tokens CSS `--floit-*`, `localStorage` `floit:*`). Planificación Fases 2–4: **`docs/operations/REBRAND_QUEGYM_PLAN.md`**.
+- **Rebrand QueGym (2026-05-27):** **Fase 1** copy/metadata ✅. **Fase 2 visual + copy** ✅ en repo local:
+  - Tokens dual-theme `--qg-*`, accent Mint, elevación Apple, partner/admin shells, `localStorage` canónico, favicon, export `quegym-leads.csv`.
+  - Copy verbal tuteo venezolano (sin voseo); gate `pnpm copy:verify`.
+  - Planes: [`REBRAND_QUEGYM_PLAN.md`](REBRAND_QUEGYM_PLAN.md), [`../ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`](../ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md), [`../ux/QUEGYM_BRAND_COPY_PLAN.md`](../ux/QUEGYM_BRAND_COPY_PLAN.md).
+  - Referencias: [propuesta de marca](https://propuestademarca.netlify.app/) · [UI aplicada](https://quegymconmarcaaplicada.netlify.app/).
+  - **Pendiente:** QA visual/copy en **staging** (`UI_VISUAL_QA_CHECKLIST.md`).
+- **Completado (2026-05-27):** Sprint **UX-A/B/C** — confianza catálogo/conversión en repo ([`QUEGYM_UX_V0_IMPROVEMENT_PLAN.md`](../ux/QUEGYM_UX_V0_IMPROVEMENT_PLAN.md)):
+  - Tarjetas unificadas (`VenueCardGrid`), `/buscar` + ficha + home + nav móvil, Lucide/skeletons.
+  - **Comparador:** `CompareActiveBar` en `/buscar` (fix visibilidad móvil y desaparición al hover); `CompareGrid` sticky en `/comparar` (grilla móvil alineada a wireframe v0).
+  - **Focus campos:** `.qg-field` (focus en contenedor redondeado) y `.qg-input`; sin borde cuadrado grueso en inputs transparentes (home, buscar, logins).
+  - Catálogo JSON re-normalizado: `pnpm venues:audit:ui` → **100% descripción limpia** (95 venues); **import en Neon/staging pendiente**.
+- **Pendiente:** deploy web UX a staging; QA visual/copy (`UI_VISUAL_QA_CHECKLIST.md`).
+- **Identificadores técnicos legacy** sin cambio (`@floit/*`, cookies, `floit_verified`, eventos) — Fase 3 planificada.
 - **Sprint UI (Sprint 11) cerrado** (mayo 2026): páginas P1/P2 del plan en `sprints.md` (`/partner/planes`, `/partner/fotos`, `/admin/venues`, `/admin/duplicados`, `/admin/moderacion-media`), discovery con taxonomías activas y pulido ficha gym (tabs, descripción, guardar/compartir).
 - **Staging desplegado (2026-05):** infra en Neon `quegym`, Railway `quegym-api`, Auth0, Vercel `floit-web`, DNS **`https://staging.quegym.com`**. Registro: **`STAGING_DEPLOYMENT_STATUS.md`**, informe **`STAGING_AGENT_EXECUTION_REPORT.md`**.
 - **Staging paso 3 (2026-05-27):** auth admin desbloqueado — M2M Auth0 + fix issuer `00fd9f9`; `pnpm sprint5:staging-gate -- --kpi-relaxed` → Sprint 4 + flow-checklist **PASS**; KPI A/B **FAIL** (tráfico). `/admin/leads` operativo en staging. Decisión: **GO técnico condicional**. Evidencia: **`STAGING_EVIDENCE_SPRINT5.md`**, **`STAGING_AGENT_EXECUTION_REPORT.md`**.
 - **Staging paso 3 (2026-05-26):** import **95 venues**; discovery OK; `/health` 5/5 + `smoke:platform` OK; Sprint 4 gate PASS; Sprint 5 bloqueado por SLA 401 (resuelto 2026-05-27).
 - **Admin login staging:** fix `admin-local-login.ts` (`7554d6c`) + M2M BFF (`ADMIN_OIDC_ACCESS_TOKEN` en Vercel Preview).
 - **Prod `www`:** sin cutover DNS.
-- Objetivo recomendado de la próxima sesión: E2E manual staging (§2–3 evidencias S5), generar tráfico CTA A/B, firma GO/NO-GO producto/ops.
+- Objetivo recomendado de la próxima sesión: **deploy UX a staging** + import catálogo Neon + QA visual (`UI_VISUAL_QA_CHECKLIST.md`) + E2E manual §2–3 + tráfico KPI A/B + firma GO/NO-GO.
 - **Estado reciente:** `/admin/leads` renovada con la misma línea gráfica que `/admin` (grid + sidebar), filtros cliente y métricas derivadas de `GET /v1/admin/leads` + SLA + catálogo para etiquetas de centro/zona.
 - **Estado reciente (2026-05-09):** **`/admin/analytics`** ampliada con gráficos MVP coherentes con diseño (apiladas, donut, líneas; detalle técnico colapsable con funnel/SLA/experimento). **`/admin/partner-claims`** renovada con dashboard (KPIs, búsqueda, chips, tabla, paginación, CSV) y bloques operativos anclados (`#operaciones-y-sync`).
 - **Estado reciente (2026-05-10):** UI operativa de **`#operaciones-y-sync`** alineada a diseño (paneles health/DLQ/ownership/auditoría como arriba); modal **Ver detalle** de claims; documentación operativa y guías locales sincronizadas con estos cambios.

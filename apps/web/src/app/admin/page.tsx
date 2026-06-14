@@ -45,11 +45,11 @@ export default async function AdminDashboardPage() {
   if (!auth) {
     if (localAdminLoginEnabled) redirect("/admin/login");
     return (
-      <main className="mx-auto max-w-4xl px-4 py-12 text-sm text-neutral-600">
-        <h1 className="text-lg font-semibold text-neutral-900">Dashboard admin</h1>
+      <main className="mx-auto max-w-4xl px-4 py-12 text-sm text-quegym-secondary">
+        <h1 className="text-lg font-semibold text-quegym-primary">Dashboard admin</h1>
         <p className="mt-2">
-          Configura <code className="rounded bg-neutral-100 px-1">ADMIN_OIDC_ACCESS_TOKEN</code>{" "}
-          (recomendado) o <code className="rounded bg-neutral-100 px-1">ADMIN_API_TOKEN</code>.
+          Configura <code className="rounded bg-quegym-subtle px-1">ADMIN_OIDC_ACCESS_TOKEN</code>{" "}
+          (recomendado) o <code className="rounded bg-quegym-subtle px-1">ADMIN_API_TOKEN</code>.
         </p>
       </main>
     );
@@ -138,7 +138,7 @@ export default async function AdminDashboardPage() {
     .slice(0, 5);
 
   return (
-    <main className="min-h-screen bg-[#f7f9fc] p-3 md:p-4">
+    <main className="min-h-screen bg-quegym-page p-3 md:p-4">
       <div className="grid gap-4 md:grid-cols-[260px_1fr]">
         <AdminSidebar
           active="dashboard"
@@ -146,11 +146,11 @@ export default async function AdminDashboardPage() {
           leadsBadge={leadsReceivedCount}
         />
 
-        <section className="rounded-2xl border border-neutral-200 bg-white p-4 md:p-5">
+        <section className="qg-surface qg-motion rounded-2xl border border-quegym-border bg-quegym-elevated p-4 md:p-5">
           <header className="mb-4 flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-neutral-900">Dashboard operativo</h1>
-              <p className="text-sm text-neutral-500">{new Date().toLocaleString("es-VE")}</p>
+              <h1 className="text-2xl font-semibold tracking-tight text-quegym-primary">Dashboard operativo</h1>
+              <p className="text-sm text-quegym-secondary">{new Date().toLocaleString("es-VE")}</p>
             </div>
             <div className="flex items-center gap-2">
               <UIBadge>Admin</UIBadge>
@@ -200,20 +200,20 @@ export default async function AdminDashboardPage() {
             <UICard className="p-3">
               <div className="mb-2 flex items-center justify-between">
                 <h2 className="text-base font-semibold">Últimos leads recibidos</h2>
-                <Link href="/admin/leads" className="text-sm text-neutral-500 underline">Ver todos</Link>
+                <Link href="/admin/leads" className="text-sm text-quegym-secondary underline">Ver todos</Link>
               </div>
               <div className="space-y-2">
                 {latestLeads.length === 0 ? (
-                  <p className="text-sm text-neutral-500">No hay leads aún.</p>
+                  <p className="text-sm text-quegym-secondary">No hay leads aún.</p>
                 ) : (
                   latestLeads.map((lead) => (
-                    <div key={lead.id} className="flex items-center justify-between rounded-xl border border-neutral-200 px-3 py-2">
+                    <div key={lead.id} className="flex items-center justify-between rounded-xl border border-quegym-border px-3 py-2">
                       <div>
-                        <p className="text-sm font-medium text-neutral-900">{lead.name}</p>
-                        <p className="text-xs text-neutral-500">{lead.venueSlug} · {lead.intent}</p>
+                        <p className="text-sm font-medium text-quegym-primary">{lead.name}</p>
+                        <p className="text-xs text-quegym-secondary">{lead.venueSlug} · {lead.intent}</p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-neutral-500">{formatTime(lead.createdAt)}</span>
+                        <span className="text-xs text-quegym-secondary">{formatTime(lead.createdAt)}</span>
                         <Link href="/admin/leads">
                           <UIButton variant="secondary" size="sm">Ver</UIButton>
                         </Link>
@@ -228,13 +228,13 @@ export default async function AdminDashboardPage() {
               <UICard className="p-3">
                 <h2 className="mb-2 text-base font-semibold">Actividad reciente</h2>
                 {recentClaims.length === 0 ? (
-                  <p className="text-sm text-neutral-500">Sin actividad reciente.</p>
+                  <p className="text-sm text-quegym-secondary">Sin actividad reciente.</p>
                 ) : (
                   <ul className="space-y-2 text-sm">
                     {recentClaims.map((c) => (
-                      <li key={c.id} className="rounded-lg border border-neutral-200 px-3 py-2">
-                        <p className="font-medium text-neutral-900">{c.venueSlug}</p>
-                        <p className="text-xs text-neutral-500">{c.status} · {formatTime(c.createdAt)}</p>
+                      <li key={c.id} className="rounded-lg border border-quegym-border px-3 py-2">
+                        <p className="font-medium text-quegym-primary">{c.venueSlug}</p>
+                        <p className="text-xs text-quegym-secondary">{c.status} · {formatTime(c.createdAt)}</p>
                       </li>
                     ))}
                   </ul>
@@ -275,18 +275,18 @@ function AlertRow(props: { tone: "amber" | "rose"; text: string; href: string; a
 function Metric(props: { title: string; value: string; subtitle: string; accent?: boolean }) {
   return (
     <UICard className={`p-3 ${props.accent ? "border-amber-300" : ""}`}>
-      <p className="text-xs text-neutral-500">{props.title}</p>
-      <p className="mt-1 text-3xl font-semibold text-neutral-900">{props.value}</p>
-      <p className={`text-xs ${props.accent ? "text-amber-700" : "text-emerald-600"}`}>{props.subtitle}</p>
+      <p className="text-xs text-quegym-secondary">{props.title}</p>
+      <p className="mt-1 text-3xl font-semibold text-quegym-primary">{props.value}</p>
+      <p className={`text-xs ${props.accent ? "text-amber-700" : "text-quegym-highlight"}`}>{props.subtitle}</p>
     </UICard>
   );
 }
 
 function Quick(props: { href: string; title: string; value: string }) {
   return (
-    <Link href={props.href} className="rounded-xl border border-neutral-200 p-2 hover:bg-neutral-50">
-      <p className="text-xs text-neutral-500">{props.title}</p>
-      <p className="text-lg font-semibold text-neutral-900">{props.value}</p>
+    <Link href={props.href} className="rounded-xl border border-quegym-border p-2 hover:bg-quegym-subtle">
+      <p className="text-xs text-quegym-secondary">{props.title}</p>
+      <p className="text-lg font-semibold text-quegym-primary">{props.value}</p>
     </Link>
   );
 }

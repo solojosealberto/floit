@@ -22,13 +22,13 @@ export type OwnershipRowData = {
 function StatusPill(props: { status: OwnershipRowData["status"] }) {
   if (props.status === "active") {
     return (
-      <span className="inline-flex rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-900 ring-1 ring-emerald-200/90">
+      <span className="inline-flex rounded-full bg-quegym-highlight-soft px-2.5 py-1 text-xs font-semibold text-quegym-highlight ring-1 ring-quegym-highlight/30">
         Active
       </span>
     );
   }
   return (
-    <span className="inline-flex rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-semibold text-neutral-700 ring-1 ring-neutral-200/90">
+    <span className="inline-flex rounded-full bg-quegym-subtle px-2.5 py-1 text-xs font-semibold text-quegym-primary ring-1 ring-quegym-border/80">
       Revoked
     </span>
   );
@@ -56,10 +56,10 @@ export function OwnershipPartnerVenuePanel(props: { items: OwnershipRowData[] })
   }, [items, q, statusFilter]);
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm ring-1 ring-black/5">
+    <div className="overflow-hidden rounded-2xl border border-quegym-border bg-quegym-elevated qg-surface-subtle qg-motion">
       <div className="flex flex-wrap items-center justify-between gap-3 bg-[#4c1d95] px-4 py-3 text-white md:px-5">
         <div className="flex min-w-0 items-start gap-3">
-          <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
+          <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-quegym-elevated/15">
             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -74,12 +74,12 @@ export function OwnershipPartnerVenuePanel(props: { items: OwnershipRowData[] })
             <p className="text-sm text-white/75">Relaciones activas y revocadas entre partners y centros</p>
           </div>
         </div>
-        <AdminRefreshButton className="inline-flex items-center rounded-lg border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-medium text-white hover:bg-white/15" />
+        <AdminRefreshButton className="inline-flex items-center rounded-lg border border-white/35 bg-quegym-elevated/10 px-3 py-1.5 text-sm font-medium text-white hover:bg-quegym-elevated/15" />
       </div>
 
-      <div className="flex flex-col gap-3 border-t border-neutral-100 bg-neutral-50/50 px-4 py-3 md:flex-row md:items-center md:justify-between md:px-5">
+      <div className="flex flex-col gap-3 border-t border-quegym-border bg-quegym-subtle/50 px-4 py-3 md:flex-row md:items-center md:justify-between md:px-5">
         <div className="relative max-w-xl flex-1">
-          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400">
+          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-quegym-secondary">
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -89,7 +89,7 @@ export function OwnershipPartnerVenuePanel(props: { items: OwnershipRowData[] })
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Buscar por partner email o venue slug…"
-            className="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-11 pr-4 text-sm text-neutral-900 placeholder:text-neutral-500 focus:border-[#4c1d95]/35 focus:outline-none focus:ring-2 focus:ring-[#4c1d95]/15"
+            className="w-full rounded-xl border border-quegym-border bg-quegym-elevated py-2.5 pl-11 pr-4 text-sm text-quegym-primary placeholder:text-quegym-secondary focus:border-[#4c1d95]/35 focus:outline-none focus:ring-2 focus:ring-[#4c1d95]/15"
           />
         </div>
         <div className="flex items-center gap-2">
@@ -100,7 +100,7 @@ export function OwnershipPartnerVenuePanel(props: { items: OwnershipRowData[] })
             id="ownership-status-filter"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
-            className="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-[#4c1d95]/40 focus:outline-none focus:ring-2 focus:ring-[#4c1d95]/15"
+            className="rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 text-sm text-quegym-primary focus:border-[#4c1d95]/40 focus:outline-none focus:ring-2 focus:ring-[#4c1d95]/15"
           >
             <option value="all">Todos los estados</option>
             <option value="active">Activos</option>
@@ -111,36 +111,36 @@ export function OwnershipPartnerVenuePanel(props: { items: OwnershipRowData[] })
 
       <div className="overflow-x-auto px-2 pb-4 md:px-4">
         {filtered.length === 0 ? (
-          <p className="py-12 text-center text-sm text-neutral-600">
+          <p className="py-12 text-center text-sm text-quegym-secondary">
             {items.length === 0 ? "Sin ownerships registrados." : "Sin resultados para los filtros."}
           </p>
         ) : (
           <table className="w-full min-w-[960px] border-collapse text-left text-sm">
             <thead>
-              <tr className="border-b border-neutral-200 bg-white">
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">
+              <tr className="border-b border-quegym-border bg-quegym-elevated">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                   Partner email
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                   Venue slug
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">Estado</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">Creado</th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">Estado</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">Creado</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                   Actualizado
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-500">Acciones</th>
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((o) => (
                 <tr
                   key={o.id}
-                  className={`border-b border-neutral-100 ${o.status === "revoked" ? "bg-neutral-50/90 text-neutral-500" : "bg-white"}`}
+                  className={`border-b border-quegym-border ${o.status === "revoked" ? "bg-quegym-subtle/90 text-quegym-secondary" : "bg-quegym-elevated"}`}
                 >
                   <td className="px-4 py-3 align-middle">
                     <span className="flex items-center gap-2">
-                      <svg className="h-4 w-4 shrink-0 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="h-4 w-4 shrink-0 text-quegym-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -153,7 +153,7 @@ export function OwnershipPartnerVenuePanel(props: { items: OwnershipRowData[] })
                   </td>
                   <td className="px-4 py-3 align-middle">
                     <span className="flex items-center gap-2 font-medium">
-                      <svg className="h-4 w-4 shrink-0 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="h-4 w-4 shrink-0 text-quegym-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -165,8 +165,8 @@ export function OwnershipPartnerVenuePanel(props: { items: OwnershipRowData[] })
                         href={`/gyms/${encodeURIComponent(o.venueSlug)}`}
                         className={
                           o.status === "revoked"
-                            ? "text-neutral-500 underline decoration-neutral-300"
-                            : "text-[#0a1430] underline decoration-neutral-300"
+                            ? "text-quegym-secondary underline decoration-quegym-border"
+                            : "text-quegym-accent underline decoration-quegym-border"
                         }
                       >
                         {o.venueSlug}
@@ -176,13 +176,13 @@ export function OwnershipPartnerVenuePanel(props: { items: OwnershipRowData[] })
                   <td className="px-4 py-3 align-middle">
                     <StatusPill status={o.status} />
                   </td>
-                  <td className="px-4 py-3 align-middle text-neutral-800">
+                  <td className="px-4 py-3 align-middle text-quegym-primary">
                     {formatDateTimeLong(o.createdAt)}
                   </td>
                   <td className="px-4 py-3 align-middle">
-                    <div className="flex flex-col gap-0.5 text-neutral-800">
+                    <div className="flex flex-col gap-0.5 text-quegym-primary">
                       <span>{formatDateShort(o.updatedAt)}</span>
-                      <span className="text-xs text-neutral-500">{formatRelativeShort(o.updatedAt)}</span>
+                      <span className="text-xs text-quegym-secondary">{formatRelativeShort(o.updatedAt)}</span>
                     </div>
                   </td>
                   <td className="px-4 py-3 align-middle">
@@ -198,7 +198,7 @@ export function OwnershipPartnerVenuePanel(props: { items: OwnershipRowData[] })
                             name="reason"
                             placeholder="Motivo (opcional)"
                             maxLength={500}
-                            className="w-36 rounded-lg border border-neutral-300 bg-white px-2 py-1.5 text-xs text-neutral-900 placeholder:text-neutral-500"
+                            className="w-36 rounded-lg border border-quegym-border bg-quegym-elevated px-2 py-1.5 text-xs text-quegym-primary placeholder:text-quegym-secondary"
                           />
                           <UIButton type="submit" variant="secondary" size="sm" className="border-rose-300 bg-rose-600 text-white hover:bg-rose-700">
                             Revocar
@@ -208,7 +208,7 @@ export function OwnershipPartnerVenuePanel(props: { items: OwnershipRowData[] })
                       <button
                         type="button"
                         onClick={() => setDetail(o)}
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 bg-white text-neutral-700 shadow-sm hover:bg-neutral-50"
+                        className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-quegym-border bg-quegym-elevated text-quegym-primary hover:bg-quegym-subtle"
                         title="Ver detalle"
                       >
                         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -239,13 +239,13 @@ export function OwnershipPartnerVenuePanel(props: { items: OwnershipRowData[] })
           }}
         >
           <div className="absolute inset-0 bg-black/45" aria-hidden />
-          <div className="relative z-[111] w-full max-w-md rounded-2xl bg-white p-5 shadow-2xl ring-1 ring-black/10">
+          <div className="relative z-[111] w-full max-w-md rounded-2xl bg-quegym-elevated p-5 shadow-2xl ring-1 ring-black/10">
             <div className="flex items-start justify-between gap-2">
-              <h3 className="text-base font-semibold text-neutral-900">Ownership</h3>
+              <h3 className="text-base font-semibold text-quegym-primary">Ownership</h3>
               <button
                 type="button"
                 onClick={() => setDetail(null)}
-                className="rounded-lg p-1 text-neutral-500 hover:bg-neutral-100"
+                className="rounded-lg p-1 text-quegym-secondary hover:bg-quegym-subtle"
                 aria-label="Cerrar"
               >
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -255,29 +255,29 @@ export function OwnershipPartnerVenuePanel(props: { items: OwnershipRowData[] })
             </div>
             <dl className="mt-4 space-y-2 text-sm">
               <div>
-                <dt className="text-xs text-neutral-500">ID</dt>
+                <dt className="text-xs text-quegym-secondary">ID</dt>
                 <dd className="font-mono text-xs">{detail.id}</dd>
               </div>
               <div>
-                <dt className="text-xs text-neutral-500">Partner</dt>
+                <dt className="text-xs text-quegym-secondary">Partner</dt>
                 <dd className="break-all">{detail.partnerEmail}</dd>
               </div>
               <div>
-                <dt className="text-xs text-neutral-500">Venue</dt>
+                <dt className="text-xs text-quegym-secondary">Venue</dt>
                 <dd>{detail.venueSlug}</dd>
               </div>
               <div>
-                <dt className="text-xs text-neutral-500">Estado</dt>
+                <dt className="text-xs text-quegym-secondary">Estado</dt>
                 <dd>
                   <StatusPill status={detail.status} />
                 </dd>
               </div>
               <div>
-                <dt className="text-xs text-neutral-500">Creado</dt>
+                <dt className="text-xs text-quegym-secondary">Creado</dt>
                 <dd>{formatDateTimeLong(detail.createdAt)}</dd>
               </div>
               <div>
-                <dt className="text-xs text-neutral-500">Actualizado</dt>
+                <dt className="text-xs text-quegym-secondary">Actualizado</dt>
                 <dd>{formatDateTimeLong(detail.updatedAt)}</dd>
               </div>
             </dl>

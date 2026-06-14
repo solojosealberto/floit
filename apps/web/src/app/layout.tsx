@@ -1,17 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { BRAND_NAME } from "@/lib/brand";
+import { Barlow_Semi_Condensed, Inter } from "next/font/google";
+import { BRAND_META_DESCRIPTION, BRAND_META_TITLE_DEFAULT, BRAND_NAME } from "@/lib/brand";
 import { FloitMainHeader } from "./floit-main-header";
+import { FloitSiteFooter } from "./floit-site-footer";
+import { ThemeScript } from "./theme-script";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const barlow = Barlow_Semi_Condensed({
+  variable: "--font-barlow",
   subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  display: "swap",
 });
 
 const siteUrl =
@@ -19,9 +24,12 @@ const siteUrl =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: { default: BRAND_NAME, template: `%s · ${BRAND_NAME}` },
-  description:
-    "Agregador de centros de fitness en Caracas: búsqueda, comparación y contacto.",
+  applicationName: BRAND_NAME,
+  title: {
+    default: BRAND_META_TITLE_DEFAULT,
+    template: `%s · ${BRAND_NAME}`,
+  },
+  description: BRAND_META_DESCRIPTION,
 };
 
 export default function RootLayout({
@@ -30,13 +38,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-neutral-50 antialiased`}
+        className={`${inter.variable} ${barlow.variable} bg-quegym-page text-quegym-primary antialiased`}
       >
         <FloitMainHeader />
-        <div className="min-h-[calc(100vh-56px)] px-0 pt-2 md:pt-3">
+        <div className="flex min-h-[calc(100vh-56px)] flex-col px-0 pt-2 md:pt-3">
           {children}
+          <FloitSiteFooter />
         </div>
       </body>
     </html>

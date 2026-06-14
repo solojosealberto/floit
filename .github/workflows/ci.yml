@@ -35,6 +35,10 @@ jobs:
         run: pnpm run typecheck
         working-directory: ${{ github.workspace }}
 
+      - name: Brand copy gate (anti-voseo)
+        run: pnpm run copy:verify
+        working-directory: ${{ github.workspace }}
+
       - name: Build
         run: pnpm run build
         working-directory: ${{ github.workspace }}

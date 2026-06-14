@@ -1,5 +1,6 @@
 "use client";
 
+import { MapPin, Map } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export function HomeLocationButton() {
@@ -27,9 +28,9 @@ export function HomeLocationButton() {
     <button
       type="button"
       onClick={onUseLocation}
-      className="inline-flex items-center gap-1 hover:text-neutral-700"
+      className="qg-link-hover qg-motion inline-flex items-center gap-1 text-quegym-secondary hover:text-quegym-highlight"
     >
-      <span aria-hidden>📍</span>
+      <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden />
       Usar mi ubicación
     </button>
   );

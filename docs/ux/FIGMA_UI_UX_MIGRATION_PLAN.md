@@ -20,15 +20,17 @@ Hallazgos clave:
 - La cobertura visual es mayor que el alcance MVP actual (incluye modulos R2 y algunos futuros).
 - El proyecto productivo (`apps/web`) tiene 14 pantallas reales, por lo que la implementacion debe mapear wireframe -> rutas existentes.
 
-### Criterio visual transversal aprobado (todas las pantallas)
+### Criterio visual transversal (actualizado — manual QueGym 2026)
 
-- El estilo objetivo de plataforma se toma de Home (`/`) y Buscar (`/buscar`) en **tema claro**.
-- Se declara como criterio de migración: evitar variantes oscuras en vistas productivas y en componentes base usados por esas vistas.
-- Criterios mínimos de legibilidad:
-  - textos de títulos/labels en `text-neutral-800/900`,
-  - campos de formulario en `bg-white` con borde neutral y texto oscuro,
-  - contraste suficiente en CTA primarios/secundarios.
-- Este criterio aplica a usuario, partner y admin, incluyendo formularios de captura/reporte.
+- **Dual-theme:** dark (default de marca, ref. capturas) + light (White/Mist/Ink/Green del manual). Toggle persistente en header del flujo público.
+- Plan de implementación: [`QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`](./QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md).
+- Tokens semánticos `--qg-*`; no hardcodear neutrals legacy como única fuente de verdad.
+- Criterios mínimos de legibilidad (ambos temas):
+  - contraste WCAG 2.2 AA (manual: 4.5:1 texto, 3:1 componentes),
+  - CTA primario Mint `#12B76A` (`--qg-accent`) + texto White,
+  - chips selected con icono/borde, no solo color,
+  - focus ring 2px blanco + 2px Green.
+- **Admin/partner:** default **light** sin preferencia guardada; **toggle habilitado** en header (público), sidebar admin, layout partner y login admin. Sin evento analytics.
 
 ## 2) Mapa de interfaces (wireframe -> Floit actual)
 

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { BRAND_ADMIN } from "@/lib/brand";
 
 export type AdminNavId =
@@ -129,14 +130,14 @@ const NAV: {
 
 export function AdminSidebar(props: Props) {
   return (
-    <aside className="rounded-2xl bg-[#121926] p-4 text-white">
+    <aside className="qg-surface-subtle qg-motion h-fit rounded-2xl border border-quegym-border bg-quegym-subtle p-4 text-quegym-primary">
       <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-sm font-semibold text-[#121926]">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-quegym-accent text-sm font-semibold text-white">
           Q
         </div>
         <div className="min-w-0">
           <p className="text-sm font-semibold leading-tight">{BRAND_ADMIN}</p>
-          <p className="text-[11px] text-white/55">Backoffice Operativo</p>
+          <p className="text-[11px] text-quegym-secondary">Backoffice Operativo</p>
         </div>
       </div>
       <nav className="space-y-1 text-sm">
@@ -154,8 +155,8 @@ export function AdminSidebar(props: Props) {
               href={item.href}
               className={`flex items-center justify-between gap-2 rounded-xl px-3 py-2.5 transition ${
                 isActive
-                  ? "bg-white font-medium text-[#121926]"
-                  : "text-white/78 hover:bg-white/10"
+                  ? "bg-quegym-accent font-medium text-white"
+                  : "text-quegym-primary hover:bg-quegym-elevated"
               }`}
             >
               <span className="flex min-w-0 items-center gap-2">
@@ -166,7 +167,7 @@ export function AdminSidebar(props: Props) {
                 <span
                   className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
                     item.id === "catalog"
-                      ? "bg-amber-400 text-[#121926]"
+                      ? "bg-amber-400 text-quegym-primary"
                       : "bg-orange-400 text-white"
                   }`}
                 >
@@ -177,12 +178,13 @@ export function AdminSidebar(props: Props) {
           );
         })}
       </nav>
-      <div className="mt-8 rounded-xl border border-white/10 bg-white/5 p-3 text-xs">
-        <p className="truncate text-white/70">{props.userEmail ?? "Admin"}</p>
-        <p className="mt-0.5 text-white/45">Admin interno</p>
+      <div className="mt-8 space-y-3 rounded-xl border border-quegym-border bg-quegym-elevated p-3 text-xs">
+        <ThemeToggle className="w-full justify-center" />
+        <p className="truncate text-quegym-secondary">{props.userEmail ?? "Admin"}</p>
+        <p className="mt-0.5 text-quegym-secondary/80">Admin interno</p>
         <Link
           href="/admin/logout"
-          className="mt-3 inline-flex items-center gap-1 text-white/85 underline-offset-2 hover:underline"
+          className="mt-3 inline-flex items-center gap-1 text-quegym-primary underline-offset-2 hover:underline"
         >
           <span aria-hidden>⎋</span> Cerrar sesión
         </Link>

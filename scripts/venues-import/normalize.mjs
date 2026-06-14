@@ -114,12 +114,17 @@ async function main() {
     }
     stats.geocode[geo.method] = (stats.geocode[geo.method] ?? 0) + 1;
 
-    const description = buildDescription(source, { geocodeNote });
+    const description = buildDescription(source);
     const record = {
       ...draft,
       lat,
       lng,
       description,
+      importMeta: {
+        sourceRow: source.rowIndex,
+        geocodeNote: geocodeNote ?? null,
+        importedAt: new Date().toISOString(),
+      },
       completenessScore: 0,
       geocode: { ...geo, lat, lng },
     };

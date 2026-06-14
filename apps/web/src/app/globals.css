@@ -2,18 +2,94 @@
 @tailwind components;
 @tailwind utilities;
 
+/* QueGym brand tokens — manual de marca (dual-theme) */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --qg-ink: #111827;
+  --qg-green: #00875a;
+  --qg-green-hover: #006644;
+  --qg-mint: #12b76a;
+  --qg-mist: #eafbf4;
+  --qg-slate: #6b7280;
+  --qg-amber: #f59e0b;
+  --qg-red: #d92d20;
+  --qg-white: #ffffff;
+
+  --qg-bg-page: #050a05;
+  --qg-bg-elevated: #141c14;
+  --qg-bg-subtle: #0f160f;
+  --qg-bg-input: #162116;
+  --qg-bg-hero: var(--qg-bg-page);
+  --qg-bg-banner: #141c14;
+  --qg-text-primary: #ffffff;
+  --qg-text-secondary: #8a968a;
+  --qg-text-on-accent: #ffffff;
+  --qg-border: #243528;
+  --qg-accent: var(--qg-mint);
+  --qg-accent-hover: var(--qg-highlight-hover);
+  --qg-highlight: var(--qg-mint);
+  --qg-highlight-hover: #0ea85e;
+  --qg-highlight-soft: rgba(18, 183, 106, 0.12);
+  --qg-warning: var(--qg-amber);
+  --qg-error: var(--qg-red);
+
+  --qg-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.28), 0 2px 8px rgba(0, 0, 0, 0.22);
+  --qg-shadow-md: 0 4px 14px rgba(0, 0, 0, 0.32), 0 2px 6px rgba(0, 0, 0, 0.2);
+  --qg-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.38), 0 4px 12px rgba(0, 0, 0, 0.24);
+  --qg-shadow-hover: 0 18px 44px rgba(0, 0, 0, 0.44), 0 8px 20px rgba(0, 0, 0, 0.28);
+  --qg-shadow-accent: 0 4px 14px rgba(18, 183, 106, 0.22);
+  --qg-shadow-accent-hover: 0 8px 24px rgba(18, 183, 106, 0.32);
+  --qg-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --qg-duration: 0.32s;
+
+  --background: var(--qg-bg-page);
+  --foreground: var(--qg-text-primary);
+
+  /* Legacy alias — mantener compat @floit/ui */
+  --floit-color-primary: var(--qg-mint);
+  --floit-color-primary-foreground: var(--qg-text-on-accent);
+  --floit-color-surface-background-secondary: var(--qg-bg-subtle);
+  --floit-color-surface-border: var(--qg-border);
+  --floit-color-neutral-600: var(--qg-text-secondary);
+  --floit-color-success: var(--qg-mint);
+  --floit-color-success-bg: var(--qg-highlight-soft);
+  --floit-color-error: var(--qg-red);
+  --floit-color-error-bg: rgba(217, 45, 32, 0.12);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --qg-bg-page: #ffffff;
+  --qg-bg-elevated: #ffffff;
+  --qg-bg-subtle: #eafbf4;
+  --qg-bg-input: #ffffff;
+  --qg-bg-hero: var(--qg-bg-subtle);
+  --qg-bg-banner: var(--qg-bg-subtle);
+  --qg-text-primary: #111827;
+  --qg-text-secondary: #6b7280;
+  --qg-text-on-accent: #ffffff;
+  --qg-border: #e5e7eb;
+  --qg-highlight-soft: #eafbf4;
+  --qg-highlight-hover: #0f9d58;
+
+  --qg-shadow-sm: 0 1px 2px rgba(17, 24, 39, 0.04), 0 2px 6px rgba(17, 24, 39, 0.03);
+  --qg-shadow-md: 0 4px 14px rgba(17, 24, 39, 0.06), 0 2px 4px rgba(17, 24, 39, 0.04);
+  --qg-shadow-lg: 0 12px 28px rgba(17, 24, 39, 0.08), 0 4px 10px rgba(17, 24, 39, 0.04);
+  --qg-shadow-hover: 0 20px 40px rgba(17, 24, 39, 0.1), 0 8px 16px rgba(17, 24, 39, 0.06);
+  --qg-shadow-accent: 0 4px 14px rgba(18, 183, 106, 0.2);
+  --qg-shadow-accent-hover: 0 8px 22px rgba(18, 183, 106, 0.28);
+
+  --background: var(--qg-bg-page);
+  --foreground: var(--qg-text-primary);
+
+  --floit-color-surface-background-secondary: var(--qg-bg-subtle);
+  --floit-color-surface-border: var(--qg-border);
+  --floit-color-neutral-600: var(--qg-text-secondary);
+  --floit-color-success-bg: var(--qg-mist);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --floit-color-primary: #030213;
-  --floit-color-primary-foreground: #ffffff;
-  --floit-color-surface-background-secondary: #fafafa;
-  --floit-color-surface-border: #e5e5e5;
-  --floit-color-neutral-600: #525252;
-  --floit-color-success: #16a34a;
-  --floit-color-success-bg: #dcfce7;
-  --floit-color-error: #dc2626;
-  --floit-color-error-bg: #fee2e2;
   --floit-radius-sm: 0.375rem;
   --floit-radius-md: 0.625rem;
   --floit-radius-lg: 0.75rem;
@@ -29,24 +105,165 @@
   --floit-font-weight-semibold: 600;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --floit-color-surface-background-secondary: #171717;
-    --floit-color-surface-border: #262626;
-    --floit-color-neutral-600: #a3a3a3;
-  }
-}
-
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Inter, "Segoe UI", Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 h1,
 h2,
-h3 {
-  letter-spacing: -0.01em;
+h3,
+.font-display {
+  font-family: var(--font-barlow), var(--font-inter), system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+:focus-visible {
+  outline: none;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:not(input):not(textarea):not(select):focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--qg-accent) 55%, transparent);
+}
+
+[data-theme="light"] button:focus-visible,
+[data-theme="light"] a:focus-visible,
+[data-theme="light"] summary:focus-visible,
+[data-theme="light"] [role="button"]:focus-visible,
+[data-theme="light"] [tabindex]:not(input):not(textarea):not(select):focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--qg-accent) 65%, transparent);
+}
+
+/* Elevación + motion (referencia Apple — prueba rebrand) */
+@layer components {
+  /** Campo compuesto (icono + input/select) — focus en el contenedor redondeado. */
+  .qg-field {
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .qg-field:focus-within {
+    border-color: color-mix(in srgb, var(--qg-accent) 55%, var(--qg-border));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--qg-accent) 38%, transparent);
+  }
+
+  /** Input/select/textarea con borde propio. */
+  .qg-input {
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .qg-input:focus-visible {
+    outline: none;
+    border-color: color-mix(in srgb, var(--qg-accent) 55%, var(--qg-border));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--qg-accent) 38%, transparent);
+  }
+
+  .qg-motion {
+    transition-property: transform, box-shadow, border-color, background-color, color, opacity;
+    transition-duration: var(--qg-duration);
+    transition-timing-function: var(--qg-ease);
+  }
+
+  .qg-surface {
+    box-shadow: var(--qg-shadow-md);
+  }
+
+  .qg-surface-subtle {
+    box-shadow: var(--qg-shadow-sm);
+  }
+
+  .qg-header-bar {
+    box-shadow: 0 1px 0 var(--qg-border), var(--qg-shadow-sm);
+  }
+
+  .qg-btn-primary {
+    box-shadow: var(--qg-shadow-accent), var(--qg-shadow-sm);
+  }
+
+  .qg-btn-ghost {
+    box-shadow: none;
+  }
+
+  .qg-fab {
+    box-shadow: var(--qg-shadow-accent), var(--qg-shadow-lg);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .qg-surface.qg-motion:hover {
+      box-shadow: var(--qg-shadow-hover);
+      transform: translateY(-3px);
+    }
+
+    .qg-surface-subtle.qg-motion:hover {
+      box-shadow: var(--qg-shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .qg-chip.qg-motion:hover {
+      box-shadow: var(--qg-shadow-sm);
+      transform: translateY(-1px);
+      border-color: color-mix(in srgb, var(--qg-accent) 45%, var(--qg-border));
+    }
+
+    .qg-btn-primary.qg-motion:hover {
+      box-shadow: var(--qg-shadow-accent-hover), var(--qg-shadow-md);
+      transform: translateY(-2px) scale(1.02);
+    }
+
+    .qg-btn-ghost.qg-motion:hover {
+      box-shadow: var(--qg-shadow-sm);
+      transform: translateY(-1px);
+      border-color: color-mix(in srgb, var(--qg-accent) 40%, var(--qg-border));
+    }
+
+    .qg-fab.qg-motion:hover {
+      box-shadow: var(--qg-shadow-accent-hover), var(--qg-shadow-hover);
+      transform: translateY(-3px) scale(1.03);
+    }
+
+    .qg-link-hover.qg-motion:hover {
+      opacity: 0.82;
+    }
+
+    .qg-nav-link.qg-motion:hover {
+      color: var(--qg-text-primary);
+    }
+  }
+
+  .qg-btn-primary.qg-motion:active,
+  .qg-btn-ghost.qg-motion:active,
+  .qg-fab.qg-motion:active {
+    transform: translateY(0) scale(0.98);
+    transition-duration: 0.12s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qg-motion {
+    transition: none !important;
+  }
+
+  .qg-surface:hover,
+  .qg-surface-subtle:hover,
+  .qg-chip:hover,
+  .qg-btn-primary:hover,
+  .qg-btn-ghost:hover,
+  .qg-fab:hover {
+    transform: none !important;
+  }
 }

@@ -82,7 +82,8 @@ Equivalencia historica en este documento:
 - `Completado` panel partner operando en contexto de `venueSlug` para operaciones clave, con navegación funcional por secciones (`Dashboard`, `Editar perfil`, `Planes y precios`, `Leads recibidos`, `Configuración`) y acciones de estado de lead desde el panel.
 - `Completado` módulo `Configuración` partner en `panel` y rutas dedicadas (`/partner/configuracion/*`) con flujos operativos de cuenta para QA local: consulta de centros por ownership, solicitud de cambio de correo (pendiente de verificación) y eliminación de cuenta en modo demo mediante cierre de sesión controlado.
 - `Completado` (2026-05-09) flujo público de alta/reclamo en `/partner/claim`: separación «cuenta existente» vs «sin cuenta», stepper solo tras avanzar del paso inicial, modal de sesión activa cuando hay cookie OIDC/dev-email, y entrada `/partner` con empty state cuando el partner autenticado no tiene centros activos.
-- `Completado` (2026-05-09, misma jornada) pulido UX/copy en `/partner/claim` (título de página, cabecera «Tu centro en QueGym» — rebrand Fase 1 mayo 2026, opciones reclamo vs alta en paralelo, textos por paso, marca `#0a1430`) y en `/partner/panel` → Configuración → Cuenta: menú lateral consistente y «Cerrar sesión» junto a «Eliminar cuenta» (`POST /partner/logout`).
+- `Completado` (2026-05-27) **Rebrand Fase 2 UI + copy verbal:** tokens QueGym, toggle tema, partner/admin shells, copy venezolano (home hero «Encuentra…», anti-voseo), `pnpm copy:verify`. Ver `docs/ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md` y `docs/ux/QUEGYM_BRAND_COPY_PLAN.md`.
+- `Completado` (2026-05-09, misma jornada) pulido UX/copy en `/partner/claim` (título de página, cabecera «Tu centro en QueGym» — rebrand Fase 1 mayo 2026, opciones reclamo vs alta en paralelo, textos por paso) y en `/partner/panel` → Configuración → Cuenta: menú lateral consistente y «Cerrar sesión» junto a «Eliminar cuenta» (`POST /partner/logout`).
 - `Completado` (2026-05-09) continuidad claim→acceso: copy explícito de que el **correo del claim** es el de login en `/partner/login`; confirmación enlaza al login; rutas configuración cuenta envueltas en **Suspense** para build estable.
 - `Completado` (2026-05) rutas de entrada partner alineadas al login: **`FloitMainHeader`** («¿Eres partner?») y **home** (banner «Reclamar mi centro») → **`/partner/login`**; alta/reclamo público permanece en **`/partner/claim`** (p. ej. desde login «Primera vez»). Panel **`/partner/panel`** incluye retorno rápido al hub **`/partner/venues`** vía **«← Mis centros»**. Referencia de rutas: `docs/operations/WEB_ROUTES_PLATFORM.md`.
 
@@ -186,13 +187,46 @@ Evidencia: `STAGING_EVIDENCE_SPRINT5.md`, `STAGING_DEPLOYMENT_STATUS.md`, `STAGI
 
 ---
 
+## Epic UX-V0 — Confianza catálogo y conversión (plan v0 staging)
+
+**Estado:** `Completado en repo` (2026-05-27). Plan: [`docs/ux/QUEGYM_UX_V0_IMPROVEMENT_PLAN.md`](../ux/QUEGYM_UX_V0_IMPROVEMENT_PLAN.md). Fuente: [auditoría v0](https://v0.app/vicsanpar1289/chat/user-experience-improvement-gCH896aJPYE).
+
+| ID backlog | Título | Prioridad | Sprint | Estado |
+|------------|--------|-----------|--------|--------|
+| UX-V0-101–104 | Fundación `VenueImage`, `VenuePrice`, sanitizar descripción | P0 | UX-A | ✅ |
+| UX-V0-201–205 | `/buscar`: tarjetas unificadas, ranking completitud, filtros chip ✕, skeletons | P0–P2 | UX-A / UX-B | ✅ |
+| UX-V0-301–306 | `/gyms/[slug]`: galería, logo, sin rating fake, planes/horarios demo + Lucide | P0–P1 | UX-A / UX-C | ✅ (planes demo placeholder) |
+| UX-V0-401–404 | Nav móvil, comparar global, FAB mapa, barra flotante + grilla móvil | P0–P2 | UX-B / cierre | ✅ |
+| UX-V0-501–504 | Home: stats, cómo funciona, footer | P1–P2 | UX-B | ✅ |
+| UX-V0-601–603 | Lucide, skeletons, paridad favoritos/comparar, focus formularios | P1–P2 | UX-C | ✅ |
+| UX-V0-701–703 | Pipeline import / completeness score catálogo | P1–P2 | UX-C | ✅ JSON normalizado; import BD pendiente |
+| UX-V0-801+ | Spike “high tech fitness” (opcional) | P2 | Post UX-C | Planificado |
+
+**Entregables comparador (referencia):**
+
+| Pieza | Ruta | Notas |
+|-------|------|--------|
+| Barra activa en buscar | `compare-active-bar.tsx` | `fixed` fuera de contenedor con `transform`; móvil + desktop |
+| Grilla comparación | `compare-grid.tsx` | Sticky labels + headers; scroll H/V en móvil |
+| Cliente `/comparar` | `comparar/comparar-client.tsx` | Header móvil «Comparador · N centros»; botón dashed añadir |
+
+**Focus formularios (polish UX-C):**
+
+| Pieza | Ruta | Notas |
+|-------|------|--------|
+| Tokens focus | `apps/web/src/app/globals.css` | Sin outline cuadrado en inputs; `.qg-field:focus-within` sigue `border-radius` |
+| Campos UI kit | `packages/ui/src/input.tsx`, `select.tsx` | Borde mint sutil en `:focus-visible` |
+| Aplicado en | home, `/buscar`, partner/admin login | Wrappers con clase `qg-field` |
+
+**Próximo paso:** deploy UX a **staging** + QA (`UI_VISUAL_QA_CHECKLIST.md` §2b, §4 focus, comparador); `pnpm venues:import:staging`; cierre beta (KPI A/B, GO/NO-GO).
+
+---
+
 ## Foco vigente de ejecución (sprint UI actual)
 
-- Scope activo: cierre de UI/UX en páginas faltantes o no mejoradas, priorizadas en `docs/operations/sprints.md`.
-- Prioridad inmediata:
-  - Partner: rutas dedicadas **`/partner/planes`** y **`/partner/fotos`** (redirect al panel); sección **`fotos`** en menú del panel; entrada `/partner` y **`/partner/claim`** operativos.
-  - Admin: **`/admin/catalogo`**, **`/admin/venues`** (alias), **`/admin/duplicados`**, **`/admin/moderacion-media`**, **`/admin/configuracion`**, **`/admin/taxonomias`**, **`/admin/leads`**, **`/admin/partner-claims`** operativos — ver US-5.2–5.5 y US-4.1.
-  - Discovery: filtros de modalidad en **`/buscar`** consumen taxonomías activas (`GET /v1/meta/taxonomy-attributes?kind=modality`).
-  - Ficha **`/gyms/[slug]`**: guardar/compartir, tabs por sección, descripción real en resumen; pendiente QA visual staging (fases 4–5 del plan en `sprints.md`).
-  - **Rebrand Fase 1 (completado):** marca visible **QueGym** / **QueGym Partners** / **QueGym Admin** (`apps/web/src/lib/brand.ts`, `QueGymLogo`, header y copy en rutas públicas/partner/admin); OpenAPI `info.title` actualizado; badge API sigue `floit_verified` con label «Verificado QueGym». Plan y fases 2–4: `docs/operations/REBRAND_QUEGYM_PLAN.md`.
+- **Completado (2026-05-27):** Rebrand Fase 2 visual + copy verbal en repo (`REBRAND_QUEGYM_PLAN.md`, `QUEGYM_BRAND_COPY_PLAN.md`, `pnpm copy:verify`).
+- **Completado (2026-05-27):** Sprint **UX-A/B/C** — confianza catálogo y conversión en repo (`QUEGYM_UX_V0_IMPROVEMENT_PLAN.md`): tarjetas unificadas, `/buscar` + ficha + home + shell móvil, Lucide/skeletons, pipeline import re-normalizado (95 venues, 100% descripción limpia en JSON), **comparador** (`CompareActiveBar` + `CompareGrid` móvil), **focus formularios** (`.qg-field` / `.qg-input` en `globals.css`).
+- **Pendiente:** deploy UX a **staging** + QA visual/copy (`UI_VISUAL_QA_CHECKLIST.md`); `pnpm venues:import:staging` con JSON normalizado.
+- **Siguiente línea de trabajo recomendada:** cierre beta staging (deploy UX → tráfico KPI A/B → E2E manual §2–3 → firma GO/NO-GO); opcional spike UX-V0-801.
+- Scope histórico cerrado: partner planes/fotos, admin duplicados/moderación, taxonomías en buscar, ficha gym tabs/guardar/compartir (ver filas US arriba).
 - Fuera del scope MVP transaccional actual: `/checkout`, `/reservas` (solo placeholder/backlog).

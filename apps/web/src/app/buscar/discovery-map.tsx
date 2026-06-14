@@ -3,7 +3,7 @@
 import type { VenueSummary } from "@floit/contracts";
 import type { Map } from "leaflet";
 import { useEffect, useRef } from "react";
-import "leaflet/dist/leaflet.css";
+import { mapPinMarkerHtml } from "@/lib/map-marker-html";
 
 type Props = {
   venues: VenueSummary[];
@@ -59,7 +59,7 @@ export function DiscoveryMap({
         const active = selectedSlug === v.slug;
         const markerIcon = L.divIcon({
           className: "floit-map-marker",
-          html: `<div style="width:${active ? 30 : 26}px;height:${active ? 30 : 26}px;border-radius:9999px;background:${active ? "#111827" : "#0f172a"};color:white;display:flex;align-items:center;justify-content:center;font-size:${active ? 15 : 13}px;box-shadow:0 6px 14px rgba(15,23,42,.3);border:2px solid white;">📍</div>`,
+          html: mapPinMarkerHtml(active),
           iconSize: [active ? 30 : 26, active ? 30 : 26],
           iconAnchor: [active ? 15 : 13, active ? 30 : 26],
           popupAnchor: [0, -24],
@@ -131,7 +131,7 @@ export function DiscoveryMap({
   return (
     <div
       ref={el}
-      className={`w-full rounded-xl border border-neutral-200 bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 ${className ?? "h-[min(360px,55vh)]"}`}
+      className={`w-full rounded-xl border border-quegym-border bg-quegym-subtle ${className ?? "h-[min(360px,55vh)]"}`}
       role="presentation"
     />
   );

@@ -7,7 +7,7 @@ import { Suspense, type FormEvent, useMemo, useState } from "react";
 function EliminarCuentaFallback() {
   return (
     <main className="mx-auto w-full max-w-[420px] px-4 py-10">
-      <p className="text-center text-sm text-neutral-500">Cargando…</p>
+      <p className="text-center text-sm text-quegym-secondary">Cargando…</p>
     </main>
   );
 }
@@ -60,11 +60,11 @@ function PartnerEliminarCuentaInner() {
   return (
     <main className="mx-auto w-full max-w-[420px] px-4 py-4">
       <header className="mb-5 flex items-center justify-between">
-        <Link href={backHref} className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-600">
+        <Link href={backHref} className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-quegym-subtle text-quegym-secondary">
           ‹
         </Link>
-        <h1 className="text-xl font-semibold text-neutral-900">Eliminar cuenta</h1>
-        <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-500">🔔</span>
+        <h1 className="text-xl font-semibold text-quegym-primary">Eliminar cuenta</h1>
+        <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-quegym-subtle text-quegym-secondary">🔔</span>
       </header>
 
       <form className="space-y-4" onSubmit={onSubmit}>
@@ -76,8 +76,8 @@ function PartnerEliminarCuentaInner() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold text-neutral-800">¿Qué se eliminará?</h2>
-          <ul className="mt-2 space-y-1 text-base text-neutral-600">
+          <h2 className="text-2xl font-semibold text-quegym-primary">¿Qué se eliminará?</h2>
+          <ul className="mt-2 space-y-1 text-base text-quegym-secondary">
             <li>• Perfil de administrador y acceso al panel</li>
             <li>• 2 perfiles de gimnasios (Altamira y El Rosal)</li>
             <li>• Historial de leads recibidos (47 leads)</li>
@@ -87,18 +87,18 @@ function PartnerEliminarCuentaInner() {
         </div>
 
         <div>
-          <label className="mb-1 block text-base font-semibold text-neutral-800">
+          <label className="mb-1 block text-base font-semibold text-quegym-primary">
             {"Escribí 'ELIMINAR' para confirmar *"}
           </label>
           <input
             value={confirmText}
             onChange={(event) => setConfirmText(event.target.value)}
             placeholder="ELIMINAR"
-            className="h-12 w-full rounded-xl border border-neutral-300 bg-white px-3 text-neutral-800"
+            className="h-12 w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 text-quegym-primary"
           />
         </div>
         <div>
-          <label className="mb-1 block text-base font-semibold text-neutral-800">
+          <label className="mb-1 block text-base font-semibold text-quegym-primary">
             Contraseña o último enlace de acceso *
           </label>
           <input
@@ -106,22 +106,22 @@ function PartnerEliminarCuentaInner() {
             onChange={(event) => setSecret(event.target.value)}
             type="password"
             placeholder="••••••••"
-            className="h-12 w-full rounded-xl border border-neutral-300 bg-white px-3 text-neutral-800"
+            className="h-12 w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 text-quegym-primary"
           />
-          <p className="mt-1 text-sm text-neutral-500">Requerida para confirmar la eliminación</p>
+          <p className="mt-1 text-sm text-quegym-secondary">Requerida para confirmar la eliminación</p>
         </div>
 
-        <label className="flex items-start gap-2 text-sm text-neutral-600">
+        <label className="flex items-start gap-2 text-sm text-quegym-secondary">
           <input
             type="checkbox"
             checked={accepted}
             onChange={(event) => setAccepted(event.target.checked)}
-            className="mt-1 h-4 w-4 rounded border-neutral-300"
+            className="mt-1 h-4 w-4 rounded border-quegym-border"
           />
           <span>Entiendo que esta acción es permanente y no podrá revertirse.</span>
         </label>
         {msg ? (
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+          <div className="rounded-xl border border-quegym-highlight/30 bg-quegym-highlight-soft px-3 py-2 text-sm text-quegym-highlight">
             {msg}
           </div>
         ) : null}

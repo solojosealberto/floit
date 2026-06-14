@@ -111,8 +111,8 @@ function StatusBadge({ status }: { status: DashboardClaimRow["status"] }) {
   }
   if (status === "approved") {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-900 ring-1 ring-emerald-200/90">
-        <span aria-hidden className="text-emerald-600">
+      <span className="inline-flex items-center gap-1 rounded-full bg-quegym-highlight-soft px-2.5 py-1 text-xs font-semibold text-quegym-highlight ring-1 ring-quegym-highlight/30">
+        <span aria-hidden className="text-quegym-highlight">
           ✓
         </span>
         Aprobado
@@ -138,24 +138,24 @@ function KpiCard(props: {
 }) {
   const shell =
     props.tone === "neutral"
-      ? "border-neutral-200 bg-white"
+      ? "border-quegym-border bg-quegym-elevated"
       : props.tone === "amber"
         ? "border-amber-200/90 bg-amber-50/90"
         : props.tone === "sky"
           ? "border-sky-200/90 bg-sky-50/90"
           : props.tone === "emerald"
-            ? "border-emerald-200/90 bg-emerald-50/90"
+            ? "border-quegym-highlight/30/90 bg-quegym-highlight-soft/90"
             : "border-rose-200/90 bg-rose-50/90";
   return (
     <div
-      className={`flex flex-col gap-2 rounded-xl border p-4 shadow-sm ${shell}`}
+      className={`flex flex-col gap-2 rounded-xl border p-4 ${shell}`}
     >
       <div className="flex items-start justify-between gap-2">
-        <p className="text-xs font-medium uppercase tracking-wide text-neutral-600">{props.label}</p>
-        <span className="text-neutral-500">{props.icon}</span>
+        <p className="text-xs font-medium uppercase tracking-wide text-quegym-secondary">{props.label}</p>
+        <span className="text-quegym-secondary">{props.icon}</span>
       </div>
-      <p className="text-3xl font-semibold tracking-tight text-neutral-900">{props.value}</p>
-      <p className="text-xs text-neutral-600">{props.hint}</p>
+      <p className="text-3xl font-semibold tracking-tight text-quegym-primary">{props.value}</p>
+      <p className="text-xs text-quegym-secondary">{props.hint}</p>
     </div>
   );
 }
@@ -187,7 +187,7 @@ function PaginationBar(props: {
 
   if (totalPages <= 1) {
     return (
-      <p className="text-xs text-neutral-500">
+      <p className="text-xs text-quegym-secondary">
         Página 1 de 1
       </p>
     );
@@ -207,7 +207,7 @@ function PaginationBar(props: {
       <div className="flex flex-wrap items-center gap-1">
         {nums.map((item, idx) =>
           item === "ellipsis" ? (
-            <span key={`g-${idx}`} className="px-1 text-neutral-400">
+            <span key={`g-${idx}`} className="px-1 text-quegym-secondary">
               …
             </span>
           ) : (
@@ -217,8 +217,8 @@ function PaginationBar(props: {
               onClick={() => onSelect(item)}
               className={`flex h-8 min-w-[2rem] items-center justify-center rounded-lg text-xs font-semibold ${
                 pageSafe === item
-                  ? "bg-[#0a1430] text-white"
-                  : "border border-neutral-200 bg-white text-neutral-800 hover:bg-neutral-50"
+                  ? "bg-quegym-accent text-white"
+                  : "border border-quegym-border bg-quegym-elevated text-quegym-primary hover:bg-quegym-subtle"
               }`}
             >
               {item}
@@ -294,24 +294,24 @@ export function PartnerClaimsDashboard(props: { items: DashboardClaimRow[] }) {
 
       <header className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">Solicitudes</p>
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-neutral-900">
+          <p className="text-xs font-medium uppercase tracking-wide text-quegym-secondary">Solicitudes</p>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-quegym-primary">
             Claims de partners
           </h1>
-          <p className="mt-1 max-w-2xl text-sm text-neutral-600">
+          <p className="mt-1 max-w-2xl text-sm text-quegym-secondary">
             Gestiona solicitudes de registro y reclamo de centros.
           </p>
           <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs">
-            <Link className="font-medium text-[#0a1430] underline underline-offset-2" href="/admin/catalogo">
+            <Link className="font-medium text-quegym-accent underline underline-offset-2" href="/admin/catalogo">
               Catálogo
             </Link>
-            <Link className="font-medium text-[#0a1430] underline underline-offset-2" href="/admin/leads">
+            <Link className="font-medium text-quegym-accent underline underline-offset-2" href="/admin/leads">
               Leads
             </Link>
-            <Link className="font-medium text-[#0a1430] underline underline-offset-2" href="/admin/analytics">
+            <Link className="font-medium text-quegym-accent underline underline-offset-2" href="/admin/analytics">
               Métricas
             </Link>
-            <Link className="font-medium text-[#0a1430] underline underline-offset-2" href="/partner/claim">
+            <Link className="font-medium text-quegym-accent underline underline-offset-2" href="/partner/claim">
               Formulario público
             </Link>
           </div>
@@ -340,7 +340,7 @@ export function PartnerClaimsDashboard(props: { items: DashboardClaimRow[] }) {
               type="button"
               size="sm"
               variant="primary"
-              className="border-0 bg-[#0a1430] text-white hover:bg-[#152447] dark:bg-[#0a1430] dark:text-white dark:hover:bg-[#152447]"
+              className="border-0 bg-quegym-accent text-white hover:bg-[#152447] dark:bg-quegym-accent dark:text-white dark:hover:bg-[#152447]"
               leadingIcon={
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
@@ -365,7 +365,7 @@ export function PartnerClaimsDashboard(props: { items: DashboardClaimRow[] }) {
           hint="Resultados cargados (máx. 200)"
           tone="neutral"
           icon={
-            <svg className="h-5 w-5 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="h-5 w-5 text-quegym-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           }
@@ -398,7 +398,7 @@ export function PartnerClaimsDashboard(props: { items: DashboardClaimRow[] }) {
           hint="En la lista actual"
           tone="emerald"
           icon={
-            <svg className="h-5 w-5 text-emerald-600/90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="h-5 w-5 text-quegym-highlight/90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
             </svg>
           }
@@ -416,9 +416,9 @@ export function PartnerClaimsDashboard(props: { items: DashboardClaimRow[] }) {
         />
       </section>
 
-      <div className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+      <div className="rounded-xl border border-quegym-border bg-quegym-elevated p-4">
         <div className="relative">
-          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400">
+          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-quegym-secondary">
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -428,7 +428,7 @@ export function PartnerClaimsDashboard(props: { items: DashboardClaimRow[] }) {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Buscar por centro (slug), nombre, email o teléfono…"
-            className="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-11 pr-4 text-sm text-neutral-900 placeholder:text-neutral-500 focus:border-[#0a1430]/40 focus:outline-none focus:ring-2 focus:ring-[#0a1430]/15"
+            className="w-full rounded-xl border border-quegym-border bg-quegym-elevated py-2.5 pl-11 pr-4 text-sm text-quegym-primary placeholder:text-quegym-secondary focus:border-quegym-accent/40 focus:outline-none focus:ring-2 focus:ring-quegym-accent/15"
             aria-label="Buscar solicitudes"
           />
         </div>
@@ -448,8 +448,8 @@ export function PartnerClaimsDashboard(props: { items: DashboardClaimRow[] }) {
               onClick={() => setChip(id)}
               className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
                 chip === id
-                  ? "bg-[#0a1430] text-white shadow-sm"
-                  : "border border-neutral-200 bg-white text-neutral-800 hover:border-neutral-300 hover:bg-neutral-50"
+                  ? "bg-quegym-accent text-white"
+                  : "border border-quegym-border bg-quegym-elevated text-quegym-primary hover:border-quegym-border hover:bg-quegym-subtle"
               }`}
             >
               {label}
@@ -458,30 +458,30 @@ export function PartnerClaimsDashboard(props: { items: DashboardClaimRow[] }) {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-quegym-border bg-quegym-elevated">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[960px] border-collapse text-left text-sm">
             <thead>
-              <tr className="border-b border-neutral-200 bg-neutral-50">
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-600">
+              <tr className="border-b border-quegym-border bg-quegym-subtle">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                   Centro / Partner
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-600">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                   Tipo
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-600">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                   Contacto
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-600">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                   Fecha
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-600">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                   Estado
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-600">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                   Evidencia
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-neutral-600">
+                <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                   Acciones
                 </th>
               </tr>
@@ -489,7 +489,7 @@ export function PartnerClaimsDashboard(props: { items: DashboardClaimRow[] }) {
             <tbody>
               {slice.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-4 py-12 text-center text-neutral-600">
+                  <td colSpan={7} className="px-4 py-12 text-center text-quegym-secondary">
                     No hay solicitudes que coincidan con los filtros.
                   </td>
                 </tr>
@@ -499,13 +499,13 @@ export function PartnerClaimsDashboard(props: { items: DashboardClaimRow[] }) {
                   return (
                     <tr
                       key={c.id}
-                      className={`border-b border-neutral-100 last:border-0 ${
-                        pendingHighlight ? "bg-amber-50/45" : "bg-white"
+                      className={`border-b border-quegym-border last:border-0 ${
+                        pendingHighlight ? "bg-amber-50/45" : "bg-quegym-elevated"
                       }`}
                     >
                       <td className="px-4 py-3 align-top">
                         <div className="flex gap-3">
-                          <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#0a1430]/8 text-[#0a1430]">
+                          <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-quegym-accent/8 text-quegym-accent">
                             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                             </svg>
@@ -513,14 +513,14 @@ export function PartnerClaimsDashboard(props: { items: DashboardClaimRow[] }) {
                           <div className="min-w-0">
                             <Link
                               href={`/gyms/${c.venueSlug}`}
-                              className="font-semibold text-[#0a1430] underline decoration-neutral-300 underline-offset-2 hover:decoration-[#0a1430]"
+                              className="font-semibold text-quegym-accent underline decoration-quegym-border underline-offset-2 hover:decoration-quegym-accent"
                             >
                               {c.venueSlug}
                             </Link>
-                            <p className="truncate text-xs text-neutral-600">{c.representativeName}</p>
+                            <p className="truncate text-xs text-quegym-secondary">{c.representativeName}</p>
                             <Link
                               href={`/admin/catalogo/${encodeURIComponent(c.venueSlug)}/panel`}
-                              className="text-xs font-medium text-neutral-600 underline hover:text-neutral-900"
+                              className="text-xs font-medium text-quegym-secondary underline hover:text-quegym-primary"
                             >
                               Panel catálogo
                             </Link>
@@ -532,7 +532,7 @@ export function PartnerClaimsDashboard(props: { items: DashboardClaimRow[] }) {
                           className={
                             c.claimKind === "new"
                               ? "inline-flex rounded-md bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-950 ring-1 ring-amber-200/90"
-                              : "inline-flex rounded-md bg-neutral-100 px-2 py-1 text-xs font-semibold text-neutral-800 ring-1 ring-neutral-200/90"
+                              : "inline-flex rounded-md bg-quegym-subtle px-2 py-1 text-xs font-semibold text-quegym-primary ring-1 ring-quegym-border/80"
                           }
                         >
                           {c.claimKind === "new" ? "Alta nueva" : "Reclamo"}
@@ -540,14 +540,14 @@ export function PartnerClaimsDashboard(props: { items: DashboardClaimRow[] }) {
                       </td>
                       <td className="px-4 py-3 align-top">
                         <div className="flex flex-col gap-0.5">
-                          <span className="break-all text-neutral-900">{c.representativeEmail}</span>
-                          <span className="text-xs text-neutral-600">{c.representativePhone}</span>
+                          <span className="break-all text-quegym-primary">{c.representativeEmail}</span>
+                          <span className="text-xs text-quegym-secondary">{c.representativePhone}</span>
                         </div>
                       </td>
                       <td className="px-4 py-3 align-top">
                         <div className="flex flex-col gap-0.5">
-                          <span className="text-neutral-900">{formatDateShort(c.createdAt)}</span>
-                          <span className="text-xs text-neutral-600">{formatRelative(c.createdAt)}</span>
+                          <span className="text-quegym-primary">{formatDateShort(c.createdAt)}</span>
+                          <span className="text-xs text-quegym-secondary">{formatRelative(c.createdAt)}</span>
                         </div>
                       </td>
                       <td className="px-4 py-3 align-top">
@@ -555,11 +555,11 @@ export function PartnerClaimsDashboard(props: { items: DashboardClaimRow[] }) {
                       </td>
                       <td className="max-w-[180px] px-4 py-3 align-top">
                         {c.evidence ? (
-                          <span className="break-words text-xs font-medium text-[#0a1430]" title={c.evidence}>
+                          <span className="break-words text-xs font-medium text-quegym-accent" title={c.evidence}>
                             {c.evidence.length > 48 ? `${c.evidence.slice(0, 48)}…` : c.evidence}
                           </span>
                         ) : (
-                          <span className="text-xs font-medium text-neutral-600">Sin evidencia</span>
+                          <span className="text-xs font-medium text-quegym-secondary">Sin evidencia</span>
                         )}
                       </td>
                       <td className="px-4 py-3 align-top">
@@ -568,7 +568,7 @@ export function PartnerClaimsDashboard(props: { items: DashboardClaimRow[] }) {
                             type="button"
                             size="sm"
                             variant="primary"
-                            className="border-0 bg-[#0a1430] text-white hover:bg-[#152447]"
+                            className="border-0 bg-quegym-accent text-white hover:bg-[#152447]"
                             onClick={() => setDetailClaim(c)}
                           >
                             Ver detalle
@@ -585,8 +585,8 @@ export function PartnerClaimsDashboard(props: { items: DashboardClaimRow[] }) {
         </div>
 
         {filtered.length > 0 ? (
-          <div className="flex flex-col gap-3 border-t border-neutral-100 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs text-neutral-600">
+          <div className="flex flex-col gap-3 border-t border-quegym-border px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs text-quegym-secondary">
               Mostrando {(pageSafe - 1) * PAGE_SIZE + 1}–
               {Math.min(pageSafe * PAGE_SIZE, filtered.length)} de {filtered.length} solicitudes
               {q.trim() ? " (filtrado)" : ""}

@@ -117,9 +117,14 @@ El paso `normalize.mjs` aplica reglas en `scripts/venues-import/lib/`:
 | `contactPhone` / `contactWhatsapp` | E.164 Venezuela (`58…`) |
 | `priceMin` / `priceMax` | USD, Bs. y patrones «mensual» |
 | `lat` / `lng` | Maps URL → caché → Nominatim → **centroide por zona** (no un único punto Caracas) |
-| `description` | Bloques estructurados + pie «importación normalizada» |
+| `description` | Solo copy usuario (Tipo, actividades, amenidades…); metadatos ops en `importMeta` / `geocode` |
+| `completenessScore` | Foto, precio, contacto, zona y descripción estructurada |
 
-Auditoría: `pnpm venues:audit` (JSON vs API).
+Auditoría: `pnpm venues:audit` (JSON vs API) · `pnpm venues:audit:ui` (% perfiles listos para UI).
+
+**Última normalización (2026-05-27, post UX-V0-701):** 95 venues → `data/venues-caracas.normalized.json`. `pnpm venues:audit:ui`: foto 94.7%, precio 60%, contacto 91.6%, **descripción limpia 100%**, listos UI (≥0.55) 51.6%. Aplicar en BD: `pnpm venues:import --update` (local con catalog en 4010) o `pnpm venues:import:staging`.
+
+Tras cambiar el pipeline: `pnpm venues:normalize` y re-importar para refrescar descripciones limpias en BD.
 
 ## Limitaciones conocidas
 

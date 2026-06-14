@@ -7,7 +7,7 @@ import { Suspense, type FormEvent, useMemo, useState } from "react";
 function CambiarCorreoFallback() {
   return (
     <main className="mx-auto w-full max-w-[420px] px-4 py-10">
-      <p className="text-center text-sm text-neutral-500">Cargando…</p>
+      <p className="text-center text-sm text-quegym-secondary">Cargando…</p>
     </main>
   );
 }
@@ -65,11 +65,11 @@ function PartnerCambiarCorreoInner() {
   return (
     <main className="mx-auto w-full max-w-[420px] px-4 py-4">
       <header className="mb-5 flex items-center justify-between">
-        <Link href={backHref} className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-600">
+        <Link href={backHref} className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-quegym-subtle text-quegym-secondary">
           ‹
         </Link>
-        <h1 className="text-xl font-semibold text-neutral-900">Cambiar correo</h1>
-        <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-500">🔔</span>
+        <h1 className="text-xl font-semibold text-quegym-primary">Cambiar correo</h1>
+        <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-quegym-subtle text-quegym-secondary">🔔</span>
       </header>
 
       <form className="space-y-4" onSubmit={onSubmit}>
@@ -77,24 +77,24 @@ function PartnerCambiarCorreoInner() {
           <p className="text-lg font-medium">Te enviaremos un código de verificación a tu nuevo correo para confirmar el cambio.</p>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-neutral-700">Correo actual</label>
-          <input value="admin@evolvefitness.com" readOnly className="h-12 w-full rounded-xl border border-neutral-300 bg-neutral-100 px-3 text-neutral-500" />
+          <label className="mb-1 block text-sm font-medium text-quegym-primary">Correo actual</label>
+          <input value="admin@evolvefitness.com" readOnly className="h-12 w-full rounded-xl border border-quegym-border bg-quegym-subtle px-3 text-quegym-secondary" />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-neutral-700">Nuevo correo electrónico *</label>
-          <input value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder="nuevo@correo.com" className="h-12 w-full rounded-xl border border-neutral-300 bg-white px-3 text-neutral-800" />
+          <label className="mb-1 block text-sm font-medium text-quegym-primary">Nuevo correo electrónico *</label>
+          <input value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder="nuevo@correo.com" className="h-12 w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 text-quegym-primary" />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-neutral-700">Confirmar nuevo correo *</label>
-          <input value={confirmEmail} onChange={(e) => setConfirmEmail(e.target.value)} placeholder="nuevo@correo.com" className="h-12 w-full rounded-xl border border-neutral-300 bg-white px-3 text-neutral-800" />
+          <label className="mb-1 block text-sm font-medium text-quegym-primary">Confirmar nuevo correo *</label>
+          <input value={confirmEmail} onChange={(e) => setConfirmEmail(e.target.value)} placeholder="nuevo@correo.com" className="h-12 w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 text-quegym-primary" />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-neutral-700">Contraseña actual *</label>
-          <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="••••••••" className="h-12 w-full rounded-xl border border-neutral-300 bg-white px-3 text-neutral-800" />
-          <p className="mt-1 text-sm text-neutral-500">Requerida para confirmar el cambio</p>
+          <label className="mb-1 block text-sm font-medium text-quegym-primary">Contraseña actual *</label>
+          <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="••••••••" className="h-12 w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 text-quegym-primary" />
+          <p className="mt-1 text-sm text-quegym-secondary">Requerida para confirmar el cambio</p>
         </div>
         {msg ? (
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+          <div className="rounded-xl border border-quegym-highlight/30 bg-quegym-highlight-soft px-3 py-2 text-sm text-quegym-highlight">
             {msg}
           </div>
         ) : null}
@@ -109,7 +109,7 @@ function PartnerCambiarCorreoInner() {
         <button
           type="submit"
           disabled={busy}
-          className="h-11 w-full rounded-xl bg-neutral-900 px-4 text-sm font-medium text-white disabled:opacity-60"
+          className="h-11 w-full rounded-xl bg-quegym-accent px-4 text-sm font-medium text-white disabled:opacity-60"
         >
           {busy ? "Enviando..." : "Solicitar cambio"}
         </button>

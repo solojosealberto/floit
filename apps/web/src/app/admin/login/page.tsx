@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { BRAND_ADMIN, BRAND_NAME } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -16,12 +17,15 @@ export default async function AdminLoginPage({ searchParams }: Props) {
   const error = params.error?.trim();
   const errorMessage = mapAdminLoginError(error);
   return (
-    <main className="mx-auto flex min-h-[calc(100vh-80px)] w-full max-w-6xl items-center px-4 py-6 sm:py-10">
-      <section className="w-full overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-sm">
+    <main className="mx-auto flex min-h-[calc(100vh-80px)] w-full max-w-6xl flex-col px-4 py-6 sm:py-10">
+      <div className="mb-4 flex justify-end">
+        <ThemeToggle />
+      </div>
+      <section className="qg-surface qg-motion flex w-full flex-1 items-center overflow-hidden rounded-3xl border border-quegym-border bg-quegym-elevated">
         <div className="grid md:grid-cols-[1fr_1.15fr]">
-          <aside className="hidden bg-neutral-900 px-10 py-12 text-white md:flex md:flex-col">
+          <aside className="hidden bg-quegym-ink px-10 py-12 text-white md:flex md:flex-col">
             <div className="mb-16 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-xl font-semibold text-neutral-900">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-quegym-accent text-xl font-semibold text-white">
                 Q
               </div>
               <div className="flex items-baseline gap-2">
@@ -38,10 +42,10 @@ export default async function AdminLoginPage({ searchParams }: Props) {
           </aside>
 
           <div className="px-5 py-8 sm:px-8 sm:py-10 md:px-12 md:py-12">
-            <h1 className="text-4xl font-semibold tracking-tight text-neutral-900 md:text-5xl">
+            <h1 className="text-4xl font-semibold tracking-tight text-quegym-primary md:text-5xl">
               Iniciar sesion admin
             </h1>
-            <p className="mt-3 max-w-xl text-lg leading-relaxed text-neutral-500">
+            <p className="mt-3 max-w-xl text-lg leading-relaxed text-quegym-secondary">
               Accede con tus credenciales para entrar al panel administrativo.
             </p>
 
@@ -52,46 +56,46 @@ export default async function AdminLoginPage({ searchParams }: Props) {
             ) : null}
 
             <form className="mt-8 space-y-4" method="post" action="/admin/auth/login">
-              <label htmlFor="admin-email" className="block text-xl font-medium text-neutral-700">
+              <label htmlFor="admin-email" className="block text-xl font-medium text-quegym-primary">
                 Correo electronico
               </label>
-              <div className="flex h-16 items-center gap-3 rounded-2xl border border-neutral-300 bg-white px-5 text-xl text-neutral-400">
+              <div className="qg-field flex h-16 items-center gap-3 rounded-2xl border border-quegym-border bg-quegym-elevated px-5 text-xl text-quegym-secondary">
                 <span aria-hidden>✉</span>
                 <input
                   id="admin-email"
                   name="email"
                   type="email"
                   placeholder="admin@floit.com"
-                  className="w-full bg-transparent text-xl text-neutral-700 outline-none placeholder:text-neutral-400"
+                  className="w-full bg-transparent text-xl text-quegym-primary outline-none placeholder:text-quegym-secondary"
                   required
                 />
               </div>
-              <label htmlFor="admin-password" className="block text-xl font-medium text-neutral-700">
+              <label htmlFor="admin-password" className="block text-xl font-medium text-quegym-primary">
                 Contrasena
               </label>
-              <div className="flex h-16 items-center gap-3 rounded-2xl border border-neutral-300 bg-white px-5 text-xl text-neutral-400">
+              <div className="qg-field flex h-16 items-center gap-3 rounded-2xl border border-quegym-border bg-quegym-elevated px-5 text-xl text-quegym-secondary">
                 <span aria-hidden>•</span>
                 <input
                   id="admin-password"
                   name="password"
                   type="password"
                   placeholder="••••••••"
-                  className="w-full bg-transparent text-xl text-neutral-700 outline-none placeholder:text-neutral-400"
+                  className="w-full bg-transparent text-xl text-quegym-primary outline-none placeholder:text-quegym-secondary"
                   required
                 />
               </div>
               <button
                 type="submit"
-                className="inline-flex h-16 w-full items-center justify-center rounded-2xl bg-neutral-900 px-6 text-2xl font-semibold text-white transition hover:bg-neutral-800"
+                className="qg-btn-primary inline-flex h-16 w-full items-center justify-center rounded-2xl bg-quegym-accent px-6 text-2xl font-semibold text-white transition hover:bg-quegym-accent-hover"
               >
                 Ingresar al panel
               </button>
             </form>
 
-            <div className="mt-8 border-t border-neutral-200 pt-7 text-center">
+            <div className="mt-8 border-t border-quegym-border pt-7 text-center">
               <Link
                 href="/"
-                className="inline-flex w-full items-center justify-center text-base font-medium text-neutral-500 underline-offset-2 hover:underline"
+                className="inline-flex w-full items-center justify-center text-base font-medium text-quegym-secondary underline-offset-2 hover:underline"
               >
                 Volver al inicio
               </Link>

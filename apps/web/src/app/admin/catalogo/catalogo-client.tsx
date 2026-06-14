@@ -145,15 +145,15 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
 
   return (
     <>
-      <header className="mb-6 flex flex-col gap-4 border-b border-neutral-200 pb-4 sm:flex-row sm:items-start sm:justify-between">
+      <header className="mb-6 flex flex-col gap-4 border-b border-quegym-border pb-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-xs font-medium text-neutral-500">Admin &gt; Catálogo</p>
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-neutral-900 md:text-[26px]">
+          <p className="text-xs font-medium text-quegym-secondary">Admin &gt; Catálogo</p>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-quegym-primary md:text-[26px]">
             Catálogo de gimnasios
           </h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-500">
+          <span className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-quegym-border bg-quegym-elevated text-quegym-secondary">
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"
@@ -164,11 +164,11 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
             </svg>
             <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500" />
           </span>
-          <span className="rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-xs font-medium text-neutral-700">
+          <span className="rounded-full border border-quegym-border bg-quegym-subtle px-3 py-1.5 text-xs font-medium text-quegym-primary">
             Admin
           </span>
           <Link href="/partner/claim?returnTo=/admin/catalogo">
-            <UIButton className="!rounded-xl !bg-neutral-900 !px-4 !text-sm font-semibold">
+            <UIButton className="!rounded-xl !bg-quegym-accent !px-4 !text-sm font-semibold">
               + Nuevo gimnasio
             </UIButton>
           </Link>
@@ -186,13 +186,13 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
               {pendingOld > 0 ? ` (${pendingOld} con más de 48h)` : ""}
             </p>
             <p className="mt-0.5 text-xs text-amber-900/85">
-              Revisá y aprobá claims desde Partner claims para mantener el catálogo consistente.
+              Revisa y aprueba claims desde Partner claims para mantener el catálogo consistente.
             </p>
           </div>
         </div>
       ) : null}
 
-      <div className="mb-5 flex flex-wrap gap-2 rounded-2xl border border-neutral-200 bg-neutral-50/80 p-1.5">
+      <div className="mb-5 flex flex-wrap gap-2 rounded-2xl border border-quegym-border bg-quegym-subtle/80 p-1.5">
         {tabs.map((t) => (
           <button
             key={t.id}
@@ -200,12 +200,12 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
             onClick={() => setTab(t.id)}
             className={`rounded-xl px-3 py-2 text-xs font-medium transition ${
               tab === t.id
-                ? "bg-neutral-900 text-white shadow-sm"
-                : "text-neutral-600 hover:bg-white"
+                ? "bg-quegym-accent text-white"
+                : "text-quegym-secondary hover:bg-quegym-elevated"
             }`}
           >
             {t.label}{" "}
-            <span className={tab === t.id ? "text-white/80" : "text-neutral-400"}>
+            <span className={tab === t.id ? "text-white/80" : "text-quegym-secondary"}>
               ({t.count})
             </span>
           </button>
@@ -215,7 +215,7 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
       <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center">
         <div className="relative min-w-[200px] flex-1">
           <svg
-            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400"
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-quegym-secondary"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -223,14 +223,14 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input
-            className="w-full rounded-xl border border-neutral-200 bg-white py-2.5 pl-10 pr-3 text-sm outline-none ring-neutral-900/10 focus:ring-2"
+            className="w-full rounded-xl border border-quegym-border bg-quegym-elevated py-2.5 pl-10 pr-3 text-sm outline-none ring-quegym-accent/10 focus:ring-2"
             placeholder="Buscar…"
             value={q}
             onChange={(e) => setQ(e.target.value)}
           />
         </div>
         <select
-          className="rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800"
+          className="rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2.5 text-sm text-quegym-primary"
           value={zone}
           onChange={(e) => setZone(e.target.value)}
         >
@@ -242,7 +242,7 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
           ))}
         </select>
         <select
-          className="rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800"
+          className="rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2.5 text-sm text-quegym-primary"
           value={venueType}
           onChange={(e) => setVenueType(e.target.value)}
         >
@@ -254,7 +254,7 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
           ))}
         </select>
         <select
-          className="rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800"
+          className="rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2.5 text-sm text-quegym-primary"
           value={estadoFilter}
           onChange={(e) => setEstadoFilter(e.target.value)}
         >
@@ -265,7 +265,7 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
           <option value="archivado">Archivado</option>
         </select>
         <select
-          className="rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-800"
+          className="rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2.5 text-sm text-quegym-primary"
           value={completitud}
           onChange={(e) => setCompletitud(e.target.value)}
         >
@@ -276,10 +276,10 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
         </select>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white">
+      <div className="overflow-x-auto rounded-2xl border border-quegym-border bg-quegym-elevated">
         <table className="w-full min-w-[880px] border-collapse text-left text-sm">
           <thead>
-            <tr className="border-b border-neutral-200 bg-neutral-50/90 text-xs font-semibold uppercase tracking-wide text-neutral-500">
+            <tr className="border-b border-quegym-border bg-quegym-subtle/90 text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
               <th className="px-4 py-3">Nombre / Zona</th>
               <th className="px-4 py-3">Estado</th>
               <th className="px-4 py-3">Completitud</th>
@@ -290,7 +290,7 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-12 text-center text-neutral-500">
+                <td colSpan={5} className="px-4 py-12 text-center text-quegym-secondary">
                   No hay resultados con los filtros actuales.
                 </td>
               </tr>
@@ -299,22 +299,22 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
                 const e = estadoLabel(row);
                 const pct = pctComplete(row.completenessScore);
                 const barColor =
-                  pct >= 70 ? "bg-emerald-500" : pct >= 45 ? "bg-amber-400" : "bg-red-400";
+                  pct >= 70 ? "bg-quegym-highlight-soft0" : pct >= 45 ? "bg-amber-400" : "bg-red-400";
                 const highlight =
                   row.needsReview || e.key === "pendiente"
                     ? "bg-[#FEF9C3]/90"
-                    : "bg-white";
+                    : "bg-quegym-elevated";
                 const modalityLabel = row.modalities[0] ?? row.venueType;
                 return (
-                  <tr key={row.slug} className={`border-b border-neutral-100 ${highlight}`}>
+                  <tr key={row.slug} className={`border-b border-quegym-border ${highlight}`}>
                     <td className="px-4 py-3 align-middle">
                       <div className="flex items-start gap-3">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-neutral-100 text-[10px] font-medium text-neutral-400">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-quegym-subtle text-[10px] font-medium text-quegym-secondary">
                           Logo
                         </div>
                         <div className="min-w-0">
-                          <p className="font-semibold text-neutral-900">{row.name}</p>
-                          <p className="text-xs text-neutral-500">
+                          <p className="font-semibold text-quegym-primary">{row.name}</p>
+                          <p className="text-xs text-quegym-secondary">
                             {row.zone} · {modalityLabel}
                           </p>
                         </div>
@@ -326,8 +326,8 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
                           e.key === "pendiente"
                             ? "bg-amber-100 text-amber-900"
                             : e.key === "publicado"
-                              ? "bg-emerald-100 text-emerald-900"
-                              : "bg-neutral-100 text-neutral-600"
+                              ? "bg-quegym-highlight-soft text-quegym-highlight"
+                              : "bg-quegym-subtle text-quegym-secondary"
                         }`}
                       >
                         <span
@@ -335,8 +335,8 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
                             e.key === "pendiente"
                               ? "bg-amber-500"
                               : e.key === "publicado"
-                                ? "bg-emerald-500"
-                                : "bg-neutral-400"
+                                ? "bg-quegym-highlight-soft0"
+                                : "bg-quegym-subtle"
                           }`}
                         />
                         {e.label}
@@ -344,10 +344,10 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
                     </td>
                     <td className="px-4 py-3 align-middle">
                       <div className="flex items-center gap-2">
-                        <span className="w-10 text-xs font-medium tabular-nums text-neutral-800">
+                        <span className="w-10 text-xs font-medium tabular-nums text-quegym-primary">
                           {pct}%
                         </span>
-                        <div className="h-2 w-24 overflow-hidden rounded-full bg-neutral-100">
+                        <div className="h-2 w-24 overflow-hidden rounded-full bg-quegym-subtle">
                           <div
                             className={`h-full rounded-full ${barColor}`}
                             style={{ width: `${pct}%` }}
@@ -355,9 +355,9 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 align-middle text-xs text-neutral-600">
+                    <td className="px-4 py-3 align-middle text-xs text-quegym-secondary">
                       <div>{formatRelative(row.updatedAt)}</div>
-                      <div className="text-[11px] text-neutral-400">
+                      <div className="text-[11px] text-quegym-secondary">
                         {row.needsReview ? "Revisión sugerida" : "Catálogo"}
                       </div>
                     </td>
@@ -365,7 +365,7 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
                       <div className="flex flex-wrap items-center justify-end gap-2">
                         <Link
                           href={`/gyms/${encodeURIComponent(row.slug)}`}
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50"
+                          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-quegym-border bg-quegym-elevated text-quegym-secondary hover:bg-quegym-subtle"
                           aria-label="Ver ficha pública"
                           title="Ver ficha pública"
                         >
@@ -376,7 +376,7 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
                         </Link>
                         <Link
                           href={`/admin/catalogo/${encodeURIComponent(row.slug)}/panel`}
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50"
+                          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-quegym-border bg-quegym-elevated text-quegym-secondary hover:bg-quegym-subtle"
                           aria-label="Editar centro (mismo panel que partners)"
                           title="Editar ficha del centro"
                         >
@@ -387,7 +387,7 @@ export function AdminCatalogoClient(props: { rows: CatalogRow[] }) {
                         {row.needsReview ? (
                           <Link
                             href="/admin/partner-claims"
-                            className="rounded-lg bg-emerald-100 px-3 py-1.5 text-xs font-semibold text-emerald-900 hover:bg-emerald-200"
+                            className="rounded-lg bg-quegym-highlight-soft px-3 py-1.5 text-xs font-semibold text-quegym-highlight hover:bg-quegym-highlight-hover"
                           >
                             Revisar
                           </Link>

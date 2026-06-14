@@ -30,11 +30,12 @@ async function main() {
     if (!r.zone) issues.push(`sin zona: ${r.slug}`);
     if (r.lat == null || r.lng == null) issues.push(`sin coords: ${r.slug}`);
     if (!r.source) issues.push(`sin source preservado: ${r.slug}`);
-    if (
-      !r.description?.includes("importación normalizada") &&
-      !r.description?.includes("venues-import")
-    ) {
-      issues.push(`description sin marca import: ${r.slug}`);
+    if (!r.importMeta?.sourceRow) issues.push(`sin importMeta: ${r.slug}`);
+    if (r.description && /Calificación \(fuente\):/i.test(r.description)) {
+      issues.push(`description con metadatos ops (rating): ${r.slug}`);
+    }
+    if (r.description && /Ubicación:\s*cache:/i.test(r.description)) {
+      issues.push(`description con metadatos ops (geocode): ${r.slug}`);
     }
   }
 

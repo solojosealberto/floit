@@ -1,6 +1,6 @@
-# Floit — UI Visual QA Checklist
+# QueGym — UI Visual QA Checklist
 
-Checklist operativo corto para validar consistencia visual en cualquier pantalla antes de cerrar una tarea UI/UX.
+Checklist operativo para validar consistencia visual en cualquier pantalla antes de cerrar una tarea UI/UX. Aplica al sistema **dual-theme** QueGym (manual de marca + [`QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`](./QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md)).
 
 ## 0) Referencia visual y alineación documental (obligatorio)
 
@@ -11,11 +11,10 @@ Checklist operativo corto para validar consistencia visual en cualquier pantalla
   - Buscar (`/buscar`),
   - Ficha de gym (`/gyms/[slug]`).
 - [ ] Antes de cerrar cambios, se valida alineación con:
-  - `docs/product/PLAN_MAESTRO.md`,
-  - `docs/product/PLAN_PROMPT_ENGINEERING.md`,
-  - `docs/product/PRD.md`,
-  - `docs/product/BACKLOG.md`,
-  - y artefactos Figma (`docs/ux/FIGMA_UI_UX_MIGRATION_PLAN.md`, `docs/ux/FIGMA_SCREEN_INVENTORY.md`).
+  - `docs/operations/REBRAND_QUEGYM_PLAN.md`,
+  - `docs/ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`,
+  - `docs/ux/QUEGYM_BRAND_COPY_PLAN.md`,
+  - `docs/ux/FIGMA_UI_UX_MIGRATION_PLAN.md`.
 
 ## Alcance
 
@@ -27,59 +26,81 @@ Aplica a:
 
 ## 1) Tema y superficies (obligatorio)
 
-- [ ] La pantalla usa estilo claro (sin degradación a bloques oscuros por tema del sistema).
-- [ ] Superficies principales en `bg-white` / `bg-neutral-50`.
-- [ ] Bordes coherentes en `border-neutral-200`.
-- [ ] No hay clases `dark:*` activas en estructuras core de la vista.
+Validar **en ambos temas** (toggle header / sidebar):
 
-## 2) Tipografía y legibilidad
+### Dark (default público)
 
-- [ ] Títulos y labels con contraste legible (`text-neutral-800/900`).
-- [ ] Textos secundarios en `text-neutral-500/600` sin perder lectura.
-- [ ] Jerarquía visual clara (título > subtítulo > metadata > helper text).
+- [ ] Fondo página verde bosque (`--qg-bg-page`, ~`#050a05`), no gris azulado neutro.
+- [ ] Cards/elevated en `#141c14`; inputs/placeholders en `#162116`.
+- [ ] Bordes verde-gris (`--qg-border`).
+- [ ] Texto secundario legible (`#8a968a`).
 
-## 3) Formularios (input/select/textarea)
+### Light (default admin/partner; opcional en público)
 
-- [ ] Campos con fondo claro (`bg-white`), borde neutral y texto oscuro.
-- [ ] Placeholders legibles (`text-neutral-500` aprox).
-- [ ] Label de cada campo visible y comprensible.
-- [ ] Estados de error/éxito visibles y legibles.
+- [ ] Fondo página **White**; hero/banners **Mist** (`#EAFBF4`).
+- [ ] Cards **White** con borde `#E5E7EB`.
+- [ ] Texto principal **Ink** `#111827`; metadata **Slate** `#6B7280`.
 
-## 4) Botones y acciones
+### General
 
-- [ ] Acción primaria usa estilo de plataforma (`neutral-900` + texto blanco).
-- [ ] Acciones secundarias con borde neutral y hover claro.
-- [ ] CTA WhatsApp usa verde de plataforma y conserva contraste.
-- [ ] No hay botones “invisibles” por bajo contraste.
+- [ ] Toggle persiste preferencia; sin FOUC al recargar.
+- [ ] Cards interactivas usan elevación (`qg-surface` / `qg-surface-subtle`) con hover suave en desktop.
+- [ ] CTAs primarios con `qg-btn-primary` (sombra Mint + lift ligero).
+- [ ] `prefers-reduced-motion`: sin transform en hover.
+
+## 2) Acentos y CTAs (manual de marca)
+
+- [ ] **Mint `#12B76A` (`--qg-accent` / `--qg-highlight`):** Buscar, Reclamar centro, CTAs primarios, logo Q, favicon, toggles activos.
+- [ ] **Green `#00875A`:** solo referencia de manual (`--qg-green`); no usar en CTAs salvo excepción editorial.
+- [ ] **White sobre Green:** contraste ≥ 4.5:1 en botones primarios.
+- [ ] Chips/filtros activos: borde Mint + fondo soft + texto Mint (no solo color de fondo).
+- [ ] FAB WhatsApp en cards: círculo Mint sólido (`--qg-accent`), no gris.
+
+## 2b) Tono verbal — Venezuela (manual §07)
+
+Validar contra [`QUEGYM_BRAND_COPY_PLAN.md`](./QUEGYM_BRAND_COPY_PLAN.md) y referencias [propuesta de marca](https://propuestademarca.netlify.app/) / [UI aplicada](https://quegymconmarcaaplicada.netlify.app/).
+
+- [ ] Hero: «Encuentra tu próximo gym en Caracas» + subtítulo con *Compáralos* / *Contacta directo*.
+- [ ] **Sin voseo:** no *Encontrá*, *Tenés*, *Podés*, *Registrá*, *Reclamá*, *Elegí*, etc.
+- [ ] Partner banner: «¿Tienes un gimnasio en Caracas?» · «Reclamar mi centro».
+- [ ] Tono directo, local, honesto — no corporativo ni urgencia falsa.
+
+## 3) Tipografía y legibilidad
+
+- [ ] **Inter** body; **Barlow Semi Condensed** en headlines (hero, secciones).
+- [ ] Jerarquía clara: título > subtítulo > metadata > helper.
+- [ ] Palabra **gym** en hero resaltada en Mint/Green.
+
+## 4) Formularios (input/select/textarea)
+
+- [ ] Campos usan `--qg-bg-input` y `--qg-border`.
+- [ ] Placeholders en `--qg-text-secondary` con contraste AA.
+- [ ] **Focus:** borde mint **sutil** en el contenedor redondeado (`.qg-field:focus-within`), no rectángulo grueso sobre el input interno. Verificar home hero, `/buscar`, login partner/admin.
+- [ ] Inputs con borde propio (`.qg-input`, `UITextInput`): highlight sigue `border-radius`.
+- [ ] Estados error/éxito con tokens `--qg-error` / `--qg-highlight-soft`.
 
 ## 5) Mapa y tarjetas contextuales (si aplica)
 
-- [ ] Marcador seleccionado permanece visible (la tarjeta no tapa el pin).
+- [ ] Marcador seleccionado visible (tarjeta no tapa el pin).
 - [ ] Click en marcador selecciona; click en área vacía limpia selección.
-- [ ] Si hay lista vinculada al mapa, click en ítem enfoca + zoom al centro.
-- [ ] En mobile, listado scrolleable y paginación incremental funcional.
+- [ ] Lista vinculada al mapa: click enfoca + zoom al centro.
+- [ ] Mobile: listado scrolleable; FAB «Ver mapa» en Green.
 
 ## 6) Responsive
 
-- [ ] Validado en desktop (>= 1024px).
-- [ ] Validado en mobile (<= 430px).
-- [ ] Sin desbordes horizontales.
-- [ ] Sin solapamiento de bloques/CTAs.
+- [ ] Desktop (≥ 1024px) y mobile (≤ 430px).
+- [ ] Sin desbordes horizontales ni CTAs solapados.
 
 ## 7) Consistencia cross-screen
 
-- [ ] La pantalla se percibe consistente con Home (`/`) y Buscar (`/buscar`).
-- [ ] Tokens de color/espaciado coinciden con el sistema actual.
-- [ ] No introduce estilo “aislado” que rompa el lenguaje visual global.
+- [ ] Misma gramática cromática entre `/`, `/buscar`, `/gyms/[slug]`, `/comparar`, `/favoritos`.
+- [ ] Partner login/claim/**panel** alineados a tokens QueGym (sin `#0a1430` legacy).
+- [ ] Admin sidebar + páginas internas con tokens + toggle dual-theme.
 
 ## 8) Cierre técnico mínimo
 
-- [ ] Sin errores de lint en archivos modificados.
+- [ ] `pnpm --filter @floit/web exec tsc --noEmit` sin errores.
 - [ ] Sin cambios de contrato/API/eventos por refactor visual.
-- [ ] Documentación de diseño actualizada cuando el cambio afecta criterio global.
+- [ ] Docs operativos actualizados si cambia criterio global de tema.
 
-## Evidencia recomendada por tarea
-
-- Captura desktop.
-- Captura mobile.
-- Nota corta de validación: "Checklist UI visual: PASS".
+*Última actualización: 2026-05-27 — dual-theme QueGym*

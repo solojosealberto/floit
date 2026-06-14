@@ -52,14 +52,14 @@ export default async function AdminAnalyticsPage(props: {
       redirect("/admin/login");
     }
     return (
-      <main className="mx-auto max-w-4xl px-4 py-12 text-sm text-neutral-600">
-        <h1 className="text-lg font-semibold text-neutral-900">Métricas</h1>
+      <main className="mx-auto max-w-4xl px-4 py-12 text-sm text-quegym-secondary">
+        <h1 className="text-lg font-semibold text-quegym-primary">Métricas</h1>
         <p className="mt-2">
           Configura{" "}
-          <code className="rounded bg-neutral-100 px-1">ADMIN_OIDC_ACCESS_TOKEN</code>{" "}
+          <code className="rounded bg-quegym-subtle px-1">ADMIN_OIDC_ACCESS_TOKEN</code>{" "}
           (recomendado) o{" "}
-          <code className="rounded bg-neutral-100 px-1">ADMIN_API_TOKEN</code> en{" "}
-          <code className="rounded bg-neutral-100 px-1">apps/web</code>.
+          <code className="rounded bg-quegym-subtle px-1">ADMIN_API_TOKEN</code> en{" "}
+          <code className="rounded bg-quegym-subtle px-1">apps/web</code>.
         </p>
       </main>
     );
@@ -176,14 +176,14 @@ export default async function AdminAnalyticsPage(props: {
 
   if (err || !funnel) {
     return (
-      <main className="min-h-screen bg-[#f7f9fc] p-3 md:p-4">
+      <main className="min-h-screen bg-quegym-page p-3 md:p-4">
         <div className="grid gap-4 md:grid-cols-[260px_1fr]">
           <AdminSidebar active="metrics" />
-          <section className="rounded-2xl border border-neutral-200 bg-white p-6">
-            <h1 className="text-lg font-semibold text-neutral-900">Métricas</h1>
+          <section className="qg-surface qg-motion rounded-2xl border border-quegym-border bg-quegym-elevated p-6">
+            <h1 className="text-lg font-semibold text-quegym-primary">Métricas</h1>
             <p className="mt-3 text-sm text-red-600">
               No se pudo cargar: {err ?? "unknown"}. Verifica que{" "}
-              <code className="rounded bg-neutral-100 px-1">analytics-service</code>{" "}
+              <code className="rounded bg-quegym-subtle px-1">analytics-service</code>{" "}
               responda en {analyticsBase}.
             </p>
           </section>
@@ -193,14 +193,14 @@ export default async function AdminAnalyticsPage(props: {
   }
 
   return (
-    <main className="min-h-screen bg-[#f7f9fc] p-3 md:p-4">
+    <main className="min-h-screen bg-quegym-page p-3 md:p-4">
       <div className="grid gap-4 md:grid-cols-[260px_1fr]">
         <AdminSidebar
           active="metrics"
           catalogBadge={catalogBadge}
           leadsBadge={leadsReceived}
         />
-        <section className="rounded-2xl border border-neutral-200 bg-white p-4 md:p-6">
+        <section className="qg-surface qg-motion rounded-2xl border border-quegym-border bg-quegym-elevated p-4 md:p-6">
           <AdminAnalyticsDashboard
             windowHours={windowSafe}
             device={device}

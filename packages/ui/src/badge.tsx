@@ -17,17 +17,16 @@ export function UIBadge({
       className={cn(
         "inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium",
         variant === "neutral" &&
-          "bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200",
+          "bg-[var(--qg-bg-subtle)] text-[var(--qg-text-primary)]",
         variant === "success" &&
-          "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-200",
+          "border border-[var(--qg-highlight)]/30 bg-[var(--qg-highlight-soft)] text-[var(--qg-highlight)]",
         variant === "warning" &&
-          "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-200",
+          "border border-[var(--qg-warning)]/30 bg-[var(--qg-warning)]/10 text-[var(--qg-warning)]",
         variant === "error" &&
-          "bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-200",
+          "border border-[var(--qg-error)]/30 bg-[var(--qg-error)]/10 text-[var(--qg-error)]",
         className,
       )}
       {...props}
     />
   );
 }
-

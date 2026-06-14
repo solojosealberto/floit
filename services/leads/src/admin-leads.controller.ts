@@ -29,7 +29,7 @@ export class AdminLeadsController {
   @Get("v1/admin/leads/export.csv")
   @Header(
     "Content-Disposition",
-    'attachment; filename="floit-leads.csv"',
+    'attachment; filename="quegym-leads.csv"',
   )
   async exportCsv(
     @Query("limit") limitRaw: string | undefined,

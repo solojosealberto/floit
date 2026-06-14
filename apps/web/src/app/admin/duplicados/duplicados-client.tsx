@@ -3,7 +3,10 @@
 import { UIBanner, UIButton, UICard } from "@floit/ui";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-const STORAGE_DUPLICATES_DISMISS = "floit-admin-duplicate-dismissed";
+import { QG_STORAGE, readStorageItem, writeStorageItem } from "@/lib/storage-keys";
+
+const STORAGE_DUPLICATES_DISMISS = QG_STORAGE.adminDuplicateDismiss;
+const STORAGE_DUPLICATES_DISMISS_LEGACY = QG_STORAGE.legacy.adminDuplicateDismiss;
 
 export type DuplicatePair = {
   a: string;
@@ -21,7 +24,7 @@ type Props = {
 function loadDismissed(): Set<string> {
   if (typeof window === "undefined") return new Set();
   try {
-    const raw = window.localStorage.getItem(STORAGE_DUPLICATES_DISMISS);
+    const raw = readStorageItem(STORAGE_DUPLICATES_DISMISS, STORAGE_DUPLICATES_DISMISS_LEGACY);
     if (!raw) return new Set();
     const data = JSON.parse(raw) as unknown;
     if (!Array.isArray(data)) return new Set();
@@ -65,23 +68,23 @@ export function AdminDuplicadosClient(props: Props) {
     const next = new Set(dismissed);
     next.add(pairKey(p));
     setDismissed(next);
-    localStorage.setItem(STORAGE_DUPLICATES_DISMISS, JSON.stringify([...next]));
+    writeStorageItem(STORAGE_DUPLICATES_DISMISS, JSON.stringify([...next]));
   }
 
   return (
     <>
-      <header className="mb-6 flex flex-col gap-4 border-b border-neutral-200 pb-4 sm:flex-row sm:items-start sm:justify-between">
+      <header className="mb-6 flex flex-col gap-4 border-b border-quegym-border pb-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-xs font-medium text-neutral-500">Admin &gt; Duplicados</p>
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-neutral-900 md:text-[26px]">
+          <p className="text-xs font-medium text-quegym-secondary">Admin &gt; Duplicados</p>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-quegym-primary md:text-[26px]">
             Control de duplicados
           </h1>
-          <p className="mt-2 text-sm text-neutral-600">
+          <p className="mt-2 text-sm text-quegym-secondary">
             Candidatos detectados por similitud de nombre en la misma zona. La fusión manual
             queda en el catálogo editorial.
           </p>
         </div>
-        <span className="rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-xs font-medium text-neutral-700">
+        <span className="rounded-full border border-quegym-border bg-quegym-subtle px-3 py-1.5 text-xs font-medium text-quegym-primary">
           {visible.length} pendientes
         </span>
       </header>
@@ -98,13 +101,13 @@ export function AdminDuplicadosClient(props: Props) {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Buscar por slug, nombre o zona…"
-          className="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-sm outline-none ring-neutral-900/10 focus:ring-2"
+          className="w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2.5 text-sm outline-none ring-quegym-accent/10 focus:ring-2"
         />
       </div>
 
       <div className="space-y-3">
         {visible.length === 0 && props.pairs.length > 0 ? (
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-quegym-secondary">
             Todos los pares visibles fueron marcados como revisados en esta sesión.
           </p>
         ) : null}
@@ -114,7 +117,7 @@ export function AdminDuplicadosClient(props: Props) {
           return (
             <UICard
               key={pairKey(p)}
-              className="border-neutral-200 bg-white p-4"
+              className="border-quegym-border bg-quegym-elevated p-4"
             >
               <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                 <div>
@@ -159,7 +162,7 @@ export function AdminDuplicadosClient(props: Props) {
                     variant="ghost"
                     size="sm"
                     onClick={() => dismiss(p)}
-                    className="!text-neutral-600"
+                    className="!text-quegym-secondary"
                   >
                     Marcar revisado
                   </UIButton>
@@ -175,9 +178,9 @@ export function AdminDuplicadosClient(props: Props) {
 
 function VenueChip(props: { slug: string; name: string; zone: string }) {
   return (
-    <div className="rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2">
-      <p className="text-sm font-semibold text-neutral-900">{props.name}</p>
-      <p className="text-xs text-neutral-500">
+    <div className="rounded-xl border border-quegym-border bg-quegym-subtle px-3 py-2">
+      <p className="text-sm font-semibold text-quegym-primary">{props.name}</p>
+      <p className="text-xs text-quegym-secondary">
         {props.zone} · <span className="font-mono">{props.slug}</span>
       </p>
     </div>

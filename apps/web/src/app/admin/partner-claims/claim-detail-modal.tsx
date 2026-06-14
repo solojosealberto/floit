@@ -61,8 +61,8 @@ function formatDateTime(iso: string): string {
 
 function SectionShell(props: { title: string; children: ReactNode }) {
   return (
-    <div className="rounded-xl bg-neutral-50 p-4 ring-1 ring-neutral-200/80">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-500">{props.title}</p>
+    <div className="rounded-xl bg-quegym-subtle p-4 ring-1 ring-quegym-border/80">
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-quegym-secondary">{props.title}</p>
       <div className="mt-3">{props.children}</div>
     </div>
   );
@@ -71,8 +71,8 @@ function SectionShell(props: { title: string; children: ReactNode }) {
 function Field(props: { label: string; value: ReactNode }) {
   return (
     <div>
-      <p className="text-xs text-neutral-500">{props.label}</p>
-      <div className="mt-0.5 text-sm font-semibold text-neutral-900">{props.value ?? "—"}</div>
+      <p className="text-xs text-quegym-secondary">{props.label}</p>
+      <div className="mt-0.5 text-sm font-semibold text-quegym-primary">{props.value ?? "—"}</div>
     </div>
   );
 }
@@ -84,10 +84,10 @@ function ApplicantRow(props: {
 }) {
   return (
     <div className="flex gap-3">
-      <span className="mt-0.5 shrink-0 text-neutral-400">{props.icon}</span>
+      <span className="mt-0.5 shrink-0 text-quegym-secondary">{props.icon}</span>
       <div className="min-w-0">
-        <p className="text-xs text-neutral-500">{props.label}</p>
-        <p className="text-sm font-semibold text-neutral-900">{props.value}</p>
+        <p className="text-xs text-quegym-secondary">{props.label}</p>
+        <p className="text-sm font-semibold text-quegym-primary">{props.value}</p>
       </div>
     </div>
   );
@@ -148,7 +148,7 @@ export function ClaimDetailModal(props: {
         aria-modal="true"
         aria-labelledby={titleId}
         tabIndex={-1}
-        className="relative z-[101] flex max-h-[min(92vh,880px)] w-full max-w-xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/10"
+        className="relative z-[101] flex max-h-[min(92vh,880px)] w-full max-w-xl flex-col overflow-hidden rounded-2xl bg-quegym-elevated shadow-2xl ring-1 ring-black/10"
       >
         <header className="shrink-0 bg-[#111827] px-5 py-4 text-white">
           <div className="flex items-start justify-between gap-3">
@@ -161,7 +161,7 @@ export function ClaimDetailModal(props: {
             <button
               type="button"
               onClick={onClose}
-              className="shrink-0 rounded-lg p-1.5 text-white/90 transition hover:bg-white/10"
+              className="shrink-0 rounded-lg p-1.5 text-white/90 transition hover:bg-quegym-elevated/10"
               aria-label="Cerrar"
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -178,13 +178,13 @@ export function ClaimDetailModal(props: {
                 claim.status === "pending_review"
                   ? "inline-flex rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-950 ring-1 ring-amber-200/90"
                   : claim.status === "approved"
-                    ? "inline-flex rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-900 ring-1 ring-emerald-200/90"
+                    ? "inline-flex rounded-full bg-quegym-highlight-soft px-2.5 py-1 text-xs font-semibold text-quegym-highlight ring-1 ring-quegym-highlight/30"
                     : "inline-flex rounded-full bg-rose-100 px-2.5 py-1 text-xs font-semibold text-rose-900 ring-1 ring-rose-200/90"
               }
             >
               {statusLabel}
             </span>
-            <span className="inline-flex rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-semibold text-neutral-800 ring-1 ring-neutral-200/90">
+            <span className="inline-flex rounded-full bg-quegym-subtle px-2.5 py-1 text-xs font-semibold text-quegym-primary ring-1 ring-quegym-border/80">
               Tipo: {typeLabel}
             </span>
           </div>
@@ -200,7 +200,7 @@ export function ClaimDetailModal(props: {
                     ) : (
                       <Link
                         href={`/gyms/${encodeURIComponent(claim.venueSlug)}`}
-                        className="font-semibold text-[#0a1430] underline decoration-neutral-300 underline-offset-2"
+                        className="font-semibold text-quegym-accent underline decoration-quegym-border underline-offset-2"
                       >
                         Ver ficha ({claim.venueSlug})
                       </Link>
@@ -218,7 +218,7 @@ export function ClaimDetailModal(props: {
                   <Field label="Tipo de espacio (borrador)" value={draft.venueType} />
                 ) : null}
               </div>
-              <p className="mt-3 text-xs text-neutral-500">
+              <p className="mt-3 text-xs text-quegym-secondary">
                 {claim.claimKind === "new"
                   ? "Alta nueva: al aprobar se crea el stub en catálogo con este slug."
                   : "Reclamo sobre una ficha ya publicada en el catálogo."}
@@ -246,7 +246,7 @@ export function ClaimDetailModal(props: {
                   value={
                     <a
                       href={`mailto:${encodeURIComponent(claim.representativeEmail)}`}
-                      className="break-all text-[#0a1430] underline"
+                      className="break-all text-quegym-accent underline"
                     >
                       {claim.representativeEmail}
                     </a>
@@ -265,7 +265,7 @@ export function ClaimDetailModal(props: {
                 <ApplicantRow
                   label="Teléfono"
                   value={
-                    <a href={`tel:${claim.representativePhone.replace(/\s/g, "")}`} className="text-neutral-900">
+                    <a href={`tel:${claim.representativePhone.replace(/\s/g, "")}`} className="text-quegym-primary">
                       {claim.representativePhone}
                     </a>
                   }
@@ -285,7 +285,7 @@ export function ClaimDetailModal(props: {
 
             <SectionShell title="Evidencia adjunta">
               {evidenceItems.length === 0 ? (
-                <p className="text-sm text-neutral-600">Sin evidencia textual o enlaces adjuntos.</p>
+                <p className="text-sm text-quegym-secondary">Sin evidencia textual o enlaces adjuntos.</p>
               ) : (
                 <ul className="space-y-2">
                   {evidenceItems.map((item, i) =>
@@ -326,7 +326,7 @@ export function ClaimDetailModal(props: {
                     ) : (
                       <li
                         key={`t-${i}`}
-                        className="rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-800"
+                        className="rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 text-sm text-quegym-primary"
                       >
                         {item.text}
                       </li>
@@ -338,7 +338,7 @@ export function ClaimDetailModal(props: {
 
             <SectionShell title="Historial">
               <div className="relative pl-8">
-                <span className="absolute bottom-2 left-[11px] top-2 w-px bg-neutral-200" aria-hidden />
+                <span className="absolute bottom-2 left-[11px] top-2 w-px bg-quegym-subtle" aria-hidden />
                 <ul className="space-y-4">
                   <li className="relative">
                     <span className="absolute -left-8 flex h-6 w-6 items-center justify-center rounded-full bg-sky-100 text-sky-700 ring-2 ring-white">
@@ -346,20 +346,20 @@ export function ClaimDetailModal(props: {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </span>
-                    <p className="text-sm font-semibold text-neutral-900">Solicitud recibida</p>
-                    <p className="text-xs text-neutral-500">{formatDateTime(claim.createdAt)}</p>
+                    <p className="text-sm font-semibold text-quegym-primary">Solicitud recibida</p>
+                    <p className="text-xs text-quegym-secondary">{formatDateTime(claim.createdAt)}</p>
                   </li>
                   {claim.status !== "pending_review" ? (
                     <li className="relative">
-                      <span className="absolute -left-8 flex h-6 w-6 items-center justify-center rounded-full bg-neutral-100 text-neutral-600 ring-2 ring-white">
+                      <span className="absolute -left-8 flex h-6 w-6 items-center justify-center rounded-full bg-quegym-subtle text-quegym-secondary ring-2 ring-white">
                         <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                       </span>
-                      <p className="text-sm font-semibold text-neutral-900">
+                      <p className="text-sm font-semibold text-quegym-primary">
                         Decisión: {claim.status === "approved" ? "Aprobado" : "Rechazado"}
                       </p>
-                      <p className="text-xs text-neutral-500">
+                      <p className="text-xs text-quegym-secondary">
                         {claim.updatedAt ? formatDateTime(claim.updatedAt) : "—"}
                       </p>
                     </li>
@@ -370,8 +370,8 @@ export function ClaimDetailModal(props: {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       </span>
-                      <p className="text-sm font-semibold text-neutral-900">En revisión</p>
-                      <p className="text-xs text-neutral-500">Pendiente de aprobación o rechazo.</p>
+                      <p className="text-sm font-semibold text-quegym-primary">En revisión</p>
+                      <p className="text-xs text-quegym-secondary">Pendiente de aprobación o rechazo.</p>
                     </li>
                   )}
                 </ul>
@@ -380,8 +380,8 @@ export function ClaimDetailModal(props: {
 
             {claim.status === "pending_review" ? (
               <>
-                <div className="rounded-xl border border-neutral-200 bg-white p-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-500">
+                <div className="rounded-xl border border-quegym-border bg-quegym-elevated p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-quegym-secondary">
                     Acciones
                   </p>
                   <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -393,16 +393,16 @@ export function ClaimDetailModal(props: {
                       />
                     </div>
                   </div>
-                  <p className="mt-3 text-xs text-neutral-500">
+                  <p className="mt-3 text-xs text-quegym-secondary">
                     Tras decidir, cierra el modal o actualiza la página si no ves el cambio al instante.
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-dashed border-neutral-200 bg-neutral-50/80 px-3 py-2">
-                  <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-500">
+                <div className="rounded-xl border border-dashed border-quegym-border bg-quegym-subtle/80 px-3 py-2">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-quegym-secondary">
                     Notas internas (opcional)
                   </p>
-                  <p className="mt-1 text-sm text-neutral-600">
+                  <p className="mt-1 text-sm text-quegym-secondary">
                     La persistencia de notas en QueGym está prevista para una iteración posterior; documenta acuerdos en tu
                     sistema de tickets o CRM.
                   </p>
@@ -413,13 +413,13 @@ export function ClaimDetailModal(props: {
             <div className="flex flex-wrap gap-3 pt-1">
               <Link
                 href={`/admin/catalogo/${encodeURIComponent(claim.venueSlug)}/panel`}
-                className="text-sm font-medium text-[#0a1430] underline underline-offset-2"
+                className="text-sm font-medium text-quegym-accent underline underline-offset-2"
               >
                 Abrir panel catálogo
               </Link>
               <Link
                 href={`/gyms/${encodeURIComponent(claim.venueSlug)}`}
-                className="text-sm font-medium text-[#0a1430] underline underline-offset-2"
+                className="text-sm font-medium text-quegym-accent underline underline-offset-2"
               >
                 Ver ficha pública
               </Link>

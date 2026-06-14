@@ -310,11 +310,11 @@ export function GymContactSection({
     <>
       {contactModalOpen ? (
         <div className="fixed inset-0 z-[1200] flex items-end justify-center bg-black/45 p-3 backdrop-blur-[2px] md:items-center md:p-4">
-          <div className="w-full max-w-xl rounded-2xl border border-neutral-200 bg-white shadow-xl">
-            <div className="flex items-center justify-between border-b border-neutral-200 px-4 py-3">
+          <div className="w-full max-w-xl rounded-2xl border border-quegym-border bg-quegym-elevated shadow-xl">
+            <div className="flex items-center justify-between border-b border-quegym-border px-4 py-3">
               <div className="flex items-center gap-2">
                 <UIBadge variant="success">Contacto directo</UIBadge>
-                <h2 className="text-lg font-semibold text-neutral-900">
+                <h2 className="text-lg font-semibold text-quegym-primary">
                   Contactar · {venueName}
                 </h2>
               </div>
@@ -326,13 +326,13 @@ export function GymContactSection({
                     history.replaceState(null, "", window.location.pathname + window.location.search);
                   }
                 }}
-                className="rounded-full border border-neutral-300 px-2 py-1 text-xs text-neutral-600"
+                className="rounded-full border border-quegym-border px-2 py-1 text-xs text-quegym-secondary"
               >
                 Cerrar
               </button>
             </div>
             <div className="max-h-[80vh] overflow-y-auto p-4">
-              <p className="mb-3 text-sm text-neutral-600">
+              <p className="mb-3 text-sm text-quegym-secondary">
                 {BRAND_NAME} reenvía tu solicitud al centro (demo). Usa un teléfono real
                 si quieres probar el seguimiento.
               </p>
@@ -346,8 +346,8 @@ export function GymContactSection({
                 </UIButton>
               ) : null}
               <form className="flex flex-col gap-3 text-sm" onSubmit={onLeadSubmit}>
-                <label className="flex flex-col gap-1 text-neutral-800">
-                  <span className="font-medium text-neutral-800">Qué necesitas</span>
+                <label className="flex flex-col gap-1 text-quegym-primary">
+                  <span className="font-medium text-quegym-primary">Qué necesitas</span>
                   <UISelect
                     name="intent"
                     value={intent}
@@ -356,7 +356,7 @@ export function GymContactSection({
                         event.target.value as "membership" | "trial" | "info",
                       )
                     }
-                    className="!border-neutral-300 !bg-white !text-neutral-900"
+                    className="!border-quegym-border !bg-quegym-elevated !text-quegym-primary"
                   >
                     <option value="info">Información general</option>
                     <option value="membership">Membresía / precios</option>
@@ -366,8 +366,8 @@ export function GymContactSection({
                     </option>
                   </UISelect>
                 </label>
-                <label className="flex flex-col gap-1 text-neutral-800">
-                  <span className="font-medium text-neutral-800">Nombre</span>
+                <label className="flex flex-col gap-1 text-quegym-primary">
+                  <span className="font-medium text-quegym-primary">Nombre</span>
                   <UITextInput
                     name="name"
                     required
@@ -375,11 +375,11 @@ export function GymContactSection({
                     maxLength={160}
                     placeholder="Tu nombre"
                     autoComplete="name"
-                    className="!border-neutral-300 !bg-white !text-neutral-900 placeholder:!text-neutral-500"
+                    className="!border-quegym-border !bg-quegym-elevated !text-quegym-primary placeholder:!text-quegym-secondary"
                   />
                 </label>
-                <label className="flex flex-col gap-1 text-neutral-800">
-                  <span className="font-medium text-neutral-800">Teléfono</span>
+                <label className="flex flex-col gap-1 text-quegym-primary">
+                  <span className="font-medium text-quegym-primary">Teléfono</span>
                   <UITextInput
                     name="phone"
                     required
@@ -387,11 +387,11 @@ export function GymContactSection({
                     maxLength={40}
                     placeholder="+58 …"
                     autoComplete="tel"
-                    className="!border-neutral-300 !bg-white !text-neutral-900 placeholder:!text-neutral-500"
+                    className="!border-quegym-border !bg-quegym-elevated !text-quegym-primary placeholder:!text-quegym-secondary"
                   />
                 </label>
-                <label className="flex flex-col gap-1 text-neutral-800">
-                  <span className="font-medium text-neutral-800">
+                <label className="flex flex-col gap-1 text-quegym-primary">
+                  <span className="font-medium text-quegym-primary">
                     Correo (opcional)
                   </span>
                   <UITextInput
@@ -399,29 +399,29 @@ export function GymContactSection({
                     type="email"
                     maxLength={200}
                     autoComplete="email"
-                    className="!border-neutral-300 !bg-white !text-neutral-900 placeholder:!text-neutral-500"
+                    className="!border-quegym-border !bg-quegym-elevated !text-quegym-primary placeholder:!text-quegym-secondary"
                   />
                 </label>
-                <label className="flex flex-col gap-1 text-neutral-800">
-                  <span className="font-medium text-neutral-800">
+                <label className="flex flex-col gap-1 text-quegym-primary">
+                  <span className="font-medium text-quegym-primary">
                     Horario preferido (opcional)
                   </span>
                   <UITextInput
                     name="preferredSlot"
                     maxLength={500}
                     placeholder="Ej. tardes entre semana"
-                    className="!border-neutral-300 !bg-white !text-neutral-900 placeholder:!text-neutral-500"
+                    className="!border-quegym-border !bg-quegym-elevated !text-quegym-primary placeholder:!text-quegym-secondary"
                   />
                 </label>
-                <label className="flex flex-col gap-1 text-neutral-800">
-                  <span className="font-medium text-neutral-800">
+                <label className="flex flex-col gap-1 text-quegym-primary">
+                  <span className="font-medium text-quegym-primary">
                     Mensaje (opcional)
                   </span>
                   <textarea
                     name="message"
                     maxLength={1200}
                     rows={3}
-                    className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-neutral-900 placeholder:text-neutral-500"
+                    className="rounded-lg border border-quegym-border bg-quegym-elevated px-3 py-2 text-quegym-primary placeholder:text-quegym-secondary"
                   />
                 </label>
                 <label className="flex items-start gap-2 text-sm leading-snug">
@@ -429,9 +429,9 @@ export function GymContactSection({
                     type="checkbox"
                     name="consentAccepted"
                     required
-                    className="mt-1 shrink-0 rounded border-neutral-300"
+                    className="mt-1 shrink-0 rounded border-quegym-border"
                   />
-                  <span className="text-neutral-600">
+                  <span className="text-quegym-secondary">
                     Acepto el tratamiento de mis datos personales de contacto para
                     que {BRAND_NAME} y el centro puedan responder a esta solicitud.
                     Versión: {FLOIT_CONSENT_VERSION}.{" "}
@@ -443,24 +443,24 @@ export function GymContactSection({
                 </label>
                 {TURNSTILE_SITE_KEY ? (
                   <div className="flex flex-col gap-1">
-                    <span className="font-medium text-neutral-800">
+                    <span className="font-medium text-quegym-primary">
                       Verificación anti-spam
                     </span>
                     <div
                       ref={turnstileHostRef}
-                      className="min-h-16 rounded-lg border border-neutral-300 bg-white p-2"
+                      className="min-h-16 rounded-lg border border-quegym-border bg-quegym-elevated p-2"
                     />
                   </div>
                 ) : null}
                 {leadErr ? (
-                  <UIBanner variant="error" className="text-neutral-900">
+                  <UIBanner variant="error" className="text-quegym-primary">
                     {leadErr}
                   </UIBanner>
                 ) : null}
                 <UIButton
                   type="submit"
                   disabled={leadBusy}
-                  className="w-full !bg-neutral-900 !text-white hover:!bg-neutral-800"
+                  className="w-full !bg-quegym-accent !text-white hover:!bg-quegym-accent-hover"
                 >
                   {leadBusy
                     ? "Enviando…"
@@ -478,11 +478,11 @@ export function GymContactSection({
 
       {reportModalOpen ? (
         <div className="fixed inset-0 z-[1200] flex items-end justify-center bg-black/45 p-3 backdrop-blur-[2px] md:items-center md:p-4">
-          <div className="w-full max-w-xl rounded-2xl border border-neutral-200 bg-white shadow-xl">
-            <div className="flex items-center justify-between border-b border-neutral-200 px-4 py-3">
+          <div className="w-full max-w-xl rounded-2xl border border-quegym-border bg-quegym-elevated shadow-xl">
+            <div className="flex items-center justify-between border-b border-quegym-border px-4 py-3">
               <div className="flex items-center gap-2">
                 <UIBadge>Calidad de datos</UIBadge>
-                <h2 className="text-lg font-semibold text-neutral-900">
+                <h2 className="text-lg font-semibold text-quegym-primary">
                   Reportar datos incorrectos
                 </h2>
               </div>
@@ -494,24 +494,24 @@ export function GymContactSection({
                     history.replaceState(null, "", window.location.pathname + window.location.search);
                   }
                 }}
-                className="rounded-full border border-neutral-300 px-2 py-1 text-xs text-neutral-600"
+                className="rounded-full border border-quegym-border px-2 py-1 text-xs text-quegym-secondary"
               >
                 Cerrar
               </button>
             </div>
             <div className="max-h-[80vh] overflow-y-auto p-4">
-              <p className="mb-3 text-sm text-neutral-600">
+              <p className="mb-3 text-sm text-quegym-secondary">
                 Ayuda a mantener {BRAND_NAME} preciso: precio, ubicación, horarios u otra
                 información.
               </p>
               <form className="flex flex-col gap-3 text-sm" onSubmit={onReportSubmit}>
-                <label className="flex flex-col gap-1 text-neutral-800">
-                  <span className="font-medium text-neutral-800">Tipo</span>
+                <label className="flex flex-col gap-1 text-quegym-primary">
+                  <span className="font-medium text-quegym-primary">Tipo</span>
                   <UISelect
                     name="kind"
                     required
                     defaultValue="info"
-                    className="!border-neutral-300 !bg-white !text-neutral-900"
+                    className="!border-quegym-border !bg-quegym-elevated !text-quegym-primary"
                   >
                     <option value="precio">Precio</option>
                     <option value="ubicacion">Ubicación</option>
@@ -520,25 +520,25 @@ export function GymContactSection({
                     <option value="otro">Otro</option>
                   </UISelect>
                 </label>
-                <label className="flex flex-col gap-1 text-neutral-800">
-                  <span className="font-medium text-neutral-800">Detalle</span>
+                <label className="flex flex-col gap-1 text-quegym-primary">
+                  <span className="font-medium text-quegym-primary">Detalle</span>
                   <textarea
                     name="message"
                     required
                     minLength={5}
                     maxLength={1200}
                     rows={4}
-                    className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-neutral-900 placeholder:text-neutral-500"
+                    className="rounded-lg border border-quegym-border bg-quegym-elevated px-3 py-2 text-quegym-primary placeholder:text-quegym-secondary"
                     placeholder="Describe qué está mal o qué falta."
                   />
                 </label>
                 {reportErr ? (
-                  <UIBanner variant="error" className="text-neutral-900">
+                  <UIBanner variant="error" className="text-quegym-primary">
                     {reportErr}
                   </UIBanner>
                 ) : null}
                 {reportOk ? (
-                  <UIBanner variant="success" className="text-neutral-900">
+                  <UIBanner variant="success" className="text-quegym-primary">
                     Gracias. El equipo revisará el reporte.
                   </UIBanner>
                 ) : null}
@@ -546,7 +546,7 @@ export function GymContactSection({
                   type="submit"
                   disabled={reportBusy}
                   variant="secondary"
-                  className="!border-neutral-300 !bg-white !text-neutral-800 hover:!bg-neutral-50"
+                  className="!border-quegym-border !bg-quegym-elevated !text-quegym-primary hover:!bg-quegym-subtle"
                 >
                   {reportBusy ? "Enviando…" : "Enviar reporte"}
                 </UIButton>

@@ -1,4 +1,12 @@
-const KEY = "floit:compare";
+import {
+  QG_STORAGE,
+  readStorageItem,
+  removeStorageItem,
+  writeStorageItem,
+} from "./storage-keys";
+
+const KEY = QG_STORAGE.compare;
+const LEGACY = QG_STORAGE.legacy.compare;
 const MAX_COMPARE = 3;
 
 function sanitizeSlugs(slugs: string[]): string[] {
@@ -11,7 +19,7 @@ function sanitizeSlugs(slugs: string[]): string[] {
 export function readCompareSlugs(): string[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = window.localStorage.getItem(KEY);
+    const raw = readStorageItem(KEY, LEGACY);
     if (!raw) return [];
     const data = JSON.parse(raw) as unknown;
     if (!Array.isArray(data)) return [];
@@ -23,12 +31,12 @@ export function readCompareSlugs(): string[] {
 
 export function writeCompareSlugs(slugs: string[]): void {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(KEY, JSON.stringify(sanitizeSlugs(slugs)));
+  writeStorageItem(KEY, JSON.stringify(sanitizeSlugs(slugs)));
 }
 
 export function clearCompareSlugs(): void {
   if (typeof window === "undefined") return;
-  window.localStorage.removeItem(KEY);
+  removeStorageItem(KEY, LEGACY);
 }
 
 export function removeCompareSlug(slug: string): string[] {
