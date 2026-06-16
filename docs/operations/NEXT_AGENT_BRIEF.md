@@ -4,7 +4,7 @@ Documento corto para retomar trabajo sin releer todo el historial.
 
 ## 1) Estado actual en una frase
 
-**Repo local / remoto:** commit **`ca4070b`** en `main` — `QueGymLogo`, menú móvil opaco, galería partner, assets `/brand/`. **Staging:** deploy Vercel OK; gates Sprint 5 **PASS** con `--kpi-relaxed`; KPI PRD strict **FAIL** (conversión). Pendiente: **QA visual** §6b, E2E manual §2–3, firma GO/NO-GO producto/ops.
+**Repo local / remoto:** commits **`ca4070b`** + **`27409e1`** en `main` — `QueGymLogo`, menú móvil opaco, galería partner, evidencia cierre beta. **Staging:** deploy Vercel OK; gates Sprint 5 **PASS** con `--kpi-relaxed`; KPI PRD strict **FAIL** (conversión). Pendiente: **QA visual** §6b, E2E manual §2–3, firma GO/NO-GO producto/ops.
 
 ## 2) Prioridad de arranque (orden estricto)
 
