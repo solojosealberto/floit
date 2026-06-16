@@ -28,15 +28,16 @@ Plan: **`PRODUCTION_LAUNCH_PLAN.md`**. Infra staging: **`STAGING_DEPLOYMENT_STAT
 
 **Hecho (2026-05-27):** Sprint **UX-A/B/C** en repo — plan [`QUEGYM_UX_V0_IMPROVEMENT_PLAN.md`](../ux/QUEGYM_UX_V0_IMPROVEMENT_PLAN.md). Incluye `CompareActiveBar` (`/buscar`), `CompareGrid` móvil (`/comparar`), catálogo JSON 100% descripción limpia (`pnpm venues:audit:ui`).
 
-**Ahora (deploy UX + cierre formal beta staging):**
+**Hecho (repo local, 2026-05-27 / 2026-06-15):** `QueGymLogo` + 3 PNG en `/brand/`; favicon estático; galería fotos partner; menú móvil opaco (`mobile-nav-drawer.tsx`); fix CI. **Sin commit en `main` remoto.**
 
-1. **Deploy web** a `staging.quegym.com` (Vercel) con rama `main` / PR UX.
-2. **Import catálogo** en Neon: `pnpm venues:import:staging` (ver `VENUES_CATALOG_IMPORT.md`).
-3. **Renovar token M2M** si aplica: `pnpm auth0:m2m-token` → Vercel `ADMIN_OIDC_ACCESS_TOKEN`.
-4. **QA visual UX** — [`UI_VISUAL_QA_CHECKLIST.md`](../ux/UI_VISUAL_QA_CHECKLIST.md) (buscar, comparar móvil, ficha, home, **focus campos §4**, dual-theme).
-5. **E2E manual** — §2–3 de `STAGING_EVIDENCE_SPRINT5.md`.
-6. **Tráfico A/B** → `pnpm sprint5:staging-gate`.
-7. **Firma GO/NO-GO** → cutover prod (§14 `PRODUCTION_LAUNCH_PLAN.md`).
+**Ahora (cierre formal beta staging):**
+
+1. **Commit + deploy** logotipo, assets `/brand/` y menú móvil opaco.
+2. **QA visual** — [`UI_VISUAL_QA_CHECKLIST.md`](../ux/UI_VISUAL_QA_CHECKLIST.md).
+3. **E2E manual** — `STAGING_EVIDENCE_SPRINT5.md` §2–3.
+4. **Renovar token M2M** si aplica: `pnpm auth0:m2m-token` → Vercel `ADMIN_OIDC_ACCESS_TOKEN`.
+5. **Tráfico A/B** → `pnpm sprint5:staging-gate` (PASS con datos actuales; revalidar antes de GO).
+6. **Firma GO/NO-GO** → cutover prod (§14 `PRODUCTION_LAUNCH_PLAN.md`).
 
 ## Prioridad 0b — Rebrand (estado)
 
@@ -50,7 +51,7 @@ Plan: **`PRODUCTION_LAUNCH_PLAN.md`**. Infra staging: **`STAGING_DEPLOYMENT_STAT
 
 - Páginas P1/P2 del Sprint 11 **entregadas** (ver `sprints.md` § Sprint 11 y `WEB_ROUTES_PLATFORM.md`).
 - Sprint **UX-A/B/C** **entregado en repo** — comparador móvil, tarjetas discovery, pipeline import (ver `EPICS_USER_STORIES_STATUS.md` epic UX-V0).
-- Siguiente foco: **Prioridad 0** (deploy UX staging + cierre beta).
+- Siguiente foco: **Prioridad 0** (commit logo + QA visual + cierre beta).
 
 ### 1.1 Páginas — inventario actual
 

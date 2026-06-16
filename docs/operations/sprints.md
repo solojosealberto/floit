@@ -421,7 +421,7 @@ Plan completo y fases siguientes: **`docs/operations/REBRAND_QUEGYM_PLAN.md`**.
 - `Completado` OpenAPI `info.title` con prefijo QueGym en los cinco YAML.
 - `Completado` E2E `partner-claim.spec.ts` (heading «Tu centro en QueGym»).
 - `Sin cambio` (intencional Fase 1): tokens CSS `--floit-*`, claves `localStorage` legacy `floit:*` (migradas al leer), `@floit/*`, cookies HTTP `floit_*`, `floit_verified`, eventos `floit.*.v1`, OIDC audience `floit-admin`.
-- `Completado` (Fase 2): migración `localStorage` canónico, favicon `icon.tsx`, export `quegym-leads.csv`.
+- `Completado` (Fase 2): migración `localStorage` canónico, favicon estático (`icon.png` / `apple-icon.png`), export `quegym-leads.csv`.
 
 ### Avance — Rebrand Fase 2 (QueGym visual)
 
@@ -432,7 +432,7 @@ Plan: **`docs/ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`**, estado en **`docs/op
 - `Completado` Tipografías Inter + Barlow Semi Condensed en layout raíz.
 - `Completado` Home, `/buscar`, `/favoritos`, `/gyms/[slug]` migrados a tokens semánticos.
 - `Completado` (2026-05-27) **Accent unificado Mint `#12B76A`:** `--qg-accent` = `--qg-highlight`; CTAs, logo Q, favicon.
-- `Completado` (2026-05-27) Partner login/claim — tokens QueGym (Ink/Green) vs `#0a1430`; `/comparar` sin HEX hardcodeado; favicon `icon.tsx` + `apple-icon.tsx`.
+- `Completado` (2026-05-27) Partner login/claim — tokens QueGym (Ink/Green) vs `#0a1430`; `/comparar` sin HEX hardcodeado; favicon estático desde símbolo (`icon.png`, `apple-icon.png`).
 - `Completado` (2026-05-27) Migración `localStorage` canónico (`storage-keys.ts`: favoritos, comparar, duplicados).
 - `Completado` (2026-05-27) Partner claim wizard + `/partner` entry; `/privacidad` y `/lead/*`.
 - `Completado` (2026-05-27) Partner panel interno (`partner-panel-client`, venues, config, leads); admin shells (`admin-sidebar` + páginas internas); login admin alineado a partner.
@@ -448,7 +448,10 @@ Plan: **`docs/ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`**, estado en **`docs/op
   - **Pipeline:** `pnpm venues:normalize` + `pnpm venues:audit:ui` — 95 venues, **100% descripción limpia** en JSON, 51.6% listos UI (≥0.55).
   - **Componentes clave:** `packages/ui/src/venue-image.tsx`, `venue-card-grid.tsx`, `compare-active-bar.tsx`, `compare-grid.tsx`, `discovery-filter-link.tsx`, `buscar/loading.tsx`, `globals.css` (`.qg-field`, `.qg-input`).
   - **Pendiente:** QA visual staging; spike UX-V0-801 opcional.
-  - **Deploy staging (2026-06-14):** `main` → Vercel Production success; import `{ updated: 95 }`; `smoke:platform` OK contra `staging.quegym.com`.
+  - **Deploy staging (2026-06-14):** `main` → Vercel Production success; import `{ updated: 95 }`; `smoke:platform` OK.
+  - **Logotipo (2026-06-15):** assets reducidos a 3 PNG en `/brand/`; `QueGymLogo` en header, drawer, footer, login admin/partner y sidebar admin; favicon estático (`icon.png` / `apple-icon.png`) desde símbolo.
+  - **Menú móvil (2026-05-27):** drawer con fondo opaco y `createPortal` a `body` — legibilidad de enlaces (Explorar, Comparar, Favoritos, Partner, Privacidad) en viewport ≤ md.
+  - **Partner panel fotos:** galería con eliminar, reordenar, portada, copiar enlace y vista previa OG cableados en `partner-panel-client.tsx`.
 
 ### Consolidado rebrand 2026-05-26 / 2026-05-27
 
@@ -462,7 +465,7 @@ Plan: **`docs/ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`**, estado en **`docs/op
 | Partner login/claim/entry + panel + venues | Fase 4–6 UI |
 | Admin sidebar theme-aware + páginas internas | Fase 6 UI |
 | `localStorage` `quegym:*` + migración `floit:*` | `storage-keys.ts` |
-| Favicon / apple-icon Mint | `app/icon.tsx`, `apple-icon.tsx` |
+| Favicon / apple-icon Mint | `app/icon.png`, `app/apple-icon.png` (desde `quegym-symbol-source.png`) |
 | Export `quegym-leads.csv` | BFF + `admin-leads.controller.ts` |
 | Copy Venezuela (sin voseo) | `QUEGYM_BRAND_COPY_PLAN.md` C0–C5 |
 

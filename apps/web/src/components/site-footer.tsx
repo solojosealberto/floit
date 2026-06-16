@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { QueGymLogo } from "@/components/quegym-logo";
 import {
   BRAND_NAME,
   BRAND_PARTNER_CTA,
@@ -13,10 +14,8 @@ export function SiteFooter() {
       <div className="mx-auto w-full max-w-[1280px] px-3 py-8 md:py-10">
         <div className="grid gap-8 md:grid-cols-[1.2fr_1fr_1fr]">
           <div>
-            <p className="font-display text-base font-semibold text-quegym-primary">
-              {BRAND_NAME}
-            </p>
-            <p className="mt-2 max-w-xs text-sm leading-relaxed text-quegym-secondary">
+            <QueGymLogo variant="horizontal" theme="auto" size="sm" href />
+            <p className="mt-3 max-w-xs text-sm leading-relaxed text-quegym-secondary">
               {BRAND_TAGLINE} Compara gimnasios en Caracas y contacta directo por
               WhatsApp.
             </p>

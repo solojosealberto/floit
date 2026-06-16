@@ -4,7 +4,7 @@ Documento corto para retomar trabajo sin releer todo el historial.
 
 ## 1) Estado actual en una frase
 
-**Repo local:** Sprint UX-A/B/C **cerrado** (confianza catálogo, comparador móvil/desktop, catálogo JSON normalizado). **Staging:** GO técnico condicional — pendiente **deploy UX**, import catálogo re-normalizado en Neon, QA visual, tráfico KPI A/B y firma GO/NO-GO.
+**Repo local:** Sprint UX-A/B/C **cerrado**; logotipo horizontal PNG light/dark + menú móvil opaco en repo (sin commit en `main`). **Staging:** deploy UX OK (`d684837`+); import 95 venues OK; gates Sprint 5 **PASS** (2026-06-15). Pendiente: **commit + deploy** cambios locales, **QA visual**, E2E manual, firma GO/NO-GO producto/ops.
 
 ## 2) Prioridad de arranque (orden estricto)
 
@@ -17,17 +17,11 @@ Documento corto para retomar trabajo sin releer todo el historial.
 
 ## 3) Objetivo recomendado para la próxima sesión
 
-**Deploy UX + cierre formal beta staging:**
+**Cierre formal beta staging:**
 
-1. **Deploy web** a Vercel Preview/staging (`staging.quegym.com`) con cambios UX + comparador.
-2. **Import catálogo** re-normalizado en Neon:
-   ```bash
-   export CATALOG_SERVICE_URL=https://floitcatalog-service-production.up.railway.app
-   export CATALOG_INTERNAL_API_TOKEN=<vault>
-   pnpm venues:import:staging
-   pnpm venues:validate:live
-   ```
-3. **QA manual** — [`docs/ux/UI_VISUAL_QA_CHECKLIST.md`](../ux/UI_VISUAL_QA_CHECKLIST.md):
+1. **Commit + deploy** logotipo QueGym (`QueGymLogo` + assets `/brand/quegym-horizontal-*.png`) y fix menú móvil opaco.
+2. **QA manual** — [`docs/ux/UI_VISUAL_QA_CHECKLIST.md`](../ux/UI_VISUAL_QA_CHECKLIST.md):
+   - Menú móvil (☰): panel opaco, enlaces legibles en dark/light (§6b).
    - Home: barra búsqueda — focus sigue curvas del contenedor (§4).
    - `/buscar`: filtros, skeletons, barra comparador (móvil + desktop).
    - `/comparar`: grilla sticky, 2–3 centros, CTAs WhatsApp/ficha.
@@ -40,8 +34,10 @@ Documento corto para retomar trabajo sin releer todo el historial.
 
 - ~~Rebrand Fase 2 UI + copy~~ (`pnpm copy:verify`)
 - ~~Sprint UX-A/B/C~~ — ver `sprints.md` § Rebrand Fase 2 / Sprint UX
-- ~~`pnpm sprint5:flow-checklist` staging~~ (PASS)
-- ~~Auth M2M + SLA 401~~ (2026-05-27)
+- ~~Menú móvil opaco (portal + `bg-quegym-page`)~~ (2026-05-27)
+- ~~`QueGymLogo` + assets `/brand/` (3 PNG) + favicon estático~~ (2026-06-15, local)
+- ~~Galería fotos partner cableada~~ (`partner-panel-client.tsx`)
+- ~~Fix CI (`governance-docs-guard`, `fetch-depth: 0`)~~
 
 Vault local (gitignored): `docs/env/staging.local` — copiar desde `docs/env/staging.local.example`.
 
@@ -68,6 +64,7 @@ pnpm sprint5:staging-gate                    # umbrales PRD (cuando haya tráfic
 | Tarjetas | `venue-card-grid.tsx`, `venue-card.tsx`, `packages/ui/src/venue-image.tsx` |
 | Buscar | `buscar/buscar-client.tsx`, `buscar/loading.tsx`, `discovery-filter-link.tsx` |
 | Comparador | `compare-active-bar.tsx`, `compare-grid.tsx`, `comparar/comparar-client.tsx` |
+| Marca / shell | `quegym-logo.tsx`, `brand-assets.ts`, `mobile-nav-drawer.tsx`, `floit-main-header.tsx` |
 | Focus / forms | `globals.css` (`.qg-field`, `.qg-input`), `packages/ui/src/input.tsx`, `select.tsx` |
 | Catálogo | `scripts/venues-import/`, `data/venues-caracas.normalized.json` |
 

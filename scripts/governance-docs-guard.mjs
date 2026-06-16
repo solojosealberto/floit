@@ -25,14 +25,23 @@ function getMergeBase() {
     try {
       return run(`git merge-base HEAD origin/${baseRef}`);
     } catch {
-      // fall back below
+      // fall through
     }
   }
-  return run("git rev-parse HEAD~1");
+  try {
+    return run("git rev-parse HEAD~1");
+  } catch {
+    // Shallow clone (fetch-depth: 1) — sin padre; comparar contra HEAD = sin diff.
+    return run("git rev-parse HEAD");
+  }
 }
 
 function getChangedFiles() {
   const base = getMergeBase();
+  const head = run("git rev-parse HEAD");
+  if (base === head) {
+    return [];
+  }
   const output = run(`git diff --name-only ${base}...HEAD`);
   if (!output) return [];
   return output.split("\n").map((line) => line.trim()).filter(Boolean);
@@ -64,7 +73,7 @@ function main() {
     process.exit(1);
   }
 
-  console.log("[governance-docs-guard] Guardrail OK: documentos de estado actualizados.");
+  console.log("[governance-docs-guard] Guardrail OK: documentos actualizados.");
 }
 
 main();

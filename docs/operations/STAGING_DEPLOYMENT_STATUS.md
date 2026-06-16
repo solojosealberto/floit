@@ -36,9 +36,10 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | 6 | Variables Vercel + Railway | ✅ | Vault; no en git |
 | 7 | Import catálogo Neon staging | ✅ | 2026-06-14 — **95 updated** (`pnpm venues:import:staging --update`); audit UI 100% descripción limpia |
 | 7d | Deploy web UX v0 en Vercel | ✅ | 2026-06-14 — commits `12a0870`/`b23fadb`/`d684837`; Vercel Production **success**; staging sirve rebrand Mint |
+| 7e | Logotipo QueGym + menú móvil opaco | ☐ | En repo local (2026-05-27 / 2026-06-15); pendiente commit + deploy Vercel |
 | 7b | Fix crash partner Railway (`express`) | ✅ | `services/partner/package.json` (commit `08633b0`) |
 | 7c | Fix TypeORM Postgres (`datetime` → `timestamptz`) | ✅ | 8 entidades partner + helper `typeorm-column-types.ts`; leads alineado; Railway PR #1 absorbido en `main` |
-| 8 | Smoke + evidencias Sprint 4/5 | ☐ | `smoke:platform` OK; `sprint4:gate` + `sprint5:flow-checklist` PASS (2026-05-27); KPI A/B FAIL; GO técnico condicional |
+| 8 | Smoke + evidencias Sprint 4/5 | ☐ | `smoke:platform` OK; gates **PASS** (2026-06-15); QA visual + E2E manual + firma GO pendientes |
 | 8b | Auth M2M + fix issuer Auth0 | ✅ | `00fd9f9`; `pnpm auth0:m2m-token`; Vercel `ADMIN_OIDC_ACCESS_TOKEN` |
 | 9 | Dominio prod `www.quegym.com` | ☐ | Post GO |
 

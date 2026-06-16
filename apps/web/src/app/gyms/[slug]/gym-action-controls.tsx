@@ -10,7 +10,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { BRAND_NAME } from "@/lib/brand";
 import { isFavoriteSlug, toggleFavoriteSlug } from "@/lib/floit-favorites";
 import { trackEvent } from "@/lib/track";
@@ -24,9 +24,9 @@ type BaseProps = {
 };
 
 export function GymHeaderActionControls({ slug, venueName }: BaseProps) {
-  const [tick, setTick] = useState(0);
+  const [, setTick] = useState(0);
   const [copied, setCopied] = useState(false);
-  const fav = useMemo(() => isFavoriteSlug(slug), [slug, tick]);
+  const fav = isFavoriteSlug(slug);
 
   async function onShare() {
     const shareData = {
@@ -89,9 +89,9 @@ export function GymMobileActionRow({
   phoneHref,
   emailHref,
 }: BaseProps) {
-  const [tick, setTick] = useState(0);
+  const [, setTick] = useState(0);
   const [copied, setCopied] = useState(false);
-  const fav = useMemo(() => isFavoriteSlug(slug), [slug, tick]);
+  const fav = isFavoriteSlug(slug);
 
   async function onShare() {
     const shareData = {

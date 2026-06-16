@@ -146,6 +146,21 @@ summary:focus-visible,
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--qg-accent) 65%, transparent);
 }
 
+/* Logotipo: alternar PNG según data-theme (sin JS) */
+.qg-logo-theme-light,
+.qg-logo-theme-dark {
+  display: none;
+}
+
+html:not([data-theme="light"]) .qg-logo-theme-dark,
+[data-theme="dark"] .qg-logo-theme-dark {
+  display: block;
+}
+
+[data-theme="light"] .qg-logo-theme-light {
+  display: block;
+}
+
 /* Elevación + motion (referencia Apple — prueba rebrand) */
 @layer components {
   /** Campo compuesto (icono + input/select) — focus en el contenedor redondeado. */

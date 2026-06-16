@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
-import { BRAND_NAME } from "@/lib/brand";
+import { createPortal } from "react-dom";
+import { QueGymLogo } from "@/components/quegym-logo";
 import { readCompareSlugs } from "@/lib/floit-compare";
 import { readFavoriteSlugs } from "@/lib/floit-favorites";
 
@@ -80,6 +81,62 @@ export function MobileNavDrawer({ onNavigate }: Props) {
     { href: "/privacidad", label: "Privacidad" },
   ];
 
+  const drawerPanel =
+    open && typeof document !== "undefined"
+      ? createPortal(
+          <div className="fixed inset-0 z-[1300] md:hidden">
+            <button
+              type="button"
+              className="absolute inset-0 bg-black/50"
+              aria-label="Cerrar menú"
+              onClick={() => setOpen(false)}
+            />
+            <div
+              ref={panelRef}
+              id={titleId}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={`${titleId}-title`}
+              className="absolute right-0 top-0 flex h-full w-[min(88vw,320px)] flex-col border-l border-quegym-border bg-quegym-page shadow-[var(--qg-shadow-lg)]"
+            >
+              <div className="flex items-center justify-between border-b border-quegym-border bg-quegym-page px-4 py-3">
+                <div id={`${titleId}-title`}>
+                  <QueGymLogo variant="horizontal" theme="auto" size="sm" href />
+                </div>
+                <button
+                  type="button"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-quegym-border bg-quegym-elevated text-quegym-primary hover:bg-quegym-subtle"
+                  aria-label="Cerrar menú"
+                  onClick={() => setOpen(false)}
+                >
+                  <CloseIcon />
+                </button>
+              </div>
+              <nav className="flex flex-1 flex-col gap-1 overflow-y-auto bg-quegym-page p-3">
+                {links.map((item) => (
+                  <Link
+                    key={item.href + item.label}
+                    href={item.href}
+                    onClick={() => {
+                      setOpen(false);
+                      onNavigate?.();
+                    }}
+                    className={`rounded-xl px-3 py-3 text-sm ${
+                      pathname === item.href.split("?")[0]
+                        ? "bg-quegym-highlight-soft font-semibold text-quegym-highlight"
+                        : "bg-quegym-elevated text-quegym-primary hover:bg-quegym-subtle"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+          </div>,
+          document.body,
+        )
+      : null;
+
   return (
     <>
       <button
@@ -93,57 +150,7 @@ export function MobileNavDrawer({ onNavigate }: Props) {
         <MenuIcon />
       </button>
 
-      {open ? (
-        <div className="fixed inset-0 z-50 md:hidden">
-          <button
-            type="button"
-            className="absolute inset-0 bg-black/50"
-            aria-label="Cerrar menú"
-            onClick={() => setOpen(false)}
-          />
-          <div
-            ref={panelRef}
-            id={titleId}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={`${titleId}-title`}
-            className="qg-surface absolute right-0 top-0 flex h-full w-[min(88vw,320px)] flex-col border-l border-quegym-border bg-quegym-elevated shadow-[var(--qg-shadow-lg)]"
-          >
-            <div className="flex items-center justify-between border-b border-quegym-border px-4 py-3">
-              <p id={`${titleId}-title`} className="text-sm font-semibold text-quegym-primary">
-                {BRAND_NAME}
-              </p>
-              <button
-                type="button"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-quegym-border text-quegym-primary hover:bg-quegym-subtle"
-                aria-label="Cerrar menú"
-                onClick={() => setOpen(false)}
-              >
-                <CloseIcon />
-              </button>
-            </div>
-            <nav className="flex flex-1 flex-col gap-1 p-3">
-              {links.map((item) => (
-                <Link
-                  key={item.href + item.label}
-                  href={item.href}
-                  onClick={() => {
-                    setOpen(false);
-                    onNavigate?.();
-                  }}
-                  className={`rounded-xl px-3 py-3 text-sm ${
-                    pathname === item.href.split("?")[0]
-                      ? "bg-quegym-highlight-soft font-semibold text-quegym-highlight"
-                      : "text-quegym-primary hover:bg-quegym-subtle"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        </div>
-      ) : null}
+      {drawerPanel}
     </>
   );
 }

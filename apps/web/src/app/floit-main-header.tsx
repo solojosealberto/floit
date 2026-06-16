@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { HeaderCompareLink } from "@/components/header-compare-link";
 import { MobileNavDrawer } from "@/components/mobile-nav-drawer";
-import { BRAND_NAME } from "@/lib/brand";
+import { QueGymLogo } from "@/components/quegym-logo";
 import { HomeFavoritesLink } from "./home-favorites-link";
 
 function shouldShowMainHeader(pathname: string): boolean {
@@ -23,18 +23,7 @@ export function FloitMainHeader() {
   return (
     <header className="qg-header-bar sticky top-0 z-40 border-b border-quegym-border bg-quegym-page/95 backdrop-blur-md">
       <div className="mx-auto flex w-full max-w-[1280px] items-center justify-between gap-3 px-3 py-3">
-        <div className="flex items-center gap-2">
-          <Link
-            href="/"
-            className="qg-motion flex h-8 w-8 items-center justify-center rounded-full bg-quegym-accent text-sm font-semibold text-white shadow-[var(--qg-shadow-accent)] hover:bg-quegym-accent-hover"
-            aria-label={`Ir al inicio de ${BRAND_NAME}`}
-          >
-            Q
-          </Link>
-          <Link href="/" className="text-sm font-semibold tracking-tight text-quegym-primary">
-            {BRAND_NAME}
-          </Link>
-        </div>
+        <QueGymLogo variant="horizontal" theme="auto" size="sm" href priority />
 
         <nav className="hidden items-center gap-5 text-xs text-quegym-secondary md:flex">
           <Link

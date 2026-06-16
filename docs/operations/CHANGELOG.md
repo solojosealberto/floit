@@ -17,6 +17,8 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 ## [Unreleased]
 
 ### Changed
+- **Logotipo QueGym (2026-06-15, repo local):** assets consolidados a 3 PNG en `/brand/`; componente `QueGymLogo` (swap light/dark); favicon estático `icon.png` / `apple-icon.png` desde símbolo; eliminados generadores dinámicos `icon.tsx` / `apple-icon.tsx`.
+- **Partner panel fotos (2026-06-15):** galería cableada en `partner-panel-client.tsx` — subir, eliminar, reordenar, portada, copiar enlace, vista previa OG.
 - **Rebrand Fase 7 — copy C5 (2026-05-27):** script `scripts/verify-brand-copy.mjs` + `pnpm copy:verify` (CI); E2E smoke valida hero «Encuentra tu próximo gym en Caracas».
 - **Rebrand Fase 7 — copy C1 (2026-05-27):** home + metadata SEO con tuteo venezolano; constantes `BRAND_*` en `page.tsx` y `layout.tsx`.
 - **Rebrand Fase 7 — copy C2–C4 (2026-05-27):** `/buscar`, partner claim/panel/config, admin leads/catálogo — anti-voseo.
@@ -29,6 +31,8 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - **Rebrand Fase 2 — UI visual QueGym (2026-05-27):** paleta dark **verde bosque** en `globals.css` (`--qg-bg-page` `#050a05`, elevated `#141c14`, input `#162116`, secundario `#8a968a`); tokens `hero`, `banner`, `highlight-hover`; refinamiento home (hero continuo, banner partner, logo Q circular), cards destacadas, `/buscar` (chips Mint, barra elevated), ficha gym (tabs Mint, CTAs); focus ring adaptado en light. Partner login/claim migrados a tokens QueGym; `/comparar` sin HEX hardcodeado; favicon `icon.tsx` + `apple-icon.tsx`; `applicationName` en layout. Plan: `docs/ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`.
 
 ### Fixed
+- **Menú móvil (2026-05-27):** `mobile-nav-drawer.tsx` — panel opaco (`bg-quegym-page`), `createPortal` a `document.body` y `z-[1300]`; corrige legibilidad de enlaces cuando el header usa `backdrop-blur`.
+- **CI governance (2026-06-15):** `governance-docs-guard.mjs` tolera shallow clone; workflow `ci.yml` con `fetch-depth: 0`.
 - **Admin login en Vercel staging (`7554d6c`):** helper `apps/web/src/lib/admin-local-login.ts` — el formulario `/admin/login` ya no exige `NODE_ENV !== production`; en staging habilita login local si `ADMIN_LOGIN_ALLOW_LOCAL_PASSWORD=true` y `NEXT_PUBLIC_SITE_URL` contiene `staging.` (o `VERCEL_ENV` es `preview`/`development`). Corrige `?error=admin_login_not_enabled` tras configurar solo variables en Vercel.
 - **Partner-service Railway:** dependencia directa **`express`** en `services/partner/package.json` — corrige crash al arranque (`Cannot find module 'express'`) por import de `serveStatic` en `main.ts` con aislamiento pnpm en deploy.
 - **Partner/leads + PostgreSQL (Neon):** columnas de fecha pasan de `datetime` (SQLite) a **`timestamptz`** cuando existe `DATABASE_URL`; helper `typeorm-column-types.ts` mantiene `datetime` en SQLite local. Corrige fallo de metadata TypeORM en Railway (diagnóstico Railway PR #1, absorbido en `main`).

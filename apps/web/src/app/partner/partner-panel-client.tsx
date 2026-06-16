@@ -255,6 +255,7 @@ export function PartnerPanelClient(props: {
     setVenueSlugDraft(initialSlug);
     void reload(initialSlug);
     void loadPhotos(initialSlug);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount + query slug; reload/loadPhotos estables por venue
   }, [router, search, variant, fixedVenueSlug]);
 
   function openConfigView(next: ConfigView) {
@@ -836,54 +837,115 @@ export function PartnerPanelClient(props: {
 
       {activeSection === "perfil" || activeSection === "fotos" ? (
       <div className="space-y-4">
-        <div className={`grid gap-4 ${activeSection === "fotos" ? "" : "xl:grid-cols-[1.7fr_0.9fr]"}`}>
+        <div className={`grid gap-4 ${activeSection === "fotos" ? "xl:grid-cols-[1.7fr_0.9fr]" : activeSection === "perfil" ? "xl:grid-cols-[1.7fr_0.9fr]" : ""}`}>
           <div className="space-y-4">
             <UICard className={`bg-quegym-subtle ${lightCardClass}`}>
-              <div className="mb-3 flex items-center justify-between">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                 <h2 className="text-base font-semibold">Galería de fotos</h2>
-                <span className="text-xs text-quegym-secondary">Centro: {photosVenueSlug || "sin seleccionar"}</span>
+                <span className="text-xs text-quegym-secondary">
+                  Centro: {photosVenueSlug || "sin seleccionar"}
+                  {photosLoading ? " · cargando…" : ` · ${photos.length} foto(s)`}
+                </span>
               </div>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                {Array.from({ length: 4 }).map((_, idx) => {
-                  const photo = photos[idx];
-                  return (
-                    <div key={`slot-${idx}`} className="flex h-[118px] items-center justify-center overflow-hidden rounded-[14px] border border-quegym-border bg-quegym-elevated text-xs text-quegym-secondary">
-                      {photo ? (
+              {photosLoading ? (
+                <p className="text-sm text-quegym-secondary">Cargando fotos del centro…</p>
+              ) : photos.length === 0 ? (
+                <p className="rounded-xl border border-dashed border-quegym-border px-4 py-8 text-center text-sm text-quegym-secondary">
+                  Aún no hay fotos. Usa el formulario de abajo para subir la primera.
+                </p>
+              ) : (
+                <ul className="space-y-2">
+                  {photos.map((photo, idx) => (
+                    <li
+                      key={photo.id}
+                      draggable
+                      onDragStart={() => setDraggingPhotoId(photo.id)}
+                      onDragEnd={() => setDraggingPhotoId(null)}
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={() => void onDropPhoto(photo)}
+                      className={`flex flex-wrap items-center gap-3 rounded-xl border border-quegym-border bg-quegym-elevated p-2 ${
+                        draggingPhotoId === photo.id ? "opacity-60" : ""
+                      } ${reorderingPhotos ? "pointer-events-none opacity-70" : ""}`}
+                    >
+                      <div className="h-16 w-24 shrink-0 overflow-hidden rounded-lg border border-quegym-border">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={photo.url}
-                          alt={`Foto ${idx + 1} de ${photosVenueSlug || "centro"}`}
+                          alt={`Foto ${idx + 1}`}
                           className="h-full w-full object-cover"
                           loading="lazy"
                         />
-                      ) : (
-                        `Foto ${idx + 1}`
-                      )}
-                    </div>
-                  );
-                })}
-                <label className="flex h-[118px] cursor-pointer flex-col items-center justify-center gap-1 rounded-[14px] border border-dashed border-quegym-border bg-quegym-elevated text-xs text-quegym-secondary hover:bg-quegym-subtle">
-                  <span className="text-base">⇪</span>
-                  Subir
-                  <input
-                    type="file"
-                    name="photo"
-                    form="partner-photo-upload"
-                    accept="image/jpeg,image/png,image/webp"
-                    className="sr-only"
-                  />
-                </label>
-              </div>
+                      </div>
+                      <div className="min-w-0 flex-1 text-xs text-quegym-secondary">
+                        <p className="font-medium text-quegym-primary">
+                          {idx === 0 ? "Portada" : `Foto ${idx + 1}`}
+                        </p>
+                        <p className="truncate">{photo.mimeType} · {Math.round(photo.sizeBytes / 1024)} KB</p>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-1">
+                        <UIButton
+                          type="button"
+                          size="sm"
+                          variant="secondary"
+                          className={lightSecondaryButtonClass}
+                          disabled={idx === 0 || settingCoverPhotoId === photo.id}
+                          onClick={() => void onSetCoverPhoto(photo)}
+                        >
+                          {settingCoverPhotoId === photo.id ? "…" : "Portada"}
+                        </UIButton>
+                        <UIButton
+                          type="button"
+                          size="sm"
+                          variant="secondary"
+                          className={lightSecondaryButtonClass}
+                          disabled={idx === 0 || movingPhotoId === photo.id}
+                          onClick={() => void onMovePhoto(photo, "up")}
+                        >
+                          ↑
+                        </UIButton>
+                        <UIButton
+                          type="button"
+                          size="sm"
+                          variant="secondary"
+                          className={lightSecondaryButtonClass}
+                          disabled={idx === photos.length - 1 || movingPhotoId === photo.id}
+                          onClick={() => void onMovePhoto(photo, "down")}
+                        >
+                          ↓
+                        </UIButton>
+                        <UIButton
+                          type="button"
+                          size="sm"
+                          variant="secondary"
+                          className="!border-rose-200 !text-rose-700 hover:!bg-rose-50"
+                          disabled={deletingPhotoId === photo.id}
+                          onClick={() => void onDeletePhoto(photo)}
+                        >
+                          {deletingPhotoId === photo.id ? "…" : "Eliminar"}
+                        </UIButton>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
               <form
                 id="partner-photo-upload"
                 className="mt-3 flex flex-wrap items-center gap-2"
                 onSubmit={onUploadPhoto}
               >
+                <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 text-xs text-quegym-primary hover:bg-quegym-subtle">
+                  Seleccionar imagen
+                  <input
+                    type="file"
+                    name="photo"
+                    accept="image/jpeg,image/png,image/webp"
+                    className="sr-only"
+                  />
+                </label>
                 <UIButton type="submit" disabled={uploadingPhoto || !photosVenueSlug.trim()} className={lightPrimaryButtonClass}>
-                  {uploadingPhoto ? "Subiendo…" : "Subir"}
+                  {uploadingPhoto ? "Subiendo…" : "Subir foto"}
                 </UIButton>
-                <span className="text-xs text-quegym-secondary">
-                  JPG/PNG/WEBP, hasta 5MB
-                </span>
+                <span className="text-xs text-quegym-secondary">JPG/PNG/WEBP, hasta 5MB</span>
               </form>
             </UICard>
 
@@ -1008,6 +1070,35 @@ export function PartnerPanelClient(props: {
             </>
             ) : null}
           </div>
+
+          {activeSection === "fotos" ? (
+          <div className="space-y-3 xl:sticky xl:top-4 xl:h-fit">
+            <UICard className={lightCardClass}>
+              <h3 className="text-sm font-semibold text-quegym-primary">Vista previa en catálogo</h3>
+              <p className="mt-1 text-xs text-quegym-secondary">{ogPreviewPath}</p>
+              <p className="mt-3 text-sm font-medium text-quegym-primary">{ogPreviewTitle}</p>
+              <p className="mt-1 line-clamp-3 text-xs text-quegym-secondary">{ogPreviewDescription}</p>
+              {ogPreviewImage ? (
+                <div className="mt-3 overflow-hidden rounded-xl border border-quegym-border">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={ogPreviewImage} alt="" className="h-32 w-full object-cover" />
+                </div>
+              ) : (
+                <p className="mt-3 text-xs text-quegym-secondary">Sube al menos una foto para la vista previa.</p>
+              )}
+            </UICard>
+            <UIButton
+              type="button"
+              variant="secondary"
+              className={lightSecondaryButtonClass}
+              fullWidth
+              disabled={!photosVenueSlug.trim()}
+              onClick={() => void onCopyGymLink()}
+            >
+              {copiedLink ? "Enlace copiado" : "Copiar enlace de la ficha"}
+            </UIButton>
+          </div>
+          ) : null}
 
           {activeSection === "perfil" ? (
           <div className="space-y-3 xl:sticky xl:top-4 xl:h-fit">

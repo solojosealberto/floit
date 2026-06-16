@@ -117,7 +117,7 @@ Prueba manual: home, `/partner/login`, `/partner/claim`, `/admin/login`, ficha c
 | Toggle tema | `quegym:theme` en `localStorage`; botón en header/admin/partner; script anti-FOUC | `Completado` |
 | `packages/ui` / Tailwind | Componentes base + tema `quegym.*` (`hero`, `banner`, `highlight-hover`) | `Completado` |
 | Tipografías | Inter (body) + Barlow Semi Condensed (headlines) | `Completado` |
-| Favicon / apple-touch | `app/icon.tsx`, `app/apple-icon.tsx` (isotipo Q verde) | `Completado` (2026-05-27) |
+| Favicon / apple-touch | `app/icon.png`, `app/apple-icon.png` (desde `quegym-symbol-source.png`) | `Completado` (2026-05-27; estático PNG) |
 | Layout metadata | `applicationName`, SEO title/description copy venezolano | `Completado` (2026-05-27) |
 | `localStorage` | `quegym:favorites`, `quegym:compare`, `quegym-admin-duplicate-dismissed` | `Completado` (2026-05-27) |
 | Export admin | `quegym-leads.csv` | `Completado` (2026-05-27) |

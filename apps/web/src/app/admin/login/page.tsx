@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { QueGymLogo } from "@/components/quegym-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { BRAND_ADMIN, BRAND_NAME } from "@/lib/brand";
+import { BRAND_ADMIN } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: `${BRAND_ADMIN} · Login`,
@@ -24,14 +25,9 @@ export default async function AdminLoginPage({ searchParams }: Props) {
       <section className="qg-surface qg-motion flex w-full flex-1 items-center overflow-hidden rounded-3xl border border-quegym-border bg-quegym-elevated">
         <div className="grid md:grid-cols-[1fr_1.15fr]">
           <aside className="hidden bg-quegym-ink px-10 py-12 text-white md:flex md:flex-col">
-            <div className="mb-16 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-quegym-accent text-xl font-semibold text-white">
-                Q
-              </div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-semibold leading-none tracking-tight">{BRAND_NAME}</span>
-                <span className="text-xl text-white/75">Admin</span>
-              </div>
+            <div className="mb-16">
+              <QueGymLogo variant="horizontal" theme="dark" size="md" href="/" />
+              <p className="mt-2 text-xl text-white/75">{BRAND_ADMIN}</p>
             </div>
             <h2 className="max-w-xs text-5xl font-semibold leading-tight tracking-tight">
               Administra la plataforma desde un solo panel

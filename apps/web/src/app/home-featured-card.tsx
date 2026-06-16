@@ -2,7 +2,7 @@
 
 import { VenueCardGrid, type VenueCardGridVenue } from "@/components/venue-card-grid";
 import { isFavoriteSlug, toggleFavoriteSlug } from "@/lib/floit-favorites";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 export type FeaturedVenueCard = VenueCardGridVenue & {
   distanceM?: number;
@@ -13,8 +13,8 @@ type Props = {
 };
 
 export function HomeFeaturedCard({ gym }: Props) {
-  const [tick, setTick] = useState(0);
-  const isFav = useMemo(() => isFavoriteSlug(gym.slug), [gym.slug, tick]);
+  const [, setTick] = useState(0);
+  const isFav = isFavoriteSlug(gym.slug);
 
   return (
     <VenueCardGrid

@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -45,6 +47,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -64,6 +68,21 @@ jobs:
         run: pnpm docker:up
         working-directory: ${{ github.workspace }}
 
+      - name: Wait for Postgres
+        run: |
+          set -e
+          for i in {1..30}; do
+            if docker compose exec -T postgres pg_isready -U floit -d floit_catalog >/dev/null 2>&1; then
+              echo "Postgres ready"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Postgres did not become ready"
+          docker compose ps
+          exit 1
+        working-directory: ${{ github.workspace }}
+
       - name: Start backend services
         env:
           DATABASE_URL: postgresql://floit:floit@localhost:5432/floit_catalog
@@ -72,6 +91,7 @@ jobs:
           CATALOG_SERVICE_URL: http://localhost:4010
           SEARCH_SERVICE_URL: http://localhost:4011
           LEADS_SERVICE_URL: http://localhost:4012
+          PARTNER_SERVICE_URL: http://localhost:4013
           ANALYTICS_SERVICE_URL: http://localhost:4014
           ADMIN_API_TOKEN: ci-admin-token
         run: pnpm dev:services > /tmp/dev-services.log 2>&1 &
@@ -82,6 +102,7 @@ jobs:
           CATALOG_SERVICE_URL: http://localhost:4010
           SEARCH_SERVICE_URL: http://localhost:4011
           LEADS_SERVICE_URL: http://localhost:4012
+          PARTNER_SERVICE_URL: http://localhost:4013
           ANALYTICS_SERVICE_URL: http://localhost:4014
           ADMIN_API_TOKEN: ci-admin-token
           NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3050

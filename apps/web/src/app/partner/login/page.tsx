@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { QueGymLogo } from "@/components/quegym-logo";
 import { BRAND_NAME, BRAND_PARTNERS } from "@/lib/brand";
 
 export const metadata: Metadata = {
@@ -20,14 +21,9 @@ export default async function PartnerLoginPage({ searchParams }: Props) {
       <section className="qg-surface qg-motion w-full overflow-hidden rounded-3xl border border-quegym-border bg-quegym-elevated">
         <div className="grid md:grid-cols-[1fr_1.15fr]">
           <aside className="hidden bg-quegym-ink px-10 py-12 text-white md:flex md:flex-col">
-            <div className="mb-16 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-quegym-accent text-xl font-semibold text-white">
-                Q
-              </div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-semibold leading-none tracking-tight">{BRAND_NAME}</span>
-                <span className="text-xl text-white/75">Partners</span>
-              </div>
+            <div className="mb-16">
+              <QueGymLogo variant="horizontal" theme="dark" size="md" href="/" />
+              <p className="mt-2 text-xl text-white/75">{BRAND_PARTNERS}</p>
             </div>
             <h2 className="max-w-xs text-5xl font-semibold leading-tight tracking-tight">
               Tu panel de control en un solo lugar
@@ -53,10 +49,8 @@ export default async function PartnerLoginPage({ searchParams }: Props) {
 
           <div className="px-5 py-8 sm:px-8 sm:py-10 md:px-12 md:py-12">
             <div className="mb-8 border-b border-quegym-border pb-8 text-center md:hidden">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-quegym-accent text-3xl font-semibold text-white">
-                Q
-              </div>
-              <h2 className="mt-4 text-3xl font-semibold tracking-tight text-quegym-primary">{BRAND_PARTNERS}</h2>
+              <QueGymLogo variant="horizontal" theme="auto" size="md" href="/" className="mx-auto" />
+              <p className="mt-3 text-lg text-quegym-secondary">{BRAND_PARTNERS}</p>
               <p className="mt-2 text-lg text-quegym-secondary">Gestiona tu gimnasio desde un panel simple</p>
             </div>
 

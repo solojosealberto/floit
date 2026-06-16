@@ -6,29 +6,12 @@
   "scope": "/",
   "display": "standalone",
   "background_color": "#0B0F0E",
-  "theme_color": "#17C964",
+  "theme_color": "#12B76A",
   "icons": [
     {
-      "src": "/icons/pwa/android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/pwa/android-chrome-512x512.png",
+      "src": "/brand/quegym-symbol-source.png",
       "sizes": "512x512",
       "type": "image/png"
-    },
-    {
-      "src": "/icons/pwa/maskable-icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/icons/pwa/maskable-icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
     }
   ]
 }

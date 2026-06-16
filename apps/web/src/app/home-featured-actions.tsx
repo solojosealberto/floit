@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { isFavoriteSlug, toggleFavoriteSlug } from "@/lib/floit-favorites";
 
 type Props = {
@@ -9,8 +9,8 @@ type Props = {
 };
 
 export function HomeFeaturedActions({ slug }: Props) {
-  const [tick, setTick] = useState(0);
-  const isFav = useMemo(() => isFavoriteSlug(slug), [slug, tick]);
+  const [, setTick] = useState(0);
+  const isFav = isFavoriteSlug(slug);
 
   return (
     <div className="flex items-center gap-2 pt-1">

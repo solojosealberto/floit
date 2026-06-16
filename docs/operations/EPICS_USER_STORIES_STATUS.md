@@ -174,10 +174,11 @@ Notas operativas recientes de discovery/comparación (US-2.x):
 | Capacidad | Estado staging | Notas |
 |-----------|----------------|-------|
 | Discovery (US-1.x) | `Completado` | 95 venues en Neon; search+catalog Railway; Vercel Preview |
+| Logotipo header/footer/login | `En curso` | Header, footer, login admin/partner, sidebar admin; pendiente deploy Vercel |
 | Ficha / comparar (US-2.x) | `Completado` | `/gyms/*`, `/api/compare/search` verificados en staging |
 | Leads públicos (US-3.1) | `Completado` (infra staging) | `leads-service` Railway `/health` 200; admin API con M2M |
 | Partner / admin ops (US-4.x, 5.x) | `Parcial` | `/admin/leads` operativo (M2M + `00fd9f9`); E2E manual partner/admin pendiente |
-| Analytics / Sprint 5 KPIs (US-6.x) | `Parcial` | Preflight PASS; KPI A/B membership+trial FAIL por tráfico (~21 eventos) |
+| Analytics / Sprint 5 KPIs (US-6.x) | `Parcial` | Gates **PASS** (2026-06-15); E2E manual y firma GO pendientes |
 
 Evidencia: `STAGING_EVIDENCE_SPRINT5.md`, `STAGING_DEPLOYMENT_STATUS.md`, `STAGING_AGENT_EXECUTION_REPORT.md`.
 
@@ -199,7 +200,7 @@ Evidencia: `STAGING_EVIDENCE_SPRINT5.md`, `STAGING_DEPLOYMENT_STATUS.md`, `STAGI
 | UX-V0-401–404 | Nav móvil, comparar global, FAB mapa, barra flotante + grilla móvil | P0–P2 | UX-B / cierre | ✅ |
 | UX-V0-501–504 | Home: stats, cómo funciona, footer | P1–P2 | UX-B | ✅ |
 | UX-V0-601–603 | Lucide, skeletons, paridad favoritos/comparar, focus formularios | P1–P2 | UX-C | ✅ |
-| UX-V0-701–703 | Pipeline import / completeness score catálogo | P1–P2 | UX-C | ✅ JSON normalizado; import BD pendiente |
+| UX-V0-701–703 | Pipeline import / completeness score catálogo | P1–P2 | UX-C | ✅ JSON + import Neon staging (95 venues) |
 | UX-V0-801+ | Spike “high tech fitness” (opcional) | P2 | Post UX-C | Planificado |
 
 **Entregables comparador (referencia):**
@@ -210,6 +211,20 @@ Evidencia: `STAGING_EVIDENCE_SPRINT5.md`, `STAGING_DEPLOYMENT_STATUS.md`, `STAGI
 | Grilla comparación | `compare-grid.tsx` | Sticky labels + headers; scroll H/V en móvil |
 | Cliente `/comparar` | `comparar/comparar-client.tsx` | Header móvil «Comparador · N centros»; botón dashed añadir |
 
+**Menú móvil (UX-V0-401):**
+
+| Pieza | Ruta | Notas |
+|-------|------|--------|
+| Drawer header público | `mobile-nav-drawer.tsx` | Portal a `document.body`, `z-[1300]`; panel `bg-quegym-page` opaco; enlaces con `bg-quegym-elevated`; Esc + overlay |
+| Trigger | `floit-main-header.tsx` | Botón ☰ solo `md:hidden` |
+
+**Logotipo (2026-06-15, repo local):**
+
+| Pieza | Ruta | Notas |
+|-------|------|--------|
+| Componente | `quegym-logo.tsx` | Variantes horizontal/symbol; swap light/dark vía `.qg-logo-theme-*` |
+| Assets | `brand-assets.ts`, `/brand/*.png` | 3 PNG; pendiente commit + deploy Vercel |
+
 **Focus formularios (polish UX-C):**
 
 | Pieza | Ruta | Notas |
@@ -218,7 +233,7 @@ Evidencia: `STAGING_EVIDENCE_SPRINT5.md`, `STAGING_DEPLOYMENT_STATUS.md`, `STAGI
 | Campos UI kit | `packages/ui/src/input.tsx`, `select.tsx` | Borde mint sutil en `:focus-visible` |
 | Aplicado en | home, `/buscar`, partner/admin login | Wrappers con clase `qg-field` |
 
-**Próximo paso:** QA visual en **staging** (`UI_VISUAL_QA_CHECKLIST.md` §2b, §4 focus, comparador); cierre beta (KPI A/B, E2E manual, GO/NO-GO). Deploy UX + import catálogo **OK** (2026-06-14).
+**Próximo paso:** QA visual en **staging** (`UI_VISUAL_QA_CHECKLIST.md` §2b, §4 focus, §6b menú móvil, comparador); cierre beta (KPI A/B, E2E manual, GO/NO-GO). Deploy UX + import catálogo **OK** (2026-06-14); logotipo + menú móvil **pendiente commit/deploy**.
 
 ---
 
@@ -227,7 +242,8 @@ Evidencia: `STAGING_EVIDENCE_SPRINT5.md`, `STAGING_DEPLOYMENT_STATUS.md`, `STAGI
 - **Completado (2026-05-27):** Rebrand Fase 2 visual + copy verbal en repo (`REBRAND_QUEGYM_PLAN.md`, `QUEGYM_BRAND_COPY_PLAN.md`, `pnpm copy:verify`).
 - **Completado (2026-05-27):** Sprint **UX-A/B/C** — confianza catálogo y conversión en repo (`QUEGYM_UX_V0_IMPROVEMENT_PLAN.md`): tarjetas unificadas, `/buscar` + ficha + home + shell móvil, Lucide/skeletons, pipeline import re-normalizado (95 venues, 100% descripción limpia en JSON), **comparador** (`CompareActiveBar` + `CompareGrid` móvil), **focus formularios** (`.qg-field` / `.qg-input` en `globals.css`).
 - **Completado (2026-06-14):** deploy UX a **staging.quegym.com** (Vercel); import catálogo `{ updated: 95 }`.
-- **Pendiente:** QA visual/copy en staging (`UI_VISUAL_QA_CHECKLIST.md`).
+- **Completado (2026-06-15):** logotipo QueGym + galería fotos partner + fix CI en repo local (pendiente commit/deploy).
+- **Completado (2026-05-27):** menú móvil opaco (`mobile-nav-drawer.tsx` — portal + `bg-quegym-page`).
 - **Siguiente línea de trabajo recomendada:** cierre beta staging (QA visual → tráfico KPI A/B → E2E manual §2–3 → firma GO/NO-GO); opcional spike UX-V0-801.
 - Scope histórico cerrado: partner planes/fotos, admin duplicados/moderación, taxonomías en buscar, ficha gym tabs/guardar/compartir (ver filas US arriba).
 - Fuera del scope MVP transaccional actual: `/checkout`, `/reservas` (solo placeholder/backlog).

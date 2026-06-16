@@ -11,6 +11,16 @@ Referencias:
 
 ---
 
+## Actualización 2026-06-15
+
+| Campo | Valor |
+|---|---|
+| Comando | `pnpm sprint5:staging-gate -- --kpi-relaxed` |
+| `sprint5:kpi-gate` | **PASS** (128 eventos; variantes `membership` + `trial` presentes) |
+| Notas | Revalidar antes de GO formal; E2E manual §2–3 sigue pendiente |
+
+---
+
 ## Metadatos de ejecución
 
 | Campo | Valor |

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { QueGymLogo } from "@/components/quegym-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { BRAND_ADMIN } from "@/lib/brand";
 
@@ -132,9 +133,7 @@ export function AdminSidebar(props: Props) {
   return (
     <aside className="qg-surface-subtle qg-motion h-fit rounded-2xl border border-quegym-border bg-quegym-subtle p-4 text-quegym-primary">
       <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-quegym-accent text-sm font-semibold text-white">
-          Q
-        </div>
+        <QueGymLogo variant="symbol" size="sm" href="/admin" />
         <div className="min-w-0">
           <p className="text-sm font-semibold leading-tight">{BRAND_ADMIN}</p>
           <p className="text-[11px] text-quegym-secondary">Backoffice Operativo</p>

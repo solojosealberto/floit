@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin, Map } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export function HomeLocationButton() {

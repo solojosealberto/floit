@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-14T22:34:42.729Z",
+  "generatedAt": "2026-06-14T22:49:16.602Z",
   "sourceCsv": "/Users/nosoyelmago/Documents/FLOIT v.0.2/data/venues-caracas.source.csv",
   "count": 95,
   "records": [
@@ -72,7 +72,7 @@
       "importMeta": {
         "sourceRow": 2,
         "geocodeNote": "cache: Chacao, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.718Z"
+        "importedAt": "2026-06-14T22:49:16.593Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -167,7 +167,7 @@
       "importMeta": {
         "sourceRow": 3,
         "geocodeNote": "cache: Baruta, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.721Z"
+        "importedAt": "2026-06-14T22:49:16.594Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -274,7 +274,7 @@
       "importMeta": {
         "sourceRow": 4,
         "geocodeNote": "cache: Libertador, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.721Z"
+        "importedAt": "2026-06-14T22:49:16.594Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -332,7 +332,7 @@
       "importMeta": {
         "sourceRow": 5,
         "geocodeNote": "cache: https://www.google.com/maps/place/Sweat+Gym/@10.4926693,-66.857848,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a58ffdb3e5c6b:0xf16f86a4d7ffd02d!8m2!3d10.4926693!4d-66.857848!16s%2Fg%2F1tgnbncs?entry=tts&g_ep=EgoyMDI2MDQwOC4wIPu8ASoASAFQAw%3D%3D&skid=fc22f1df-bac3-4a25-b4d6-66c5628d5549",
-        "importedAt": "2026-06-14T22:34:42.721Z"
+        "importedAt": "2026-06-14T22:49:16.595Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -448,7 +448,7 @@
       "importMeta": {
         "sourceRow": 6,
         "geocodeNote": "cache: https://www.google.com/maps/place/Gym+Fitness/@10.4968669,-66.8462981,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59adcd7ded47:0xe14e36bb6b80d632!8m2!3d10.4968669!4d-66.8462981!16s%2Fg%2F11cmss2rbz?entry=tts&g_ep=EgoyMDI2MDQwOC4wIPu8ASoASAFQAw%3D%3D&skid=c7f0a0ce-065c-440f-b45f-2731ba03ae7f",
-        "importedAt": "2026-06-14T22:34:42.721Z"
+        "importedAt": "2026-06-14T22:49:16.595Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -519,7 +519,7 @@
       "importMeta": {
         "sourceRow": 7,
         "geocodeNote": "cache: Libertador, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.722Z"
+        "importedAt": "2026-06-14T22:49:16.595Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -622,7 +622,7 @@
       "importMeta": {
         "sourceRow": 8,
         "geocodeNote": "cache: Libertador, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.722Z"
+        "importedAt": "2026-06-14T22:49:16.595Z"
       },
       "completenessScore": 0.75,
       "geocode": {
@@ -722,7 +722,7 @@
       "importMeta": {
         "sourceRow": 9,
         "geocodeNote": "cache: https://www.google.com/maps/place/Focus+Fitness+-+La+Castellana/@10.4975858,-66.8552797,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a596353586993:0xc6a035afc5ab44bf!8m2!3d10.4975858!4d-66.8552797!16s%2Fg%2F11pvhqk4m7?entry=tts&g_ep=EgoyMDI2MDQwOC4wIPu8ASoASAFQAw%3D%3D&skid=545dc925-29e8-4b31-b1ee-09378f1c4c07",
-        "importedAt": "2026-06-14T22:34:42.722Z"
+        "importedAt": "2026-06-14T22:49:16.595Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -775,7 +775,7 @@
       "importMeta": {
         "sourceRow": 10,
         "geocodeNote": "cache: https://www.google.com/maps/place/BodyBox+-+Integral+Fitness/@10.5002794,-66.8528621,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a595495c2e2d9:0x37b3b4d8b385a3ec!8m2!3d10.5002794!4d-66.8528621!16s%2Fg%2F11tj_d_rr3?entry=tts&g_ep=EgoyMDI2MDQwOC4wIPu8ASoASAFQAw%3D%3D&skid=aca53f97-c2c0-4f69-a3e6-e965ba03f0f6",
-        "importedAt": "2026-06-14T22:34:42.722Z"
+        "importedAt": "2026-06-14T22:49:16.595Z"
       },
       "completenessScore": 0.82,
       "geocode": {
@@ -859,7 +859,7 @@
       "importMeta": {
         "sourceRow": 11,
         "geocodeNote": "cache: https://www.google.com/maps/place/Image+Gym/@10.4915563,-66.8555676,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a58556147e619:0x5efaea2a5bdf25ce!8m2!3d10.4915563!4d-66.8555676!16s%2Fg%2F11bt_hljf5?entry=tts&g_ep=EgoyMDI2MDQwOC4wIPu8ASoASAFQAw%3D%3D&skid=6c947156-4993-4eae-99c0-3ba7ab34e937",
-        "importedAt": "2026-06-14T22:34:42.722Z"
+        "importedAt": "2026-06-14T22:49:16.595Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -960,7 +960,7 @@
       "importMeta": {
         "sourceRow": 12,
         "geocodeNote": "cache: https://www.google.com/maps/place/Planet+Fit+Gimnasio/@10.4970453,-66.8571804,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a5993b17a2f09:0x8457f523493595a8!8m2!3d10.4970453!4d-66.8571804!16s%2Fg%2F11f7r62q6s?entry=tts&g_ep=EgoyMDI2MDQwOC4wIPu8ASoASAFQAw%3D%3D&skid=00402cd6-35d1-4bee-ab9d-bd13b6cc82ae",
-        "importedAt": "2026-06-14T22:34:42.722Z"
+        "importedAt": "2026-06-14T22:49:16.595Z"
       },
       "completenessScore": 0.67,
       "geocode": {
@@ -1016,7 +1016,7 @@
       "importMeta": {
         "sourceRow": 13,
         "geocodeNote": "cache: https://www.google.com/maps/place/Aura+Fit+Center+-+Entrenamiento+Personalizado+y+Bienestar./@10.4939908,-66.8520115,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59dfe4e64429:0xedd849d3696abddf!8m2!3d10.4939908!4d-66.8520115!16s%2Fg%2F11ym_29ddh?entry=tts&g_ep=EgoyMDI2MDQxMi4wIPu8ASoASAFQAw%3D%3D&skid=11c5e1a7-09c4-431d-9d8e-43c016d55a3f",
-        "importedAt": "2026-06-14T22:34:42.722Z"
+        "importedAt": "2026-06-14T22:49:16.595Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -1081,7 +1081,7 @@
       "importMeta": {
         "sourceRow": 14,
         "geocodeNote": "cache: https://www.google.com/maps/place/Nautilus+Fitness+Center/@10.4847653,-66.8544359,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a585646bebb3d:0x66df10be48e15463!8m2!3d10.4847653!4d-66.8544359!16s%2Fg%2F11g8kv4b5z?entry=tts&g_ep=EgoyMDI2MDQxMi4wIPu8ASoASAFQAw%3D%3D&skid=80e5f001-f8d2-415f-ba3c-1d46c11f3a17",
-        "importedAt": "2026-06-14T22:34:42.722Z"
+        "importedAt": "2026-06-14T22:49:16.596Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -1168,7 +1168,7 @@
       "importMeta": {
         "sourceRow": 15,
         "geocodeNote": "cache: https://www.google.com/maps/place/Fitness+Factory+-+Caracas/@10.5025223,-66.8465744,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a592db835161b:0x5fd4b721b607d535!8m2!3d10.5025223!4d-66.8465744!16s%2Fg%2F11y10z57t4?entry=tts&g_ep=EgoyMDI2MDQxMi4wIPu8ASoASAFQAw%3D%3D&skid=2507322f-b99f-472f-868c-44535584eca6",
-        "importedAt": "2026-06-14T22:34:42.722Z"
+        "importedAt": "2026-06-14T22:49:16.596Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -1251,7 +1251,7 @@
       "importMeta": {
         "sourceRow": 16,
         "geocodeNote": "cache: Libertador, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.722Z"
+        "importedAt": "2026-06-14T22:49:16.596Z"
       },
       "completenessScore": 0.85,
       "geocode": {
@@ -1304,7 +1304,7 @@
       "importMeta": {
         "sourceRow": 17,
         "geocodeNote": "cache: Libertador, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.722Z"
+        "importedAt": "2026-06-14T22:49:16.596Z"
       },
       "completenessScore": 0.82,
       "geocode": {
@@ -1416,7 +1416,7 @@
       "importMeta": {
         "sourceRow": 18,
         "geocodeNote": "cache: Baruta, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.722Z"
+        "importedAt": "2026-06-14T22:49:16.596Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -1530,7 +1530,7 @@
       "importMeta": {
         "sourceRow": 19,
         "geocodeNote": "cache: Libertador, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.723Z"
+        "importedAt": "2026-06-14T22:49:16.596Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -1626,7 +1626,7 @@
       "importMeta": {
         "sourceRow": 20,
         "geocodeNote": "cache: Daniels Center Fitness, Av. Urdaneta, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.723Z"
+        "importedAt": "2026-06-14T22:49:16.596Z"
       },
       "completenessScore": 0.97,
       "geocode": {
@@ -1681,7 +1681,7 @@
       "importMeta": {
         "sourceRow": 21,
         "geocodeNote": "cache: Gimnasio Amo, Libertador, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.723Z"
+        "importedAt": "2026-06-14T22:49:16.596Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -1751,7 +1751,7 @@
       "importMeta": {
         "sourceRow": 22,
         "geocodeNote": "cache: https://www.google.com/maps/place/Activa+Fit,+Edificio+Fundaci%C3%B3n+Fondo+Andr%C3%A9s+Bello+Casa+del+Profesor+UCV,+Avenida+Bellas+Artes,+Caracas+1041,+Distrito+Capital/@10.4876378,-66.888399,15z/data=!4m6!3m5!1s0x8c2a59007bb9dce5:0x8c6c5d86305484cf!8m2!3d10.4876378!4d-66.888399!16s%2Fg%2F11xfqd_y5f?hl=es&g_ep=Eg1tbF8yMDI2MDQxNV8wIOC7DCoASAJQAg%3D%3D",
-        "importedAt": "2026-06-14T22:34:42.723Z"
+        "importedAt": "2026-06-14T22:49:16.596Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -1815,7 +1815,7 @@
       "importMeta": {
         "sourceRow": 23,
         "geocodeNote": "cache: https://www.google.com/maps/place/F4JR%2B76X+BALANCE,+C.+Nueva+York,+Caracas+1080,+Miranda/@10.4807406,-66.8954475,14z/data=!4m6!3m5!1s0x8c2a5900205d97c7:0xd140057d8b93cf66!8m2!3d10.4807406!4d-66.8593986!16s%2Fg%2F11yltzg3jz?g_ep=Eg1tbF8yMDI2MDQxNV8wIOC7DCoASAJQAg%3D%3D",
-        "importedAt": "2026-06-14T22:34:42.723Z"
+        "importedAt": "2026-06-14T22:49:16.596Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -1912,7 +1912,7 @@
       "importMeta": {
         "sourceRow": 24,
         "geocodeNote": "cache: Baruta, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.723Z"
+        "importedAt": "2026-06-14T22:49:16.596Z"
       },
       "completenessScore": 0.89,
       "geocode": {
@@ -1977,7 +1977,7 @@
       "importMeta": {
         "sourceRow": 25,
         "geocodeNote": "cache: https://www.google.com/maps?q=10.4870000,-66.8231000&entry=gps&shh=CAE&lucs=,94297699,100808504,94284499,94231188,94280568,47071704,94218641,94282134,94286869&g_ep=CAISEjI2LjE2LjAuODk4OTU0MjE1MBgAINeCAypSLDk0Mjk3Njk5LDEwMDgwODUwNCw5NDI4NDQ5OSw5NDIzMTE4OCw5NDI4MDU2OCw0NzA3MTcwNCw5NDIxODY0MSw5NDI4MjEzNCw5NDI4Njg2OUICVkU%3D&skid=e37298ae-612f-4bdd-952d-063e54c1a3ee&g_st=ic",
-        "importedAt": "2026-06-14T22:34:42.723Z"
+        "importedAt": "2026-06-14T22:49:16.596Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -2054,7 +2054,7 @@
       "importMeta": {
         "sourceRow": 26,
         "geocodeNote": "cache: Libertador, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.723Z"
+        "importedAt": "2026-06-14T22:49:16.596Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -2109,7 +2109,7 @@
       "importMeta": {
         "sourceRow": 27,
         "geocodeNote": "cache: Baruta, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.723Z"
+        "importedAt": "2026-06-14T22:49:16.596Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -2219,7 +2219,7 @@
       "importMeta": {
         "sourceRow": 28,
         "geocodeNote": "cache: Baruta, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.723Z"
+        "importedAt": "2026-06-14T22:49:16.597Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -2293,7 +2293,7 @@
       "importMeta": {
         "sourceRow": 29,
         "geocodeNote": "cache: Baruta, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.723Z"
+        "importedAt": "2026-06-14T22:49:16.597Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -2371,7 +2371,7 @@
       "importMeta": {
         "sourceRow": 30,
         "geocodeNote": "cache: https://www.google.com/maps/dir//Luxor+Fitness+Center,+Torre+Luxor,+C.+Par%C3%ADs,+Caracas+1060,+Miranda/@10.4660992,-66.5714688,13z/data=!4m8!4m7!1m0!1m5!1m1!1s0x8c2a5916314b1e31:0x75576e9ce00c39a3!2m2!1d-66.860192!2d10.4827005?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=68aaef13-0087-460e-99b6-b8a9e46a2aeb",
-        "importedAt": "2026-06-14T22:34:42.723Z"
+        "importedAt": "2026-06-14T22:49:16.597Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -2484,7 +2484,7 @@
       "importMeta": {
         "sourceRow": 31,
         "geocodeNote": "cache: https://www.google.com/maps/dir//San+Luis+Fitness+Center,+Calle+Comercio+Centro+Comercial+San+Luis+-+Carascas,+El+Cafetal+PLANTA+BAJA+LOCAL+D,+Caracas+1061,+Miranda/@10.4717528,-66.5483669,13z/data=!4m8!4m7!1m0!1m5!1m1!1s0x8c2a58688b32045f:0xbb1dcbd854dd1717!2m2!1d-66.8423498!2d10.4684092?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=3bc211b7-a7c1-4b73-9385-d2c0350015c7",
-        "importedAt": "2026-06-14T22:34:42.723Z"
+        "importedAt": "2026-06-14T22:49:16.597Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -2547,7 +2547,7 @@
       "importMeta": {
         "sourceRow": 32,
         "geocodeNote": "cache: https://www.google.com/maps/place/Energym+Fitness+Center/@10.4941515,-66.8749809,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59002ffba31b:0x348dd5c4274a7793!8m2!3d10.4941515!4d-66.8749809!16s%2Fg%2F11wp6_b3vp?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=4adfba41-ca94-4080-9d04-661851b3bf1d",
-        "importedAt": "2026-06-14T22:34:42.723Z"
+        "importedAt": "2026-06-14T22:49:16.597Z"
       },
       "completenessScore": 0.84,
       "geocode": {
@@ -2638,7 +2638,7 @@
       "importMeta": {
         "sourceRow": 33,
         "geocodeNote": "cache: https://www.google.com/maps/place/Galaxy+Gym/@10.5046373,-66.9585961,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a5e532148a211:0xe5ff0a5fdd0f95a!8m2!3d10.5046373!4d-66.9585961!16s%2Fg%2F11cjxvhj23?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=2d4c3023-c7c5-43fa-8be3-64c0c128a875",
-        "importedAt": "2026-06-14T22:34:42.724Z"
+        "importedAt": "2026-06-14T22:49:16.597Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -2696,7 +2696,7 @@
       "importMeta": {
         "sourceRow": 34,
         "geocodeNote": "cache: https://www.google.com/maps/dir//Gimnasio+Zona+8,+C5H6%2BC99,+Caracas+1083,+Miranda/@10.4717528,-66.5483669,13z/data=!4m8!4m7!1m0!1m5!1m1!1s0x8c2af7004db0b461:0x7da861ae5590c8cf!2m2!1d-66.839175!2d10.4286118?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=0cf54a24-88cc-4dec-9798-3f7f609f0130",
-        "importedAt": "2026-06-14T22:34:42.724Z"
+        "importedAt": "2026-06-14T22:49:16.597Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -2768,7 +2768,7 @@
       "importMeta": {
         "sourceRow": 35,
         "geocodeNote": "cache: https://www.google.com/maps/place/10%C2%B028'53.8%22N+66%C2%B052'48.5%22W/@10.481612,-66.880151,17z/data=!3m1!4b1!4m4!3m3!8m2!3d10.481612!4d-66.880151?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=6a9d15cf-e63f-4275-9175-2eca2f1e39ec",
-        "importedAt": "2026-06-14T22:34:42.724Z"
+        "importedAt": "2026-06-14T22:49:16.597Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -2854,7 +2854,7 @@
       "importMeta": {
         "sourceRow": 36,
         "geocodeNote": "cache: https://www.google.com/maps/place/Xpartanfitzone/@10.4963781,-66.8344502,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2a59b5d10ca0e1:0x5c4ba5fe50fddb4f!8m2!3d10.4963781!4d-66.8344502!16s%2Fg%2F11b_1m4xds?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=94608342-fba2-4aa4-bf0e-5041eb88ca3a",
-        "importedAt": "2026-06-14T22:34:42.724Z"
+        "importedAt": "2026-06-14T22:49:16.597Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -2943,7 +2943,7 @@
       "importMeta": {
         "sourceRow": 37,
         "geocodeNote": "cache: Libertador, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.724Z"
+        "importedAt": "2026-06-14T22:49:16.597Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -3010,7 +3010,7 @@
       "importMeta": {
         "sourceRow": 38,
         "geocodeNote": "cache: Sucre, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.724Z"
+        "importedAt": "2026-06-14T22:49:16.597Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -3103,7 +3103,7 @@
       "importMeta": {
         "sourceRow": 39,
         "geocodeNote": "cache: https://www.google.com/maps/dir//Elite+Team,+C5FG%2BJ3R,+Caracas+1083,+Miranda/@10.4717528,-66.5483669,13z/data=!4m8!4m7!1m0!1m5!1m1!1s0x8c2af75195f6c61f:0x9921979310e06b36!2m2!1d-66.8245293!2d10.4239849?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=9cca95e2-8189-4c61-a14f-e610418e789c",
-        "importedAt": "2026-06-14T22:34:42.724Z"
+        "importedAt": "2026-06-14T22:49:16.598Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -3204,7 +3204,7 @@
       "importMeta": {
         "sourceRow": 40,
         "geocodeNote": "cache: Guarenas, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.725Z"
+        "importedAt": "2026-06-14T22:49:16.598Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -3314,7 +3314,7 @@
       "importMeta": {
         "sourceRow": 41,
         "geocodeNote": "cache: Sucre, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.725Z"
+        "importedAt": "2026-06-14T22:49:16.598Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -3399,7 +3399,7 @@
       "importMeta": {
         "sourceRow": 42,
         "geocodeNote": "skipped (centroide de zona — revisar ubicación exacta)",
-        "importedAt": "2026-06-14T22:34:42.725Z"
+        "importedAt": "2026-06-14T22:49:16.598Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -3488,7 +3488,7 @@
       "importMeta": {
         "sourceRow": 43,
         "geocodeNote": "cache: https://www.google.com/maps/place/La+Trinidad+Athletic+Center/@10.4363467,-66.8603951,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2af633f2bfa367:0xb349ef5e5927543b!8m2!3d10.4363467!4d-66.8603951!16s%2Fg%2F1tjxgpv6?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=59b3f8db-9466-4af1-b86f-65ca1915c31e",
-        "importedAt": "2026-06-14T22:34:42.725Z"
+        "importedAt": "2026-06-14T22:49:16.599Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -3607,7 +3607,7 @@
       "importMeta": {
         "sourceRow": 44,
         "geocodeNote": "cache: https://www.google.com/maps/place/Esmeralda+Gym/@10.4717738,-66.5561967,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2bab004ee0d53d:0xd9977f59b8d824e4!8m2!3d10.4717738!4d-66.5561967!16s%2Fg%2F11vqm0p4nb?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=0f16dd7f-e0f6-4653-9400-99087a50b4c6",
-        "importedAt": "2026-06-14T22:34:42.725Z"
+        "importedAt": "2026-06-14T22:49:16.599Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -3689,7 +3689,7 @@
       "importMeta": {
         "sourceRow": 45,
         "geocodeNote": "cache: Guatire, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.725Z"
+        "importedAt": "2026-06-14T22:49:16.599Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -3783,7 +3783,7 @@
       "importMeta": {
         "sourceRow": 46,
         "geocodeNote": "cache: Guatire, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.725Z"
+        "importedAt": "2026-06-14T22:49:16.599Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -3854,7 +3854,7 @@
       "importMeta": {
         "sourceRow": 47,
         "geocodeNote": "cache: Guatire, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.725Z"
+        "importedAt": "2026-06-14T22:49:16.599Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -3932,7 +3932,7 @@
       "importMeta": {
         "sourceRow": 48,
         "geocodeNote": "cache: https://www.google.com/maps/place/Elephant+Gym+Gimnasio+Guatire/@10.4745002,-66.544156,17z/data=!3m1!4b1!4m6!3m5!1s0x8c2bab1c1b50f809:0xc0ee3c1cde2d502d!8m2!3d10.4745002!4d-66.544156!16s%2Fg%2F11r_q5vfjr?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=4979fffa-d412-403a-8091-383d82fc29fa",
-        "importedAt": "2026-06-14T22:34:42.725Z"
+        "importedAt": "2026-06-14T22:49:16.599Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -4012,7 +4012,7 @@
       "importMeta": {
         "sourceRow": 49,
         "geocodeNote": "cache: Guatire, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.599Z"
       },
       "completenessScore": 0.93,
       "geocode": {
@@ -4089,7 +4089,7 @@
       "importMeta": {
         "sourceRow": 50,
         "geocodeNote": "cache: https://www.google.com/maps/place/Xtreme+Fitness/@10.4714787,-66.5741202,888m/data=!3m2!1e3!4b1!4m6!3m5!1s0x8c2bab853897044f:0x375c1173b02c1f49!8m2!3d10.4714787!4d-66.5741202!16s%2Fg%2F11r_v7b47r?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.599Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -4206,7 +4206,7 @@
       "importMeta": {
         "sourceRow": 51,
         "geocodeNote": "cache: https://www.google.com/maps/place/Gimnasio+Buenaventura+C.A./@10.4655565,-66.575077,888m/data=!3m2!1e3!4b1!4m6!3m5!1s0x8c2baaf9450d19d7:0x3b9fb6cd62cc2871!8m2!3d10.4655565!4d-66.575077!16s%2Fg%2F11fxc0rzk3?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.599Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -4304,7 +4304,7 @@
       "importMeta": {
         "sourceRow": 52,
         "geocodeNote": "cache: https://www.google.com/maps/place/SWIITCH/@10.5069555,-66.8476222,1776m/data=!3m1!1e3!4m6!3m5!1s0x8c2a59003effa8c5:0x3cf4eaac7db77811!8m2!3d10.5065744!4d-66.8476437!16s%2Fg%2F11xch22t_q?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.599Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -4374,7 +4374,7 @@
       "importMeta": {
         "sourceRow": 53,
         "geocodeNote": "cache: https://www.google.com/maps/place/Centrum+Gym/@10.4723432,-66.960247,888m/data=!3m2!1e3!4b1!4m6!3m5!1s0x8c2a5f9a55a06497:0x779d4d97dbc719a4!8m2!3d10.4723432!4d-66.960247!16s%2Fg%2F11b6_fs207?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.599Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -4456,7 +4456,7 @@
       "importMeta": {
         "sourceRow": 54,
         "geocodeNote": "cache: https://www.google.com/maps/place/Iron+bodies+gym/@10.4849146,-66.9422401,888m/data=!3m2!1e3!4b1!4m6!3m5!1s0x8c2a5ff1f9a7616d:0x66147fa399879694!8m2!3d10.4849146!4d-66.9422401!16s%2Fg%2F11kqwy5hl2?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=7b75a3f5-d986-4ec9-ae16-0334d57975ae",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.599Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -4520,7 +4520,7 @@
       "importMeta": {
         "sourceRow": 55,
         "geocodeNote": "cache: https://www.google.com/maps/place/VIP+Fitness+Center/@10.4987612,-66.8491197,888m/data=!3m2!1e3!4b1!4m6!3m5!1s0x8c2a59aebbcf093b:0xc8225372afb15919!8m2!3d10.4987612!4d-66.8491197!16s%2Fg%2F11b90d56rq?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=bbb05dd5-f2f2-4d93-bf40-91fdee893d46",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.599Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -4642,7 +4642,7 @@
       "importMeta": {
         "sourceRow": 56,
         "geocodeNote": "cache: https://www.google.com/maps/place/ELEVATE+gym/@10.4824625,-66.860436,888m/data=!3m2!1e3!4b1!4m6!3m5!1s0x8c2a590016380a4d:0x548cf27b31c26002!8m2!3d10.4824625!4d-66.860436!16s%2Fg%2F11mk_l2d9f?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=1f3e05e2-5aa8-4928-9a99-aceb61dfe94f",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.599Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -4753,7 +4753,7 @@
       "importMeta": {
         "sourceRow": 57,
         "geocodeNote": "cache: https://www.google.com/maps/place/Tennis+Shop+Gym/@10.473752,-66.8942489,888m/data=!3m2!1e3!4b1!4m6!3m5!1s0x8c2a58b7cbba2acf:0xd250560af9828057!8m2!3d10.473752!4d-66.8942489!16s%2Fg%2F11bbrkxn4f?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=9b6588a1-0a7f-4125-a0ec-76315a56faa1",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.599Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -4853,7 +4853,7 @@
       "importMeta": {
         "sourceRow": 58,
         "geocodeNote": "cache: https://www.google.com/maps/place/Retraining+Studio+Caracas/@10.4829838,-66.8623754,888m/data=!3m2!1e3!4b1!4m6!3m5!1s0x8c2a58f0a8e8a425:0x6c1e65f3ae4e5389!8m2!3d10.4829838!4d-66.8623754!16s%2Fg%2F1tgcbk7w?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=fecd12ae-4ab4-48e3-b1a1-a037c1f28c0a",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.599Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -4961,7 +4961,7 @@
       "importMeta": {
         "sourceRow": 59,
         "geocodeNote": "cache: https://www.google.com/maps/place/Top+Training/@10.492761,-66.8290611,888m/data=!3m2!1e3!4b1!4m6!3m5!1s0x8c2a59cae02f18b9:0x5124f0c7cbbf2708!8m2!3d10.492761!4d-66.8290611!16s%2Fg%2F11b75m_yph?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=82b60a13-ec8b-4d56-b9d1-38d3587455bc",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.599Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -5043,7 +5043,7 @@
       "importMeta": {
         "sourceRow": 60,
         "geocodeNote": "cache: https://www.google.com/maps/place/CCS+GYM+BOLE%C3%8DTA/@10.4986005,-66.8227012,888m/data=!3m2!1e3!4b1!4m6!3m5!1s0x8c2a599c0bcef39b:0xec6f03cbe24596e8!8m2!3d10.4986005!4d-66.8227012!16s%2Fg%2F11x0nzx3_j?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=73d90e8c-e95e-4c9c-8953-c6ed47414f3a",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -5162,7 +5162,7 @@
       "importMeta": {
         "sourceRow": 61,
         "geocodeNote": "cache: Chacao, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -5282,7 +5282,7 @@
       "importMeta": {
         "sourceRow": 62,
         "geocodeNote": "cache: https://www.google.com/maps/place/Fit+Club/@10.4793125,-66.8599375,888m/data=!3m2!1e3!4b1!4m6!3m5!1s0x8c2a59beec1cc125:0x52625e53cf9e9c6c!8m2!3d10.4793125!4d-66.8599375!16s%2Fg%2F11ltj6m0fc?entry=tts&g_ep=EgoyMDI2MDQyOS4wIPu8ASoASAFQAw%3D%3D&skid=81665c5d-cba3-4974-a13a-73176f3672bf",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -5375,7 +5375,7 @@
       "importMeta": {
         "sourceRow": 63,
         "geocodeNote": "cache: Yoga caracas, Chacao, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -5435,7 +5435,7 @@
       "importMeta": {
         "sourceRow": 64,
         "geocodeNote": "cache: Chacao, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -5494,7 +5494,7 @@
       "importMeta": {
         "sourceRow": 65,
         "geocodeNote": "cache: https://www.google.com/maps/dir/THE+PLACE,+F5M3%2B6X2,+Calle+Sta.+Cruz,+Caracas+1061,+Miranda,+Venezuela/THE+PLACE,+F5M3%2B6X2,+Calle+Sta.+Cruz,+Caracas+1061,+Miranda,+Venezuela/@33.786671,-118.2990476,7z/data=!4m13!4m12!1m5!1m1!1s0x8c2a596b8235827b:0xd7af36e675a394a!2m2!1d-66.8451029!2d10.4830215!1m5!1m1!1s0x8c2a596b8235827b:0xd7af36e675a394a!2m2!1d-66.8451029!2d10.4830215?entry=tts&g_ep=EgoyMDI2MDUwNi4wIPu8ASoASAFQAw%3D%3D&skid=eb7bd2c9-600b-43c5-8f71-c2f27c6ae17e",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -5549,7 +5549,7 @@
       "importMeta": {
         "sourceRow": 66,
         "geocodeNote": "cache: https://www.google.com/maps/dir/Urban+Yoga+CCS,+En+el+medio+de+las+dos+torres.+Nivel,+Parque+Central,+Av.+Sur+21.+Entre+la+Av.+Bol%C3%ADvar+y+la+Av.+Lecuna.+Complejo+Urban%C3%ADstico,+Av.+Bol%C3%ADvar,+Caracas+1010,+Distrito+Capital,+Venezuela/Urban+Yoga+CCS,+En+el+medio+de+las+dos+torres.+Nivel,+Parque+Central,+Av.+Sur+21.+Entre+la+Av.+Bol%C3%ADvar+y+la+Av.+Lecuna.+Complejo+Urban%C3%ADstico,+Av.+Bol%C3%ADvar,+Caracas+1010,+Distrito+Capital,+Venezuela/@33.786671,-118.2990475,7z/data=!4m14!4m13!1m5!1m1!1s0x8c2a59cfc6e75255:0xbdd98176a5849cb6!2m2!1d-66.8992533!2d10.4991259!1m5!1m1!1s0x8c2a59cfc6e75255:0xbdd98176a5849cb6!2m2!1d-66.8992533!2d10.4991259!3e0?entry=tts&g_ep=EgoyMDI2MDUwNi4wIPu8ASoASAFQAw%3D%3D&skid=2622ca38-4fbc-4c04-b73e-c63c618fc749",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 0.86,
       "geocode": {
@@ -5610,7 +5610,7 @@
       "importMeta": {
         "sourceRow": 67,
         "geocodeNote": "cache: https://www.google.com/maps/dir//Nirvana+Ccs,+F45F%2BMWF,+Caracas+1080,+Miranda,+Venezuela/@33.786671,-118.2990476,7z/data=!4m8!4m7!1m0!1m5!1m1!1s0x8c2a59e628c72b85:0xed30fc488579144f!2m2!1d-66.8752014!2d10.4591983?entry=tts&g_ep=EgoyMDI2MDUwNi4wIPu8ASoASAFQAw%3D%3D&skid=c0c3a393-a58f-4238-9849-de9c137d04c4",
-        "importedAt": "2026-06-14T22:34:42.726Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 0.86,
       "geocode": {
@@ -5696,7 +5696,7 @@
       "importMeta": {
         "sourceRow": 68,
         "geocodeNote": "cache: https://www.google.com/maps/dir//Kpaz+Pilates+Studio,+y+la,+Edif.+VVZ,+Local+9,+Avenida+Sorocaima.+Urbanizaci%C3%B3n+El+Rosal+entre+la+avenida+Venezuela,+Av.+Tamanaco,+Caracas+1060,+Distrito+Capital,+Venezuela/@33.786671,-118.2990476,7z/data=!4m8!4m7!1m0!1m5!1m1!1s0x8c2a5939e2090277:0xf8328d05105eb67e!2m2!1d-66.8604735!2d10.4906732?entry=tts&g_ep=EgoyMDI2MDUwNi4wIPu8ASoASAFQAw%3D%3D&skid=26b0695b-dfee-479c-93cf-9a655e475010",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -5751,7 +5751,7 @@
       "importMeta": {
         "sourceRow": 69,
         "geocodeNote": "cache: Baruta, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -5808,7 +5808,7 @@
       "importMeta": {
         "sourceRow": 70,
         "geocodeNote": "cache: Baruta, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -5873,7 +5873,7 @@
       "importMeta": {
         "sourceRow": 71,
         "geocodeNote": "cache: Chacao, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -5972,7 +5972,7 @@
       "importMeta": {
         "sourceRow": 72,
         "geocodeNote": "cache: Chacao, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -6085,7 +6085,7 @@
       "importMeta": {
         "sourceRow": 73,
         "geocodeNote": "cache: Chacao, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 1,
       "geocode": {
@@ -6143,7 +6143,7 @@
       "importMeta": {
         "sourceRow": 74,
         "geocodeNote": "cache: Chacao, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 0.86,
       "geocode": {
@@ -6201,7 +6201,7 @@
       "importMeta": {
         "sourceRow": 75,
         "geocodeNote": "cache: Libertador, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 0.86,
       "geocode": {
@@ -6257,7 +6257,7 @@
       "importMeta": {
         "sourceRow": 76,
         "geocodeNote": "cache: Baruta, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -6313,7 +6313,7 @@
       "importMeta": {
         "sourceRow": 77,
         "geocodeNote": "cache: Libertador, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -6374,7 +6374,7 @@
       "importMeta": {
         "sourceRow": 78,
         "geocodeNote": "cache: Sucre, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -6432,7 +6432,7 @@
       "importMeta": {
         "sourceRow": 79,
         "geocodeNote": "cache: Chacao, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -6490,7 +6490,7 @@
       "importMeta": {
         "sourceRow": 80,
         "geocodeNote": "cache: Chacao, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.600Z"
       },
       "completenessScore": 0.86,
       "geocode": {
@@ -6546,7 +6546,7 @@
       "importMeta": {
         "sourceRow": 81,
         "geocodeNote": "cache: Chacao, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.601Z"
       },
       "completenessScore": 0.86,
       "geocode": {
@@ -6601,7 +6601,7 @@
       "importMeta": {
         "sourceRow": 82,
         "geocodeNote": "cache: Baruta, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.601Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -6706,7 +6706,7 @@
       "importMeta": {
         "sourceRow": 83,
         "geocodeNote": "cache: 10° 26' 48.4926\" N 66° 52' 14.525\" W",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.601Z"
       },
       "completenessScore": 0.87,
       "geocode": {
@@ -6774,7 +6774,7 @@
       "importMeta": {
         "sourceRow": 84,
         "geocodeNote": "cache: Baruta, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.601Z"
       },
       "completenessScore": 0.89,
       "geocode": {
@@ -6830,7 +6830,7 @@
       "importMeta": {
         "sourceRow": 85,
         "geocodeNote": "cache: Baruta, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.601Z"
       },
       "completenessScore": 0.86,
       "geocode": {
@@ -6887,7 +6887,7 @@
       "importMeta": {
         "sourceRow": 86,
         "geocodeNote": "cache: Baruta, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.601Z"
       },
       "completenessScore": 0.86,
       "geocode": {
@@ -6942,7 +6942,7 @@
       "importMeta": {
         "sourceRow": 87,
         "geocodeNote": "cache: Chacao, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.601Z"
       },
       "completenessScore": 0.74,
       "geocode": {
@@ -7001,7 +7001,7 @@
       "importMeta": {
         "sourceRow": 88,
         "geocodeNote": "cache: Baruta, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.601Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -7062,7 +7062,7 @@
       "importMeta": {
         "sourceRow": 89,
         "geocodeNote": "cache: Chacao, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.601Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -7120,7 +7120,7 @@
       "importMeta": {
         "sourceRow": 90,
         "geocodeNote": "cache: Baruta, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.601Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -7180,7 +7180,7 @@
       "importMeta": {
         "sourceRow": 91,
         "geocodeNote": "cache: Baruta, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.601Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -7235,7 +7235,7 @@
       "importMeta": {
         "sourceRow": 92,
         "geocodeNote": "cache: Chacao, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.727Z"
+        "importedAt": "2026-06-14T22:49:16.601Z"
       },
       "completenessScore": 0.74,
       "geocode": {
@@ -7296,7 +7296,7 @@
       "importMeta": {
         "sourceRow": 93,
         "geocodeNote": "cache: Libertador, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.728Z"
+        "importedAt": "2026-06-14T22:49:16.601Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -7353,7 +7353,7 @@
       "importMeta": {
         "sourceRow": 94,
         "geocodeNote": "cache: Galpon 7, Libertador, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.728Z"
+        "importedAt": "2026-06-14T22:49:16.601Z"
       },
       "completenessScore": 0.86,
       "geocode": {
@@ -7420,7 +7420,7 @@
       "importMeta": {
         "sourceRow": 95,
         "geocodeNote": "cache: Baruta, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.728Z"
+        "importedAt": "2026-06-14T22:49:16.601Z"
       },
       "completenessScore": 0.9,
       "geocode": {
@@ -7471,7 +7471,7 @@
       "importMeta": {
         "sourceRow": 96,
         "geocodeNote": "cache: Libertador, Caracas, Venezuela",
-        "importedAt": "2026-06-14T22:34:42.728Z"
+        "importedAt": "2026-06-14T22:49:16.601Z"
       },
       "completenessScore": 0.6,
       "geocode": {

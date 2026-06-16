@@ -91,6 +91,16 @@ Validar contra [`QUEGYM_BRAND_COPY_PLAN.md`](./QUEGYM_BRAND_COPY_PLAN.md) y refe
 - [ ] Desktop (≥ 1024px) y mobile (≤ 430px).
 - [ ] Sin desbordes horizontales ni CTAs solapados.
 
+## 6b) Menú móvil (header público)
+
+Validar en viewport ≤ 768px (`md:hidden`):
+
+- [ ] Botón ☰ abre drawer desde la derecha; overlay semitransparente detrás.
+- [ ] **Panel del menú opaco** (`bg-quegym-page`) — enlaces legibles en dark y light (no se ve el contenido de la página a través del menú).
+- [ ] Enlaces presentes: Explorar gimnasios, Comparar (con contador si aplica), Favoritos, ¿Eres partner?, Privacidad.
+- [ ] Cerrar con ✕, tap en overlay o tecla Esc; scroll del body bloqueado mientras está abierto.
+- [ ] `QueGymLogo` horizontal visible en cabecera del drawer.
+
 ## 7) Consistencia cross-screen
 
 - [ ] Misma gramática cromática entre `/`, `/buscar`, `/gyms/[slug]`, `/comparar`, `/favoritos`.
@@ -103,4 +113,4 @@ Validar contra [`QUEGYM_BRAND_COPY_PLAN.md`](./QUEGYM_BRAND_COPY_PLAN.md) y refe
 - [ ] Sin cambios de contrato/API/eventos por refactor visual.
 - [ ] Docs operativos actualizados si cambia criterio global de tema.
 
-*Última actualización: 2026-05-27 — dual-theme QueGym*
+*Última actualización: 2026-05-27 — dual-theme QueGym; menú móvil opaco (§6b)*

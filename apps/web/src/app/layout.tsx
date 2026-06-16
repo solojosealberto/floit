@@ -30,6 +30,7 @@ export const metadata: Metadata = {
     template: `%s · ${BRAND_NAME}`,
   },
   description: BRAND_META_DESCRIPTION,
+  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({
