@@ -28,10 +28,11 @@ export function GymGallery({ name, venueType, modalities, photoUrls = [] }: Prop
   if (photos.length === 1) {
     return (
       <div id="galeria" className="scroll-mt-24">
-        <img
+        <VenueImage
           src={photos[0]}
-          alt={`Foto principal de ${name}`}
-          className="h-44 w-full rounded-2xl bg-quegym-subtle object-cover md:h-56"
+          name={name}
+          modality={modality}
+          className="h-44 w-full rounded-2xl md:h-56"
         />
       </div>
     );
@@ -39,17 +40,19 @@ export function GymGallery({ name, venueType, modalities, photoUrls = [] }: Prop
 
   return (
     <div id="galeria" className="grid scroll-mt-24 gap-2 md:grid-cols-[2fr_1fr]">
-      <img
+      <VenueImage
         src={photos[0]}
-        alt={`Foto principal de ${name}`}
-        className="h-44 w-full rounded-2xl bg-quegym-subtle object-cover md:h-56"
+        name={name}
+        modality={modality}
+        className="h-44 w-full rounded-2xl md:h-56"
       />
       <div className="grid gap-2">
         {photos[1] ? (
-          <img
+          <VenueImage
             src={photos[1]}
-            alt={`Foto secundaria de ${name}`}
-            className="h-[108px] w-full rounded-2xl bg-quegym-subtle object-cover md:h-auto md:min-h-[108px]"
+            name={name}
+            modality={modality}
+            className="h-[108px] w-full rounded-2xl md:h-auto md:min-h-[108px]"
           />
         ) : null}
         {photos.length > 2 ? (

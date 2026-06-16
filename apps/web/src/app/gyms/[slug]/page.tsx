@@ -137,20 +137,12 @@ export default async function GymPage(props: Props) {
       <section className="lg:hidden">
         <div className="overflow-hidden rounded-3xl border border-quegym-border bg-quegym-elevated shadow-sm">
           <div id="m-galeria" className="relative h-56 scroll-mt-24">
-            {galleryPhotos[0] ? (
-              <img
-                src={galleryPhotos[0]}
-                alt={`Foto principal de ${venue.name}`}
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-            ) : (
-              <VenueImage
-                src={null}
-                name={venue.name}
-                modality={modalityList[0] ?? venue.venueType}
-                className="h-full w-full"
-              />
-            )}
+            <VenueImage
+              src={galleryPhotos[0] ?? null}
+              name={venue.name}
+              modality={modalityList[0] ?? venue.venueType}
+              className="absolute inset-0 h-full w-full"
+            />
             <Link
               href="/buscar"
               className="absolute left-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-quegym-elevated/90 text-sm text-quegym-primary shadow"

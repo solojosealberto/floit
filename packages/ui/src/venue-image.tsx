@@ -1,6 +1,7 @@
 "use client";
 
-import type { CSSProperties, ImgHTMLAttributes } from "react";
+import { useEffect, useState } from "react";
+import type { ImgHTMLAttributes } from "react";
 import { cn } from "./cn";
 import { venueInitials, venueModalityTint } from "./venue-image-utils";
 
@@ -18,19 +19,41 @@ export type VenueImageProps = Omit<
   decorative?: boolean;
 };
 
-function GymIcon({ className }: { className?: string }) {
+function VenueImagePlaceholder({
+  name,
+  className,
+}: {
+  name: string;
+  className?: string;
+}) {
+  const initials = venueInitials(name);
+
   return (
-    <svg
-      viewBox="0 0 24 24"
+    <div
+      className={cn(
+        "relative flex items-center justify-center overflow-hidden border border-[var(--qg-border)]/40 bg-[var(--qg-bg-subtle)]",
+        className,
+      )}
       aria-hidden
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
     >
-      <path d="M4 10h3v8H4zM17 10h3v8h-3z" strokeLinecap="round" />
-      <path d="M7 14h10M9 10V6h6v4" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 90% 80% at 50% 50%, var(--qg-highlight-soft), transparent 70%)",
+        }}
+      />
+      <div
+        className="absolute inset-0 opacity-40"
+        style={{
+          background:
+            "linear-gradient(180deg, color-mix(in srgb, var(--qg-bg-elevated) 30%, transparent), transparent 55%)",
+        }}
+      />
+      <span className="relative select-none text-base font-bold tracking-[0.14em] text-[var(--qg-highlight)] md:text-lg">
+        {initials}
+      </span>
+    </div>
   );
 }
 
@@ -45,59 +68,33 @@ export function VenueImage({
   ...imgProps
 }: VenueImageProps) {
   const hasPhoto = typeof src === "string" && src.length > 0;
-  const tint = venueModalityTint(modality, name);
-  const initials = venueInitials(name);
+  const [loadFailed, setLoadFailed] = useState(false);
 
-  if (hasPhoto) {
+  useEffect(() => {
+    setLoadFailed(false);
+  }, [src]);
+
+  if (!hasPhoto || loadFailed) {
     return (
-      <div
-        className={cn(
-          "relative overflow-hidden bg-[var(--qg-bg-subtle)]",
-          className,
-        )}
-      >
-        <img
-          {...imgProps}
-          src={src}
-          alt={decorative ? "" : name}
-          loading={loading}
-          className={cn("h-full w-full object-cover object-center", imageClassName)}
-        />
-      </div>
+      <VenueImagePlaceholder name={name} className={className} />
     );
   }
-
-  const fallbackStyle = {
-    "--venue-tint": tint,
-  } as CSSProperties;
 
   return (
     <div
       className={cn(
-        "relative flex items-center justify-center overflow-hidden bg-[var(--qg-bg-subtle)]",
+        "relative overflow-hidden bg-[var(--qg-bg-subtle)]",
         className,
       )}
-      style={fallbackStyle}
-      aria-hidden
     >
-      <div
-        className="absolute inset-0 opacity-[0.14]"
-        style={{ background: "var(--venue-tint)" }}
+      <img
+        {...imgProps}
+        src={src}
+        alt={decorative ? "" : name}
+        loading={loading}
+        className={cn("h-full w-full object-cover object-center", imageClassName)}
+        onError={() => setLoadFailed(true)}
       />
-      <div
-        className="absolute inset-0 opacity-[0.06]"
-        style={{
-          backgroundImage:
-            "linear-gradient(var(--qg-border) 1px, transparent 1px), linear-gradient(90deg, var(--qg-border) 1px, transparent 1px)",
-          backgroundSize: "12px 12px",
-        }}
-      />
-      <div className="relative flex flex-col items-center justify-center gap-1 text-[var(--qg-text-secondary)]">
-        <GymIcon className="h-7 w-7 opacity-50" />
-        <span className="text-lg font-bold tracking-wider text-[var(--qg-text-primary)]">
-          {initials}
-        </span>
-      </div>
     </div>
   );
 }
