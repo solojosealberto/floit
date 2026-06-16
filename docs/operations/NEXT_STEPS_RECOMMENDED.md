@@ -30,14 +30,12 @@ Plan: **`PRODUCTION_LAUNCH_PLAN.md`**. Infra staging: **`STAGING_DEPLOYMENT_STAT
 
 **Hecho (repo local, 2026-05-27 / 2026-06-15):** `QueGymLogo` + 3 PNG en `/brand/`; favicon estático; galería fotos partner; menú móvil opaco (`mobile-nav-drawer.tsx`); fix CI. **Sin commit en `main` remoto.**
 
-**Ahora (cierre formal beta staging):**
+**Ahora (post-deploy `ca4070b`):**
 
-1. **Commit + deploy** logotipo, assets `/brand/` y menú móvil opaco.
-2. **QA visual** — [`UI_VISUAL_QA_CHECKLIST.md`](../ux/UI_VISUAL_QA_CHECKLIST.md).
-3. **E2E manual** — `STAGING_EVIDENCE_SPRINT5.md` §2–3.
-4. **Renovar token M2M** si aplica: `pnpm auth0:m2m-token` → Vercel `ADMIN_OIDC_ACCESS_TOKEN`.
-5. **Tráfico A/B** → `pnpm sprint5:staging-gate` (PASS con datos actuales; revalidar antes de GO).
-6. **Firma GO/NO-GO** → cutover prod (§14 `PRODUCTION_LAUNCH_PLAN.md`).
+1. **QA visual** — [`UI_VISUAL_QA_CHECKLIST.md`](../ux/UI_VISUAL_QA_CHECKLIST.md) (§6b menú móvil).
+2. **E2E manual** — `STAGING_EVIDENCE_SPRINT5.md` §2–3.
+3. **Tráfico A/B + leads** → `pnpm sprint5:staging-gate` (umbrales PRD).
+4. **Firma GO/NO-GO** → cutover prod (§14 `PRODUCTION_LAUNCH_PLAN.md`).
 
 ## Prioridad 0b — Rebrand (estado)
 

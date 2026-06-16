@@ -11,6 +11,24 @@ Referencias:
 
 ---
 
+## Actualización 2026-05-27 — cierre beta (deploy `ca4070b`)
+
+| Campo | Valor |
+|---|---|
+| Commit | `ca4070b` — `QueGymLogo`, menú móvil opaco, galería partner, assets `/brand/` |
+| Deploy Vercel | **OK** — `staging.quegym.com` sirve PNG `/brand/quegym-horizontal-*.png` (HTTP 200) |
+| `pnpm verify` (local pre-push) | **PASS** |
+| `SMOKE_WEB_BASE=https://staging.quegym.com pnpm smoke:platform` | **PASS** (health 5/5, 95 venues, rutas web) |
+| `pnpm sprint5:staging-gate -- --kpi-relaxed` | **PASS** (preflight + KPI smoke) |
+| `pnpm sprint5:staging-gate` (umbrales PRD) | **FAIL** — `profile->lead` 0%, `partnerSlaRate` 0%, A/B sin volumen (7 checks) |
+| QA visual (`UI_VISUAL_QA_CHECKLIST.md`) | **Pendiente** firma humana (§6b menú móvil incluido) |
+| E2E manual §2–3 | **Parcial** — rutas HTTP 200; flujos lead/partner sin ejecutar en sesión |
+| **Decisión** | **GO técnico condicional** — plataforma desplegada y gates automatizados OK; bloqueadores producto: conversión KPI, E2E manual completo, firma ops |
+
+Rutas verificadas HTTP 200 post-deploy: `/`, `/buscar`, `/comparar`, `/favoritos`, `/partner/login`, `/admin/login`, `/privacidad`, `/icon.png`.
+
+---
+
 ## Actualización 2026-06-15
 
 | Campo | Valor |

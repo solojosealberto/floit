@@ -3,12 +3,14 @@
  * Gate anti-voseo para copy UI QueGym (Fase 7 / QUEGYM_BRAND_COPY_PLAN.md).
  * Escanea apps/web/src — falla si encuentra patrones rioplatenses en strings visibles.
  */
-import { execSync } from "node:child_process";
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SCAN_DIR = path.join(ROOT, "apps/web/src");
+
+const SOURCE_EXT = new Set([".ts", ".tsx", ".js", ".jsx", ".mdx"]);
 
 /** Patrones prohibidos (voseo / copy legacy). */
 const FORBIDDEN = [
@@ -43,23 +45,39 @@ const FORBIDDEN = [
   "sos administrador",
 ];
 
-function runRg(pattern) {
-  try {
-    const out = execSync(
-      `rg -n --no-heading -F "${pattern.replace(/"/g, '\\"')}" "${SCAN_DIR}"`,
-      { encoding: "utf8", stdio: ["pipe", "pipe", "pipe"] },
-    );
-    return out.trim();
-  } catch (err) {
-    if (err.status === 1) return "";
-    throw err;
+function walkFiles(dir, out = []) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      walkFiles(full, out);
+      continue;
+    }
+    if (SOURCE_EXT.has(path.extname(entry.name))) {
+      out.push(full);
+    }
   }
+  return out;
 }
 
+function scanPattern(pattern, files) {
+  const hits = [];
+  for (const file of files) {
+    const lines = fs.readFileSync(file, "utf8").split("\n");
+    lines.forEach((line, index) => {
+      if (line.includes(pattern)) {
+        const rel = path.relative(ROOT, file);
+        hits.push(`${rel}:${index + 1}:${line.trim()}`);
+      }
+    });
+  }
+  return hits.join("\n");
+}
+
+const files = walkFiles(SCAN_DIR);
 const violations = [];
 
 for (const pattern of FORBIDDEN) {
-  const hits = runRg(pattern);
+  const hits = scanPattern(pattern, files);
   if (hits) {
     violations.push({ pattern, hits });
   }

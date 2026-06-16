@@ -4,7 +4,7 @@ Documento corto para retomar trabajo sin releer todo el historial.
 
 ## 1) Estado actual en una frase
 
-**Repo local:** Sprint UX-A/B/C **cerrado**; logotipo horizontal PNG light/dark + menú móvil opaco en repo (sin commit en `main`). **Staging:** deploy UX OK (`d684837`+); import 95 venues OK; gates Sprint 5 **PASS** (2026-06-15). Pendiente: **commit + deploy** cambios locales, **QA visual**, E2E manual, firma GO/NO-GO producto/ops.
+**Repo local / remoto:** commit **`ca4070b`** en `main` — `QueGymLogo`, menú móvil opaco, galería partner, assets `/brand/`. **Staging:** deploy Vercel OK; gates Sprint 5 **PASS** con `--kpi-relaxed`; KPI PRD strict **FAIL** (conversión). Pendiente: **QA visual** §6b, E2E manual §2–3, firma GO/NO-GO producto/ops.
 
 ## 2) Prioridad de arranque (orden estricto)
 
@@ -17,20 +17,18 @@ Documento corto para retomar trabajo sin releer todo el historial.
 
 ## 3) Objetivo recomendado para la próxima sesión
 
-**Cierre formal beta staging:**
+**Cierre formal beta staging (post-deploy `ca4070b`):**
 
-1. **Commit + deploy** logotipo QueGym (`QueGymLogo` + assets `/brand/quegym-horizontal-*.png`) y fix menú móvil opaco.
-2. **QA manual** — [`docs/ux/UI_VISUAL_QA_CHECKLIST.md`](../ux/UI_VISUAL_QA_CHECKLIST.md):
-   - Menú móvil (☰): panel opaco, enlaces legibles en dark/light (§6b).
-   - Home: barra búsqueda — focus sigue curvas del contenedor (§4).
-   - `/buscar`: filtros, skeletons, barra comparador (móvil + desktop).
-   - `/comparar`: grilla sticky, 2–3 centros, CTAs WhatsApp/ficha.
-   - Ficha gym, favoritos, dual-theme.
-4. **E2E manual** — §2–3 de `STAGING_EVIDENCE_SPRINT5.md`.
-5. **Tráfico CTA** A/B → `pnpm sprint5:staging-gate` (sin `--kpi-relaxed` cuando haya volumen).
-6. **Firma GO/NO-GO** producto/ops → cutover prod según `PRODUCTION_LAUNCH_PLAN.md`.
+1. **QA visual** — [`docs/ux/UI_VISUAL_QA_CHECKLIST.md`](../ux/UI_VISUAL_QA_CHECKLIST.md) (§6b menú móvil, §4 focus, comparador).
+2. **E2E manual** — §2–3 de `STAGING_EVIDENCE_SPRINT5.md` (lead formulario, partner leads, analytics).
+3. **Tráfico CTA** A/B → generar leads reales en staging → `pnpm sprint5:staging-gate` (sin `--kpi-relaxed`).
+4. **Firma GO/NO-GO** producto/ops → cutover prod según `PRODUCTION_LAUNCH_PLAN.md`.
 
 **Hecho en repo (no repetir):**
+
+- ~~Commit + deploy `ca4070b`~~ (2026-05-27)
+- ~~`pnpm verify` + `smoke:platform` staging~~ (PASS)
+- ~~`pnpm sprint5:staging-gate -- --kpi-relaxed`~~ (PASS)
 
 - ~~Rebrand Fase 2 UI + copy~~ (`pnpm copy:verify`)
 - ~~Sprint UX-A/B/C~~ — ver `sprints.md` § Rebrand Fase 2 / Sprint UX

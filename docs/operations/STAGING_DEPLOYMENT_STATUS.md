@@ -6,10 +6,10 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 
 **Catalog Railway:** https://floitcatalog-service-production.up.railway.app — `venues: 95`.  
 **Search Railway:** https://floitsearch-service-production.up.railway.app — `/v1/search` OK (`meta.total: 95`) tras `CATALOG_SERVICE_URL` → catalog.  
-**Vercel staging:** UX v0 rebrand desplegado (`d684837`, 2026-06-14) — copy sin voseo, tokens Mint, logotipo QueGym, comparador; `/buscar`, fichas y `/api/compare/search` OK.  
+**Vercel staging:** deploy cierre beta **`ca4070b`** (2026-05-27) — `QueGymLogo`, menú móvil opaco, 3 PNG `/brand/`, galería fotos partner; `/buscar`, fichas y `/api/compare/search` OK.  
 **URLs leads / partner / analytics (Railway):** registradas 2026-05-26 — **salud HTTP OK** (`/health` 200 en los tres).  
 **Auth admin staging:** M2M Auth0 + `ADMIN_OIDC_ACCESS_TOKEN` en Vercel Preview; fix issuer `00fd9f9`. `/admin/leads` operativo.  
-**Pendiente:** QA visual manual (`UI_VISUAL_QA_CHECKLIST.md`), E2E manual, tráfico A/B para KPI gate, firma GO/NO-GO producto/ops.
+**Pendiente:** QA visual manual (`UI_VISUAL_QA_CHECKLIST.md` §6b), E2E manual §2–3 completo, KPI gate PRD sin `--kpi-relaxed`, firma GO/NO-GO producto/ops.
 
 ---
 
@@ -18,7 +18,7 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | Fase | Estado | Notas |
 |------|--------|-------|
 | Paso 2 — Cuentas e infra (§0–§5) | **Completado** | Neon, Railway, Auth0, Vercel, DNS `staging` |
-| Paso 3 — Datos y validación | **En curso (casi cerrado)** | Import + health 5/5 + smoke OK; gates preflight PASS; KPI A/B + E2E manual pendientes |
+| Paso 3 — Datos y validación | **Casi cerrado** | Deploy `ca4070b` OK; smoke + gates relaxed PASS; KPI PRD y E2E manual pendientes |
 | Paso 4 — Producción `www` | **Pendiente** | Tras GO/NO-GO staging |
 
 ---
@@ -36,10 +36,10 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | 6 | Variables Vercel + Railway | ✅ | Vault; no en git |
 | 7 | Import catálogo Neon staging | ✅ | 2026-06-14 — **95 updated** (`pnpm venues:import:staging --update`); audit UI 100% descripción limpia |
 | 7d | Deploy web UX v0 en Vercel | ✅ | 2026-06-14 — commits `12a0870`/`b23fadb`/`d684837`; Vercel Production **success**; staging sirve rebrand Mint |
-| 7e | Logotipo QueGym + menú móvil opaco | ☐ | En repo local (2026-05-27 / 2026-06-15); pendiente commit + deploy Vercel |
+| 7e | Logotipo QueGym + menú móvil opaco | ✅ | 2026-05-27 — commit `ca4070b`; assets `/brand/*.png` HTTP 200 en staging |
 | 7b | Fix crash partner Railway (`express`) | ✅ | `services/partner/package.json` (commit `08633b0`) |
 | 7c | Fix TypeORM Postgres (`datetime` → `timestamptz`) | ✅ | 8 entidades partner + helper `typeorm-column-types.ts`; leads alineado; Railway PR #1 absorbido en `main` |
-| 8 | Smoke + evidencias Sprint 4/5 | ☐ | `smoke:platform` OK; gates **PASS** (2026-06-15); QA visual + E2E manual + firma GO pendientes |
+| 8 | Smoke + evidencias Sprint 4/5 | ☐ | `smoke:platform` + `sprint5:staging-gate --kpi-relaxed` **PASS** (2026-05-27); KPI PRD strict FAIL; QA visual + E2E manual + firma GO pendientes |
 | 8b | Auth M2M + fix issuer Auth0 | ✅ | `00fd9f9`; `pnpm auth0:m2m-token`; Vercel `ADMIN_OIDC_ACCESS_TOKEN` |
 | 9 | Dominio prod `www.quegym.com` | ☐ | Post GO |
 

@@ -174,7 +174,7 @@ Notas operativas recientes de discovery/comparación (US-2.x):
 | Capacidad | Estado staging | Notas |
 |-----------|----------------|-------|
 | Discovery (US-1.x) | `Completado` | 95 venues en Neon; search+catalog Railway; Vercel Preview |
-| Logotipo header/footer/login | `En curso` | Header, footer, login admin/partner, sidebar admin; pendiente deploy Vercel |
+| Logotipo header/footer/login | `Completado` | Deploy `ca4070b` en staging; `QueGymLogo` + `/brand/*.png` |
 | Ficha / comparar (US-2.x) | `Completado` | `/gyms/*`, `/api/compare/search` verificados en staging |
 | Leads públicos (US-3.1) | `Completado` (infra staging) | `leads-service` Railway `/health` 200; admin API con M2M |
 | Partner / admin ops (US-4.x, 5.x) | `Parcial` | `/admin/leads` operativo (M2M + `00fd9f9`); E2E manual partner/admin pendiente |
@@ -223,7 +223,7 @@ Evidencia: `STAGING_EVIDENCE_SPRINT5.md`, `STAGING_DEPLOYMENT_STATUS.md`, `STAGI
 | Pieza | Ruta | Notas |
 |-------|------|--------|
 | Componente | `quegym-logo.tsx` | Variantes horizontal/symbol; swap light/dark vía `.qg-logo-theme-*` |
-| Assets | `brand-assets.ts`, `/brand/*.png` | 3 PNG; pendiente commit + deploy Vercel |
+| Assets | `brand-assets.ts`, `/brand/*.png` | Deploy staging `ca4070b` |
 
 **Focus formularios (polish UX-C):**
 
