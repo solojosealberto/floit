@@ -211,6 +211,10 @@ Evidencia: `STAGING_EVIDENCE_SPRINT5.md`, `STAGING_DEPLOYMENT_STATUS.md`, `STAGI
 | Grilla comparación | `compare-grid.tsx` | Sticky labels + headers; scroll H/V en móvil |
 | Cliente `/comparar` | `comparar/comparar-client.tsx` | Header móvil «Comparador · N centros»; botón dashed añadir |
 
+| Pieza | Ruta | Notas |
+|-------|------|--------|
+| Imagen + placeholder | `packages/ui/src/venue-image.tsx` | Siglas centradas; `onError` → placeholder; tokens `--qg-*` (`ff98be2`) |
+
 **Menú móvil (UX-V0-401):**
 
 | Pieza | Ruta | Notas |

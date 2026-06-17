@@ -11,6 +11,19 @@ Referencias:
 
 ---
 
+## Actualización 2026-05-27 — HEAD `ff98be2`
+
+| Campo | Valor |
+|---|---|
+| Commit | `ff98be2` — placeholder `VenueImage` (siglas + paleta QueGym, `onError`) |
+| `pnpm verify` (local) | **PASS** |
+| `smoke:platform` (Railway + staging web) | **PASS** (health 5/5, 95 venues) |
+| `pnpm sprint5:staging-gate -- --kpi-relaxed` | **PASS** (190 eventos analytics) |
+| CI GitHub (`build`) | **FAIL** en `ff98be2` — `governance-docs-guard` (docs estado sin actualizar en push); job `e2e-services` también falla (arranque web en CI) |
+| Working tree local | `quegym-symbol-source.png` modificado (~1.4 MB vs ~47 KB en git) — **no commitear** sin revisión |
+
+---
+
 ## Actualización 2026-05-27 — cierre beta (deploy `ca4070b`)
 
 | Campo | Valor |

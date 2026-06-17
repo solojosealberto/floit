@@ -4,7 +4,7 @@ Documento corto para retomar trabajo sin releer todo el historial.
 
 ## 1) Estado actual en una frase
 
-**Repo local / remoto:** commits **`ca4070b`** + **`27409e1`** en `main` — `QueGymLogo`, menú móvil opaco, galería partner, evidencia cierre beta. **Staging:** deploy Vercel OK; gates Sprint 5 **PASS** con `--kpi-relaxed`; KPI PRD strict **FAIL** (conversión). Pendiente: **QA visual** §6b, E2E manual §2–3, firma GO/NO-GO producto/ops.
+**Repo local / remoto:** HEAD **`ff98be2`** en `main` (sincronizado con `origin`). Incluye cierre beta (`ca4070b`), placeholder `VenueImage` con siglas (`ff98be2`). **Staging:** https://staging.quegym.com OK; gates Sprint 5 **PASS** con `--kpi-relaxed` (revalidado 2026-05-27). KPI PRD strict **FAIL** (conversión). Pendiente: **QA visual** §6b, E2E manual §2–3, firma GO/NO-GO producto/ops.
 
 ## 2) Prioridad de arranque (orden estricto)
 
@@ -35,7 +35,7 @@ Documento corto para retomar trabajo sin releer todo el historial.
 - ~~Menú móvil opaco (portal + `bg-quegym-page`)~~ (2026-05-27)
 - ~~`QueGymLogo` + assets `/brand/` (3 PNG) + favicon estático~~ (2026-06-15, local)
 - ~~Galería fotos partner cableada~~ (`partner-panel-client.tsx`)
-- ~~Fix CI (`governance-docs-guard`, `fetch-depth: 0`)~~
+- ~~Placeholder `VenueImage` (siglas + paleta `--qg-*`, `onError`)~~ (`ff98be2`)
 
 Vault local (gitignored): `docs/env/staging.local` — copiar desde `docs/env/staging.local.example`.
 

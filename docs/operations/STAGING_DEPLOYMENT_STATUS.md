@@ -6,7 +6,7 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 
 **Catalog Railway:** https://floitcatalog-service-production.up.railway.app — `venues: 95`.  
 **Search Railway:** https://floitsearch-service-production.up.railway.app — `/v1/search` OK (`meta.total: 95`) tras `CATALOG_SERVICE_URL` → catalog.  
-**Vercel staging:** deploy cierre beta **`ca4070b`** (2026-05-27) — `QueGymLogo`, menú móvil opaco, 3 PNG `/brand/`, galería fotos partner; `/buscar`, fichas y `/api/compare/search` OK.  
+**Vercel staging:** deploy **`ff98be2`** (2026-05-27) — UX beta + placeholder imágenes; ver commits `ca4070b`–`ff98be2`.  
 **URLs leads / partner / analytics (Railway):** registradas 2026-05-26 — **salud HTTP OK** (`/health` 200 en los tres).  
 **Auth admin staging:** M2M Auth0 + `ADMIN_OIDC_ACCESS_TOKEN` en Vercel Preview; fix issuer `00fd9f9`. `/admin/leads` operativo.  
 **Pendiente:** QA visual manual (`UI_VISUAL_QA_CHECKLIST.md` §6b), E2E manual §2–3 completo, KPI gate PRD sin `--kpi-relaxed`, firma GO/NO-GO producto/ops.
@@ -36,7 +36,8 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | 6 | Variables Vercel + Railway | ✅ | Vault; no en git |
 | 7 | Import catálogo Neon staging | ✅ | 2026-06-14 — **95 updated** (`pnpm venues:import:staging --update`); audit UI 100% descripción limpia |
 | 7d | Deploy web UX v0 en Vercel | ✅ | 2026-06-14 — commits `12a0870`/`b23fadb`/`d684837`; Vercel Production **success**; staging sirve rebrand Mint |
-| 7e | Logotipo QueGym + menú móvil opaco | ✅ | 2026-05-27 — commit `ca4070b`; assets `/brand/*.png` HTTP 200 en staging |
+| 7e | Logotipo QueGym + menú móvil opaco | ✅ | `ca4070b`; assets `/brand/*.png` HTTP 200 |
+| 7f | Placeholder imágenes venue (`VenueImage`) | ✅ | `ff98be2` — siglas + tokens `--qg-*`; deploy Vercel |
 | 7b | Fix crash partner Railway (`express`) | ✅ | `services/partner/package.json` (commit `08633b0`) |
 | 7c | Fix TypeORM Postgres (`datetime` → `timestamptz`) | ✅ | 8 entidades partner + helper `typeorm-column-types.ts`; leads alineado; Railway PR #1 absorbido en `main` |
 | 8 | Smoke + evidencias Sprint 4/5 | ☐ | `smoke:platform` + `sprint5:staging-gate --kpi-relaxed` **PASS** (2026-05-27); KPI PRD strict FAIL; QA visual + E2E manual + firma GO pendientes |

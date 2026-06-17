@@ -448,7 +448,8 @@ Plan: **`docs/ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`**, estado en **`docs/op
   - **Pipeline:** `pnpm venues:normalize` + `pnpm venues:audit:ui` — 95 venues, **100% descripción limpia** en JSON, 51.6% listos UI (≥0.55).
   - **Componentes clave:** `packages/ui/src/venue-image.tsx`, `venue-card-grid.tsx`, `compare-active-bar.tsx`, `compare-grid.tsx`, `discovery-filter-link.tsx`, `buscar/loading.tsx`, `globals.css` (`.qg-field`, `.qg-input`).
   - **Pendiente:** QA visual staging; spike UX-V0-801 opcional.
-  - **Deploy staging (2026-05-27):** commit `ca4070b` → Vercel; assets `/brand/*.png` HTTP 200; menú móvil opaco en producción staging.
+  - **VenueImage placeholder (2026-05-27):** siglas del centro en Mint (`--qg-highlight`), fondo `--qg-bg-subtle` / `--qg-highlight-soft`; sin icono roto del navegador (`ff98be2`).
+  - **Deploy staging (2026-05-27):** commits `ca4070b`–`ff98be2` → Vercel; assets `/brand/*.png` HTTP 200.
   - **Logotipo (2026-06-15):** assets reducidos a 3 PNG en `/brand/`; `QueGymLogo` en header, drawer, footer, login admin/partner y sidebar admin; favicon estático (`icon.png` / `apple-icon.png`) desde símbolo.
   - **Menú móvil (2026-05-27):** drawer con fondo opaco y `createPortal` a `body` — legibilidad de enlaces (Explorar, Comparar, Favoritos, Partner, Privacidad) en viewport ≤ md.
   - **Partner panel fotos:** galería con eliminar, reordenar, portada, copiar enlace y vista previa OG cableados en `partner-panel-client.tsx`.
