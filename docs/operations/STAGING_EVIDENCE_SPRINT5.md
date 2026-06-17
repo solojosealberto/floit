@@ -11,6 +11,19 @@ Referencias:
 
 ---
 
+## Actualización 2026-05-27 — QA visual, E2E lead y tráfico KPI
+
+| Campo | Valor |
+|---|---|
+| QA visual (`UI_VISUAL_QA_CHECKLIST.md`) | **PASS** — firma producto/ops (2026-05-27) |
+| E2E lead staging | **PASS** — `POST /api/leads` → `201`; lead `5359a096-…` visible en `GET /v1/admin/leads` (M2M) |
+| `pnpm staging:generate-traffic` | **OK** — 257+ eventos analytics; 9 leads BFF; 9 `contacted` (SLA) |
+| `pnpm sprint5:staging-gate` (PRD) | **16/17 PASS** — único FAIL: `ab stable days` (1/7); requiere `ANALYTICS_ALLOW_BACKDATE=true` en Railway analytics + redeploy + re-seed, o 7 días calendario |
+| Métricas post-tráfico | `profile→lead` 12.77%, `partnerSlaRate` 90%, A/B assignments ≥30, submits ≥3, uplift trial/whatsapp OK |
+| CI `e2e-services` | Fix: `next dev --turbopack -p 3050` (sin `-- --port`) |
+
+---
+
 ## Actualización 2026-05-27 — HEAD `ff98be2`
 
 | Campo | Valor |

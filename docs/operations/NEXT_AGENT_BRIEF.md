@@ -4,7 +4,7 @@ Documento corto para retomar trabajo sin releer todo el historial.
 
 ## 1) Estado actual en una frase
 
-**Repo local / remoto:** HEAD **`ff98be2`** en `main` (sincronizado con `origin`). Incluye cierre beta (`ca4070b`), placeholder `VenueImage` con siglas (`ff98be2`). **Staging:** https://staging.quegym.com OK; gates Sprint 5 **PASS** con `--kpi-relaxed` (revalidado 2026-05-27). KPI PRD strict **FAIL** (conversión). Pendiente: **QA visual** §6b, E2E manual §2–3, firma GO/NO-GO producto/ops.
+**Repo / staging:** HEAD `14fb270`+; QA visual **PASS**; E2E lead **PASS**; KPI PRD **16/17** (solo `stable days` 7/7 pendiente). Pendiente: firma GO/NO-GO ops.
 
 ## 2) Prioridad de arranque (orden estricto)
 
@@ -17,18 +17,17 @@ Documento corto para retomar trabajo sin releer todo el historial.
 
 ## 3) Objetivo recomendado para la próxima sesión
 
-**Cierre formal beta staging (post-deploy `ca4070b`):**
+**Cierre beta staging:**
 
-1. **QA visual** — [`docs/ux/UI_VISUAL_QA_CHECKLIST.md`](../ux/UI_VISUAL_QA_CHECKLIST.md) (§6b menú móvil, §4 focus, comparador).
-2. **E2E manual** — §2–3 de `STAGING_EVIDENCE_SPRINT5.md` (lead formulario, partner leads, analytics).
-3. **Tráfico CTA** A/B → generar leads reales en staging → `pnpm sprint5:staging-gate` (sin `--kpi-relaxed`).
-4. **Firma GO/NO-GO** producto/ops → cutover prod según `PRODUCTION_LAUNCH_PLAN.md`.
+1. Activar `ANALYTICS_ALLOW_BACKDATE=true` en Railway **analytics** → redeploy → `pnpm staging:generate-traffic` → `pnpm sprint5:staging-gate` (PRD 17/17).
+2. **Firma GO/NO-GO** producto/ops → cutover prod (`PRODUCTION_LAUNCH_PLAN.md`).
 
-**Hecho en repo (no repetir):**
+**Hecho (no repetir):**
 
-- ~~Commit + deploy `ca4070b`~~ (2026-05-27)
-- ~~`pnpm verify` + `smoke:platform` staging~~ (PASS)
-- ~~`pnpm sprint5:staging-gate -- --kpi-relaxed`~~ (PASS)
+- ~~QA visual staging~~ (PASS 2026-05-27)
+- ~~E2E lead + admin/leads~~ (PASS)
+- ~~`pnpm staging:generate-traffic`~~ (KPI 16/17)
+- ~~Fix CI e2e-services~~ (`next dev -p 3050`)
 
 - ~~Rebrand Fase 2 UI + copy~~ (`pnpm copy:verify`)
 - ~~Sprint UX-A/B/C~~ — ver `sprints.md` § Rebrand Fase 2 / Sprint UX

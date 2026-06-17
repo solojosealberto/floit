@@ -9,7 +9,7 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 **Vercel staging:** deploy **`ff98be2`** (2026-05-27) — UX beta + placeholder imágenes; ver commits `ca4070b`–`ff98be2`.  
 **URLs leads / partner / analytics (Railway):** registradas 2026-05-26 — **salud HTTP OK** (`/health` 200 en los tres).  
 **Auth admin staging:** M2M Auth0 + `ADMIN_OIDC_ACCESS_TOKEN` en Vercel Preview; fix issuer `00fd9f9`. `/admin/leads` operativo.  
-**Pendiente:** QA visual manual (`UI_VISUAL_QA_CHECKLIST.md` §6b), E2E manual §2–3 completo, KPI gate PRD sin `--kpi-relaxed`, firma GO/NO-GO producto/ops.
+**Pendiente:** KPI `ab stable days` (7/7); firma GO/NO-GO producto/ops.
 
 ---
 
@@ -40,7 +40,7 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | 7f | Placeholder imágenes venue (`VenueImage`) | ✅ | `ff98be2` — siglas + tokens `--qg-*`; deploy Vercel |
 | 7b | Fix crash partner Railway (`express`) | ✅ | `services/partner/package.json` (commit `08633b0`) |
 | 7c | Fix TypeORM Postgres (`datetime` → `timestamptz`) | ✅ | 8 entidades partner + helper `typeorm-column-types.ts`; leads alineado; Railway PR #1 absorbido en `main` |
-| 8 | Smoke + evidencias Sprint 4/5 | ☐ | `smoke:platform` + `sprint5:staging-gate --kpi-relaxed` **PASS** (2026-05-27); KPI PRD strict FAIL; QA visual + E2E manual + firma GO pendientes |
+| 8 | Smoke + evidencias Sprint 4/5 | ☐ | Preflight + KPI PRD **16/17**; stable days 7/7 pendiente (`ANALYTICS_ALLOW_BACKDATE` o calendario) |
 | 8b | Auth M2M + fix issuer Auth0 | ✅ | `00fd9f9`; `pnpm auth0:m2m-token`; Vercel `ADMIN_OIDC_ACCESS_TOKEN` |
 | 9 | Dominio prod `www.quegym.com` | ☐ | Post GO |
 

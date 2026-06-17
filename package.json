@@ -34,6 +34,7 @@
     "sprint5:kpi-gate": "node scripts/sprint5-kpi-gate.mjs",
     "auth0:m2m-token": "node scripts/obtain-auth0-m2m-token.mjs",
     "sprint5:staging-gate": "node scripts/sprint5-staging-gate.mjs",
+    "staging:generate-traffic": "node scripts/staging-generate-traffic.mjs",
     "lint": "pnpm -r run lint",
     "typecheck": "pnpm -r run typecheck",
     "verify": "pnpm run lint && pnpm run typecheck && pnpm run build",

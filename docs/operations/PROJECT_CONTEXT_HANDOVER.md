@@ -236,7 +236,9 @@ Antes de implementar nuevos cambios:
 - **Completado (2026-05-27):** menú móvil (`mobile-nav-drawer.tsx`) — panel opaco (`bg-quegym-page`), portal a `document.body` y `z-[1300]` (evita transparencia por `backdrop-blur` del header).
 - **Completado (2026-05-27):** `VenueImage` — placeholder con siglas centradas y tokens `--qg-*`; fallback en error de carga (`onError`); galerías ficha usan `VenueImage` (`ff98be2`).
 - **Completado (2026-05-27):** cierre beta técnico — commit/deploy `ca4070b`; `smoke:platform` + `sprint5:staging-gate --kpi-relaxed` **PASS** en staging (revalidado HEAD `ff98be2`).
-- **Pendiente:** QA visual/copy en staging (`UI_VISUAL_QA_CHECKLIST.md` §2b, §4, §6b, comparador móvil); E2E manual §2–3; KPI gate PRD (sin relaxed); tráfico real A/B; firma GO/NO-GO producto/ops.
+- **Completado (2026-05-27):** QA visual staging **PASS** (firma producto/ops).
+- **Completado (2026-05-27):** E2E lead staging — `POST /api/leads` + verificación `GET /v1/admin/leads` (10 leads en BD).
+- **Completado (2026-05-27):** `pnpm staging:generate-traffic` — KPI PRD **16/17** (`stable days` pendiente).
 - **Identificadores técnicos legacy** sin cambio (`@floit/*`, cookies, `floit_verified`, eventos) — Fase 3 planificada.
 - **Sprint UI (Sprint 11) cerrado** (mayo 2026): páginas P1/P2 del plan en `sprints.md` (`/partner/planes`, `/partner/fotos`, `/admin/venues`, `/admin/duplicados`, `/admin/moderacion-media`), discovery con taxonomías activas y pulido ficha gym (tabs, descripción, guardar/compartir).
 - **Staging desplegado (2026-05):** infra en Neon `quegym`, Railway `quegym-api`, Auth0, Vercel `floit-web`, DNS **`https://staging.quegym.com`**. Registro: **`STAGING_DEPLOYMENT_STATUS.md`**, informe **`STAGING_AGENT_EXECUTION_REPORT.md`**.

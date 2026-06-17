@@ -237,7 +237,7 @@ Evidencia: `STAGING_EVIDENCE_SPRINT5.md`, `STAGING_DEPLOYMENT_STATUS.md`, `STAGI
 | Campos UI kit | `packages/ui/src/input.tsx`, `select.tsx` | Borde mint sutil en `:focus-visible` |
 | Aplicado en | home, `/buscar`, partner/admin login | Wrappers con clase `qg-field` |
 
-**Próximo paso:** QA visual en **staging** (`UI_VISUAL_QA_CHECKLIST.md` §2b, §4 focus, §6b menú móvil, comparador); cierre beta (KPI A/B, E2E manual, GO/NO-GO). Deploy UX + import catálogo **OK** (2026-06-14); logotipo + menú móvil **pendiente commit/deploy**.
+**Próximo paso:** firma GO/NO-GO ops; opcional `ANALYTICS_ALLOW_BACKDATE=true` + re-seed para KPI 17/17.
 
 ---
 

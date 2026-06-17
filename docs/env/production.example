@@ -104,6 +104,7 @@ PARTNER_LOCAL_LOGIN_PASSWORD=
 # PORT=4014
 # DATABASE_URL=postgresql://...@.../analytics?sslmode=require
 # DATABASE_SYNC=true
+# ANALYTICS_ALLOW_BACKDATE=true   # solo staging: seed 7 días A/B (pnpm staging:generate-traffic)
 
 # =============================================================================
 # Import catálogo (máquina CI/ops, no Vercel)

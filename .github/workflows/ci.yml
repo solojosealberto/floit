@@ -106,7 +106,7 @@ jobs:
           ANALYTICS_SERVICE_URL: http://localhost:4014
           ADMIN_API_TOKEN: ci-admin-token
           NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3050
-        run: pnpm --filter @floit/web dev -- --port 3050 > /tmp/web.log 2>&1 &
+        run: pnpm --filter @floit/web exec next dev --turbopack -p 3050 > /tmp/web.log 2>&1 &
         working-directory: ${{ github.workspace }}
 
       - name: Wait for services

@@ -36,21 +36,32 @@ export class EventsController {
     body: IngestEventDto,
     @Req() req: Request,
   ) {
+    const properties: Record<string, unknown> = { ...(body.properties ?? {}) };
+    let createdAt: Date | undefined;
+    if (process.env.ANALYTICS_ALLOW_BACKDATE === "true") {
+      const daysAgo = Number(properties._stagingBackdateDays);
+      if (Number.isFinite(daysAgo) && daysAgo >= 0 && daysAgo <= 30) {
+        createdAt = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
+        delete properties._stagingBackdateDays;
+      }
+    }
     const sourceFromProperties =
-      typeof body.properties?.source === "string"
-        ? body.properties.source.trim()
+      typeof properties.source === "string"
+        ? properties.source.trim()
         : "";
     const sourceFromReferer = this.extractSourcePath(
       String(req.headers.referer ?? ""),
     );
-    await this.events.save(
-      this.events.create({
-        name: body.name,
-        properties: body.properties ?? null,
-        device: this.detectDevice(String(req.headers["user-agent"] ?? "")),
-        source: sourceFromProperties || sourceFromReferer || null,
-      }),
-    );
+    const row = this.events.create({
+      name: body.name,
+      properties: Object.keys(properties).length > 0 ? properties : null,
+      device: this.detectDevice(String(req.headers["user-agent"] ?? "")),
+      source: sourceFromProperties || sourceFromReferer || null,
+    });
+    if (createdAt) {
+      row.createdAt = createdAt;
+    }
+    await this.events.save(row);
     await this.trimToMaxItems(50000);
     return { ok: true };
   }
