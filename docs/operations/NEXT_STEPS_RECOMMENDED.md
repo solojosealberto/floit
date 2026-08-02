@@ -1,55 +1,45 @@
-# QueGym — próximos pasos recomendados (alineados a planes fuente)
+# QueGym — próximos pasos recomendados (estrategia)
 
-Priorización de siguientes iteraciones basada en:
+> **Priority 0 (estado vivo):** no uses esta lista como next-session.  
+> Abre [`NEXT_AGENT_BRIEF.md`](./NEXT_AGENT_BRIEF.md) — CURRENT TRUTH.  
+> Este documento = backlog estratégico a medio plazo.
+
+Priorización alineada a:
 
 - `docs/product/PLAN_MAESTRO.md`
 - `docs/product/PLAN_PROMPT_ENGINEERING.md`
 - `docs/product/PRD.md`
 - `docs/product/BACKLOG.md`
 
-## Prioridad 0b — Calidad catálogo importado (2026-05-27)
+## Prioridad 0 — Staging → prod (delegado al brief)
+
+Plan: **`PRODUCTION_LAUNCH_PLAN.md`**. Infra: **`STAGING_DEPLOYMENT_STATUS.md`**.
+
+**Hecho (resumen):** infra staging, 95 venues, smoke 5/5, QA visual PASS, E2E lead API PASS, rebrand Fase 2, commits `ca4070b`–`f937abf` en `main`.
+
+**Ahora (2026-08-02):** ver brief — `ANALYTICS_ALLOW_BACKDATE` + re-seed → **PASS PRD 17/17** → firma GO → cutover `www.quegym.com`.
+
+## Prioridad 0b — Calidad catálogo importado
 
 Tras `pnpm venues:normalize` + `pnpm venues:audit:ui` (95 venues, **100% descripción limpia** en JSON):
 
-1. **Import staging/prod:** `pnpm venues:import:staging` (Neon) o local `pnpm venues:import --update` con catalog en 4010.
-2. **Geocodificación:** caché en `data/venues-geocode-cache.json`; revisar venues con coords fallback — ver `VENUES_CATALOG_IMPORT.md`.
-3. **Completitud UI:** ~51.6% venues ≥0.55 — priorizar partners con fotos/precio/contacto.
+1. Re-import solo si hay CSV nuevo: `pnpm venues:import:staging` o local `pnpm venues:import --update`.
+2. **Geocodificación:** venues con coords fallback — `VENUES_CATALOG_IMPORT.md`.
+3. **Completitud UI:** ~51.6% venues ≥0.55 — fotos/precio/contacto vía partners.
 4. **Partner QA:** ownership sobre slugs reales (`LOCAL_TEST_CREDENTIALS.md`), no demos seed.
 
-## Prioridad 0 — Staging operativo → producción `www.quegym.com`
+## Prioridad 0c — Rebrand (estado)
 
-Plan: **`PRODUCTION_LAUNCH_PLAN.md`**. Infra staging: **`STAGING_DEPLOYMENT_STATUS.md`**.
-
-**Hecho (2026-05):** Neon `quegym`, Railway `quegym-api` (5 servicios), Auth0, Vercel `floit-web`, DNS `staging.quegym.com` → https://staging.quegym.com (web 200).
-
-**Hecho (2026-05-26, paso 3):** import **95 venues** (`pnpm venues:import:staging`); URLs de los 5 servicios Railway documentadas; fixes deploy (`express` + `TIMESTAMP_COLUMN_TYPE` para Postgres) en `main`; `/health` **OK 5/5**; `pnpm smoke:platform` **OK** contra `staging.quegym.com`.
-
-**Hecho (2026-05-27):** auth M2M Auth0 + fix issuer `00fd9f9`; `pnpm sprint5:staging-gate -- --kpi-relaxed` → Sprint 4 + flow-checklist **PASS**; `/admin/leads` operativo; evidencias en `STAGING_EVIDENCE_SPRINT5.md`.
-
-**Hecho (2026-05-27):** Sprint **UX-A/B/C** en repo — plan [`QUEGYM_UX_V0_IMPROVEMENT_PLAN.md`](../ux/QUEGYM_UX_V0_IMPROVEMENT_PLAN.md). Incluye `CompareActiveBar` (`/buscar`), `CompareGrid` móvil (`/comparar`), catálogo JSON 100% descripción limpia (`pnpm venues:audit:ui`).
-
-**Hecho (repo local, 2026-05-27 / 2026-06-15):** `QueGymLogo` + 3 PNG en `/brand/`; favicon estático; galería fotos partner; menú móvil opaco (`mobile-nav-drawer.tsx`); fix CI. **Sin commit en `main` remoto.**
-
-**Ahora (post-deploy `ca4070b`):**
-
-1. **QA visual** — [`UI_VISUAL_QA_CHECKLIST.md`](../ux/UI_VISUAL_QA_CHECKLIST.md) (§6b menú móvil).
-2. **E2E manual** — `STAGING_EVIDENCE_SPRINT5.md` §2–3.
-3. **Tráfico A/B + leads** → `pnpm sprint5:staging-gate` (umbrales PRD).
-4. **Firma GO/NO-GO** → cutover prod (§14 `PRODUCTION_LAUNCH_PLAN.md`).
-
-## Prioridad 0b — Rebrand (estado)
-
-- **Fase 1 (marca visible):** `Completado` — ver `docs/operations/REBRAND_QUEGYM_PLAN.md`.
-- **Fase 2 (tokens, favicon, migración `localStorage`, copy):** `Completado en repo` (2026-05-27) — QA staging pendiente.
-- **Fase 3 (identificadores técnicos `@floit/*`):** `Pendiente` — coordinar con analytics, DB y despliegue.
+- **Fase 1 + Fase 2:** `Completado` (repo + staging); QA visual **PASS**.
+- **Fase 3 (`@floit/*`):** `Pendiente` — coordinar analytics/DB/deploy.
 
 ## Prioridad 1 — Sprint UI + UX (completado mayo 2026)
 
 ### 1.0 Estado
 
 - Páginas P1/P2 del Sprint 11 **entregadas** (ver `sprints.md` § Sprint 11 y `WEB_ROUTES_PLATFORM.md`).
-- Sprint **UX-A/B/C** **entregado en repo** — comparador móvil, tarjetas discovery, pipeline import (ver `EPICS_USER_STORIES_STATUS.md` epic UX-V0).
-- Siguiente foco: **Prioridad 0** (commit logo + QA visual + cierre beta).
+- Sprint **UX-A/B/C** **entregado** (repo + staging).
+- Siguiente foco operativo: **Priority 0 del brief** (KPI 17/17 → GO → cutover), no reabrir UI salvo regresión.
 
 ### 1.1 Páginas — inventario actual
 

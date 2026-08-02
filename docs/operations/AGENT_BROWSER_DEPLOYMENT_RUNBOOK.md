@@ -1,5 +1,9 @@
 # Runbook para agente (ChatGPT Agent Mode / navegador) — Cierre deployment QueGym
 
+> **Superseded (2026-08-02) para prioridad.**  
+> Estado vivo: [`NEXT_AGENT_BRIEF.md`](./NEXT_AGENT_BRIEF.md). Conservar solo como referencia de paneles UI (Railway/Vercel/Auth0).
+
+
 ## Prompt inicial (copiar en ChatGPT Agent Mode)
 
 **Usar el prompt completo en:** [`GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md`](./GPT_AGENT_DEPLOYMENT_INSTRUCTIONS.md) §1 (incluye estado actual y enlace a este runbook).

@@ -1,6 +1,8 @@
 # Plan de rebranding: Floit → QueGym
 
-Documento de planificación y estado del cambio de marca. La **Fase 1** está aplicada en runtime (mayo 2026). Las fases 2–4 son **planificadas** y no deben ejecutarse sin PR dedicado y criterios de migración explícitos.
+**status:** Fase 1 + Fase 2 **done** (repo + staging; QA visual PASS). Fases **3–4** planificadas — no ejecutar sin PR dedicado.
+
+Documento de planificación y estado del cambio de marca.
 
 ## Objetivo
 

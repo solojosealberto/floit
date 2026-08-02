@@ -6,12 +6,14 @@ Fuente única de verdad para **qué se entregó** y **dónde está en el repo**,
 
 ## Protocolo de fuente unica de verdad
 
-Este archivo es una de las 3 fuentes operativas de estado junto con:
+**Estado vivo / next actions:** `docs/operations/NEXT_AGENT_BRIEF.md` (+ `STATUS_CHANGELOG.md`).
 
-- `docs/operations/EPICS_USER_STORIES_STATUS.md`
-- `docs/operations/PROJECT_CONTEXT_HANDOVER.md`
+Este archivo es el **ledger de entrega** por sprint, junto con:
 
-Cuando una iteracion cambia estado funcional, los 3 archivos se actualizan en el mismo PR.
+- `docs/operations/EPICS_USER_STORIES_STATUS.md` (matriz US)
+- `docs/operations/PROJECT_CONTEXT_HANDOVER.md` (contexto)
+
+Cuando una iteracion cambia estado funcional, se actualizan en el mismo PR: **brief + changelog de estado + estos 3**. Vocabulario: `DOC_STATUS_VOCABULARY.md`.
 
 ## Semantica de estados (estandar)
 
@@ -243,11 +245,13 @@ OpenAPI (`openapi/README.md`), `pnpm verify`, `pnpm smoke:local`, [`docs/operati
 
 ### Pendiente (resto Sprint 5)
 
-- ~~Ejecutar `pnpm sprint5:flow-checklist` contra staging~~ — **PASS** (2026-05-27, M2M + fix issuer).
-- Ejecutar `pnpm sprint5:kpi-gate` con umbrales PRD en staging (actualmente **FAIL**: variantes A/B `membership` + `trial` por poco tráfico).
-- Completar checklist manual E2E en `docs/operations/STAGING_EVIDENCE_SPRINT5.md` (§2–3).
-- Añadir variantes adicionales de experimento (copy corto vs largo) sobre baseline actual multivariante.
-- Firma producto/ops para GO formal beta.
+- ~~`pnpm sprint5:flow-checklist` staging~~ — **PASS** (2026-05-27).
+- KPI PRD: pico **PASS PRD 16/17** (2026-06-17); live **FAIL PRD** (2026-08-02, ventana 7d) — re-seed + `ANALYTICS_ALLOW_BACKDATE` → objetivo **PASS PRD 17/17**. Ver brief.
+- E2E checklist manual §2–3: opcional pre-GO (E2E lead API ya PASS).
+- Firma producto/ops GO formal beta.
+- CI `e2e-services` sigue FAIL en `main` (arreglar en paralelo).
+
+**Estado vivo:** [`NEXT_AGENT_BRIEF.md`](./NEXT_AGENT_BRIEF.md).
 
 ---
 
@@ -438,8 +442,8 @@ Plan: **`docs/ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`**, estado en **`docs/op
 - `Completado` (2026-05-27) Partner panel interno (`partner-panel-client`, venues, config, leads); admin shells (`admin-sidebar` + páginas internas); login admin alineado a partner.
 - `Completado` (2026-05-27) Export CSV admin renombrado a `quegym-leads.csv`.
 - `Completado` (2026-05-27) **Copy verbal (Fase 7):** tuteo venezolano en home, metadata SEO, `/buscar`, partner claim/panel/config, admin leads/catálogo; constantes `BRAND_*` en `brand.ts`; gate `pnpm copy:verify` + CI; plan [`docs/ux/QUEGYM_BRAND_COPY_PLAN.md`](../ux/QUEGYM_BRAND_COPY_PLAN.md).
-- `Pendiente` QA **staging** dual-theme + copy manual ([`UI_VISUAL_QA_CHECKLIST.md`](../ux/UI_VISUAL_QA_CHECKLIST.md)).
-- `Completado` (2026-05-27) **Sprint UX-A/B/C** — mejora confianza catálogo y conversión (repo local). Plan: [`docs/ux/QUEGYM_UX_V0_IMPROVEMENT_PLAN.md`](../ux/QUEGYM_UX_V0_IMPROVEMENT_PLAN.md).
+- `Completado` QA visual staging (**PASS**, 2026-05-27) — dual-theme + copy.
+- `Completado` (2026-05-27) **Sprint UX-A/B/C** — mejora confianza catálogo y conversión. Plan: [`docs/ux/QUEGYM_UX_V0_IMPROVEMENT_PLAN.md`](../ux/QUEGYM_UX_V0_IMPROVEMENT_PLAN.md).
   - **UX-A:** `VenueImage` + fallback iniciales, `VenueCardGrid`/`VenueCard` unificados, `VenuePriceDisplay` variant `card`, descripción sanitizada (`venue-description.ts`), aspect ratio imagen `3/1` móvil / `16/9` desktop.
   - **UX-B:** `/buscar` tarjetas reales, chips filtros activos removibles (`ActiveFilterChip`), drawer nav móvil, contador comparar en header, ranking `relevanceScore` con peso completitud en catalog, `DiscoveryFilterLink` + skeletons (`useTransition`).
   - **UX-C:** Home «Cómo funciona» + destacados con skeleton, footer público (`site-footer.tsx`), Lucide en rutas públicas, mapas sin emoji, popups sin rating fake, paridad `/favoritos`.
@@ -447,9 +451,9 @@ Plan: **`docs/ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`**, estado en **`docs/op
   - **Focus formularios (polish):** clases `.qg-field` (`:focus-within` en contenedor redondeado) y `.qg-input` en `globals.css`; inputs internos sin outline cuadrado; `UITextInput`/`UISelect` en `@floit/ui` alineados; home, `/buscar`, logins partner/admin.
   - **Pipeline:** `pnpm venues:normalize` + `pnpm venues:audit:ui` — 95 venues, **100% descripción limpia** en JSON, 51.6% listos UI (≥0.55).
   - **Componentes clave:** `packages/ui/src/venue-image.tsx`, `venue-card-grid.tsx`, `compare-active-bar.tsx`, `compare-grid.tsx`, `discovery-filter-link.tsx`, `buscar/loading.tsx`, `globals.css` (`.qg-field`, `.qg-input`).
-  - **Pendiente:** QA visual staging; spike UX-V0-801 opcional.
-  - **Tráfico staging (2026-05-27):** `pnpm staging:generate-traffic` + KPI PRD 16/17; script seed A/B; `ANALYTICS_ALLOW_BACKDATE` opcional en analytics Railway.
-  - **Deploy staging (2026-05-27):** commits `ca4070b`–`ff98be2` → Vercel; assets `/brand/*.png` HTTP 200.
+  - **Completado:** QA visual staging PASS; spike UX-V0-801 opcional.
+  - **Tráfico / KPI:** pico **PASS PRD 16/17** (2026-06-17); live **FAIL PRD** (2026-08-02) — ver [`NEXT_AGENT_BRIEF.md`](./NEXT_AGENT_BRIEF.md); `ANALYTICS_ALLOW_BACKDATE` en Railway.
+  - **Deploy staging:** commits `ca4070b`–`f937abf` en `main` / Vercel.
   - **Logotipo (2026-06-15):** assets reducidos a 3 PNG en `/brand/`; `QueGymLogo` en header, drawer, footer, login admin/partner y sidebar admin; favicon estático (`icon.png` / `apple-icon.png`) desde símbolo.
   - **Menú móvil (2026-05-27):** drawer con fondo opaco y `createPortal` a `body` — legibilidad de enlaces (Explorar, Comparar, Favoritos, Partner, Privacidad) en viewport ≤ md.
   - **Partner panel fotos:** galería con eliminar, reordenar, portada, copiar enlace y vista previa OG cableados en `partner-panel-client.tsx`.
@@ -612,7 +616,7 @@ Detalle de ejecución:
 | Railway leads + partner + analytics | fixes `express` + TypeORM Postgres (`TIMESTAMP_COLUMN_TYPE`) desplegados en `main` | `/health` OK (5/5 servicios) |
 | Admin login Vercel staging | `admin-local-login.ts` — habilita `/admin/login` con `NODE_ENV=production` en Preview | `Completado` (`7554d6c`) |
 | Smoke | `pnpm smoke:platform` con 5 URLs + `SMOKE_WEB_BASE=staging.quegym.com` | **OK** |
-| Gates Sprint 4/5 | `sprint4:gate`, flow-checklist, kpi-gate | `Parcial` — preflight PASS (2026-05-27); KPI A/B pendiente tráfico |
+| Gates Sprint 4/5 | `sprint4:gate`, flow-checklist, kpi-gate | `Parcial` — smoke/relaxed PASS; KPI PRD requiere re-seed (2026-08-02) |
 | Decisión | GO técnico condicional | Ver `STAGING_EVIDENCE_SPRINT5.md` |
 
 URLs Railway staging (sin secretos): ver tabla en `STAGING_DEPLOYMENT_STATUS.md` y `docs/env/production.example`.

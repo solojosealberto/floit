@@ -17,6 +17,7 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 ## [Unreleased]
 
 ### Changed
+- **Documentación operativa (2026-08-02):** brief = CURRENT TRUTH; vocabulario + status changelog + documentation guide; reconciliación KPI live / QA PASS / wireframe ausente; banners Superseded en informes GPT/agent; §0 en evidencia Sprint 5.
 - **Logotipo QueGym (2026-06-15, repo local):** assets consolidados a 3 PNG en `/brand/`; componente `QueGymLogo` (swap light/dark); favicon estático `icon.png` / `apple-icon.png` desde símbolo; eliminados generadores dinámicos `icon.tsx` / `apple-icon.tsx`.
 - **Partner panel fotos (2026-06-15):** galería cableada en `partner-panel-client.tsx` — subir, eliminar, reordenar, portada, copiar enlace, vista previa OG.
 - **Rebrand Fase 7 — copy C5 (2026-05-27):** script `scripts/verify-brand-copy.mjs` + `pnpm copy:verify` (CI); E2E smoke valida hero «Encuentra tu próximo gym en Caracas».

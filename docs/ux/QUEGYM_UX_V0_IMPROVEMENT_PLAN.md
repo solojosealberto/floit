@@ -1,5 +1,8 @@
 # QueGym — plan de mejora UX (auditoría v0 + staging)
 
+> **status: done** (Sprint UX-A/B/C en repo + staging). No re-ejecutar fases cerradas; spike UX-V0-801 opcional.
+
+
 Plan de implementación derivado del análisis UX sobre **staging.quegym.com** documentado en [v0 — User experience improvement](https://v0.app/vicsanpar1289/chat/user-experience-improvement-gCH896aJPYE) y contrastado con el estado del repo (mayo 2026).
 
 **Objetivo:** cerrar fugas de **confianza** y **conversión** en discovery (buscar + ficha) y **navegación móvil**, sin romper contratos MVP ni flujos lead/compare/favoritos.

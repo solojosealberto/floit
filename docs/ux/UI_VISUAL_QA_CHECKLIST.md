@@ -1,5 +1,8 @@
 # QueGym — UI Visual QA Checklist
 
+> **Staging firmado:** QA visual **PASS** (2026-05-27) — no reabrir checklist completo salvo regresión.  
+> Estado vivo: [`../operations/NEXT_AGENT_BRIEF.md`](../operations/NEXT_AGENT_BRIEF.md).
+
 Checklist operativo para validar consistencia visual en cualquier pantalla antes de cerrar una tarea UI/UX. Aplica al sistema **dual-theme** QueGym (manual de marca + [`QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`](./QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md)).
 
 ## 0) Referencia visual y alineación documental (obligatorio)

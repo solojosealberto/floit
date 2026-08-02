@@ -2,10 +2,12 @@
 
 Recuento consolidado del avance funcional contra `docs/product/BACKLOG.md`, basado en lo documentado y entregado en `docs/operations/sprints.md` (Sprints 0–5 en curso).
 
-Fuente de verdad compartida:
+**Next actions:** [`NEXT_AGENT_BRIEF.md`](./NEXT_AGENT_BRIEF.md). Vocabulario: [`DOC_STATUS_VOCABULARY.md`](./DOC_STATUS_VOCABULARY.md).
+
+Ledger / contexto compartido:
 
 - `docs/operations/sprints.md`
-- `docs/operations/EPICS_USER_STORIES_STATUS.md`
+- `docs/operations/EPICS_USER_STORIES_STATUS.md` (este archivo)
 - `docs/operations/PROJECT_CONTEXT_HANDOVER.md`
 
 Escala de estado (estandar):
@@ -178,7 +180,7 @@ Notas operativas recientes de discovery/comparación (US-2.x):
 | Ficha / comparar (US-2.x) | `Completado` | `/gyms/*`, `/api/compare/search` verificados en staging |
 | Leads públicos (US-3.1) | `Completado` (infra staging) | `leads-service` Railway `/health` 200; admin API con M2M |
 | Partner / admin ops (US-4.x, 5.x) | `Parcial` | `/admin/leads` operativo (M2M + `00fd9f9`); E2E manual partner/admin pendiente |
-| Analytics / Sprint 5 KPIs (US-6.x) | `Parcial` | Gates **PASS** (2026-06-15); E2E manual y firma GO pendientes |
+| Analytics / Sprint 5 KPIs (US-6.x) | `Parcial` | Pico **PASS PRD 16/17** (2026-06-17); live **FAIL PRD** (2026-08-02); re-seed + backdate → 17/17; GO pendiente |
 
 Evidencia: `STAGING_EVIDENCE_SPRINT5.md`, `STAGING_DEPLOYMENT_STATUS.md`, `STAGING_AGENT_EXECUTION_REPORT.md`.
 
@@ -237,17 +239,15 @@ Evidencia: `STAGING_EVIDENCE_SPRINT5.md`, `STAGING_DEPLOYMENT_STATUS.md`, `STAGI
 | Campos UI kit | `packages/ui/src/input.tsx`, `select.tsx` | Borde mint sutil en `:focus-visible` |
 | Aplicado en | home, `/buscar`, partner/admin login | Wrappers con clase `qg-field` |
 
-**Próximo paso:** firma GO/NO-GO ops; opcional `ANALYTICS_ALLOW_BACKDATE=true` + re-seed para KPI 17/17.
+**Próximo paso:** [`NEXT_AGENT_BRIEF.md`](./NEXT_AGENT_BRIEF.md) — backdate + re-seed → **PASS PRD 17/17** → firma GO/NO-GO.
 
 ---
 
-## Foco vigente de ejecución (sprint UI actual)
+## Foco vigente de ejecución
 
-- **Completado (2026-05-27):** Rebrand Fase 2 visual + copy verbal en repo (`REBRAND_QUEGYM_PLAN.md`, `QUEGYM_BRAND_COPY_PLAN.md`, `pnpm copy:verify`).
-- **Completado (2026-05-27):** Sprint **UX-A/B/C** — confianza catálogo y conversión en repo (`QUEGYM_UX_V0_IMPROVEMENT_PLAN.md`): tarjetas unificadas, `/buscar` + ficha + home + shell móvil, Lucide/skeletons, pipeline import re-normalizado (95 venues, 100% descripción limpia en JSON), **comparador** (`CompareActiveBar` + `CompareGrid` móvil), **focus formularios** (`.qg-field` / `.qg-input` en `globals.css`).
-- **Completado (2026-06-14):** deploy UX a **staging.quegym.com** (Vercel); import catálogo `{ updated: 95 }`.
-- **Completado (2026-06-15):** logotipo QueGym + galería fotos partner + fix CI en repo local (pendiente commit/deploy).
-- **Completado (2026-05-27):** menú móvil opaco (`mobile-nav-drawer.tsx` — portal + `bg-quegym-page`).
-- **Siguiente línea de trabajo recomendada:** cierre beta staging (QA visual → tráfico KPI A/B → E2E manual §2–3 → firma GO/NO-GO); opcional spike UX-V0-801.
-- Scope histórico cerrado: partner planes/fotos, admin duplicados/moderación, taxonomías en buscar, ficha gym tabs/guardar/compartir (ver filas US arriba).
-- Fuera del scope MVP transaccional actual: `/checkout`, `/reservas` (solo placeholder/backlog).
+- **Completado:** Rebrand Fase 2; Sprint UX-A/B/C; deploy staging; logo `ca4070b`; `VenueImage` `ff98be2`; traffic/KPI tooling `f937abf`.
+- **QA visual:** **PASS** (no reabrir).
+- **E2E lead API:** **PASS**. E2E checklist §2–3: opcional pre-GO.
+- **KPI:** live **FAIL PRD** (2026-08-02); pico histórico **PASS PRD 16/17**. Next: backdate + re-seed → **17/17** → firma GO.
+- **Fuente de next actions:** [`NEXT_AGENT_BRIEF.md`](./NEXT_AGENT_BRIEF.md).
+- Fuera de MVP: `/checkout`, `/reservas`.

@@ -1,5 +1,8 @@
 # QueGym — plan de copy verbal (manual de marca · Venezuela)
 
+> **status: done** (copy verbal + `pnpm copy:verify`; QA visual PASS).
+
+
 Plan para alinear **todo el texto visible del producto** al manual de marca QueGym: tono **directo, local y honesto**, con **tuteo venezolano** (tú / imperativo estándar), **sin voseo rioplatense** (`encontrá`, `podés`, `tenés`, etc.).
 
 Complementa la Fase 1 (marca «QueGym») y la Fase 2 visual ([`QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`](./QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md)). **No cambia** contratos API, eventos ni identificadores técnicos.

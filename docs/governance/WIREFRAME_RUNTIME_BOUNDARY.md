@@ -5,16 +5,19 @@ Este documento separa de forma explicita los artefactos de referencia UX de los 
 ## 1) Dominios y responsabilidad
 
 - **Runtime productivo**: `apps/web`, `services/*`, `packages/*`, `openapi/`, `contracts/events/`, `scripts/`.
-- **Wireframe / referencia UX**: `Floit Wireframe v.0.2/`.
-- **Archivo historico UX**: `docs/archive/wireframe-v0.2/` (indice y puntero de archivado).
+- **Estado vivo**: `docs/operations/NEXT_AGENT_BRIEF.md`.
+- **Wireframe / referencia UX**: carpeta histórica `Floit Wireframe v.0.2/` — **ausente en este clone**; ver `docs/archive/wireframe-v0.2/README.md`. Diseño vivo: `docs/ux/*` + Figma.
+- **Archivo historico UX**: `docs/archive/wireframe-v0.2/`.
 
 ## 2) Regla de alcance
 
-- `Floit Wireframe v.0.2/` no define estado de sprint, release ni readiness operativa.
-- El estado operativo vive solo en:
+- Wireframes no definen estado de sprint, release ni readiness operativa.
+- El estado operativo vive en:
+  - `docs/operations/NEXT_AGENT_BRIEF.md` (**prioridad / next**)
   - `docs/operations/sprints.md`
   - `docs/operations/EPICS_USER_STORIES_STATUS.md`
   - `docs/operations/PROJECT_CONTEXT_HANDOVER.md`
+  - `docs/operations/STATUS_CHANGELOG.md`
 
 ## 3) Frontera de consumo wireframe -> runtime
 

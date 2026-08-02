@@ -8,7 +8,7 @@ Plantilla de variables (sin secretos): [`docs/env/production.example`](../env/pr
 
 ## Checklist maestro
 
-> **Estado (2026-05):** pasos 0–7 **completados** según [`STAGING_DEPLOYMENT_STATUS.md`](./STAGING_DEPLOYMENT_STATUS.md). Pendientes: **8–9** y GO staging.
+> **Estado (2026-08-02):** pasos 0–7 **completados**; **8 Import ✅**; **9 Smoke ✅** + gates **parcial** (KPI PRD / GO). Fuente: [`NEXT_AGENT_BRIEF.md`](./NEXT_AGENT_BRIEF.md).
 
 | # | Tarea | Hecho |
 |---|--------|-------|
@@ -20,8 +20,8 @@ Plantilla de variables (sin secretos): [`docs/env/production.example`](../env/pr
 | 5 | **GoDaddy** DNS `staging` (+ TTL bajo antes de prod) | ✅ |
 | 6 | Variables en Vercel + Railway (sin commitear) | ✅ |
 | 7 | Web staging `https://staging.quegym.com` responde | ✅ |
-| 8 | Import catálogo en Neon staging | ☐ |
-| 9 | Smoke + gates + evidencias Sprint 4/5 | ☐ |
+| 8 | Import catálogo en Neon staging | ✅ (95 venues) |
+| 9 | Smoke + gates + evidencias Sprint 4/5 | Parcial — smoke PASS; KPI PRD + GO ☐ |
 
 ---
 

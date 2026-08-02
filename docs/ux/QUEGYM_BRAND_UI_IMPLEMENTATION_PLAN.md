@@ -1,5 +1,8 @@
 # QueGym — plan de implementación UI (manual de marca + dark/light)
 
+> **status: done** (Fase 2 visual en repo + staging; QA visual PASS).
+
+
 Plan operativo para cerrar el **rebranding visual** alineado al *Manual de marca accionable para QueGym* y las referencias de diseño (capturas home desktop/mobile). Complementa [`REBRAND_QUEGYM_PLAN.md`](../operations/REBRAND_QUEGYM_PLAN.md) Fase 1 (copy) y Fase 2 (tokens).
 
 **Fuente de verdad visual:** manual de marca (paleta, tipografía, componentes, WCAG 2.2 AA) + capturas de referencia en repo/assets.

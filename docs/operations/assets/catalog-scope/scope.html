@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>QueGym — Guía de trabajo: catálogo de gimnasios (Caracas)</title>
+  <style>
+    @page { size: A4; margin: 16mm 14mm 18mm 14mm; }
+    :root {
+      --ink: #0B0F0E;
+      --ink-2: #151B19;
+      --green: #17C964;
+      --mint: #9FE6C3;
+      --mist: #EAF8F1;
+      --white: #FFFFFF;
+      --gray: #5A6E64;
+      --line: #D5E8DC;
+      --amber: #E8A838;
+      --red: #DC5046;
+      --blue: #468CB4;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      color: var(--ink);
+      background: var(--white);
+      font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.5;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .page-break { page-break-before: always; break-before: page; }
+    .avoid-break { page-break-inside: avoid; break-inside: avoid; }
+
+    .cover {
+      min-height: 250mm;
+      padding: 16mm 8mm 10mm;
+      background:
+        radial-gradient(1100px 480px at 8% -8%, rgba(159,230,195,0.55), transparent 60%),
+        radial-gradient(800px 400px at 100% 15%, rgba(23,201,100,0.16), transparent 55%),
+        linear-gradient(180deg, #F7FCF9 0%, #FFFFFF 55%, #EAF8F1 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .cover-logo { height: 42px; width: auto; }
+    .cover-kicker {
+      display: inline-block;
+      margin-top: 22mm;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--mint);
+      font-size: 9pt;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .cover h1 {
+      margin: 8mm 0 4mm;
+      font-size: 26pt;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      max-width: 155mm;
+    }
+    .cover .lead {
+      font-size: 12.5pt;
+      color: var(--gray);
+      max-width: 150mm;
+      margin: 0 0 7mm;
+    }
+    .cover-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 16px;
+      max-width: 160mm;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+    .cover-meta dt {
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--gray);
+      margin: 0;
+    }
+    .cover-meta dd {
+      margin: 2px 0 6px;
+      font-weight: 600;
+      font-size: 10.5pt;
+    }
+    .cover-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 14px;
+      margin-top: 8mm;
+    }
+    .cover-footer img.ui-ref {
+      width: 68mm;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 24px rgba(11,15,14,0.08);
+    }
+    .one-liner {
+      flex: 1;
+      padding: 12px 14px;
+      background: var(--ink);
+      color: var(--white);
+      border-radius: 14px;
+      font-size: 10.5pt;
+      line-height: 1.4;
+    }
+    .one-liner strong { color: var(--mint); }
+
+    h2 {
+      margin: 0 0 3mm;
+      font-size: 15pt;
+      letter-spacing: -0.01em;
+      border-left: 5px solid var(--green);
+      padding-left: 10px;
+    }
+    h3 { margin: 5mm 0 2mm; font-size: 12pt; color: var(--ink-2); }
+    p { margin: 0 0 2.5mm; }
+    ul, ol { margin: 0 0 3mm; padding-left: 5mm; }
+    li { margin-bottom: 1.4mm; }
+
+    .section { margin-bottom: 5mm; }
+    .figure {
+      margin: 3mm 0 4mm;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .figure img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      display: block;
+    }
+    .figure.wide img { border-radius: 8px; }
+    .figure figcaption {
+      margin-top: 2mm;
+      font-size: 8.5pt;
+      color: var(--gray);
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2mm 0 4mm;
+      font-size: 9pt;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 5px 7px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: var(--mist); font-weight: 700; }
+    tr:nth-child(even) td { background: #FBFEFC; }
+    tr.ok td { background: #E8F8EE; }
+    tr.warn td { background: #FFF8E6; }
+    tr.new td { background: #F7F8F9; color: var(--gray); }
+
+    .callout {
+      margin: 3mm 0;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--mist);
+      border: 1px solid var(--line);
+    }
+    .callout.warn { background: #FFF6E8; border-color: #F0D29A; }
+    .callout.danger { background: #FDECEC; border-color: #F0B4B0; }
+    .callout.tip { background: #EEF6FB; border-color: #B7D4E6; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3mm;
+      margin: 2mm 0 4mm;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: var(--white);
+    }
+    .card h4 { margin: 0 0 2mm; font-size: 10.5pt; }
+    .card.in { border-top: 4px solid var(--green); }
+    .card.out { border-top: 4px solid var(--red); }
+
+    .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 2mm 0 3mm; }
+    .badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--mist);
+      border: 1px solid var(--line);
+      font-size: 8.5pt;
+      font-weight: 600;
+    }
+    .badge.mint { background: var(--mint); }
+
+    .checklist li { list-style: none; margin-left: -3mm; }
+    .checklist li::before { content: "☐ "; color: var(--green); font-weight: 700; }
+
+    .toc {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2mm 8mm;
+      margin: 3mm 0 5mm;
+      padding: 12px 14px;
+      background: var(--mist);
+      border-radius: 14px;
+      border: 1px solid var(--line);
+    }
+    .toc a {
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 9.5pt;
+    }
+    .toc span { color: var(--green); font-weight: 700; margin-right: 4px; }
+
+    .glossary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2mm;
+      margin: 2mm 0 4mm;
+    }
+    .glossary dt {
+      font-weight: 700;
+      font-size: 9.5pt;
+      margin: 0;
+    }
+    .glossary dd {
+      margin: 0 0 2mm;
+      color: var(--gray);
+      font-size: 9pt;
+    }
+
+    .footer-note {
+      margin-top: 6mm;
+      padding-top: 3mm;
+      border-top: 1px solid var(--line);
+      font-size: 8pt;
+      color: var(--gray);
+    }
+    .tiny { font-size: 8pt; color: var(--gray); }
+  </style>
+</head>
+<body>
+
+  <section class="cover">
+    <div>
+      <img class="cover-logo" src="logo-horizontal.png" alt="QueGym" />
+      <div class="cover-kicker">Guía de trabajo · Operaciones de datos</div>
+      <h1>Revisar y completar el catálogo de gimnasios en Caracas</h1>
+      <p class="lead">
+        Esta guía es para quien va a <strong>verificar que la información sea real</strong>
+        y <strong>agregar los gimnasios que aún faltan</strong>. Está escrita en lenguaje claro,
+        sin necesidad de saber de programación.
+      </p>
+      <dl class="cover-meta">
+        <div><dt>Producto</dt><dd>QueGym</dd></div>
+        <div><dt>Para quién</dt><dd>Asistente junior del equipo</dd></div>
+        <div><dt>Dónde trabajas</dt><dd>Sitio de prueba + Google Sheets</dd></div>
+        <div><dt>Fecha</dt><dd>30 julio 2026</dd></div>
+      </dl>
+    </div>
+    <div class="cover-footer">
+      <div class="one-liner">
+        <strong>En una frase:</strong> confirma que lo publicado sea verdad, complétalo bien,
+        y suma el resto de Caracas — usando Sheets, el panel admin y fuentes como Maps o Instagram —
+        siempre en el ambiente de prueba y <strong>sin inventar datos</strong>.
+      </div>
+      <img class="ui-ref" src="ui-header-ref.png" alt="Referencia visual QueGym" />
+    </div>
+  </section>
+
+  <section class="page-break section">
+    <h2>Contenido</h2>
+    <div class="toc">
+      <a href="#s1"><span>1</span> ¿Qué debes lograr?</a>
+      <a href="#s2"><span>2</span> Qué sí / qué no</a>
+      <a href="#s3"><span>3</span> Cómo está el catálogo hoy</a>
+      <a href="#s4"><span>4</span> Tu rol día a día</a>
+      <a href="#s5"><span>5</span> La tabla en Google Sheets (ejemplo)</a>
+      <a href="#s6"><span>6</span> Qué datos lleva cada gimnasio</a>
+      <a href="#s7"><span>7</span> Herramientas que usarás</a>
+      <a href="#s8"><span>8</span> Cuándo un gimnasio está “listo”</a>
+      <a href="#s9"><span>9</span> Plan por etapas</a>
+      <a href="#s10"><span>10</span> Accesos, entregas y reglas</a>
+    </div>
+
+    <h2>Palabras que verás (glosario rápido)</h2>
+    <dl class="glossary">
+      <div><dt>Catálogo</dt><dd>La lista de gimnasios que aparecen en QueGym.</dd></div>
+      <div><dt>Staging / sitio de prueba</dt><dd>Versión de prueba del sitio (no es el público final). Ahí trabajas.</dd></div>
+      <div><dt>Panel admin</dt><dd>Pantalla interna para ver y editar gimnasios.</dd></div>
+      <div><dt>Sheet / hoja</dt><dd>Tu tabla en Google Sheets: ahí registras todo.</dd></div>
+      <div><dt>CSV</dt><dd>Archivo de tabla que exportas desde Sheets para que el equipo lo cargue.</dd></div>
+      <div><dt>Ficha</dt><dd>La página pública de un gimnasio (nombre, fotos, datos).</dd></div>
+      <div><dt>Evidencia</dt><dd>Prueba de que el dato es real (link de Maps, captura, nota de llamada).</dd></div>
+      <div><dt>Duplicado</dt><dd>El mismo gimnasio cargado dos veces con nombres parecidos.</dd></div>
+    </dl>
+  </section>
+
+  <section class="page-break section">
+    <h2 id="s1">1. ¿Qué debes lograr?</h2>
+    <p>
+      QueGym ayuda a la gente a <strong>descubrir, comparar y contactar</strong> centros de fitness en Caracas.
+      Si un gimnasio sale con datos falsos o incompletos, la persona pierde confianza.
+    </p>
+    <figure class="figure">
+      <img src="01-objetivos.png" alt="Dos metas: datos verdaderos y sumar los que faltan" />
+      <figcaption>Figura 1 — Las dos metas van juntas: no cargues sin verificar, y no “completes” inventando.</figcaption>
+    </figure>
+    <div class="callout">
+      <strong>Regla de oro:</strong> cada fila de tu tabla debe poder demostrarse con algo externo
+      (Google Maps, Instagram, página web, llamada o WhatsApp, visita, captura de pantalla).
+    </div>
+  </section>
+
+  <section class="page-break section">
+    <h2 id="s2">2. Qué sí entra / qué no entra</h2>
+    <div class="grid-2">
+      <div class="card in avoid-break">
+        <h4>Sí — es tu trabajo</h4>
+        <ul>
+          <li>Revisar los ~95 gimnasios ya publicados</li>
+          <li>Corregir datos incorrectos o dudosos</li>
+          <li>Detectar cuando el mismo local está repetido</li>
+          <li>Buscar e incorporar gimnasios de Caracas que falten</li>
+          <li>Llenar la hoja de Sheets con la misma estructura</li>
+          <li>Usar Maps, Instagram, web, WhatsApp, panel admin</li>
+          <li>Anotar de dónde salió cada dato y cuándo lo revisaste</li>
+          <li>Avisar si algo te bloquea</li>
+        </ul>
+      </div>
+      <div class="card out avoid-break">
+        <h4>No — no lo hagas</h4>
+        <ul>
+          <li>Cambiar el programa o la app</li>
+          <li>Publicar en el sitio final sin autorización</li>
+          <li>Gestionar reclamos de dueños / partners</li>
+          <li>Inventar precios, teléfonos o fotos</li>
+          <li>Usar gimnasios de demostración viejos</li>
+        </ul>
+      </div>
+    </div>
+    <h3>¿Cuándo un gimnasio se considera terminado?</h3>
+    <ol>
+      <li>Existe de verdad (tienes un link o prueba).</li>
+      <li>Cumple el mínimo de datos de la sección 8.</li>
+      <li>Quedó actualizado en el sitio de prueba.</li>
+      <li>Está en tu Sheet con estado y notas de evidencia.</li>
+    </ol>
+  </section>
+
+  <section class="page-break section">
+    <h2 id="s3">3. Cómo está el catálogo hoy</h2>
+    <table>
+      <thead><tr><th>Tema</th><th>Situación</th></tr></thead>
+      <tbody>
+        <tr><td>Cantidad aproximada</td><td><strong>~95 gimnasios</strong> ya cargados</td></tr>
+        <tr><td>Sitio de prueba</td><td>https://staging.quegym.com</td></tr>
+        <tr><td>Buscar centros</td><td>Entra a <strong>/buscar</strong> en ese sitio</td></tr>
+        <tr><td>Ejemplo de ficha</td><td>Gold’s Gym San Ignacio (búscala por nombre)</td></tr>
+      </tbody>
+    </table>
+    <figure class="figure">
+      <img src="04-completitud.png" alt="Porcentaje de datos completos hoy" />
+      <figcaption>Figura 2 — Hay buen avance en fotos y contacto; el precio es el hueco más grande.</figcaption>
+    </figure>
+    <div class="callout tip">
+      <strong>Implicación para ti:</strong> no solo “agregar nombres”. También hay que
+      <strong>completar precios, teléfonos y fotos</strong> de lo que ya está publicado.
+    </div>
+  </section>
+
+  <section class="page-break section">
+    <h2 id="s4">4. Tu rol día a día</h2>
+    <div class="grid-2">
+      <div class="card in avoid-break">
+        <h4>Tus responsabilidades</h4>
+        <ol>
+          <li>Investigar cada gimnasio con fuentes reales</li>
+          <li>Anotar todo en Google Sheets</li>
+          <li>Corregir en el panel admin cuando te lo indiquen</li>
+          <li>Actualizar el estado de cada fila</li>
+          <li>Escalar dudas al responsable</li>
+        </ol>
+      </div>
+      <div class="card out avoid-break">
+        <h4>No se espera que</h4>
+        <ul>
+          <li>Subas lotes grandes sin coordinación</li>
+          <li>Manejes claves técnicas del servidor</li>
+          <li>Apruebes solicitudes de dueños</li>
+          <li>Toques el sitio de producción</li>
+        </ul>
+      </div>
+    </div>
+    <figure class="figure">
+      <img src="03-estados.png" alt="Estados de la columna Estado" />
+      <figcaption>Figura 3 — Usa exactamente estos estados en la columna «Estado».</figcaption>
+    </figure>
+    <figure class="figure">
+      <img src="08-loop-diario.png" alt="Rutina diaria de 6 pasos" />
+      <figcaption>Figura 4 — Rutina diaria sugerida. Al final de la semana: marca las filas «Listo para cargar = Sí» y avisa al responsable.</figcaption>
+    </figure>
+  </section>
+
+  <!-- SHEET EXAMPLE - KEY SECTION -->
+  <section class="page-break section">
+    <h2 id="s5">5. La tabla en Google Sheets (cómo debe verse)</h2>
+    <p>
+      Esta es la pieza central de tu trabajo. <strong>Crea una hoja nueva</strong> (o usa la que te compartan)
+      con estas columnas. Cada <strong>fila = una sede</strong> (si un gym tiene dos locales, son dos filas).
+    </p>
+
+    <figure class="figure wide">
+      <img src="10-ejemplo-sheet.png" alt="Ejemplo visual de tabla tipo Google Sheets" />
+      <figcaption>Figura 5 — Vista de ejemplo: fila 2 verificada, fila 3 en revisión, fila 4 plantilla para un gimnasio nuevo.</figcaption>
+    </figure>
+
+    <h3>Columnas obligatorias (copia estos nombres)</h3>
+    <table>
+      <thead><tr><th>Columna</th><th>Qué poner</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td>Nombre del Gimnasio</td><td>Nombre comercial de la sede</td><td>Gold's Gym (Sede C.C. San Ignacio)</td></tr>
+        <tr><td>Zona / Municipio</td><td>Uno de los municipios canónicos</td><td>Chacao</td></tr>
+        <tr><td>Categoría</td><td>Qué tipo de centro es</td><td>Gimnasio Integral / Fitness Center</td></tr>
+        <tr><td>Link de Google Maps</td><td>Enlace que abre el lugar en Maps</td><td>https://maps.app.goo.gl/…</td></tr>
+        <tr><td>Teléfono / WhatsApp</td><td>Número de contacto</td><td>0212-2642045</td></tr>
+        <tr><td>Instagram</td><td>Usuario con @</td><td>@goldsgymve</td></tr>
+        <tr><td>Precio (Ref.)</td><td>Precio mensual / semanal / diario</td><td>80$ mensual</td></tr>
+        <tr><td>Planes</td><td>Planes especiales (si hay)</td><td>Estudiantil, familiar…</td></tr>
+        <tr><td>Amenidades</td><td>Separadas por | o comas</td><td>Sauna | Parking | Duchas</td></tr>
+        <tr><td>Actividades</td><td>Separadas por | o comas</td><td>Cycling | Pilates | Yoga</td></tr>
+        <tr><td>Horario (Resumen)</td><td>Texto corto</td><td>Lun-Vie 6am–9pm</td></tr>
+        <tr><td>Fotos (URLs)</td><td>Links que abran la imagen en el navegador</td><td>https://…/foto.jpg</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Columnas de control (para ti y el equipo)</h3>
+    <table>
+      <thead><tr><th>Columna</th><th>Valores / uso</th></tr></thead>
+      <tbody>
+        <tr><td>Estado</td><td>Pendiente · En revisión · Verificado · Publicado · Bloqueado · Duplicado · Cerrado</td></tr>
+        <tr><td>Existe confirmado</td><td>Sí / No (+ fecha en notas)</td></tr>
+        <tr><td>Fuente verificada</td><td>Ej.: Google Maps + Instagram</td></tr>
+        <tr><td>Notas de evidencia</td><td>Qué revisaste y qué faltó</td></tr>
+        <tr><td>Acción</td><td>corregir · alta_nueva · sin_cambio · excluir</td></tr>
+        <tr><td>Listo para cargar</td><td>Sí solo cuando la fila está completa y verificada</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="page-break section">
+    <h2>Ejemplo completo de 3 filas (cópialas a Sheets)</h2>
+    <p class="tiny">También hay un archivo listo para importar: <strong>ejemplo-tabla-gimnasios.csv</strong> (en la carpeta de assets del proyecto).</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Zona</th>
+          <th>Categoría</th>
+          <th>Teléfono</th>
+          <th>Instagram</th>
+          <th>Precio</th>
+          <th>Estado</th>
+          <th>Listo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="ok">
+          <td>Gold's Gym (Sede C.C. San Ignacio)</td>
+          <td>Chacao</td>
+          <td>Gimnasio Integral</td>
+          <td>0212-2642045</td>
+          <td>@goldsgymve</td>
+          <td>80$ mensual</td>
+          <td>Verificado</td>
+          <td>Sí</td>
+        </tr>
+        <tr class="warn">
+          <td>Black Rock GYM</td>
+          <td>Baruta</td>
+          <td>Entrenamiento híbrido</td>
+          <td>0412-8958723</td>
+          <td>@theblackrockgym</td>
+          <td>15$ diario</td>
+          <td>En revisión</td>
+          <td>No</td>
+        </tr>
+        <tr class="new">
+          <td>Nuevo Gym Ejemplo</td>
+          <td>Libertador</td>
+          <td>Musculación</td>
+          <td>0414-0000000</td>
+          <td>@usuario_ig</td>
+          <td>consultar</td>
+          <td>Pendiente</td>
+          <td>No</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Detalle de la fila “bien hecha” (Gold’s Gym)</h3>
+    <table>
+      <thead><tr><th>Campo</th><th>Valor de ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td>Link de Google Maps</td><td>Link real del local (abre el pin correcto)</td></tr>
+        <tr><td>Amenidades</td><td>Sauna | Estacionamiento | Lockers | Duchas</td></tr>
+        <tr><td>Actividades</td><td>Cycling | Pilates | Yoga | TRX</td></tr>
+        <tr><td>Horario</td><td>Lun-Vie 6:00 AM – 9:00 PM | Sáb 8:00 AM – 4:00 PM</td></tr>
+        <tr><td>Fotos</td><td>1 o más URLs que abran la imagen (no archivos pegados en el chat)</td></tr>
+        <tr><td>Fuente verificada</td><td>Google Maps + Instagram @goldsgymve</td></tr>
+        <tr><td>Notas de evidencia</td><td>Revisado 2026-07-30: abierto; teléfono responde; fotos OK</td></tr>
+        <tr><td>Acción</td><td>sin_cambio</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn">
+      <strong>Municipios / zonas permitidas:</strong>
+      <div class="badge-row" style="margin-top:2mm">
+        <span class="badge mint">Chacao</span>
+        <span class="badge mint">Baruta</span>
+        <span class="badge mint">Libertador</span>
+        <span class="badge mint">Sucre</span>
+        <span class="badge mint">El Hatillo</span>
+        <span class="badge mint">Guatire</span>
+        <span class="badge mint">Guarenas</span>
+        <span class="badge mint">San Antonio de los Altos</span>
+      </div>
+      Si solo tienes una avenida, pregunta al responsable antes de inventar el municipio.
+    </div>
+  </section>
+
+  <section class="page-break section">
+    <h2 id="s6">6. Qué datos lleva cada gimnasio (en simple)</h2>
+    <p>
+      Piensa en cada gimnasio como una <strong>tarjeta de información</strong>.
+      Lo que escribes en Sheets es lo que luego se ve (o ayuda a que se vea bien) en QueGym.
+    </p>
+    <figure class="figure">
+      <img src="06-anatomia-venue.png" alt="Ejemplo visual de un gimnasio bien cargado" />
+      <figcaption>Figura 6 — Así se “lee” un gimnasio completo: identidad, contacto, precio, horario, actividades y fotos.</figcaption>
+    </figure>
+
+    <h3>Tipos de centro (elige el más cercano)</h3>
+    <table>
+      <thead><tr><th>Si el negocio es…</th><th>Pon en Categoría algo como…</th></tr></thead>
+      <tbody>
+        <tr><td>Gimnasio de pesas / integral / fitness</td><td>Gimnasio Integral / Fitness Center</td></tr>
+        <tr><td>CrossFit / funcional / box</td><td>Entrenamiento funcional / híbrido</td></tr>
+        <tr><td>Estudio de yoga</td><td>Yoga</td></tr>
+        <tr><td>Estudio de pilates</td><td>Pilates</td></tr>
+        <tr><td>Spinning / cycling</td><td>Cycling / Spinning</td></tr>
+        <tr><td>Entrenador personal / estudio chico</td><td>Entrenamiento personal</td></tr>
+        <tr><td>Mezcla (varios deportes)</td><td>Centro mixto / club</td></tr>
+      </tbody>
+    </table>
+    <div class="callout tip">
+      <strong>Truco:</strong> si es un gimnasio grande que también da pilates, sigue siendo
+      <em>gimnasio integral</em>. No lo clasifiques solo por una clase secundaria.
+    </div>
+  </section>
+
+  <section class="page-break section">
+    <h2 id="s7">7. Herramientas que usarás</h2>
+    <figure class="figure">
+      <img src="05-metodos.png" alt="Cuatro herramientas de trabajo" />
+      <figcaption>Figura 7 — Combínalas: Sheets es tu base; el panel sirve para ajustes; Maps/IG dan la evidencia.</figcaption>
+    </figure>
+
+    <h3>A) Google Sheets (todos los días)</h3>
+    <ol>
+      <li>Completa o corrige filas.</li>
+      <li>Cuando un lote esté listo, marca <strong>Listo para cargar = Sí</strong>.</li>
+      <li>Avisa al responsable para que lo suban a QueGym.</li>
+      <li>Tú verificas después en el sitio de prueba (buscar + ficha).</li>
+    </ol>
+
+    <h3>B) Panel admin (pocos a la vez)</h3>
+    <p>Ideal para corregir <strong>1 a 20</strong> gimnasios: nombre, fotos, precios, textos.</p>
+    <table>
+      <thead><tr><th>Dónde entrar</th><th>Para qué</th></tr></thead>
+      <tbody>
+        <tr><td>staging.quegym.com/admin/login</td><td>Iniciar sesión</td></tr>
+        <tr><td>…/admin/catalogo</td><td>Ver la lista de centros</td></tr>
+        <tr><td>Botón editar de un centro</td><td>Cambiar perfil, fotos, planes</td></tr>
+        <tr><td>…/admin/duplicados</td><td>Ver posibles repetidos</td></tr>
+        <tr><td>…/buscar</td><td>Verlo como lo ve un usuario</td></tr>
+      </tbody>
+    </table>
+
+    <h3>C) Carga por lote (muchos a la vez)</h3>
+    <figure class="figure">
+      <img src="02-pipeline.png" alt="De tu tabla a la plataforma" />
+      <figcaption>Figura 8 — Tú preparas la tabla; el responsable la carga; tú confirmas en la web.</figcaption>
+    </figure>
+
+    <h3>D) Cómo verificar que un dato es real</h3>
+    <ol>
+      <li>Google Maps: ¿existe? ¿dirección? ¿abierto? ¿teléfono?</li>
+      <li>Instagram / Facebook / web: nombre, sedes, precios publicados</li>
+      <li>WhatsApp o llamada si falta un dato reciente</li>
+      <li>Comparar con lo que se ve hoy en QueGym</li>
+      <li>Revisar que no esté duplicado</li>
+    </ol>
+    <div class="callout danger">
+      Si no hay prueba suficiente → déjalo en <strong>Pendiente</strong> o <strong>Bloqueado</strong>.
+      Nunca inventes un teléfono, un precio o una foto.
+    </div>
+  </section>
+
+  <section class="page-break section">
+    <h2 id="s8">8. Cuándo un gimnasio está “listo”</h2>
+    <div class="grid-2">
+      <div class="card in avoid-break">
+        <h4>Obligatorio</h4>
+        <ul class="checklist">
+          <li>Nombre correcto</li>
+          <li>Zona / municipio correcto</li>
+          <li>Link de Maps que apunta al lugar correcto</li>
+          <li>Categoría coherente</li>
+          <li>Al menos actividades o una descripción clara</li>
+          <li>Prueba externa anotada</li>
+          <li>No es duplicado de otro</li>
+        </ul>
+      </div>
+      <div class="card avoid-break" style="border-top:4px solid var(--amber)">
+        <h4>Muy recomendado</h4>
+        <ul class="checklist">
+          <li>Teléfono o WhatsApp que funcione</li>
+          <li>Al menos 1 foto con link que abra</li>
+          <li>Precio de referencia</li>
+          <li>Horario</li>
+          <li>Instagram o web</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout danger avoid-break">
+      <strong>No cargues si:</strong> está cerrado para siempre · solo tienes el nombre sin ubicación ·
+      la foto no abre en el navegador · es claramente el mismo local ya publicado ·
+      hay datos contradictorios sin resolver.
+    </div>
+  </section>
+
+  <section class="page-break section">
+    <h2 id="s9">9. Plan por etapas</h2>
+    <figure class="figure">
+      <img src="07-fases.png" alt="Cuatro etapas del proyecto" />
+      <figcaption>Figura 9 — Arranque → Revisión de los existentes → Ampliar cobertura → Cierre de calidad.</figcaption>
+    </figure>
+    <ol>
+      <li><strong>Arranque (1–2 días):</strong> lee esta guía, pide accesos, practica con 5 gimnasios.</li>
+      <li><strong>Revisión:</strong> recorre los ~95 por zona (10–15 al día).</li>
+      <li><strong>Ampliar:</strong> arma lista de faltantes, cruza para no repetir, marca Listo.</li>
+      <li><strong>Cierre:</strong> prioriza los que no tienen precio/foto/contacto; entrega reporte final.</li>
+    </ol>
+  </section>
+
+  <section class="page-break section">
+    <h2 id="s10">10. Accesos, entregas y reglas</h2>
+    <figure class="figure">
+      <img src="09-accesos.png" alt="Qué pedir y qué no tocar" />
+      <figcaption>Figura 10 — Pide lo necesario; no manejes secretos técnicos ni producción.</figcaption>
+    </figure>
+
+    <h3>Enlaces útiles (sitio de prueba)</h3>
+    <table>
+      <thead><tr><th>Para</th><th>Dirección</th></tr></thead>
+      <tbody>
+        <tr><td>Inicio del sitio de prueba</td><td>https://staging.quegym.com</td></tr>
+        <tr><td>Buscar gimnasios</td><td>https://staging.quegym.com/buscar</td></tr>
+        <tr><td>Entrar al panel</td><td>https://staging.quegym.com/admin/login</td></tr>
+        <tr><td>Lista de centros (admin)</td><td>https://staging.quegym.com/admin/catalogo</td></tr>
+        <tr><td>Posibles duplicados</td><td>https://staging.quegym.com/admin/duplicados</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Qué debes entregar</h3>
+    <ol>
+      <li>Google Sheet actualizado (revisados + candidatos nuevos)</li>
+      <li>Cuando pidan: export CSV del lote listo</li>
+      <li>Centros corregidos en el sitio de prueba</li>
+      <li>Resumen semanal: cuántos verificaste, corregiste, agregaste, bloqueaste</li>
+      <li>Lista de exclusiones (cerrados / no verificables) con motivo</li>
+    </ol>
+
+    <h3>Reglas de oro</h3>
+    <ol>
+      <li><strong>La verdad importa más que la velocidad.</strong></li>
+      <li><strong>Una fila = una sede física.</strong></li>
+      <li><strong>No inventes</strong> precios, teléfonos ni ubicaciones.</li>
+      <li><strong>No borres</strong> masivamente sin permiso.</li>
+      <li>Si el gimnasio ya existe, <strong>corrígelo</strong>; no crees otro igual.</li>
+      <li>Si aparece una actividad rara (ej. un deporte nuevo), <strong>anota y pregunta</strong>.</li>
+      <li>Cada cambio importante lleva <strong>fuente + fecha</strong> en Notas.</li>
+      <li>Trabaja en el <strong>sitio de prueba</strong>, no en el público final.</li>
+    </ol>
+
+    <h3>¿A quién preguntar?</h3>
+    <table>
+      <thead><tr><th>Si pasa esto…</th><th>Habla con…</th></tr></thead>
+      <tbody>
+        <tr><td>No tienes acceso al admin o al Sheet</td><td>Ops / responsable</td></tr>
+        <tr><td>Hay que cargar un lote grande</td><td>Responsable técnico / de datos</td></tr>
+        <tr><td>Dudas si es el mismo gimnasio repetido</td><td>Lead de datos</td></tr>
+        <tr><td>Local cerrado o dato sensible</td><td>Ops</td></tr>
+        <tr><td>Actividad o amenidad que no sabes cómo anotar</td><td>Lead de datos</td></tr>
+      </tbody>
+    </table>
+
+    <div class="footer-note">
+      QueGym · Guía de trabajo del catálogo Caracas · Versión en lenguaje sencillo ·
+      Diagrama y ejemplo de tabla en docs/operations/assets/catalog-scope/
+    </div>
+  </section>
+
+</body>
+</html>

@@ -2,7 +2,9 @@
 
 Documento de planificación para publicar el MVP en **https://www.quegym.com** (dominio en GoDaddy), con administración segura y operación continua. Complementa [`DEPLOY_TEST_RUNBOOK.md`](./DEPLOY_TEST_RUNBOOK.md), [`oidc-rollout-sprint4.md`](./oidc-rollout-sprint4.md) y las plantillas de evidencia Sprint 4/5.
 
-**Estado del repo (mayo 2026):** runtime probado en local (95 venues, smoke/E2E); **no hay** Dockerfiles ni IaC de producción en el monorepo. Este plan define qué construir antes del cutover DNS.
+**Estado vivo staging:** [`NEXT_AGENT_BRIEF.md`](./NEXT_AGENT_BRIEF.md) (2026-08-02).  
+**Estado del repo:** runtime + staging operativos (95 venues, smoke 5/5); **sin** Dockerfiles/IaC prod en monorepo; **sin** cutover DNS hasta GO producto/ops.  
+**Rebrand:** no confundir — Fase 2 UI/copy **done**; pendiente solo Fase **3** identificadores técnicos (`@floit/*`, cookies) — fuera del cutover mínimo.
 
 ---
 
@@ -16,7 +18,7 @@ Documento de planificación para publicar el MVP en **https://www.quegym.com** (
 | Seguridad MVP | Sin `ADMIN_API_TOKEN` / logins locales en prod; Turnstile recomendado en leads |
 | Operación | Health checks, backups DB, runbook de incidentes, monitoreo básico |
 
-**No es objetivo de este lanzamiento:** checkout, pagos, broker de eventos externo, multi-región, Fase 2–3 del rebrand técnico (`@quegym/*`, cookies renombradas).
+**No es objetivo de este lanzamiento:** checkout, pagos, broker de eventos externo, multi-región, **Fase 3** del rebrand técnico (`@quegym/*`, cookies renombradas).
 
 ---
 
@@ -637,7 +639,8 @@ Railway **no** necesita registros públicos en GoDaddy si solo Vercel consume la
 - [x] Neon: proyecto `quegym`; 4 databases + PostGIS.
 - [x] Auth0: APIs `floit-admin` / `floit-partner`; Partner Web + Admin M2M.
 - [x] Tokens S2S en vault (no en git).
-- [ ] Import catálogo staging + smoke/gates + GO/NO-GO.
+- [x] Import catálogo staging (95 venues) + smoke platform PASS.
+- [ ] Gates KPI **PASS PRD 17/17** + firma GO/NO-GO (ver brief 2026-08-02).
 - [ ] Prod `www` y OIDC-only sin passwords locales.
 
 ### 16.9 Coste orientativo MVP (orden de magnitud)

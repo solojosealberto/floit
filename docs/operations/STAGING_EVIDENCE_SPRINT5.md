@@ -2,6 +2,8 @@
 
 Evidencia objetiva para cerrar Sprint 5 y habilitar prueba integral del flujo usuario con criterios de `GO/NO-GO`.
 
+**Estado vivo (prioridad):** [`NEXT_AGENT_BRIEF.md`](./NEXT_AGENT_BRIEF.md). Vocabulario: [`DOC_STATUS_VOCABULARY.md`](./DOC_STATUS_VOCABULARY.md).
+
 Referencias:
 
 - Sprints: [`docs/operations/sprints.md`](./sprints.md)
@@ -11,7 +13,43 @@ Referencias:
 
 ---
 
-## Actualización 2026-05-27 — QA visual, E2E lead y tráfico KPI
+## §0 Estado vigente (2026-08-02) — leer solo esto para prioridad
+
+| Campo | Valor |
+|---|---|
+| Repo HEAD | `f937abf` |
+| URL | `https://staging.quegym.com` (**no** `www.staging.quegym.com`) |
+| Smoke platform | **PASS** — health **5/5**, 95 venues |
+| QA visual | **PASS** (firma 2026-05-27) — no reabrir |
+| E2E lead **API** | **PASS** (`POST /api/leads` → admin M2M) |
+| E2E checklist manual §2–3 | **Parcial / opcional** antes de GO producto (no bloquea re-seed) |
+| KPI PRD último run | **FAIL PRD** (8 checks, 2026-08-02) — ventana 7d sin tráfico reciente |
+| Pico histórico KPI | **PASS PRD 16/17** (2026-06-17) — solo `stable days` 1/7 |
+| Bloqueante técnico | `ANALYTICS_ALLOW_BACKDATE` + `pnpm staging:generate-traffic` → **17/17** |
+| CI | `build` PASS; `e2e-services` FAIL en `main` |
+| GO producto/ops | **Pendiente** |
+| Railway deploy SHA analytics | **No verificado en panel** — código backdate en `f937abf`; confirmar que el servicio desplegado incluye ese commit |
+
+**Next:** ver brief § «Próximas 3 acciones». Runbook: [`STAGING_DEPLOYMENT_STATUS.md`](./STAGING_DEPLOYMENT_STATUS.md) § Cierre KPI 17/17.
+
+---
+
+## Histórico — no usar para prioridad
+
+> Los bloques siguientes son append-only. Pueden contradecir §0 (p. ej. QA «Pendiente» o KPI «faltan variantes»). **Ignorar para next actions.**
+
+### Actualización 2026-06-17 — tráfico + PASS PRD 16/17 (histórico)
+
+| Campo | Valor |
+|---|---|
+| Commit | `f937abf` |
+| `pnpm staging:generate-traffic` | OK |
+| KPI PRD | **PASS PRD 16/17** — FAIL solo `ab stable days` |
+| Nota | Caducó en ventana 7d hacia 2026-08; re-seed obligatorio |
+
+---
+
+## Actualización 2026-05-27 — QA visual, E2E lead y tráfico KPI (histórico)
 
 | Campo | Valor |
 |---|---|

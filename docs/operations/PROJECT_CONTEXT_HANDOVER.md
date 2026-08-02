@@ -1,6 +1,6 @@
 # QueGym — contexto consolidado para futuras iteraciones
 
-Documento de continuidad para retomar el proyecto sin pérdida de contexto técnico, funcional y operativo.
+Documento de continuidad técnico/funcional. **Next actions:** solo [`NEXT_AGENT_BRIEF.md`](./NEXT_AGENT_BRIEF.md). Guía: [`DOCUMENTATION_GUIDE.md`](./DOCUMENTATION_GUIDE.md).
 
 ## 1) Qué es QueGym (marco de producto)
 
@@ -214,53 +214,31 @@ Antes de implementar nuevos cambios:
 
 ### Lectura mínima obligatoria (10-15 min)
 
-1. `docs/operations/NEXT_AGENT_BRIEF.md`
-2. `docs/operations/NEXT_STEPS_RECOMMENDED.md`
-3. `docs/operations/sprints.md`
-4. `docs/operations/EPICS_USER_STORIES_STATUS.md`
+1. `docs/operations/NEXT_AGENT_BRIEF.md` (**CURRENT TRUTH**)
+2. `docs/operations/DOCUMENTATION_GUIDE.md` / `DOC_STATUS_VOCABULARY.md`
+3. `docs/operations/STAGING_DEPLOYMENT_STATUS.md` (si el trabajo es deploy/KPI)
+4. `docs/operations/sprints.md` + `EPICS_USER_STORIES_STATUS.md` (solo si cambia entrega)
+5. `docs/operations/NEXT_STEPS_RECOMMENDED.md` — estrategia larga (no next-session)
 
 ### Contexto operativo inmediato
 
-- **Rebrand QueGym (2026-05-27):** **Fase 1** copy/metadata ✅. **Fase 2 visual + copy** ✅ en repo local:
-  - Tokens dual-theme `--qg-*`, accent Mint, elevación Apple, partner/admin shells, `localStorage` canónico, favicon, export `quegym-leads.csv`.
-  - Copy verbal tuteo venezolano (sin voseo); gate `pnpm copy:verify`.
-  - Planes: [`REBRAND_QUEGYM_PLAN.md`](REBRAND_QUEGYM_PLAN.md), [`../ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md`](../ux/QUEGYM_BRAND_UI_IMPLEMENTATION_PLAN.md), [`../ux/QUEGYM_BRAND_COPY_PLAN.md`](../ux/QUEGYM_BRAND_COPY_PLAN.md).
-  - Referencias: [propuesta de marca](https://propuestademarca.netlify.app/) · [UI aplicada](https://quegymconmarcaaplicada.netlify.app/).
-  - **Pendiente:** QA visual/copy en **staging** (`UI_VISUAL_QA_CHECKLIST.md`).
-- **Completado (2026-05-27):** Sprint **UX-A/B/C** — confianza catálogo/conversión en repo ([`QUEGYM_UX_V0_IMPROVEMENT_PLAN.md`](../ux/QUEGYM_UX_V0_IMPROVEMENT_PLAN.md)):
-  - Tarjetas unificadas (`VenueCardGrid`), `/buscar` + ficha + home + nav móvil, Lucide/skeletons.
-  - **Comparador:** `CompareActiveBar` en `/buscar` (fix visibilidad móvil y desaparición al hover); `CompareGrid` sticky en `/comparar` (grilla móvil alineada a wireframe v0).
-  - **Focus campos:** `.qg-field` (focus en contenedor redondeado) y `.qg-input`; sin borde cuadrado grueso en inputs transparentes (home, buscar, logins).
-  - Catálogo JSON re-normalizado: `pnpm venues:audit:ui` → **100% descripción limpia** (95 venues); **import Neon staging OK** (2026-06-14, `{ updated: 95 }`).
-- **Completado (2026-06-15):** gates Sprint 5 **PASS**; assets marca consolidados; `QueGymLogo` en flujo público + login admin/partner; galería fotos partner cableada; fix CI.
-- **Completado (2026-05-27):** menú móvil (`mobile-nav-drawer.tsx`) — panel opaco (`bg-quegym-page`), portal a `document.body` y `z-[1300]` (evita transparencia por `backdrop-blur` del header).
-- **Completado (2026-05-27):** `VenueImage` — placeholder con siglas centradas y tokens `--qg-*`; fallback en error de carga (`onError`); galerías ficha usan `VenueImage` (`ff98be2`).
-- **Completado (2026-05-27):** cierre beta técnico — commit/deploy `ca4070b`; `smoke:platform` + `sprint5:staging-gate --kpi-relaxed` **PASS** en staging (revalidado HEAD `ff98be2`).
-- **Completado (2026-05-27):** QA visual staging **PASS** (firma producto/ops).
-- **Completado (2026-05-27):** E2E lead staging — `POST /api/leads` + verificación `GET /v1/admin/leads` (10 leads en BD).
-- **Completado (2026-05-27):** `pnpm staging:generate-traffic` — KPI PRD **16/17** (`stable days` pendiente).
-- **Identificadores técnicos legacy** sin cambio (`@floit/*`, cookies, `floit_verified`, eventos) — Fase 3 planificada.
-- **Sprint UI (Sprint 11) cerrado** (mayo 2026): páginas P1/P2 del plan en `sprints.md` (`/partner/planes`, `/partner/fotos`, `/admin/venues`, `/admin/duplicados`, `/admin/moderacion-media`), discovery con taxonomías activas y pulido ficha gym (tabs, descripción, guardar/compartir).
-- **Staging desplegado (2026-05):** infra en Neon `quegym`, Railway `quegym-api`, Auth0, Vercel `floit-web`, DNS **`https://staging.quegym.com`**. Registro: **`STAGING_DEPLOYMENT_STATUS.md`**, informe **`STAGING_AGENT_EXECUTION_REPORT.md`**.
-- **Staging paso 3 (2026-05-27):** auth admin desbloqueado — M2M Auth0 + fix issuer `00fd9f9`; `pnpm sprint5:staging-gate -- --kpi-relaxed` → Sprint 4 + flow-checklist **PASS**; KPI A/B **FAIL** (tráfico). `/admin/leads` operativo en staging. Decisión: **GO técnico condicional**. Evidencia: **`STAGING_EVIDENCE_SPRINT5.md`**, **`STAGING_AGENT_EXECUTION_REPORT.md`**.
-- **Staging paso 3 (2026-05-26):** import **95 venues**; discovery OK; `/health` 5/5 + `smoke:platform` OK; Sprint 4 gate PASS; Sprint 5 bloqueado por SLA 401 (resuelto 2026-05-27).
-- **Admin login staging:** fix `admin-local-login.ts` (`7554d6c`) + M2M BFF (`ADMIN_OIDC_ACCESS_TOKEN` en Vercel Preview).
-- **Prod `www`:** sin cutover DNS.
-- Objetivo recomendado de la próxima sesión: **QA visual staging** (`UI_VISUAL_QA_CHECKLIST.md`) + E2E manual §2–3 + tráfico KPI A/B + firma GO/NO-GO.
-- **Estado reciente:** `/admin/leads` renovada con la misma línea gráfica que `/admin` (grid + sidebar), filtros cliente y métricas derivadas de `GET /v1/admin/leads` + SLA + catálogo para etiquetas de centro/zona.
-- **Estado reciente (2026-05-09):** **`/admin/analytics`** ampliada con gráficos MVP coherentes con diseño (apiladas, donut, líneas; detalle técnico colapsable con funnel/SLA/experimento). **`/admin/partner-claims`** renovada con dashboard (KPIs, búsqueda, chips, tabla, paginación, CSV) y bloques operativos anclados (`#operaciones-y-sync`).
-- **Estado reciente (2026-05-10):** UI operativa de **`#operaciones-y-sync`** alineada a diseño (paneles health/DLQ/ownership/auditoría como arriba); modal **Ver detalle** de claims; documentación operativa y guías locales sincronizadas con estos cambios.
-- **Admin — configuración:** **`/admin/configuracion`** — vista de contexto operativo (sesión, modo de auth del BFF sin secretos, enlaces a runbooks y rutas internas); sidebar «Configuración» enlaza aquí (ya no duplica el dashboard). Implementación: `apps/web/src/app/admin/configuracion/page.tsx`, `apps/web/src/lib/admin-config-summary.ts`. Referencia: `docs/operations/ADMIN_CONFIGURATION_PAGE_PLAN.md`.
-- Si surge solicitud fuera de este alcance, registrar como pendiente y mantener foco en el scope UI del sprint hasta completar P1/P2.
+> **Next session / prioridad:** solo [`NEXT_AGENT_BRIEF.md`](./NEXT_AGENT_BRIEF.md). No duplicar «objetivo próxima sesión» aquí.
+
+- **Rebrand QueGym:** Fase 1 + Fase 2 ✅ (repo + staging); QA visual **PASS** (2026-05-27). Fase 3 (`@floit/*`) pendiente.
+- **Completado:** Sprint UX-A/B/C; logo/`QueGymLogo`; menú móvil opaco; `VenueImage`; import 95 venues; smoke 5/5; admin M2M `00fd9f9`; E2E lead API; commits `ca4070b`–`f937abf` en `main`.
+- **KPI:** pico **PASS PRD 16/17** (2026-06-17); live **FAIL PRD** (2026-08-02) por ventana 7d — re-seed + backdate.
+- **Staging:** `https://staging.quegym.com` — informe histórico superseded: `STAGING_AGENT_EXECUTION_REPORT.md`.
+- **Prod `www`:** sin cutover hasta GO producto/ops.
+- **Admin reciente:** analytics, partner-claims, `#operaciones-y-sync`, `/admin/configuracion` — ver rutas en `WEB_ROUTES_PLATFORM.md`.
 
 ### Regla de handoff al cerrar cada jornada
 
 Siempre dejar actualizado:
 
-- estado real de sprints (`docs/operations/sprints.md`),
-- estado de épicas/US (`docs/operations/EPICS_USER_STORIES_STATUS.md`),
-- contexto consolidado (`docs/operations/PROJECT_CONTEXT_HANDOVER.md`),
-- brief de arranque del próximo agente (`docs/operations/NEXT_AGENT_BRIEF.md`).
+- **`NEXT_AGENT_BRIEF.md`** + **`STATUS_CHANGELOG.md`** (obligatorio),
+- estado real de sprints (`sprints.md`),
+- estado de épicas/US (`EPICS_USER_STORIES_STATUS.md`),
+- este handoff (contexto, sin next-actions contradictorias).
 
 ## 12) Estado reciente: partner login + workspace por gym
 

@@ -1,0 +1,20 @@
+# Status changelog (flips de estado operativo)
+
+Registro corto de cambios de **estado vivo** (no changelog de producto). Actualizar en el mismo PR/commit que mueva un gate, QA, GO o deploy relevante.
+
+Formato: `YYYY-MM-DD | SHA | qué cambió | evidencia`.
+
+| Fecha | SHA / ref | Cambio | Evidencia |
+|-------|-----------|--------|-----------|
+| 2026-08-02 | `f937abf` | Reconciliación documental P0–P2: brief = CURRENT TRUTH; KPI live **FAIL PRD** (8 checks, ventana 7d vacía); smoke **PASS** 5/5; QA visual = PASS (no reabrir) | Este log + `NEXT_AGENT_BRIEF.md` |
+| 2026-06-17 | `f937abf` | Pico KPI **PASS PRD 16/17** (solo `stable days`); E2E lead API PASS; script traffic + backdate en código | `STAGING_EVIDENCE_SPRINT5.md` (histórico) |
+| 2026-06-16 | `ff98be2` | Placeholder `VenueImage` en staging | Deploy Vercel |
+| 2026-06-15 | `ca4070b` | Logo + menú móvil + galería partner en staging | Deploy Vercel |
+| 2026-05-27 | `00fd9f9` | Admin M2M + issuer; `PASS relaxed`; QA visual PASS | Evidencia S5 / agent report (histórico) |
+| 2026-05-26 | — | Import 95 venues; health 5/5; smoke OK | `STAGING_DEPLOYMENT_STATUS.md` |
+
+## Política
+
+1. No citar un KPI PRD sin fila en esta tabla **o** run del mismo día en el brief.
+2. Tras `PASS PRD 17/17` o firma GO: añadir fila inmediata.
+3. Tras cutover `www.quegym.com`: añadir fila + actualizar brief.

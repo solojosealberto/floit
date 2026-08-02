@@ -1,6 +1,11 @@
 # Informe agente — Deployment QueGym
 
-## Última ejecución — 2026-05-27
+> **Superseded (2026-08-02) para prioridad y KPI.**  
+> Estado vivo: [`NEXT_AGENT_BRIEF.md`](./NEXT_AGENT_BRIEF.md).  
+> Evidencia vigente: [`STAGING_EVIDENCE_SPRINT5.md`](./STAGING_EVIDENCE_SPRINT5.md) §0.  
+> Este informe conserva el snapshot de mayo 2026 (pre-tráfico / variantes A/B incompletas). **No** usar para next actions.
+
+## Última ejecución — 2026-05-27 (histórico)
 
 ### Fase completada hasta
 

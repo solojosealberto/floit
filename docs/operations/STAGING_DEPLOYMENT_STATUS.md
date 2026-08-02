@@ -1,15 +1,18 @@
 # Estado del despliegue staging — QueGym
 
-Registro operativo de lo configurado en proveedores (sin secretos). Fuente: informe *Configuración de ambientes* (mayo 2026), alineado a [`PRODUCTION_ACCOUNTS_SETUP.md`](./PRODUCTION_ACCOUNTS_SETUP.md).
+Registro operativo de lo configurado en proveedores (sin secretos). Alineado a [`PRODUCTION_ACCOUNTS_SETUP.md`](./PRODUCTION_ACCOUNTS_SETUP.md).
 
-**URL pública staging:** https://staging.quegym.com (verificado HTTP 200 en web).
+**Estado vivo / next actions:** [`NEXT_AGENT_BRIEF.md`](./NEXT_AGENT_BRIEF.md) (este archivo = checklist infra + runbooks).
+
+**URL pública staging:** https://staging.quegym.com (HTTP 200). **No existe** `www.staging.quegym.com` (NXDOMAIN).
 
 **Catalog Railway:** https://floitcatalog-service-production.up.railway.app — `venues: 95`.  
-**Search Railway:** https://floitsearch-service-production.up.railway.app — `/v1/search` OK (`meta.total: 95`) tras `CATALOG_SERVICE_URL` → catalog.  
-**Vercel staging:** deploy **`ff98be2`** (2026-05-27) — UX beta + placeholder imágenes; ver commits `ca4070b`–`ff98be2`.  
-**URLs leads / partner / analytics (Railway):** registradas 2026-05-26 — **salud HTTP OK** (`/health` 200 en los tres).  
-**Auth admin staging:** M2M Auth0 + `ADMIN_OIDC_ACCESS_TOKEN` en Vercel Preview; fix issuer `00fd9f9`. `/admin/leads` operativo.  
-**Pendiente:** KPI `ab stable days` (7/7); firma GO/NO-GO producto/ops.
+**Search Railway:** https://floitsearch-service-production.up.railway.app — `/v1/search` OK (`meta.total: 95`).  
+**Vercel staging:** commits `ca4070b`–`ff98be2` (+ `main` posterior); assets `/brand/` OK.  
+**APIs Railway:** health **5/5** (catalog, search, leads, partner, analytics) — verificado 2026-08-02.  
+**Auth admin:** M2M Auth0 + `ADMIN_OIDC_ACCESS_TOKEN` Preview; issuer fix `00fd9f9`.  
+**Railway deploy SHA (analytics):** no anotado en panel — confirmar que el servicio incluye `f937abf` antes de depender de backdate.  
+**Pendiente paso 3:** re-seed KPI → **PASS PRD 17/17** (`ANALYTICS_ALLOW_BACKDATE`) + firma GO/NO-GO.
 
 ---
 
@@ -18,8 +21,8 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | Fase | Estado | Notas |
 |------|--------|-------|
 | Paso 2 — Cuentas e infra (§0–§5) | **Completado** | Neon, Railway, Auth0, Vercel, DNS `staging` |
-| Paso 3 — Datos y validación | **Casi cerrado** | Deploy `ca4070b` OK; smoke + gates relaxed PASS; KPI PRD y E2E manual pendientes |
-| Paso 4 — Producción `www` | **Pendiente** | Tras GO/NO-GO staging |
+| Paso 3 — Datos y validación | **Casi cerrado** | Smoke PASS; QA visual PASS; E2E lead API PASS; KPI PRD requiere re-seed (ventana 7d) |
+| Paso 4 — Producción `www` | **Pendiente** | Tras GO producto/ops |
 
 ---
 
@@ -40,7 +43,8 @@ Registro operativo de lo configurado en proveedores (sin secretos). Fuente: info
 | 7f | Placeholder imágenes venue (`VenueImage`) | ✅ | `ff98be2` — siglas + tokens `--qg-*`; deploy Vercel |
 | 7b | Fix crash partner Railway (`express`) | ✅ | `services/partner/package.json` (commit `08633b0`) |
 | 7c | Fix TypeORM Postgres (`datetime` → `timestamptz`) | ✅ | 8 entidades partner + helper `typeorm-column-types.ts`; leads alineado; Railway PR #1 absorbido en `main` |
-| 8 | Smoke + evidencias Sprint 4/5 | ☐ | Preflight + KPI PRD **16/17**; stable days 7/7 pendiente (`ANALYTICS_ALLOW_BACKDATE` o calendario) |
+| 8 | Smoke + evidencias Sprint 4/5 | ☐ | Smoke PASS; KPI PRD **FAIL** live (2026-08-02) — re-seed; ver § Cierre KPI 17/17 |
+| 8a | `ANALYTICS_ALLOW_BACKDATE=true` (analytics Railway) | ☐ | Bloqueante para `stable days` 7/7 + simulación ventana |
 | 8b | Auth M2M + fix issuer Auth0 | ✅ | `00fd9f9`; `pnpm auth0:m2m-token`; Vercel `ADMIN_OIDC_ACCESS_TOKEN` |
 | 9 | Dominio prod `www.quegym.com` | ☐ | Post GO |
 
@@ -136,13 +140,84 @@ Dominio gestionado: **quegym.com**. Producción `www` y forward `@` → **no con
 
 ---
 
+## Cierre KPI 17/17 — Railway analytics (paso a paso)
+
+**Estado live (2026-08-02):** `pnpm sprint5:staging-gate` PRD → **FAIL PRD** (8 checks) — la ventana de ~7 días quedó sin el tráfico de junio. Pico histórico **PASS PRD 16/17** (2026-06-17): solo fallaba `stable days`.
+
+**Por qué hace falta backdate + re-seed:** el gate exige **7 días distintos** con las tres variantes (`membership`, `trial`, `whatsapp_first`) con ≥1 `experiment_assignment`. En el pico de junio solo **2026-06-17** tenía las tres; además el volumen funnel/SLA caduca sin tráfico reciente:
+
+| Fecha | membership | trial | whatsapp_first | Las 3 |
+|-------|------------|-------|----------------|-------|
+| 2026-06-17 | 42 | 35 | 35 | ✅ |
+| Resto ventana 14d | parcial | parcial | parcial | ❌ |
+
+**Código en `main`:** commit `f937abf` — analytics acepta `_stagingBackdateDays` en propiedades **solo si** `ANALYTICS_ALLOW_BACKDATE=true` en el servicio.
+
+### Paso 1 — Railway: variable de entorno
+
+1. Abrir [Railway Dashboard](https://railway.app/dashboard).
+2. Proyecto: **`quegym-api`**.
+3. Servicio: **`analytics`** (paquete `@floit/analytics-service`; URL pública `https://floitanalytics-service-production.up.railway.app`).
+4. Pestaña **Variables** → **New Variable**:
+   - **Name:** `ANALYTICS_ALLOW_BACKDATE`
+   - **Value:** `true`
+5. **No** añadir esta variable en catalog, leads, partner ni search (solo analytics).
+6. Guardar → Railway redeploya automáticamente (o **Deployments** → **Redeploy** en analytics).
+
+### Paso 2 — Verificar deploy con backdate
+
+Desde tu máquina (repo clonado):
+
+```bash
+curl -sS -X POST "https://floitanalytics-service-production.up.railway.app/v1/events" \
+  -H "content-type: application/json" \
+  -d '{"name":"experiment_assignment","properties":{"experiment":"cta_lead_entrypoint_v2","ctaVariant":"membership","_stagingBackdateDays":5,"venueSlug":"qa-backdate-test"}}'
+```
+
+Luego comprobar que existe actividad en un día anterior (no solo hoy):
+
+```bash
+curl -sS "https://floitanalytics-service-production.up.railway.app/v1/metrics/experiments/cta-lead-form?windowDays=14" \
+  | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const j=JSON.parse(d);console.log('stableDays',j.stableDaysWithAllVariants);j.points?.forEach(p=>console.log(p.date,p.membership.assignments,p.trial.assignments,p.whatsapp_first.assignments));});"
+```
+
+Si `ANALYTICS_ALLOW_BACKDATE` está activo y el deploy incluye `f937abf`, verás asignaciones repartidas en fechas pasadas tras el seed (paso 3).
+
+### Paso 3 — Seed de tráfico (7 días A/B)
+
+Requisitos locales: `docs/env/staging.local` con `AUTH0_M2M_CLIENT_ID` + `AUTH0_M2M_CLIENT_SECRET` + `AUTH0_DOMAIN` (o `ADMIN_OIDC_ISSUER`).
+
+```bash
+cd "/Users/nosoyelmago/Documents/FLOIT v.0.2"
+export PATH="$(pwd)/.cursor-bin:$PATH"
+pnpm staging:generate-traffic
+```
+
+El script publica, por cada variante, **5 `experiment_assignment` por día** en `_stagingBackdateDays` 0…6 (7 días) + submits y leads para SLA.
+
+### Paso 4 — Gate PRD completo
+
+```bash
+pnpm sprint5:staging-gate
+```
+
+**Éxito esperado:** línea final `Result: PASS (KPI gate for Sprint 5 is green)` y `PASS sprint5:staging-gate completado` — **17/17 checks**.
+
+### Paso 5 — Post-GO (inmediato tras 17/17)
+
+1. En Railway analytics: **eliminar** `ANALYTICS_ALLOW_BACKDATE` o poner `false` → redeploy (evitar backdate en operación normal).
+2. Registrar en [`STAGING_EVIDENCE_SPRINT5.md`](./STAGING_EVIDENCE_SPRINT5.md) fecha + commit + salida gate.
+3. Firma GO/NO-GO producto/ops → [`PRODUCTION_LAUNCH_PLAN.md`](./PRODUCTION_LAUNCH_PLAN.md) §14.
+
+---
+
 ## Brechas conocidas (actualizado 2026-05-27)
 
-1. **KPI gate Sprint 5** — variantes A/B `membership` + `trial` ausentes (~21 eventos; `whatsapp_first` sí). Requiere tráfico QA o sesión instrumentada.
-2. **E2E manual** — checklist §2–3 en `STAGING_EVIDENCE_SPRINT5.md` sin completar (usuario, partner, lead real).
-3. **Token M2M** — expira ~24 h; renovar con `pnpm auth0:m2m-token` y actualizar Vercel Preview `ADMIN_OIDC_ACCESS_TOKEN`.
-4. **Firma GO/NO-GO** — producto/ops pendiente; decisión técnica actual: **GO técnico condicional**.
-5. **Prod** — `www.quegym.com`, apex redirect, OIDC-only sin passwords locales: pendiente post-GO staging.
+1. **KPI PRD 17/17** — re-seed con `ANALYTICS_ALLOW_BACKDATE` (§ Cierre KPI 17/17); live 2026-08-02 = FAIL por ventana vacía.
+2. **Token M2M** — expira ~24 h; renovar con `pnpm auth0:m2m-token` → Vercel Preview `ADMIN_OIDC_ACCESS_TOKEN`.
+3. **Firma GO/NO-GO** — producto/ops pendiente tras KPI 17/17.
+4. **Prod** — `www.quegym.com`: pendiente post-GO staging.
+5. **CI `e2e-services`** — sigue FAIL en `main` (no bloquea staging online).
 
 ---
 

@@ -1,5 +1,10 @@
 # Instrucciones para agente GPT — Deployment QueGym (staging → GO)
 
+> **Superseded (2026-08-02) para prioridad / next actions.**  
+> Arranque: [`NEXT_AGENT_BRIEF.md`](./NEXT_AGENT_BRIEF.md) → [`STAGING_DEPLOYMENT_STATUS.md`](./STAGING_DEPLOYMENT_STATUS.md).  
+> Este archivo = histórico mayo 2026. No usar el prompt §1 a ciegas.
+
+
 Documento **de arranque** para ChatGPT (Agent Mode, o1, GPT-4 con herramientas) u otro agente con o sin navegador. El detalle paso a paso en UI está en [`AGENT_BROWSER_DEPLOYMENT_RUNBOOK.md`](./AGENT_BROWSER_DEPLOYMENT_RUNBOOK.md).
 
 **No pegar secretos en el chat** (tokens, `DATABASE_URL`, client secrets). Usar el vault del equipo o variables en paneles (Railway / Vercel).
