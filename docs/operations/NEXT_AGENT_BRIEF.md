@@ -5,7 +5,7 @@
 > Ledger histórico: `sprints.md` · Backlog/US: `EPICS_USER_STORIES_STATUS.md` · Contexto: `PROJECT_CONTEXT_HANDOVER.md`.  
 > Vocabulario de estados: [`DOC_STATUS_VOCABULARY.md`](./DOC_STATUS_VOCABULARY.md) · Log de flips: [`STATUS_CHANGELOG.md`](./STATUS_CHANGELOG.md).
 
-**Última reconciliación documental:** 2026-08-03 · **Repo HEAD:** (este commit) · **URL staging:** https://staging.quegym.com  
+**Última reconciliación documental:** 2026-08-03 · **Repo HEAD:** `d9373dc` · **URL staging:** https://staging.quegym.com  
 **No usar:** `https://www.staging.quegym.com` (NXDOMAIN — no existe en DNS).
 
 ---
@@ -15,7 +15,7 @@
 | Campo | Valor (2026-08-03) |
 |-------|---------------------|
 | Producto | QueGym MVP — discovery + comparación + leads (Caracas) |
-| Repo | `main` (push de fix partner OIDC admin) |
+| Repo | `main` @ `d9373dc` |
 | Web staging (Vercel) | `staging.quegym.com` — deploy citado `ca4070b`–`ff98be2` (+ commits posteriores en `main`) |
 | APIs (Railway `quegym-api`) | catalog / search / leads / partner / analytics — **health 5/5** |
 | Partner admin `/v1/admin/*` | **Fix en código** (`oidc-jose` + guards) — **redeploy Railway pendiente**; ver [`ADMIN_STAGING_QA_REPORT.md`](./ADMIN_STAGING_QA_REPORT.md) H1 |

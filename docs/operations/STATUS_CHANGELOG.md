@@ -6,7 +6,7 @@ Formato: `YYYY-MM-DD | SHA | qué cambió | evidencia`.
 
 | Fecha | SHA / ref | Cambio | Evidencia |
 |-------|-----------|--------|-----------|
-| 2026-08-03 | (push) | Fix código partner admin 500: normalizar issuer/JWKS OIDC + try/catch en guards (`oidc-jose.ts`); **redeploy Railway pendiente** | `ADMIN_STAGING_QA_REPORT.md` H1 |
+| 2026-08-03 | `d9373dc` | Fix código partner admin 500: normalizar issuer/JWKS OIDC + try/catch en guards (`oidc-jose.ts`); **redeploy Railway pendiente** | `ADMIN_STAGING_QA_REPORT.md` H1 |
 | 2026-08-02 | `027b56d`+ | QA admin staging: partner admin APIs **500**; catalog admin **401**; BFF leads **401** — ver `ADMIN_STAGING_QA_REPORT.md` | Suite HTTP admin |
 | 2026-08-02 | `f937abf` | Reconciliación documental P0–P2: brief = CURRENT TRUTH; KPI live **FAIL PRD** (8 checks, ventana 7d vacía); smoke **PASS** 5/5; QA visual = PASS (no reabrir) | Este log + `NEXT_AGENT_BRIEF.md` |
 | 2026-06-17 | `f937abf` | Pico KPI **PASS PRD 16/17** (solo `stable days`); E2E lead API PASS; script traffic + backdate en código | `STAGING_EVIDENCE_SPRINT5.md` (histórico) |
