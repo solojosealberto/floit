@@ -49,6 +49,13 @@ export class PartnerProfileEntity {
   @Column({ type: "simple-json", nullable: true })
   amenities!: string[] | null;
 
+  /**
+   * Selected catalog venue-type slugs (multi). Synced to catalog as a single
+   * `venueType` (`mixed` when more than one).
+   */
+  @Column({ type: "simple-json", nullable: true })
+  venueTypes!: string[] | null;
+
   @CreateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   createdAt!: Date;
 

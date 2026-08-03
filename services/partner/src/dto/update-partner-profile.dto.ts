@@ -58,4 +58,11 @@ export class UpdatePartnerProfileDto {
   @IsString({ each: true })
   @MaxLength(64, { each: true })
   amenities?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(12)
+  @IsString({ each: true })
+  @MaxLength(48, { each: true })
+  venueTypes?: string[];
 }

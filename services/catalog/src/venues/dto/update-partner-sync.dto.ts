@@ -87,6 +87,11 @@ export class UpdatePartnerSyncDto {
   amenities?: string[];
 
   @IsOptional()
+  @IsString()
+  @MaxLength(48)
+  venueType?: string;
+
+  @IsOptional()
   @IsArray()
   @ArrayMaxSize(20)
   @ValidateNested({ each: true })

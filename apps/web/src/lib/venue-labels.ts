@@ -1,13 +1,17 @@
-const VENUE_TYPE_LABELS: Record<string, string> = {
-  gym: "Gym clásico",
-  functional: "Funcional",
-  yoga: "Yoga",
-  pilates: "Pilates",
-  cycling: "Cycling",
-  mixed: "Mixto",
-  personal_training: "Personal training",
-  crossfit: "CrossFit",
-};
+/** Shared venue-type options for claim + admin/partner profile. */
+export const VENUE_TYPE_OPTIONS: { value: string; label: string }[] = [
+  { value: "gym", label: "Gimnasio clásico" },
+  { value: "functional", label: "Functional / CrossFit" },
+  { value: "yoga", label: "Yoga" },
+  { value: "pilates", label: "Pilates" },
+  { value: "cycling", label: "Cycling" },
+  { value: "mixed", label: "Mixto" },
+  { value: "personal_training", label: "Personal training" },
+];
+
+const VENUE_TYPE_LABELS: Record<string, string> = Object.fromEntries(
+  VENUE_TYPE_OPTIONS.map((o) => [o.value, o.label]),
+);
 
 /** Etiqueta legible para `venueType` (UI tarjetas). */
 export function formatVenueTypeLabel(venueType?: string | null): string {
@@ -23,4 +27,15 @@ export function formatVenueMetaLine(
 ): string {
   const type = formatVenueTypeLabel(venueType).toUpperCase();
   return `${zone.toUpperCase()} · ${type}`;
+}
+
+/** Catalog stores a single venueType; multi-select collapses to one slug. */
+export function derivePrimaryVenueType(types: string[]): string | null {
+  const cleaned = Array.from(
+    new Set(types.map((t) => t.trim().toLowerCase()).filter(Boolean)),
+  );
+  if (cleaned.length === 0) return null;
+  if (cleaned.length === 1) return cleaned[0]!;
+  if (cleaned.includes("mixed")) return "mixed";
+  return "mixed";
 }

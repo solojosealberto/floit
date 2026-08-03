@@ -11,6 +11,18 @@ import { BRAND_ADMIN, BRAND_NAME, BRAND_PARTNERS } from "@/lib/brand";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { formatUpstreamError } from "@/lib/format-upstream-error";
+import {
+  VENUE_TYPE_OPTIONS,
+  formatVenueTypeLabel,
+} from "@/lib/venue-labels";
+import {
+  type DaySchedule,
+  TIME_SLOT_OPTIONS,
+  emptyWeekSchedule,
+  formatTimeSlotLabel,
+  parseScheduleSummary,
+  serializeScheduleSummary,
+} from "@/lib/venue-schedule";
 
 type Profile = {
   partnerEmail: string;
@@ -22,6 +34,7 @@ type Profile = {
   contactWhatsapp: string | null;
   modalities?: string[];
   amenities?: string[];
+  venueTypes?: string[];
   venueType?: string | null;
   zone?: string | null;
   catalogPhotoUrls?: string[];
@@ -68,6 +81,7 @@ type ProfileFormState = {
   contactWhatsapp: string;
   modalities: string[];
   amenities: string[];
+  venueTypes: string[];
 };
 
 type TaxonomyOption = { slug: string; label: string; kind: "modality" | "amenity" };
@@ -98,6 +112,7 @@ const EMPTY_PROFILE_FORM: ProfileFormState = {
   contactWhatsapp: "",
   modalities: [],
   amenities: [],
+  venueTypes: [],
 };
 
 const FALLBACK_MODALITIES = [
@@ -187,6 +202,8 @@ export function PartnerPanelClient(props: {
   const [showPlanForm, setShowPlanForm] = useState(true);
   const [configView, setConfigView] = useState<ConfigView>("account");
   const [updatingLeadId, setUpdatingLeadId] = useState<string | null>(null);
+  const [scheduleDays, setScheduleDays] = useState<DaySchedule[]>(() => emptyWeekSchedule());
+  const [scheduleParseNote, setScheduleParseNote] = useState<string | null>(null);
   const ogPreviewTitle =
     profileForm.businessName.trim() ||
     profile.businessName?.trim() ||
@@ -201,20 +218,35 @@ export function PartnerPanelClient(props: {
   const ogPreviewPath = photosVenueSlug.trim() ? `/gyms/${encodeURIComponent(photosVenueSlug.trim())}` : "/gyms/[slug]";
 
   function applyProfileToForm(p: Profile) {
+    const venueTypes =
+      p.venueTypes && p.venueTypes.length > 0
+        ? p.venueTypes
+        : p.venueType
+          ? [p.venueType]
+          : [];
+    const scheduleRaw = p.scheduleSummary ?? "";
+    const parsed = parseScheduleSummary(scheduleRaw);
+    setScheduleDays(parsed.days);
+    setScheduleParseNote(
+      scheduleRaw.trim() && !parsed.parsed
+        ? "No se pudo interpretar el horario guardado; edítalo abajo (se reemplazará al guardar)."
+        : null,
+    );
     setProfileForm({
       businessName: p.businessName ?? "",
       description: p.description ?? "",
-      scheduleSummary: p.scheduleSummary ?? "",
+      scheduleSummary: scheduleRaw,
       contactPhone: p.contactPhone ?? "",
       contactEmail: p.contactEmail ?? "",
       contactWhatsapp: p.contactWhatsapp ?? "",
       modalities: p.modalities ?? [],
       amenities: p.amenities ?? [],
+      venueTypes,
     });
   }
 
   function toggleSlug(
-    field: "modalities" | "amenities",
+    field: "modalities" | "amenities" | "venueTypes",
     slug: string,
   ) {
     setProfileForm((prev) => {
@@ -224,6 +256,34 @@ export function PartnerPanelClient(props: {
         : [...current, slug];
       return { ...prev, [field]: next };
     });
+  }
+
+  function updateScheduleDay(
+    key: DaySchedule["key"],
+    patch: Partial<Pick<DaySchedule, "closed" | "open" | "close">>,
+  ) {
+    setScheduleDays((prev) =>
+      prev.map((d) => (d.key === key ? { ...d, ...patch } : d)),
+    );
+    setScheduleParseNote(null);
+  }
+
+  function copyScheduleToWeekdays() {
+    const source = scheduleDays.find((d) => d.key === "lun") ?? scheduleDays[0];
+    if (!source) return;
+    setScheduleDays((prev) =>
+      prev.map((d) =>
+        d.key === "sab" || d.key === "dom"
+          ? d
+          : {
+              ...d,
+              closed: source.closed,
+              open: source.open,
+              close: source.close,
+            },
+      ),
+    );
+    setScheduleParseNote(null);
   }
 
   function redirectToLogin() {
@@ -434,15 +494,17 @@ export function PartnerPanelClient(props: {
     setSavingProfile(true);
     setErr(null);
     setMsg(null);
+    const scheduleSummary = serializeScheduleSummary(scheduleDays);
     const payload = {
       businessName: profileForm.businessName.trim() || undefined,
       description: profileForm.description.trim() || undefined,
-      scheduleSummary: profileForm.scheduleSummary.trim() || undefined,
+      scheduleSummary: scheduleSummary.trim() || undefined,
       contactPhone: profileForm.contactPhone.trim() || undefined,
       contactEmail: profileForm.contactEmail.trim() || undefined,
       contactWhatsapp: profileForm.contactWhatsapp.trim() || undefined,
       modalities: profileForm.modalities,
       amenities: profileForm.amenities,
+      venueTypes: profileForm.venueTypes,
     };
     try {
       const res = await fetch(venueApi(venueSlug, "/profile"), {
@@ -869,7 +931,7 @@ export function PartnerPanelClient(props: {
   const galleryCount = photos.length > 0 ? photos.length : catalogPhotos.length;
   const profileChecklist = [
     Boolean(profileForm.businessName.trim() && profileForm.description.trim()),
-    Boolean(profileForm.scheduleSummary.trim()),
+    Boolean(serializeScheduleSummary(scheduleDays).trim()),
     galleryCount >= 1,
     activePlans > 0,
     Boolean(
@@ -1321,8 +1383,12 @@ export function PartnerPanelClient(props: {
                 <p className="mb-3 text-xs text-quegym-secondary">
                   Datos precargados desde el catálogo
                   {profile.zone ? ` · Zona: ${profile.zone}` : ""}
-                  {profile.venueType ? ` · Tipo: ${slugLabel(profile.venueType)}` : ""}.
-                  Al guardar se actualiza la ficha pública.
+                  {profileForm.venueTypes.length > 0
+                    ? ` · Tipo: ${profileForm.venueTypes.map((t) => formatVenueTypeLabel(t)).join(", ")}`
+                    : profile.venueType
+                      ? ` · Tipo: ${formatVenueTypeLabel(profile.venueType)}`
+                      : ""}
+                  . Al guardar se actualiza la ficha pública.
                 </p>
               ) : (
                 <p className="mb-3 text-xs text-quegym-secondary">
@@ -1348,29 +1414,46 @@ export function PartnerPanelClient(props: {
                   </UIButton>
                 </div>
               ) : null}
-              <form id="partner-profile-form" className="grid gap-3 text-sm" onSubmit={onSaveProfile}>
-                <div className="grid gap-3 md:grid-cols-2">
-                  <label className="space-y-1">
-                    <span className="text-xs font-medium text-quegym-secondary">Nombre comercial *</span>
-                    <UITextInput
-                      name="businessName"
-                      value={profileForm.businessName}
-                      onChange={(e) => setProfileForm((prev) => ({ ...prev, businessName: e.target.value }))}
-                      placeholder="Nombre comercial"
-                      className={`h-[46px] rounded-xl ${lightInputClass}`}
-                    />
-                  </label>
-                  <label className="space-y-1">
-                    <span className="text-xs font-medium text-quegym-secondary">Tipo en catálogo</span>
-                    <UITextInput
-                      value={profile.venueType ? slugLabel(profile.venueType) : "—"}
-                      readOnly
-                      disabled
-                      className={`h-[46px] rounded-xl ${lightInputClass} opacity-80`}
-                    />
-                  </label>
+              <form id="partner-profile-form" className="grid gap-4 text-sm" onSubmit={onSaveProfile}>
+                <label className="block space-y-1">
+                  <span className="text-xs font-medium text-quegym-secondary">Nombre comercial *</span>
+                  <UITextInput
+                    name="businessName"
+                    value={profileForm.businessName}
+                    onChange={(e) => setProfileForm((prev) => ({ ...prev, businessName: e.target.value }))}
+                    placeholder="Nombre comercial"
+                    className={`h-[46px] w-full rounded-xl ${lightInputClass}`}
+                  />
+                </label>
+
+                <div className="space-y-2">
+                  <span className="text-xs font-medium text-quegym-secondary">Tipo en catálogo</span>
+                  <p className="text-[11px] text-quegym-secondary">
+                    Puedes marcar más de uno. Si eliges varios, en catálogo queda como Mixto.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {VENUE_TYPE_OPTIONS.map((opt) => {
+                      const on = profileForm.venueTypes.includes(opt.value);
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => toggleSlug("venueTypes", opt.value)}
+                          className={`rounded-full border px-3 py-1.5 text-[13px] transition ${
+                            on
+                              ? "border-quegym-accent bg-quegym-accent text-white"
+                              : "border-quegym-border bg-quegym-elevated text-quegym-secondary hover:bg-quegym-subtle"
+                          }`}
+                        >
+                          {on ? "✓ " : ""}
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-                <label className="space-y-1">
+
+                <label className="block space-y-1">
                   <span className="text-xs font-medium text-quegym-secondary">Descripción</span>
                   <textarea
                     name="description"
@@ -1378,50 +1461,123 @@ export function PartnerPanelClient(props: {
                     onChange={(e) => setProfileForm((prev) => ({ ...prev, description: e.target.value }))}
                     placeholder="Descripción pública del centro"
                     rows={4}
-                    className={`rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 ${lightInputClass}`}
+                    className={`block w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 text-sm text-quegym-primary placeholder:text-quegym-secondary ${lightInputClass}`}
                   />
                 </label>
+
                 <div className="grid gap-3 md:grid-cols-3">
-                  <UITextInput
-                    name="contactPhone"
-                    value={profileForm.contactPhone}
-                    onChange={(e) => setProfileForm((prev) => ({ ...prev, contactPhone: e.target.value }))}
-                    placeholder="Teléfono"
-                    className={`h-[46px] rounded-xl ${lightInputClass}`}
-                  />
-                  <UITextInput
-                    name="contactEmail"
-                    value={profileForm.contactEmail}
-                    onChange={(e) => setProfileForm((prev) => ({ ...prev, contactEmail: e.target.value }))}
-                    placeholder="Email de contacto"
-                    type="email"
-                    className={`h-[46px] rounded-xl ${lightInputClass}`}
-                  />
-                  <UITextInput
-                    name="contactWhatsapp"
-                    value={profileForm.contactWhatsapp}
-                    onChange={(e) => setProfileForm((prev) => ({ ...prev, contactWhatsapp: e.target.value }))}
-                    placeholder="WhatsApp"
-                    className={`h-[46px] rounded-xl ${lightInputClass}`}
-                  />
+                  <label className="block space-y-1">
+                    <span className="text-xs font-medium text-quegym-secondary">Teléfono</span>
+                    <UITextInput
+                      name="contactPhone"
+                      value={profileForm.contactPhone}
+                      onChange={(e) => setProfileForm((prev) => ({ ...prev, contactPhone: e.target.value }))}
+                      placeholder="Teléfono"
+                      className={`h-[46px] w-full rounded-xl ${lightInputClass}`}
+                    />
+                  </label>
+                  <label className="block space-y-1">
+                    <span className="text-xs font-medium text-quegym-secondary">Email de contacto</span>
+                    <UITextInput
+                      name="contactEmail"
+                      value={profileForm.contactEmail}
+                      onChange={(e) => setProfileForm((prev) => ({ ...prev, contactEmail: e.target.value }))}
+                      placeholder="Email de contacto"
+                      type="email"
+                      className={`h-[46px] w-full rounded-xl ${lightInputClass}`}
+                    />
+                  </label>
+                  <label className="block space-y-1">
+                    <span className="text-xs font-medium text-quegym-secondary">WhatsApp</span>
+                    <UITextInput
+                      name="contactWhatsapp"
+                      value={profileForm.contactWhatsapp}
+                      onChange={(e) => setProfileForm((prev) => ({ ...prev, contactWhatsapp: e.target.value }))}
+                      placeholder="WhatsApp"
+                      className={`h-[46px] w-full rounded-xl ${lightInputClass}`}
+                    />
+                  </label>
                 </div>
               </form>
             </UICard>
 
             <UICard className={`bg-quegym-subtle ${lightCardClass}`}>
-              <h2 className="mb-1 text-base font-semibold">Horarios de atención</h2>
-              <p className="mb-3 text-xs text-quegym-secondary">
-                Texto libre que se publica en la ficha (ej. Lun–Vie 5am–10pm · Sáb 7am–2pm).
+              <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
+                <div>
+                  <h2 className="text-base font-semibold">Horarios de atención</h2>
+                  <p className="mt-1 text-xs text-quegym-secondary">
+                    Define apertura por día. Se publica en la ficha del centro.
+                  </p>
+                </div>
+                <UIButton
+                  type="button"
+                  size="sm"
+                  variant="secondary"
+                  className={lightSecondaryButtonClass}
+                  onClick={copyScheduleToWeekdays}
+                >
+                  Copiar Lun → Vie
+                </UIButton>
+              </div>
+              {scheduleParseNote ? (
+                <p className="mb-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+                  {scheduleParseNote}
+                </p>
+              ) : null}
+              <div className="space-y-2">
+                {scheduleDays.map((day) => (
+                  <div
+                    key={day.key}
+                    className="grid grid-cols-1 items-center gap-2 rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 sm:grid-cols-[7.5rem_auto_1fr]"
+                  >
+                    <label className="inline-flex items-center gap-2 text-sm font-medium text-quegym-primary">
+                      <input
+                        type="checkbox"
+                        checked={!day.closed}
+                        onChange={(e) =>
+                          updateScheduleDay(day.key, { closed: !e.target.checked })
+                        }
+                        className="h-4 w-4 accent-[var(--qg-accent,#12B76A)]"
+                      />
+                      {day.label}
+                    </label>
+                    {day.closed ? (
+                      <p className="text-sm text-quegym-secondary sm:col-span-2">Cerrado</p>
+                    ) : (
+                      <div className="flex flex-wrap items-center gap-2 sm:col-span-2">
+                        <select
+                          value={day.open}
+                          onChange={(e) => updateScheduleDay(day.key, { open: e.target.value })}
+                          className="h-10 rounded-xl border border-quegym-border bg-quegym-subtle px-2 text-sm text-quegym-primary"
+                          aria-label={`${day.label} apertura`}
+                        >
+                          {TIME_SLOT_OPTIONS.map((t) => (
+                            <option key={`${day.key}-o-${t}`} value={t}>
+                              {formatTimeSlotLabel(t)}
+                            </option>
+                          ))}
+                        </select>
+                        <span className="text-xs text-quegym-secondary">a</span>
+                        <select
+                          value={day.close}
+                          onChange={(e) => updateScheduleDay(day.key, { close: e.target.value })}
+                          className="h-10 rounded-xl border border-quegym-border bg-quegym-subtle px-2 text-sm text-quegym-primary"
+                          aria-label={`${day.label} cierre`}
+                        >
+                          {TIME_SLOT_OPTIONS.map((t) => (
+                            <option key={`${day.key}-c-${t}`} value={t}>
+                              {formatTimeSlotLabel(t)}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <p className="mt-3 text-[11px] text-quegym-secondary">
+                Vista previa: {serializeScheduleSummary(scheduleDays).split("\n").join(" · ")}
               </p>
-              <textarea
-                form="partner-profile-form"
-                name="scheduleSummary"
-                value={profileForm.scheduleSummary}
-                onChange={(e) => setProfileForm((prev) => ({ ...prev, scheduleSummary: e.target.value }))}
-                placeholder="Lun–Vie 5:00am–11:00pm · Sáb 6:00am–8:00pm · Dom cerrado"
-                rows={3}
-                className={`w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 text-sm ${lightInputClass}`}
-              />
             </UICard>
 
             <UICard className={`bg-quegym-subtle ${lightCardClass}`}>

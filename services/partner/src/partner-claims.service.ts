@@ -471,6 +471,7 @@ export class PartnerClaimsService {
       photoUrls: effectiveRow?.photoUrls ?? [],
       modalities: effectiveRow?.modalities ?? [],
       amenities: effectiveRow?.amenities ?? [],
+      venueTypes: effectiveRow?.venueTypes ?? [],
     };
     return this.mergeCatalogSnapshotIntoProfile(base);
   }
@@ -508,6 +509,7 @@ export class PartnerClaimsService {
         photoUrls: [],
         modalities: [],
         amenities: [],
+        venueTypes: [],
       });
     }
     if (dto.businessName !== undefined) row.businessName = dto.businessName.trim() || null;
@@ -531,6 +533,9 @@ export class PartnerClaimsService {
     if (dto.amenities !== undefined) {
       row.amenities = normalizeSlugList(dto.amenities);
     }
+    if (dto.venueTypes !== undefined) {
+      row.venueTypes = normalizeSlugList(dto.venueTypes).slice(0, 12);
+    }
     const saved = await this.profiles.save(row);
     await this.enqueueVenueCatalogSync(identity.email, venueSlug);
     return this.mergeCatalogSnapshotIntoProfile({
@@ -545,6 +550,7 @@ export class PartnerClaimsService {
       photoUrls: saved.photoUrls ?? [],
       modalities: saved.modalities ?? [],
       amenities: saved.amenities ?? [],
+      venueTypes: saved.venueTypes ?? [],
     });
   }
 
@@ -938,6 +944,9 @@ export class PartnerClaimsService {
       contactWhatsapp: profile?.contactWhatsapp ?? undefined,
       modalities: profile?.modalities ?? undefined,
       amenities: profile?.amenities ?? undefined,
+      ...(derivePrimaryVenueType(profile?.venueTypes ?? [])
+        ? { venueType: derivePrimaryVenueType(profile?.venueTypes ?? [])! }
+        : {}),
       // Never send empty photoUrls — that would wipe catalog gallery on profile-only saves.
       ...(photos.length > 0
         ? { photoUrls: photos.map((p) => this.rewritePublicMediaUrl(p.url)) }
@@ -1059,6 +1068,7 @@ export class PartnerClaimsService {
       photoUrls: legacy.photoUrls ?? [],
       modalities: legacy.modalities ?? [],
       amenities: legacy.amenities ?? [],
+      venueTypes: legacy.venueTypes ?? [],
     });
     return this.profiles.save(copy);
   }
@@ -1075,6 +1085,7 @@ export class PartnerClaimsService {
     photoUrls: string[];
     modalities: string[];
     amenities: string[];
+    venueTypes: string[];
   }) {
     const catalog = await this.fetchCatalogVenueSnapshot(base.venueSlug);
     const scheduleFromCatalog = catalog
@@ -1089,6 +1100,12 @@ export class PartnerClaimsService {
         : (catalog?.modalities ?? []);
     const amenities =
       base.amenities.length > 0 ? base.amenities : (catalog?.amenities ?? []);
+    const venueTypes =
+      base.venueTypes.length > 0
+        ? base.venueTypes
+        : catalog?.venueType
+          ? [catalog.venueType]
+          : [];
     const catalogPhotoUrls = (catalog?.photoUrls ?? []).map((u) =>
       this.rewritePublicMediaUrl(u),
     );
@@ -1104,7 +1121,9 @@ export class PartnerClaimsService {
         base.contactWhatsapp?.trim() || catalog?.contactWhatsapp || null,
       modalities,
       amenities,
-      venueType: catalog?.venueType ?? null,
+      venueTypes,
+      venueType:
+        derivePrimaryVenueType(venueTypes) || catalog?.venueType || null,
       zone: catalog?.zone ?? null,
       catalogPhotoUrls,
       photoUrls: (base.photoUrls ?? []).map((u) => this.rewritePublicMediaUrl(u)),
@@ -1432,6 +1451,15 @@ function sanitizePhotoUrls(items: string[]): string[] {
     if (cleaned.length >= 12) break;
   }
   return cleaned;
+}
+
+function derivePrimaryVenueType(types: string[]): string | null {
+  const cleaned = Array.from(
+    new Set(types.map((t) => t.trim().toLowerCase()).filter(Boolean)),
+  );
+  if (cleaned.length === 0) return null;
+  if (cleaned.length === 1) return cleaned[0]!;
+  return "mixed";
 }
 
 function normalizeSlugList(items: string[]): string[] {

@@ -520,6 +520,10 @@ export class VenuesService {
     if (dto.amenities !== undefined) {
       venue.amenities = normalizeSlugList(dto.amenities);
     }
+    if (dto.venueType !== undefined) {
+      const vt = dto.venueType.trim().toLowerCase();
+      if (vt) venue.venueType = vt.slice(0, 48);
+    }
     if (dto.photoUrls !== undefined) {
       venue.photoUrls = sanitizePhotoUrls(dto.photoUrls);
     }

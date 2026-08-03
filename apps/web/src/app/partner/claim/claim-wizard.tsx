@@ -12,19 +12,11 @@ const BRAND_ACCENT_HOVER = "hover:bg-quegym-accent-hover";
 const BRAND_FOCUS_RING = "focus-visible:ring-quegym-accent/30";
 const ACCENT_TEXT = "text-quegym-ink";
 const BTN_PRIMARY = `${BRAND_ACCENT} ${BRAND_ACCENT_HOVER}`;
+import { VENUE_TYPE_OPTIONS } from "@/lib/venue-labels";
+
 const CARD_SELECTED = "border-quegym-accent bg-quegym-elevated";
 const CARD_IDLE =
   "border-quegym-border bg-quegym-elevated opacity-90 hover:border-quegym-accent/50 hover:opacity-100";
-
-const VENUE_TYPE_OPTIONS: { value: string; label: string }[] = [
-  { value: "gym", label: "Gimnasio clásico" },
-  { value: "functional", label: "Functional / CrossFit" },
-  { value: "yoga", label: "Yoga" },
-  { value: "pilates", label: "Pilates" },
-  { value: "cycling", label: "Cycling" },
-  { value: "mixed", label: "Mixto" },
-  { value: "personal_training", label: "Personal training" },
-];
 
 function slugify(s: string): string {
   return s
