@@ -1040,6 +1040,20 @@ export class PartnerClaimsService {
     };
   }
 
+  private resolveCatalogBaseUrl(): string {
+    const configured = this.config.get<string>("CATALOG_SERVICE_URL")?.trim();
+    if (configured) return configured.replace(/\/$/, "");
+    const railwayHost = this.config
+      .get<string>("RAILWAY_SERVICE__FLOIT_CATALOG_SERVICE_URL")
+      ?.trim();
+    if (railwayHost) {
+      return railwayHost.startsWith("http")
+        ? railwayHost.replace(/\/$/, "")
+        : `https://${railwayHost.replace(/\/$/, "")}`;
+    }
+    return "http://localhost:4010";
+  }
+
   private async fetchCatalogVenueSnapshot(venueSlug: string): Promise<{
     name: string;
     description: string | null;
@@ -1053,42 +1067,59 @@ export class PartnerClaimsService {
     photoUrls: string[];
   } | null> {
     if (!venueSlug || venueSlug === "__global__") return null;
-    const base =
-      this.config.get<string>("CATALOG_SERVICE_URL")?.trim() ||
-      "http://localhost:4010";
-    try {
-      const res = await fetch(
-        `${base.replace(/\/$/, "")}/v1/venues/${encodeURIComponent(venueSlug)}`,
-        { signal: AbortSignal.timeout(8000) },
-      );
-      if (!res.ok) return null;
-      const body = (await res.json()) as {
-        name?: string;
-        description?: string | null;
-        venueType?: string;
-        zone?: string;
-        modalities?: string[];
-        amenities?: string[];
-        contactPhone?: string | null;
-        contactEmail?: string | null;
-        contactWhatsapp?: string | null;
-        photoUrls?: string[] | null;
-      };
-      return {
-        name: body.name?.trim() || "",
-        description: body.description ?? null,
-        venueType: body.venueType?.trim() || "",
-        zone: body.zone?.trim() || "",
-        modalities: Array.isArray(body.modalities) ? body.modalities : [],
-        amenities: Array.isArray(body.amenities) ? body.amenities : [],
-        contactPhone: body.contactPhone ?? null,
-        contactEmail: body.contactEmail ?? null,
-        contactWhatsapp: body.contactWhatsapp ?? null,
-        photoUrls: Array.isArray(body.photoUrls) ? body.photoUrls : [],
-      };
-    } catch {
-      return null;
+    const candidates = Array.from(
+      new Set(
+        [
+          this.resolveCatalogBaseUrl(),
+          this.config
+            .get<string>("RAILWAY_SERVICE__FLOIT_CATALOG_SERVICE_URL")
+            ?.trim()
+            ? `https://${this.config
+                .get<string>("RAILWAY_SERVICE__FLOIT_CATALOG_SERVICE_URL")!
+                .trim()
+                .replace(/^https?:\/\//, "")
+                .replace(/\/$/, "")}`
+            : "",
+          "https://floitcatalog-service-production.up.railway.app",
+        ].filter(Boolean),
+      ),
+    );
+    for (const base of candidates) {
+      try {
+        const res = await fetch(
+          `${base.replace(/\/$/, "")}/v1/venues/${encodeURIComponent(venueSlug)}`,
+          { signal: AbortSignal.timeout(8000) },
+        );
+        if (!res.ok) continue;
+        const body = (await res.json()) as {
+          name?: string;
+          description?: string | null;
+          venueType?: string;
+          zone?: string;
+          modalities?: string[];
+          amenities?: string[];
+          contactPhone?: string | null;
+          contactEmail?: string | null;
+          contactWhatsapp?: string | null;
+          photoUrls?: string[] | null;
+        };
+        return {
+          name: body.name?.trim() || "",
+          description: body.description ?? null,
+          venueType: body.venueType?.trim() || "",
+          zone: body.zone?.trim() || "",
+          modalities: Array.isArray(body.modalities) ? body.modalities : [],
+          amenities: Array.isArray(body.amenities) ? body.amenities : [],
+          contactPhone: body.contactPhone ?? null,
+          contactEmail: body.contactEmail ?? null,
+          contactWhatsapp: body.contactWhatsapp ?? null,
+          photoUrls: Array.isArray(body.photoUrls) ? body.photoUrls : [],
+        };
+      } catch {
+        /* try next candidate */
+      }
     }
+    return null;
   }
 
   /**
