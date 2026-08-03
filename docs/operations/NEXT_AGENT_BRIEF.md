@@ -79,7 +79,7 @@ Los umbrales PRD usan ventanas ~**7 días** (funnel) y **14 días** (experimento
 |------|----------------|
 | PATH local | `export PATH="$(pwd)/.cursor-bin:$PATH"` |
 | Vault | `docs/env/staging.local` (desde `.example`) — **gitignored** |
-| Token M2M (~24 h) | `pnpm auth0:m2m-token` → renovar `ADMIN_OIDC_ACCESS_TOKEN` en Vercel Preview si admin BFF falla |
+| Token M2M | Preferido: `AUTH0_M2M_*` en Vercel (BFF renueva solo). Fallback: `pnpm auth0:m2m-token` → `ADMIN_OIDC_ACCESS_TOKEN` |
 | Gate smoke | `pnpm sprint5:staging-gate -- --kpi-relaxed` |
 | Gate PRD | `pnpm sprint5:staging-gate` |
 | Smoke infra | URLs Railway + `SMOKE_WEB_BASE=https://staging.quegym.com pnpm smoke:platform` |
