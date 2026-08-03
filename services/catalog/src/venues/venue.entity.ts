@@ -77,6 +77,19 @@ export class VenueEntity {
   @Column({ type: "varchar", length: 900, array: true, nullable: true })
   photoUrls!: string[] | null;
 
+  /**
+   * Planes referenciales sincronizados desde partner (JSON).
+   * Fuente de verdad para la ficha pública; no usar mocks en UI.
+   */
+  @Column({ type: "jsonb", nullable: true })
+  plans!: Array<{
+    name: string;
+    description?: string | null;
+    period?: string | null;
+    priceLabel?: string | null;
+    active: boolean;
+  }> | null;
+
   @CreateDateColumn({ type: "timestamptz" })
   createdAt!: Date;
 

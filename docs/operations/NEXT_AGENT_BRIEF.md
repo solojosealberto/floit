@@ -34,7 +34,7 @@
 | GO producto/ops | **Pendiente** |
 | Prod `www.quegym.com` | **Pendiente** (post-GO) |
 | Partner media | `PARTNER_PUBLIC_BASE_URL` set; uploads HTTPS; **disco efímero** (redeploy borra `/uploads` — volume pendiente) |
-| Panel planes | Create/list/edit/delete **fixed** (ship pending deploy) |
+| Panel planes | Create/list/edit/delete **fixed**; ficha pública usa `catalog.plans` (no mocks) |
 
 ### Próximas 3 acciones (orden estricto)
 

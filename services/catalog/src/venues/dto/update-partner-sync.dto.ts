@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import {
   ArrayMaxSize,
   IsArray,
@@ -7,7 +8,34 @@ import {
   IsString,
   IsUrl,
   MaxLength,
+  MinLength,
+  ValidateNested,
 } from "class-validator";
+
+export class PartnerSyncPlanItemDto {
+  @IsString()
+  @MinLength(1)
+  @MaxLength(120)
+  name!: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  description?: string | null;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(32)
+  period?: string | null;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(32)
+  priceLabel?: string | null;
+
+  @IsBoolean()
+  active!: boolean;
+}
 
 export class UpdatePartnerSyncDto {
   @IsOptional()
@@ -60,13 +88,10 @@ export class UpdatePartnerSyncDto {
 
   @IsOptional()
   @IsArray()
-  plans?: Array<{
-    name: string;
-    description?: string | null;
-    period?: string | null;
-    priceLabel?: string | null;
-    active: boolean;
-  }>;
+  @ArrayMaxSize(20)
+  @ValidateNested({ each: true })
+  @Type(() => PartnerSyncPlanItemDto)
+  plans?: PartnerSyncPlanItemDto[];
 
   @IsOptional()
   @IsArray()

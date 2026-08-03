@@ -573,11 +573,21 @@ export class PartnerClaimsService {
       where: { partnerEmail: identity.email, venueSlug, status: "active" },
     });
     if (!hasOwnership) return { error: "venue_not_owned" as const };
-    const rows = await this.plans.find({
+    let rows = await this.plans.find({
       where: { partnerEmail: identity.email, venueSlug },
       order: { createdAt: "DESC" },
       take: 300,
     });
+    if (rows.length === 0) {
+      const seeded = await this.seedPartnerPlansFromCatalog(identity.email, venueSlug);
+      if (seeded > 0) {
+        rows = await this.plans.find({
+          where: { partnerEmail: identity.email, venueSlug },
+          order: { createdAt: "DESC" },
+          take: 300,
+        });
+      }
+    }
     return {
       items: rows.map((r) => ({
         id: r.id,
@@ -1127,6 +1137,13 @@ export class PartnerClaimsService {
     contactEmail: string | null;
     contactWhatsapp: string | null;
     photoUrls: string[];
+    plans: Array<{
+      name: string;
+      description: string | null;
+      period: string | null;
+      priceLabel: string | null;
+      active: boolean;
+    }>;
   } | null> {
     if (!venueSlug || venueSlug === "__global__") return null;
     const candidates = Array.from(
@@ -1164,7 +1181,29 @@ export class PartnerClaimsService {
           contactEmail?: string | null;
           contactWhatsapp?: string | null;
           photoUrls?: string[] | null;
+          plans?: Array<{
+            name?: string;
+            description?: string | null;
+            period?: string | null;
+            priceLabel?: string | null;
+            active?: boolean;
+          }> | null;
         };
+        const structuredPlans = Array.isArray(body.plans)
+          ? body.plans
+              .filter((p) => p?.name?.trim())
+              .map((p) => ({
+                name: p.name!.trim(),
+                description: p.description?.trim() || null,
+                period: p.period?.trim() || null,
+                priceLabel: p.priceLabel?.trim() || null,
+                active: p.active !== false,
+              }))
+          : [];
+        const fromDescription =
+          structuredPlans.length > 0
+            ? []
+            : parsePlansFromDescription(body.description);
         return {
           name: body.name?.trim() || "",
           description: body.description ?? null,
@@ -1176,12 +1215,37 @@ export class PartnerClaimsService {
           contactEmail: body.contactEmail ?? null,
           contactWhatsapp: body.contactWhatsapp ?? null,
           photoUrls: Array.isArray(body.photoUrls) ? body.photoUrls : [],
+          plans: structuredPlans.length > 0 ? structuredPlans : fromDescription,
         };
       } catch {
         /* try next candidate */
       }
     }
     return null;
+  }
+
+  /** Import catalog plans into partner DB once so the admin panel can edit them. */
+  private async seedPartnerPlansFromCatalog(
+    partnerEmail: string,
+    venueSlug: string,
+  ): Promise<number> {
+    const catalog = await this.fetchCatalogVenueSnapshot(venueSlug);
+    const source = catalog?.plans ?? [];
+    if (source.length === 0) return 0;
+    const rows = source.slice(0, 20).map((p) =>
+      this.plans.create({
+        partnerEmail,
+        venueSlug,
+        name: p.name.slice(0, 120),
+        description: p.description,
+        period: p.period,
+        priceLabel: p.priceLabel,
+        active: p.active !== false,
+      }),
+    );
+    await this.plans.save(rows);
+    await this.enqueueVenueCatalogSync(partnerEmail, venueSlug);
+    return rows.length;
   }
 
   /**
@@ -1406,4 +1470,57 @@ function extractScheduleSummaryFromDescription(
   const match = description.match(/\nHorarios:\n([\s\S]*?)(?:\nPlanes:|$)/i);
   const value = match?.[1]?.trim();
   return value || null;
+}
+
+function parsePlansFromDescription(
+  description: string | null | undefined,
+): Array<{
+  name: string;
+  description: string | null;
+  period: string | null;
+  priceLabel: string | null;
+  active: boolean;
+}> {
+  if (!description) return [];
+  const match = description.match(/\nPlanes:\n([\s\S]*)$/i);
+  const block = match?.[1]?.trim();
+  if (!block) return [];
+  const out: Array<{
+    name: string;
+    description: string | null;
+    period: string | null;
+    priceLabel: string | null;
+    active: boolean;
+  }> = [];
+  for (const rawLine of block.split("\n")) {
+    const line = rawLine.replace(/^\s*[-•*]\s*/, "").trim();
+    if (!line) continue;
+    const parts = line.split("·").map((p) => p.trim()).filter(Boolean);
+    if (parts.length === 0) continue;
+    const name = parts[0]!;
+    let period: string | null = null;
+    let priceLabel: string | null = null;
+    let desc: string | null = null;
+    for (const part of parts.slice(1)) {
+      if (/^\$?\d/.test(part) || /consultar/i.test(part)) {
+        priceLabel = part;
+      } else if (
+        /mensual|anual|mes|trim|una vez|clase|sesión/i.test(part) &&
+        !period
+      ) {
+        period = part;
+      } else if (!desc) {
+        desc = part;
+      }
+    }
+    out.push({
+      name: name.slice(0, 120),
+      description: desc,
+      period,
+      priceLabel,
+      active: true,
+    });
+    if (out.length >= 20) break;
+  }
+  return out;
 }

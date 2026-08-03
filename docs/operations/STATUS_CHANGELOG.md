@@ -6,6 +6,7 @@ Formato: `YYYY-MM-DD | SHA | qué cambió | evidencia`.
 
 | Fecha | SHA / ref | Cambio | Evidencia |
 |-------|-----------|--------|-----------|
+| 2026-08-03 | (push) | Ficha gym: planes reales desde catalog.plans (no mocks); sync JSON + hydrate admin | catalog/partner/web |
 | 2026-08-03 | (push) | Planes panel: fix create/list UX + edit/delete; DELETE plans API; catalog clear empty plans | partner/web/openapi |
 | 2026-08-03 | `88a683a` | Fotos: `PARTNER_PUBLIC_BASE_URL` + rewrite localhost; preview UI; Railway var set | upload GET 200 HTTPS |
 | 2026-08-03 | (push) | Panel admin: hydrate catálogo + sync name/modalities/amenities/schedule; UI editable real | partner/catalog/web |

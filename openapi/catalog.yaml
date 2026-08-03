@@ -399,7 +399,20 @@ components:
         contactEmail: { type: string, nullable: true }
         photoUrls:
           type: array
+          maxItems: 12
           items: { type: string, format: uri }
+        plans:
+          type: array
+          description: Planes referenciales activos sincronizados desde partner
+          items:
+            type: object
+            required: [name, active]
+            properties:
+              name: { type: string }
+              description: { type: string, nullable: true }
+              period: { type: string, nullable: true }
+              priceLabel: { type: string, nullable: true }
+              active: { type: boolean }
         activePromotionTitle: { type: string, nullable: true }
         updatedAt: { type: string, format: date-time }
     VenueReportCreate:

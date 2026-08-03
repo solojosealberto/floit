@@ -18,6 +18,7 @@ import { MessageCircle, Star } from "lucide-react";
 import { VenuePriceDisplay } from "@/components/venue-price-display";
 import { FeatureCheck } from "@/components/feature-check";
 import { parseVenueDescription } from "@/lib/venue-description";
+import { GymPlansSection, type PublicVenuePlan } from "./gym-plans-section";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -41,6 +42,7 @@ type VenueDetail = {
   contactWhatsapp?: string | null;
   contactEmail?: string | null;
   photoUrls?: string[];
+  plans?: PublicVenuePlan[];
 };
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
@@ -115,6 +117,7 @@ export default async function GymPage(props: Props) {
   const amenityList = venue.amenities?.length ? venue.amenities : ["Musculación", "Cardio", "Funcional"];
   const modalityList = venue.modalities?.length ? venue.modalities : ["Musculación", "Funcional"];
   const galleryPhotos = (venue.photoUrls ?? []).filter(Boolean);
+  const publicPlans = (venue.plans ?? []).filter((p) => p.active !== false && p.name?.trim());
 
   return (
     <main className="mx-auto flex w-full max-w-[1240px] flex-col gap-4 bg-quegym-page px-3 py-4 text-quegym-primary lg:px-4">
@@ -292,51 +295,7 @@ export default async function GymPage(props: Props) {
               <p className="text-xs font-semibold uppercase tracking-wide text-quegym-secondary">
                 Planes disponibles
               </p>
-              <article className="rounded-2xl border border-quegym-border bg-quegym-elevated p-3">
-                <p className="text-sm text-quegym-secondary">Mensualidad básica</p>
-                <p className="text-3xl font-semibold text-quegym-primary">
-                  ${venue.priceMin ?? 45}
-                  <span className="ml-1 text-xs font-normal text-quegym-secondary">/mes</span>
-                </p>
-                <ul className="mt-2 space-y-1 text-xs text-quegym-secondary">
-                  <li><FeatureCheck>Acceso full equipos</FeatureCheck></li>
-                  <li><FeatureCheck>Vestuarios incluidos</FeatureCheck></li>
-                  <li><FeatureCheck>Lunes a domingo</FeatureCheck></li>
-                </ul>
-                <Link
-                  href="#contactar-modal"
-                  className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-quegym-border px-3 py-2 text-xs"
-                >
-                  Más información
-                </Link>
-              </article>
-              <article className="rounded-2xl border border-quegym-accent bg-quegym-elevated p-3 shadow-sm">
-                <p className="inline-flex items-center gap-1 text-xs text-quegym-secondary">
-                  <Star className="h-3 w-3 fill-quegym-highlight text-quegym-highlight" aria-hidden />
-                  Más popular
-                </p>
-                <p className="text-sm text-quegym-secondary">Mensualidad premium</p>
-                <p className="text-3xl font-semibold text-quegym-primary">
-                  ${venue.priceMax ?? 75}
-                  <span className="ml-1 text-xs font-normal text-quegym-secondary">/mes</span>
-                </p>
-                <ul className="mt-2 space-y-1 text-xs text-quegym-secondary">
-                  <li><FeatureCheck>Todo lo básico</FeatureCheck></li>
-                  <li><FeatureCheck>Clases grupales ilimitadas</FeatureCheck></li>
-                  <li><FeatureCheck>Acceso sauna</FeatureCheck></li>
-                  <li><FeatureCheck>Estacionamiento</FeatureCheck></li>
-                </ul>
-                <Link
-                  href="#contactar-modal"
-                  className="qg-btn-primary qg-motion mt-3 inline-flex w-full items-center justify-center rounded-xl bg-quegym-accent px-3 py-2 text-xs font-medium text-white"
-                >
-                  Solicitar este plan
-                </Link>
-              </article>
-              <p className="text-xs text-quegym-secondary">
-                * Precios orientativos en USD equivalente. Consulta al centro para
-                confirmar.
-              </p>
+              <GymPlansSection plans={publicPlans} compact />
             </div>
 
             <div id="m-ubicacion" className="space-y-3 border-t border-quegym-border pt-3 scroll-mt-24">
@@ -442,69 +401,7 @@ export default async function GymPage(props: Props) {
 
           <UICard id="planes" className="space-y-3 border-quegym-border bg-quegym-elevated scroll-mt-24">
             <h2 className="text-sm font-semibold text-quegym-primary">Planes disponibles</h2>
-            <div className="grid gap-3 md:grid-cols-3">
-              <article className="rounded-2xl border border-quegym-border bg-quegym-elevated p-3">
-                <p className="text-sm text-quegym-secondary">Mensualidad básica</p>
-                <p className="text-3xl font-semibold text-quegym-primary">
-                  ${venue.priceMin ?? 45}
-                  <span className="ml-1 text-xs font-normal text-quegym-secondary">/mes</span>
-                </p>
-                <ul className="mt-2 space-y-1 text-xs text-quegym-secondary">
-                  <li><FeatureCheck>Acceso full equipos</FeatureCheck></li>
-                  <li><FeatureCheck>Vestuarios</FeatureCheck></li>
-                  <li><FeatureCheck>Lun–Dom</FeatureCheck></li>
-                </ul>
-                <Link
-                  href="#contactar-modal"
-                  className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-quegym-border px-3 py-2 text-xs"
-                >
-                  Más información
-                </Link>
-              </article>
-              <article className="rounded-2xl border border-neutral-900 bg-quegym-elevated p-3 shadow-sm">
-                <p className="inline-flex items-center gap-1 text-xs text-quegym-secondary">
-                  <Star className="h-3 w-3 fill-quegym-highlight text-quegym-highlight" aria-hidden />
-                  Más popular
-                </p>
-                <p className="text-sm text-quegym-secondary">Mensualidad premium</p>
-                <p className="text-3xl font-semibold text-quegym-primary">
-                  ${venue.priceMax ?? 75}
-                  <span className="ml-1 text-xs font-normal text-quegym-secondary">/mes</span>
-                </p>
-                <ul className="mt-2 space-y-1 text-xs text-quegym-secondary">
-                  <li><FeatureCheck>Todo lo básico</FeatureCheck></li>
-                  <li><FeatureCheck>Clases grupales</FeatureCheck></li>
-                  <li><FeatureCheck>Acceso sauna + parking</FeatureCheck></li>
-                </ul>
-                <Link
-                  href="#contactar-modal"
-                  className="qg-btn-primary qg-motion mt-3 inline-flex w-full items-center justify-center rounded-xl bg-quegym-accent px-3 py-2 text-xs font-medium text-white hover:bg-quegym-accent-hover"
-                >
-                  Solicitar este plan
-                </Link>
-              </article>
-              <article className="rounded-2xl border border-quegym-border bg-quegym-elevated p-3">
-                <p className="text-sm text-quegym-secondary">Trimestral</p>
-                <p className="text-3xl font-semibold text-quegym-primary">
-                  ${Math.max((venue.priceMax ?? 75) * 2, 180)}
-                  <span className="ml-1 text-xs font-normal text-quegym-secondary">/3m</span>
-                </p>
-                <ul className="mt-2 space-y-1 text-xs text-quegym-secondary">
-                  <li><FeatureCheck>Plan premium</FeatureCheck></li>
-                  <li><FeatureCheck>3 meses</FeatureCheck></li>
-                  <li><FeatureCheck>Ahorro aplicado</FeatureCheck></li>
-                </ul>
-                <Link
-                  href="#contactar-modal"
-                  className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-quegym-border px-3 py-2 text-xs"
-                >
-                  Más información
-                </Link>
-              </article>
-            </div>
-            <p className="text-xs text-quegym-secondary">
-              * Precios orientativos en USD equivalente. Consulta al centro para confirmar.
-            </p>
+            <GymPlansSection plans={publicPlans} />
           </UICard>
 
           <UICard className="space-y-3 border-quegym-border bg-quegym-elevated">

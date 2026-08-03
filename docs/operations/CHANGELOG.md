@@ -17,6 +17,7 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 ## [Unreleased]
 
 ### Fixed
+- **Planes ficha vs admin (2026-08-03):** la ficha `/gyms/[slug]` mostraba planes mock (básica/premium/trimestral). Ahora usa `venue.plans` del catálogo (JSON sync desde partner); panel hidrata planes desde catálogo si partner está vacío; sync persiste `plans` + `priceMin`/`priceMax`.
 - **Partner/admin planes (2026-08-03):** crear plan fallaba en UI por `form.reset()` tras `await` (falso «Error de red») y la lista no se refrescaba; edición y eliminación cableadas; `DELETE` venue-scoped en partner + BFF; catálogo limpia bloque `Planes:` con array vacío.
 - **Partner/admin fotos (2026-08-03):** URLs públicas vía `PARTNER_PUBLIC_BASE_URL` / `RAILWAY_PUBLIC_DOMAIN` (antes `localhost:4013`); rewrite de URLs locales; preview al seleccionar; reset de form seguro tras upload (`88a683a`).
 

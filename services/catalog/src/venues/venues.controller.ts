@@ -57,6 +57,7 @@ export class VenuesController {
       contactWhatsapp: v.contactWhatsapp ?? null,
       contactEmail: v.contactEmail ?? null,
       photoUrls: v.photoUrls ?? [],
+      plans: (v.plans ?? []).filter((p) => p?.name && p.active !== false),
       activePromotionTitle: detail.activePromotionTitle ?? null,
       updatedAt: v.updatedAt.toISOString(),
     };

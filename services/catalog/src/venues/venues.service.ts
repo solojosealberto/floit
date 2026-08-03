@@ -438,8 +438,9 @@ export class VenuesService {
         dto.description !== undefined
           ? dto.description.trim()
           : (venue.description ?? "").trim();
-      // Strip a previous trailing "Horarios:" block before re-appending.
+      // Strip previous trailing Horarios:/Planes: blocks before re-appending.
       const withoutSchedule = desc
+        .replace(/\n*\nPlanes:\n[\s\S]*$/i, "")
         .replace(/\n*\nHorarios:\n[\s\S]*$/i, "")
         .trim();
       if (withoutSchedule) lines.push(withoutSchedule);
@@ -488,6 +489,22 @@ export class VenuesService {
         lines.push(...planLines.map((x) => `- ${x}`));
       }
       venue.description = lines.join("\n").trim() || null;
+    }
+    if (Array.isArray(dto.plans)) {
+      const normalized = dto.plans
+        .map((p) => ({
+          name: p.name.trim(),
+          description: p.description?.trim() || null,
+          period: p.period?.trim() || null,
+          priceLabel: p.priceLabel?.trim() || null,
+          active: p.active !== false,
+        }))
+        .filter((p) => p.name.length > 0)
+        .slice(0, 20);
+      venue.plans = normalized.length > 0 ? normalized : null;
+      const { priceMin, priceMax } = derivePriceRangeFromPlans(normalized);
+      venue.priceMin = priceMin;
+      venue.priceMax = priceMax;
     }
     if (dto.contactPhone !== undefined) venue.contactPhone = dto.contactPhone.trim() || null;
     if (dto.contactWhatsapp !== undefined) {
@@ -680,6 +697,26 @@ function sanitizePhotoUrls(items: string[]): string[] {
     if (cleaned.length >= 12) break;
   }
   return cleaned;
+}
+
+function parsePlanPrice(priceLabel: string | null | undefined): number | null {
+  if (!priceLabel?.trim()) return null;
+  const match = priceLabel.replace(/,/g, "").match(/(\d+(?:\.\d+)?)/);
+  if (!match) return null;
+  const n = Number(match[1]);
+  if (!Number.isFinite(n) || n <= 0) return null;
+  return Math.round(n);
+}
+
+function derivePriceRangeFromPlans(
+  plans: Array<{ active: boolean; priceLabel?: string | null }>,
+): { priceMin: number | null; priceMax: number | null } {
+  const nums = plans
+    .filter((p) => p.active !== false)
+    .map((p) => parsePlanPrice(p.priceLabel))
+    .filter((n): n is number => n != null);
+  if (nums.length === 0) return { priceMin: null, priceMax: null };
+  return { priceMin: Math.min(...nums), priceMax: Math.max(...nums) };
 }
 
 function normalizeSlugList(items: string[]): string[] {
