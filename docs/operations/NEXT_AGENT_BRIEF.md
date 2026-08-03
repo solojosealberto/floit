@@ -36,9 +36,9 @@
 
 ### Próximas 3 acciones (orden estricto)
 
-1. **Vercel Preview:** set `AUTH0_DOMAIN` + `AUTH0_M2M_CLIENT_ID` + `AUTH0_M2M_CLIENT_SECRET` (+ audience) para BFF admin auto-refresh (`49cb52a`); confirmar `/admin/*` BFF 200 con sesión local.
-2. `pnpm staging:generate-traffic` → `pnpm sprint5:staging-gate` → objetivo **PASS PRD 17/17** (backdate ya **ON** en analytics).
-3. Desactivar `ANALYTICS_ALLOW_BACKDATE` → firma GO → cutover según [`PRODUCTION_LAUNCH_PLAN.md`](./PRODUCTION_LAUNCH_PLAN.md).
+1. `pnpm staging:generate-traffic` → `pnpm sprint5:staging-gate` → objetivo **PASS PRD 17/17** (backdate ya **ON** en analytics).
+2. Desactivar `ANALYTICS_ALLOW_BACKDATE` tras el gate.
+3. Firma GO → cutover según [`PRODUCTION_LAUNCH_PLAN.md`](./PRODUCTION_LAUNCH_PLAN.md).
 
 ### Hecho (no repetir)
 
@@ -47,6 +47,7 @@
 - Import 95 venues, smoke 5/5, admin M2M (`00fd9f9`)
 - QA visual PASS; E2E lead API PASS
 - Script `staging:generate-traffic` + soporte backdate en código (`f937abf`)
+- Vercel Production/Preview: AUTH0_M2M_* + ADMIN_OIDC_ISSUER; BFF leads/taxonomy 200
 - Partner admin 500: env `ADMIN_OIDC_ISSUER` era audience `floit-admin` (incorrecto) → `https://<tenant>.us.auth0.com`; código `oidc-jose`; catalog OIDC ON; `ADMIN_CATALOG_DELEGATE_EMAIL` set; analytics backdate ON
 
 ---
