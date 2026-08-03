@@ -107,6 +107,9 @@ PARTNER_LOCAL_LOGIN_PASSWORD=
 # PARTNER_OIDC_AUDIENCE=floit-partner
 # ADMIN_CATALOG_DELEGATE_EMAIL=ops@quegym.com
 # PARTNER_CLAIM_STATUS_WEBHOOK_URL=
+# Public HTTPS base for /uploads (required in staging/prod; else URLs become localhost)
+# PARTNER_PUBLIC_BASE_URL=https://floitpartner-service-production.up.railway.app
+# Optional: PARTNER_MEDIA_DIR=/data/uploads  (use a Railway volume so files survive redeploys)
 
 # =============================================================================
 # Railway — analytics-service

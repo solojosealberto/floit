@@ -32,19 +32,25 @@ export async function POST(request: Request, { params }: Params) {
     return NextResponse.json({ error: "admin_not_configured" }, { status: 503 });
   }
   const { venueSlug } = await params;
-  let body: FormData;
+  let incoming: FormData;
   try {
-    body = await request.formData();
+    incoming = await request.formData();
   } catch {
     return NextResponse.json({ error: "invalid_form_data" }, { status: 400 });
   }
+  const file = incoming.get("file");
+  if (!(file instanceof File) || !file.size) {
+    return NextResponse.json({ error: "file_required" }, { status: 400 });
+  }
+  const outbound = new FormData();
+  outbound.append("file", file, file.name || "photo.jpg");
   try {
     const res = await fetch(
       `${base.replace(/\/$/, "")}/v1/admin/catalog/venues/${encodeURIComponent(venueSlug)}/photos`,
       {
         method: "POST",
         headers: { [auth.headerName]: auth.headerValue },
-        body,
+        body: outbound,
       },
     );
     const payload = await res.json().catch(() => ({}));

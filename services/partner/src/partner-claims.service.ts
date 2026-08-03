@@ -693,11 +693,23 @@ export class PartnerClaimsService {
       order: { sortOrder: "ASC", createdAt: "DESC" },
       take: 50,
     });
+    let repaired = false;
+    for (const row of rows) {
+      const nextUrl = this.rewritePublicMediaUrl(row.url);
+      if (nextUrl !== row.url) {
+        row.url = nextUrl;
+        repaired = true;
+      }
+    }
+    if (repaired) {
+      await this.photos.save(rows);
+      await this.enqueueVenueCatalogSync(identity.email, venueSlug);
+    }
     return {
       items: rows.map((r) => ({
         id: r.id,
         venueSlug: r.venueSlug,
-        url: r.url,
+        url: this.rewritePublicMediaUrl(r.url),
         mimeType: r.mimeType,
         sizeBytes: r.sizeBytes,
         sortOrder: r.sortOrder,
@@ -720,12 +732,12 @@ export class PartnerClaimsService {
       where: { partnerEmail: identity.email, venueSlug, status: "active" },
     });
     if (count >= 12) return { error: "photo_limit_reached" as const };
-    const base = this.getPublicBaseUrl();
+    const publicUrl = `${this.getPublicBaseUrl()}/uploads/${encodeURIComponent(file.filename)}`;
     const row = await this.photos.save(
       this.photos.create({
         partnerEmail: identity.email,
         venueSlug,
-        url: `${base}/uploads/${encodeURIComponent(file.filename)}`,
+        url: publicUrl,
         storagePath: file.path,
         mimeType: file.mimeType,
         sizeBytes: file.sizeBytes,
@@ -738,7 +750,7 @@ export class PartnerClaimsService {
     return {
       id: row.id,
       venueSlug: row.venueSlug,
-      url: row.url,
+      url: this.rewritePublicMediaUrl(row.url),
       mimeType: row.mimeType,
       sizeBytes: row.sizeBytes,
       sortOrder: row.sortOrder,
@@ -906,7 +918,9 @@ export class PartnerClaimsService {
       modalities: profile?.modalities ?? undefined,
       amenities: profile?.amenities ?? undefined,
       // Never send empty photoUrls — that would wipe catalog gallery on profile-only saves.
-      ...(photos.length > 0 ? { photoUrls: photos.map((p) => p.url) } : {}),
+      ...(photos.length > 0
+        ? { photoUrls: photos.map((p) => this.rewritePublicMediaUrl(p.url)) }
+        : {}),
       allowsTrial: plans.some((p) => p.active),
       plans: plans.map((p) => ({
         name: p.name,
@@ -936,10 +950,44 @@ export class PartnerClaimsService {
   }
 
   private getPublicBaseUrl(): string {
-    return (
-      this.config.get<string>("PARTNER_PUBLIC_BASE_URL")?.trim().replace(/\/$/, "") ||
-      "http://localhost:4013"
-    );
+    const configured = this.config
+      .get<string>("PARTNER_PUBLIC_BASE_URL")
+      ?.trim()
+      .replace(/\/$/, "");
+    if (configured) return configured;
+    const railwayDomain = this.config
+      .get<string>("RAILWAY_PUBLIC_DOMAIN")
+      ?.trim()
+      .replace(/\/$/, "");
+    if (railwayDomain) {
+      return railwayDomain.startsWith("http")
+        ? railwayDomain
+        : `https://${railwayDomain}`;
+    }
+    return "http://localhost:4013";
+  }
+
+  /** Rewrite local-dev partner upload URLs to the public base used in staging/prod. */
+  private rewritePublicMediaUrl(url: string): string {
+    const raw = url?.trim();
+    if (!raw) return raw;
+    try {
+      const parsed = new URL(raw);
+      const isLocalPartnerHost =
+        parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1";
+      const isPartnerPort =
+        parsed.port === "4013" || (parsed.port === "" && parsed.protocol === "http:");
+      if (
+        isLocalPartnerHost &&
+        isPartnerPort &&
+        parsed.pathname.startsWith("/uploads/")
+      ) {
+        return `${this.getPublicBaseUrl()}${parsed.pathname}${parsed.search}`;
+      }
+    } catch {
+      // keep original if not a valid absolute URL
+    }
+    return raw;
   }
 
   private async resolveDefaultVenueSlug(identity: PartnerIdentity): Promise<string> {
@@ -1020,7 +1068,9 @@ export class PartnerClaimsService {
         : (catalog?.modalities ?? []);
     const amenities =
       base.amenities.length > 0 ? base.amenities : (catalog?.amenities ?? []);
-    const catalogPhotoUrls = catalog?.photoUrls ?? [];
+    const catalogPhotoUrls = (catalog?.photoUrls ?? []).map((u) =>
+      this.rewritePublicMediaUrl(u),
+    );
     return {
       ...base,
       businessName: base.businessName?.trim() || catalog?.name || null,
@@ -1036,6 +1086,7 @@ export class PartnerClaimsService {
       venueType: catalog?.venueType ?? null,
       zone: catalog?.zone ?? null,
       catalogPhotoUrls,
+      photoUrls: (base.photoUrls ?? []).map((u) => this.rewritePublicMediaUrl(u)),
       hydratedFromCatalog: Boolean(catalog),
     };
   }

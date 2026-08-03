@@ -165,6 +165,8 @@ export function PartnerPanelClient(props: {
   const [photos, setPhotos] = useState<VenuePhoto[]>([]);
   const [photosLoading, setPhotosLoading] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [photoFileName, setPhotoFileName] = useState<string | null>(null);
+  const [photoPreviewUrl, setPhotoPreviewUrl] = useState<string | null>(null);
   const [deletingPhotoId, setDeletingPhotoId] = useState<string | null>(null);
   const [movingPhotoId, setMovingPhotoId] = useState<string | null>(null);
   const [draggingPhotoId, setDraggingPhotoId] = useState<string | null>(null);
@@ -219,6 +221,47 @@ export function PartnerPanelClient(props: {
   function redirectToLogin() {
     router.replace(variant === "admin" ? "/admin/login" : "/partner/login");
   }
+
+  function clearPhotoSelection() {
+    setPhotoFileName(null);
+    setPhotoPreviewUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+  }
+
+  function onPhotoFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0] ?? null;
+    setPhotoPreviewUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    if (!file) {
+      setPhotoFileName(null);
+      return;
+    }
+    if (!/^image\/(jpeg|png|webp)$/i.test(file.type)) {
+      setErr("Formato no soportado. Usa JPG, PNG o WEBP.");
+      e.target.value = "";
+      setPhotoFileName(null);
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setErr("La imagen supera 5MB. Elige un archivo más liviano.");
+      e.target.value = "";
+      setPhotoFileName(null);
+      return;
+    }
+    setErr(null);
+    setPhotoFileName(file.name);
+    setPhotoPreviewUrl(URL.createObjectURL(file));
+  }
+
+  useEffect(() => {
+    return () => {
+      if (photoPreviewUrl) URL.revokeObjectURL(photoPreviewUrl);
+    };
+  }, [photoPreviewUrl]);
 
   function isAuthFailureError(errorLike: unknown): boolean {
     const text = String(errorLike ?? "").toLowerCase();
@@ -543,19 +586,28 @@ export function PartnerPanelClient(props: {
     e.preventDefault();
     setErr(null);
     setMsg(null);
+    const form = e.currentTarget;
     const venueSlug = photosVenueSlug.trim();
     if (!venueSlug) {
       setErr("Indica el slug del centro para subir fotos.");
       return;
     }
-    const fd = new FormData(e.currentTarget);
+    const fd = new FormData(form);
     const file = fd.get("photo");
     if (!(file instanceof File) || !file.size) {
       setErr("Selecciona una imagen para subir.");
       return;
     }
+    if (!/^image\/(jpeg|png|webp)$/i.test(file.type)) {
+      setErr("Formato no soportado. Usa JPG, PNG o WEBP.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setErr("La imagen supera 5MB. Elige un archivo más liviano.");
+      return;
+    }
     const payload = new FormData();
-    payload.append("file", file);
+    payload.append("file", file, file.name);
     setUploadingPhoto(true);
     try {
       const res = await fetch(venueApi(venueSlug, "/photos"), {
@@ -567,11 +619,12 @@ export function PartnerPanelClient(props: {
         setErr(formatUpstreamError(body, "No se pudo subir la foto."));
         return;
       }
-      e.currentTarget.reset();
+      form.reset();
+      clearPhotoSelection();
       setMsg("Foto subida y sincronizada con catálogo.");
       await loadPhotos(venueSlug);
     } catch {
-      setErr("Error de red al subir foto.");
+      setErr("Error de red al subir foto. Revisa la conexión e inténtalo de nuevo.");
     } finally {
       setUploadingPhoto(false);
     }
@@ -978,7 +1031,7 @@ export function PartnerPanelClient(props: {
                         {catalogPhotos.slice(0, 6).map((url, idx) => (
                           <li
                             key={`${url}-${idx}`}
-                            className="overflow-hidden rounded-xl border border-quegym-border"
+                            className="overflow-hidden rounded-xl border border-quegym-border bg-quegym-elevated"
                           >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
@@ -986,7 +1039,20 @@ export function PartnerPanelClient(props: {
                               alt={`Catálogo ${idx + 1}`}
                               className="h-28 w-full object-cover"
                               loading="lazy"
+                              onError={(ev) => {
+                                const el = ev.currentTarget;
+                                el.style.display = "none";
+                                const fallback = el.nextElementSibling;
+                                if (fallback instanceof HTMLElement) fallback.hidden = false;
+                              }}
                             />
+                            <div
+                              hidden
+                              className="flex h-28 flex-col items-center justify-center gap-1 px-2 text-center text-[11px] text-quegym-secondary"
+                            >
+                              <span>Catálogo {idx + 1}</span>
+                              <span>URL no accesible — sube una foto nueva</span>
+                            </div>
                           </li>
                         ))}
                       </ul>
@@ -1011,13 +1077,22 @@ export function PartnerPanelClient(props: {
                         draggingPhotoId === photo.id ? "opacity-60" : ""
                       } ${reorderingPhotos ? "pointer-events-none opacity-70" : ""}`}
                     >
-                      <div className="h-16 w-24 shrink-0 overflow-hidden rounded-lg border border-quegym-border">
+                      <div className="h-16 w-24 shrink-0 overflow-hidden rounded-lg border border-quegym-border bg-quegym-subtle">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={photo.url}
                           alt={`Foto ${idx + 1}`}
                           className="h-full w-full object-cover"
                           loading="lazy"
+                          onError={(ev) => {
+                            ev.currentTarget.replaceWith(
+                              Object.assign(document.createElement("div"), {
+                                className:
+                                  "flex h-full w-full items-center justify-center px-1 text-center text-[10px] text-quegym-secondary",
+                                textContent: "Sin preview",
+                              }),
+                            );
+                          }}
                         />
                       </div>
                       <div className="min-w-0 flex-1 text-xs text-quegym-secondary">
@@ -1072,24 +1147,62 @@ export function PartnerPanelClient(props: {
                   ))}
                 </ul>
               )}
+              {photoPreviewUrl ? (
+                <div className="mt-3 flex flex-wrap items-center gap-3 rounded-xl border border-dashed border-quegym-border bg-quegym-elevated p-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={photoPreviewUrl}
+                    alt="Vista previa"
+                    className="h-20 w-28 rounded-lg object-cover"
+                  />
+                  <div className="min-w-0 flex-1 text-xs text-quegym-secondary">
+                    <p className="font-medium text-quegym-primary">Lista para subir</p>
+                    <p className="truncate">{photoFileName}</p>
+                  </div>
+                  <UIButton
+                    type="button"
+                    size="sm"
+                    variant="secondary"
+                    className={lightSecondaryButtonClass}
+                    onClick={() => {
+                      clearPhotoSelection();
+                      const input = document.querySelector<HTMLInputElement>(
+                        "#partner-photo-upload input[type=file]",
+                      );
+                      if (input) input.value = "";
+                    }}
+                  >
+                    Quitar
+                  </UIButton>
+                </div>
+              ) : null}
               <form
                 id="partner-photo-upload"
                 className="mt-3 flex flex-wrap items-center gap-2"
                 onSubmit={onUploadPhoto}
               >
                 <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 text-xs text-quegym-primary hover:bg-quegym-subtle">
-                  Seleccionar imagen
+                  {photoFileName ? "Cambiar imagen" : "Seleccionar imagen"}
                   <input
                     type="file"
                     name="photo"
                     accept="image/jpeg,image/png,image/webp"
                     className="sr-only"
+                    onChange={onPhotoFileChange}
                   />
                 </label>
-                <UIButton type="submit" disabled={uploadingPhoto || !photosVenueSlug.trim()} className={lightPrimaryButtonClass}>
+                <UIButton
+                  type="submit"
+                  disabled={uploadingPhoto || !photosVenueSlug.trim() || !photoFileName}
+                  className={lightPrimaryButtonClass}
+                >
                   {uploadingPhoto ? "Subiendo…" : "Subir foto"}
                 </UIButton>
-                <span className="text-xs text-quegym-secondary">JPG/PNG/WEBP, hasta 5MB</span>
+                <span className="text-xs text-quegym-secondary">
+                  {photoFileName
+                    ? photoFileName
+                    : "JPG/PNG/WEBP, hasta 5MB"}
+                </span>
               </form>
             </UICard>
 
