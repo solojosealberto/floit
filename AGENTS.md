@@ -78,7 +78,7 @@ Resumen: **[`docs/operations/sprints.md`](docs/operations/sprints.md)**. Estado 
 | Documento | Uso |
 |-----------|-----|
 | [`NEXT_AGENT_BRIEF.md`](docs/operations/NEXT_AGENT_BRIEF.md) | **CURRENT TRUTH** |
-| [`STAGING_DEPLOYMENT_STATUS.md`](docs/operations/STAGING_DEPLOYMENT_STATUS.md) | Staging `https://staging.quegym.com` — health **5/5**, 95 venues; KPI PRD pendiente re-seed |
+| [`STAGING_DEPLOYMENT_STATUS.md`](docs/operations/STAGING_DEPLOYMENT_STATUS.md) | Staging `https://staging.quegym.com` — health **5/5**, 95 venues; partner admin OIDC fix en código (redeploy); KPI PRD pendiente re-seed |
 | [`PRODUCTION_LAUNCH_PLAN.md`](docs/operations/PRODUCTION_LAUNCH_PLAN.md) | Cutover `www.quegym.com` post-GO |
 | [`PRODUCTION_ACCOUNTS_SETUP.md`](docs/operations/PRODUCTION_ACCOUNTS_SETUP.md) | Alta cuentas (paso 2 hecho; import/smoke hechos) |
 | [`STAGING_AGENT_EXECUTION_REPORT.md`](docs/operations/STAGING_AGENT_EXECUTION_REPORT.md) | **Superseded** para KPI — contexto histórico |

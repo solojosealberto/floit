@@ -6,13 +6,17 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import type { Request } from "express";
+import {
+  loadJose,
+  normalizeOidcIssuer,
+  resolveOidcJwksUrl,
+} from "./oidc-jose";
 
 type AdminIdentity = { subject: string; email: string | null };
 
 @Injectable()
 export class AdminApiGuard implements CanActivate {
   private jwksCache = new Map<string, unknown>();
-  private josePromise: Promise<typeof import("jose")> | null = null;
 
   constructor(private readonly config: ConfigService) {}
 
@@ -54,16 +58,17 @@ export class AdminApiGuard implements CanActivate {
     const token = auth.startsWith("Bearer ") ? auth.slice(7).trim() : "";
     if (!token) throw new UnauthorizedException("missing_bearer_token");
 
-    const issuerBase = issuerRaw.replace(/\/$/, "");
-    const audience =
-      this.config.get<string>("ADMIN_OIDC_AUDIENCE")?.trim() || "floit-admin";
-    const jwksUrl =
-      this.config.get<string>("ADMIN_OIDC_JWKS_URL")?.trim() ||
-      `${issuerBase}/.well-known/jwks.json`;
-    const jose = await this.getJose();
-    const jwks = await this.getOrCreateJwks(jwksUrl);
-
     try {
+      const issuerBase = normalizeOidcIssuer(issuerRaw);
+      const audience =
+        this.config.get<string>("ADMIN_OIDC_AUDIENCE")?.trim() || "floit-admin";
+      const jwksUrl = resolveOidcJwksUrl(
+        issuerBase,
+        this.config.get<string>("ADMIN_OIDC_JWKS_URL"),
+      );
+      const jose = await loadJose();
+      const jwks = this.getOrCreateJwks(jose, jwksUrl);
+
       const verified = await jose.jwtVerify(token, jwks as never, {
         issuer: [issuerBase, `${issuerBase}/`],
         audience,
@@ -75,24 +80,21 @@ export class AdminApiGuard implements CanActivate {
         email: payload.email?.trim().toLowerCase() || null,
       };
       return true;
-    } catch {
+    } catch (error) {
+      if (error instanceof UnauthorizedException) throw error;
       throw new UnauthorizedException("invalid_admin_token");
     }
   }
 
-  private async getOrCreateJwks(url: string): Promise<unknown> {
-    const existing = this.jwksCache.get(url);
+  private getOrCreateJwks(
+    jose: typeof import("jose"),
+    url: URL,
+  ): unknown {
+    const key = url.toString();
+    const existing = this.jwksCache.get(key);
     if (existing) return existing;
-    const jose = await this.getJose();
-    const created = jose.createRemoteJWKSet(new URL(url));
-    this.jwksCache.set(url, created);
+    const created = jose.createRemoteJWKSet(url);
+    this.jwksCache.set(key, created);
     return created;
-  }
-
-  private getJose(): Promise<typeof import("jose")> {
-    if (!this.josePromise) {
-      this.josePromise = import("jose");
-    }
-    return this.josePromise;
   }
 }

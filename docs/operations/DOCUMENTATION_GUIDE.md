@@ -13,6 +13,7 @@
 | Qué hacer ahora | `NEXT_AGENT_BRIEF.md` |
 | Infra staging / DNS / Railway checklist | `STAGING_DEPLOYMENT_STATUS.md` |
 | Pruebas y firmas Sprint 5 | `STAGING_EVIDENCE_SPRINT5.md` §0 solamente |
+| QA portal admin staging | `ADMIN_STAGING_QA_REPORT.md` |
 | Qué se entregó por sprint | `sprints.md` |
 | Cobertura de historias | `EPICS_USER_STORIES_STATUS.md` |
 | Arquitectura y handoff largo | `PROJECT_CONTEXT_HANDOVER.md` |

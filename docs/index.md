@@ -18,7 +18,7 @@ Mapa canónico de documentación del monorepo **QueGym** (carpeta de trabajo pue
 | Épicas / US | `docs/operations/EPICS_USER_STORIES_STATUS.md` |
 | Contexto handoff | `docs/operations/PROJECT_CONTEXT_HANDOVER.md` |
 
-**Snapshot (2026-08-02):** staging `https://staging.quegym.com` — health **5/5**, **95 venues**, smoke **PASS**; QA visual **PASS**; E2E lead API **PASS**; KPI PRD **FAIL** (ventana 7d sin tráfico — re-seed + backdate); GO producto **pendiente**. Detalle: brief.
+**Snapshot (2026-08-03):** staging `https://staging.quegym.com` — health **5/5**, **95 venues**, smoke **PASS**; partner admin **500** remedio en código (redeploy Railway pendiente); QA visual **PASS**; E2E lead API **PASS**; KPI PRD **FAIL** (ventana 7d — re-seed + backdate); GO **pendiente**. Detalle: brief.
 
 ## Producto (documentos rectores)
 

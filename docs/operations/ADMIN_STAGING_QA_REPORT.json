@@ -1,0 +1,203 @@
+{
+  "meta": {
+    "at": "2026-08-02T22:45:01.254Z",
+    "web": "https://staging.quegym.com"
+  },
+  "tests": [
+    {
+      "section": "health.partner",
+      "ok": true,
+      "detail": "{\"ok\":true,\"service\":\"partner\",\"auth\":{\"adminStrictOidc\":true,\"adminOidcConfigured\":true,\"partnerStrictOidc\":true,\"partnerOidcConfigured\":true},\"queues\":{\"catalogSync\":{\"pending\":0,\"failed\":0,\"sent\":0},\"catalogSyncOutbox\":{\"pending\":0,\"failed\":0,\"published\":0}},\"readiness\":{\"oidcConfigReady\":true,\"q"
+    },
+    {
+      "section": "health.catalog",
+      "ok": true,
+      "detail": "{\"ok\":true,\"service\":\"catalog\"}"
+    },
+    {
+      "section": "health.leads",
+      "ok": true,
+      "detail": "{\"ok\":true,\"service\":\"leads\",\"auth\":{\"adminStrictOidc\":true,\"adminOidcConfigured\":true}}"
+    },
+    {
+      "section": "auth.m2m",
+      "ok": true,
+      "detail": "token len=718"
+    },
+    {
+      "section": "auth.admin_login",
+      "ok": true,
+      "detail": "HTTP 303; cookie=yes; body="
+    },
+    {
+      "section": "page/admin",
+      "ok": true,
+      "detail": "HTTP 200 size=42266"
+    },
+    {
+      "section": "page/admin/catalogo",
+      "ok": true,
+      "detail": "HTTP 200 size=303293"
+    },
+    {
+      "section": "page/admin/catalogo/life-fit-zone/panel",
+      "ok": true,
+      "detail": "HTTP 200 size=31986"
+    },
+    {
+      "section": "page/admin/leads",
+      "ok": true,
+      "detail": "HTTP 200 WARN content error size=10883"
+    },
+    {
+      "section": "page/admin/taxonomias",
+      "ok": true,
+      "detail": "HTTP 200 size=35773"
+    },
+    {
+      "section": "page/admin/moderacion-media",
+      "ok": true,
+      "detail": "HTTP 200 size=34762"
+    },
+    {
+      "section": "page/admin/partner-claims",
+      "ok": true,
+      "detail": "HTTP 200 WARN content error size=57033"
+    },
+    {
+      "section": "page/admin/configuracion",
+      "ok": true,
+      "detail": "HTTP 200 size=44533"
+    },
+    {
+      "section": "page/admin/duplicados",
+      "ok": true,
+      "detail": "HTTP 200 size=37138"
+    },
+    {
+      "section": "page/admin/analytics",
+      "ok": true,
+      "detail": "HTTP 200 size=75139"
+    },
+    {
+      "section": "bff.get_profile",
+      "ok": false,
+      "detail": "HTTP 500 {\"statusCode\":500,\"message\":\"Internal server error\"}"
+    },
+    {
+      "section": "partner.get_profile",
+      "ok": false,
+      "detail": "HTTP 500 {\"statusCode\":500,\"message\":\"Internal server error\"}"
+    },
+    {
+      "section": "bff.put_profile",
+      "ok": false,
+      "detail": "HTTP 500 {\"statusCode\":500,\"message\":\"Internal server error\"}"
+    },
+    {
+      "section": "partner.put_profile",
+      "ok": false,
+      "detail": "HTTP 500 {\"statusCode\":500,\"message\":\"Internal server error\"}"
+    },
+    {
+      "section": "bff.get_plans",
+      "ok": false,
+      "detail": "HTTP 500 {\"statusCode\":500,\"message\":\"Internal server error\"}"
+    },
+    {
+      "section": "bff.post_plan",
+      "ok": false,
+      "detail": "HTTP 500 {\"statusCode\":500,\"message\":\"Internal server error\"}"
+    },
+    {
+      "section": "bff.patch_plan",
+      "ok": false,
+      "detail": "no planId from create"
+    },
+    {
+      "section": "partner.get_plans",
+      "ok": false,
+      "detail": "HTTP 500 count=?"
+    },
+    {
+      "section": "partner.post_plan",
+      "ok": false,
+      "detail": "HTTP 500 {\"statusCode\":500,\"message\":\"Internal server error\"}"
+    },
+    {
+      "section": "bff.get_photos",
+      "ok": false,
+      "detail": "HTTP 500 {\"statusCode\":500,\"message\":\"Internal server error\"}"
+    },
+    {
+      "section": "partner.get_photos",
+      "ok": false,
+      "detail": "HTTP 500 {\"statusCode\":500,\"message\":\"Internal server error\"}"
+    },
+    {
+      "section": "partner.patch_cover",
+      "ok": false,
+      "detail": "no photos to set cover"
+    },
+    {
+      "section": "partner.upload_photo",
+      "ok": false,
+      "detail": "HTTP 500 {\"statusCode\":500,\"message\":\"Internal server error\"}"
+    },
+    {
+      "section": "bff.upload_photo",
+      "ok": false,
+      "detail": "HTTP 500 {\"statusCode\":500,\"message\":\"Internal server error\"}"
+    },
+    {
+      "section": "bff.taxonomy_list",
+      "ok": false,
+      "detail": "HTTP 401"
+    },
+    {
+      "section": "catalog.taxonomy_list",
+      "ok": false,
+      "detail": "HTTP 401"
+    },
+    {
+      "section": "bff.leads_list",
+      "ok": false,
+      "detail": "HTTP 401 {\"error\":\"upstream_error\"}"
+    },
+    {
+      "section": "leads.list_m2m",
+      "ok": true,
+      "detail": "HTTP 200 total=?"
+    },
+    {
+      "section": "bff.claims",
+      "ok": false,
+      "detail": "HTTP 404 \"<!DOCTYPE html><!--zPHBDuJSioUTE7fmrLkEN--><html lang=\\\"es\\\"><head><meta charSet=\\\"utf-8\\\"/><meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1\\\"/><link rel=\\\"preload\\\" href=\\\"/_nex"
+    },
+    {
+      "section": "partner.sync_failures",
+      "ok": false,
+      "detail": "HTTP 500 {\"statusCode\":500,\"message\":\"Internal server error\"}"
+    },
+    {
+      "section": "partner.outbox_failures",
+      "ok": false,
+      "detail": "HTTP 500 {\"statusCode\":500,\"message\":\"Internal server error\"}"
+    },
+    {
+      "section": "catalog.public_reflects_profile",
+      "ok": false,
+      "detail": "HTTP 200 marker_in_description=false; desc_snip=nstagram: @lifefitzone\nReferencia de precio: inscripcion gratis, mensualidad 50$"
+    },
+    {
+      "section": "bff.media_review",
+      "ok": false,
+      "detail": "HTTP 401"
+    }
+  ],
+  "summary": {
+    "pass": 16,
+    "fail": 22,
+    "total": 38
+  }
+}

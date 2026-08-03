@@ -5,19 +5,20 @@
 > Ledger histórico: `sprints.md` · Backlog/US: `EPICS_USER_STORIES_STATUS.md` · Contexto: `PROJECT_CONTEXT_HANDOVER.md`.  
 > Vocabulario de estados: [`DOC_STATUS_VOCABULARY.md`](./DOC_STATUS_VOCABULARY.md) · Log de flips: [`STATUS_CHANGELOG.md`](./STATUS_CHANGELOG.md).
 
-**Última reconciliación documental:** 2026-08-02 · **Repo HEAD:** `f937abf` · **URL staging:** https://staging.quegym.com  
+**Última reconciliación documental:** 2026-08-03 · **Repo HEAD:** (este commit) · **URL staging:** https://staging.quegym.com  
 **No usar:** `https://www.staging.quegym.com` (NXDOMAIN — no existe en DNS).
 
 ---
 
 ## 0) Tarjeta viva (leer primero)
 
-| Campo | Valor (2026-08-02) |
+| Campo | Valor (2026-08-03) |
 |-------|---------------------|
 | Producto | QueGym MVP — discovery + comparación + leads (Caracas) |
-| Repo | `main` @ `f937abf` (= `origin/main`) |
+| Repo | `main` (push de fix partner OIDC admin) |
 | Web staging (Vercel) | `staging.quegym.com` — deploy citado `ca4070b`–`ff98be2` (+ commits posteriores en `main`) |
 | APIs (Railway `quegym-api`) | catalog / search / leads / partner / analytics — **health 5/5** |
+| Partner admin `/v1/admin/*` | **Fix en código** (`oidc-jose` + guards) — **redeploy Railway pendiente**; ver [`ADMIN_STAGING_QA_REPORT.md`](./ADMIN_STAGING_QA_REPORT.md) H1 |
 | Catálogo | **95 venues** |
 | Smoke platform | **PASS** (2026-08-02) |
 | QA visual staging | **PASS** (firma producto/ops 2026-05-27) — no reabrir |
@@ -28,16 +29,16 @@
 | KPI Sprint 5 **PRD** (último run) | **FAIL 8 checks** (2026-08-02) — ventana 7d sin tráfico reciente |
 | Pico histórico KPI PRD | **16/17** el 2026-06-17 (solo fallaba `stable days` 1/7) |
 | `ANALYTICS_ALLOW_BACKDATE` en Railway | **OFF / no confirmado** — bloquea simular 7 días A/B |
-| CI GitHub `build` | **PASS** en `f937abf` |
+| CI GitHub `build` | **PASS** en `f937abf` (re-chequear tras este push) |
 | CI GitHub `e2e-services` | **FAIL** (lead-flow / timing) — no implica staging caído |
 | GO producto/ops | **Pendiente** |
 | Prod `www.quegym.com` | **Pendiente** (post-GO) |
 
 ### Próximas 3 acciones (orden estricto)
 
-1. Railway analytics → `ANALYTICS_ALLOW_BACKDATE=true` → redeploy → probe backdate ([runbook](./STAGING_DEPLOYMENT_STATUS.md#cierre-kpi-1717--railway-analytics-paso-a-paso)).
-2. `pnpm staging:generate-traffic` → `pnpm sprint5:staging-gate` → objetivo **PASS PRD 17/17** → desactivar backdate.
-3. Actualizar evidencia + **firma GO/NO-GO** → cutover según [`PRODUCTION_LAUNCH_PLAN.md`](./PRODUCTION_LAUNCH_PLAN.md).
+1. **P0 admin:** redeploy **partner** Railway → verificar M2M `GET /v1/admin/partner/claims?limit=1` → **200** (bad token → **401**, no 500); `ADMIN_OIDC_ISSUER=https://…` (URL absoluta); `ADMIN_CATALOG_DELEGATE_EMAIL`; renovar `ADMIN_OIDC_ACCESS_TOKEN` en Vercel; OIDC/`ADMIN_API_TOKEN` en **catalog** Railway.
+2. Railway analytics → `ANALYTICS_ALLOW_BACKDATE=true` → redeploy → probe backdate ([runbook](./STAGING_DEPLOYMENT_STATUS.md#cierre-kpi-1717--railway-analytics-paso-a-paso)).
+3. `pnpm staging:generate-traffic` → `pnpm sprint5:staging-gate` → objetivo **PASS PRD 17/17** → desactivar backdate → firma GO.
 
 ### Hecho (no repetir)
 
@@ -46,6 +47,7 @@
 - Import 95 venues, smoke 5/5, admin M2M (`00fd9f9`)
 - QA visual PASS; E2E lead API PASS
 - Script `staging:generate-traffic` + soporte backdate en código (`f937abf`)
+- Root cause partner admin 500: `new URL(jwks)` sin esquema si issuer host-only → fix `services/partner/src/oidc-jose.ts` (redeploy pendiente)
 
 ---
 
