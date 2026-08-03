@@ -36,7 +36,7 @@
 
 ### Próximas 3 acciones (orden estricto)
 
-1. **P0 admin:** redeploy **partner** Railway → verificar M2M `GET /v1/admin/partner/claims?limit=1` → **200** (bad token → **401**, no 500); `ADMIN_OIDC_ISSUER=https://…` (URL absoluta); `ADMIN_CATALOG_DELEGATE_EMAIL`; renovar `ADMIN_OIDC_ACCESS_TOKEN` en Vercel; OIDC/`ADMIN_API_TOKEN` en **catalog** Railway.
+1. **P0 admin (bloqueado en CLI sin login):** activar Railway (`https://railway.com/activate` código de sesión agente) → redeploy **partner** (`d9373dc`+) → set **catalog** `ADMIN_OIDC_ISSUER=https://…` → Vercel Preview: `AUTH0_M2M_CLIENT_ID`/`SECRET`/`AUTH0_DOMAIN` (BFF renueva Bearer solo; commit reciente) → verificar claims/profile/taxonomy.
 2. Railway analytics → `ANALYTICS_ALLOW_BACKDATE=true` → redeploy → probe backdate ([runbook](./STAGING_DEPLOYMENT_STATUS.md#cierre-kpi-1717--railway-analytics-paso-a-paso)).
 3. `pnpm staging:generate-traffic` → `pnpm sprint5:staging-gate` → objetivo **PASS PRD 17/17** → desactivar backdate → firma GO.
 

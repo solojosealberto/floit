@@ -53,6 +53,7 @@ export default async function AdminConfiguracionPage() {
   const modeDescription = describeAuthenticatedAdminMode(auth, {
     sessionEmail,
     localPasswordGateApplies,
+    hasM2mClientCredentials: flags.hasM2mClientCredentials,
   });
 
   const displayEmail =
@@ -98,6 +99,10 @@ export default async function AdminConfiguracionPage() {
             <h2 className="text-base font-semibold text-quegym-primary">Autenticación hacia APIs admin</h2>
             <p className="mt-2 text-sm text-quegym-primary">{modeDescription}</p>
             <dl className="mt-4 grid gap-2 text-sm sm:grid-cols-2">
+              <FlagRow
+                label="AUTH0_M2M_CLIENT_ID/SECRET (renovación automática)"
+                value={flags.hasM2mClientCredentials}
+              />
               <FlagRow label="ADMIN_OIDC_ACCESS_TOKEN definido" value={flags.hasOidcAccessToken} />
               <FlagRow label="ADMIN_AUTH_REQUIRE_OIDC" value={flags.strictOidc} />
               <FlagRow label="ADMIN_API_TOKEN definido" value={flags.hasLegacyApiToken} />
