@@ -43,7 +43,7 @@ export function emptyWeekSchedule(): DaySchedule[] {
 
 function toAmPm(hhmm: string): string {
   const [hs, ms] = hhmm.split(":");
-  let h = Number(hs);
+  const h = Number(hs);
   const m = Number(ms);
   if (!Number.isFinite(h) || !Number.isFinite(m)) return hhmm;
   const suffix = h >= 12 ? "pm" : "am";
