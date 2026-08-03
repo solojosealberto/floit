@@ -75,21 +75,8 @@ Fallos concentrados en: partner admin CRUD, BFF catalog auth, BFF leads auth.
 
 ### H1 — partner-service: APIs admin devuelven 500 (P0)
 
-**Estado (2026-08-03):** **Fix en código** — pendiente **redeploy Railway partner** + re-verificación.  
-**Causa raíz confirmada:** `AdminApiGuard` construía la JWKS URL con `new URL(...)` **fuera** del `try/catch`. Si `ADMIN_OIDC_ISSUER` (o JWKS) viene como host sin `https://`, Node lanza `Invalid URL` → Nest **500**. Evidencia: Bearer inválido también daba **500** (no 401); leads con el mismo M2M → 200/401. Los handlers admin **no llegaban a ejecutarse**.
-
-**Remedio en repo:** `services/partner/src/oidc-jose.ts` (normaliza issuer/JWKS) + guards admin/partner con validación OIDC dentro de `try/catch`. Env: `ADMIN_OIDC_ISSUER=https://<tenant>.us.auth0.com`.
-
-**Síntoma (pre-fix, 2026-08-02):** Con Bearer M2M (`aud=floit-admin`):
-
-- sin token → **401** `missing_bearer_token`
-- con token (válido o inválido) → **500** en:
-  - `/v1/admin/catalog/venues/:slug/profile|plans|photos`
-  - `/v1/admin/partner/claims` / `ownerships` / `catalog-sync/*`
-
-**Contraste:** `POST /v1/partner/claims` (público) → **201**. Health partner → **200**, colas `failed=0`.
-
-**Impacto usuario:** «no guarda», «no cambia planes», «no cambia foto», «no elimina» — el panel llama a estas APIs y recibe 500.
+**Estado (2026-08-03):** **CERRADO en staging** — probes M2M: claims/ownerships/profile/plans/photos **200**; bad Bearer **401**.  
+**Causa raíz (ops + código):** en Railway, `ADMIN_OIDC_ISSUER` estaba seteado a `floit-admin` (audience) y `PARTNER_OIDC_ISSUER` a `floit-partner`. Eso hacía `new URL(issuer + "/.well-known/jwks.json")` inválido → Nest **500** para cualquier Bearer. Corregido a `https://dev-….us.auth0.com`; catalog OIDC configurado; `ADMIN_CATALOG_DELEGATE_EMAIL` set. Código: `oidc-jose` normalize + try/catch en guards.
 
 ### H2 — Vercel BFF: auth admin hacia leads/catalog inconsistente (P0)
 

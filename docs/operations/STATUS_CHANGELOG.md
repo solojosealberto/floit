@@ -6,7 +6,8 @@ Formato: `YYYY-MM-DD | SHA | qué cambió | evidencia`.
 
 | Fecha | SHA / ref | Cambio | Evidencia |
 |-------|-----------|--------|-----------|
-| 2026-08-03 | `49cb52a` | BFF admin: renovación M2M automática (`AUTH0_M2M_*`); OIDC JWKS harden en catalog/leads; partner fix `d9373dc` sigue **sin redeploy** (CLI Railway sin login) | Probes live: partner bad/good Bearer aún **500** |
+| 2026-08-03 | Railway | Partner admin **PASS**: `ADMIN_OIDC_ISSUER` era `floit-admin` (audience) → corregido a Auth0 URL; catalog OIDC ON; delegate email; analytics `ANALYTICS_ALLOW_BACKDATE=true`; redeploy partner/catalog/analytics | Probes M2M claims/profile/plans/photos/taxonomy **200** |
+| 2026-08-03 | `49cb52a` | BFF admin: renovación M2M automática (`AUTH0_M2M_*`); OIDC JWKS harden en catalog/leads; partner fix `d9373dc` | Code on `main` |
 | 2026-08-03 | `d9373dc` | Fix código partner admin 500: normalizar issuer/JWKS OIDC + try/catch en guards (`oidc-jose.ts`); **redeploy Railway pendiente** | `ADMIN_STAGING_QA_REPORT.md` H1 |
 | 2026-08-02 | `027b56d`+ | QA admin staging: partner admin APIs **500**; catalog admin **401**; BFF leads **401** — ver `ADMIN_STAGING_QA_REPORT.md` | Suite HTTP admin |
 | 2026-08-02 | `f937abf` | Reconciliación documental P0–P2: brief = CURRENT TRUTH; KPI live **FAIL PRD** (8 checks, ventana 7d vacía); smoke **PASS** 5/5; QA visual = PASS (no reabrir) | Este log + `NEXT_AGENT_BRIEF.md` |

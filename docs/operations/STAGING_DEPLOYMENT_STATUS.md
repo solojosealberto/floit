@@ -11,9 +11,9 @@ Registro operativo de lo configurado en proveedores (sin secretos). Alineado a [
 **Vercel staging:** commits `ca4070b`–`ff98be2` (+ `main` posterior); assets `/brand/` OK.  
 **APIs Railway:** health **5/5** (catalog, search, leads, partner, analytics) — verificado 2026-08-02.  
 **Auth admin:** M2M Auth0 + `ADMIN_OIDC_ACCESS_TOKEN` Preview; issuer fix `00fd9f9`.  
-**Partner admin 500 (2026-08-02):** causa = JWKS `new URL` con issuer sin `https://` en `AdminApiGuard` (cualquier Bearer → 500). Fix en `main` (`services/partner/src/oidc-jose.ts`) — **redeploy partner Railway** y re-probar claims/profile; issuer debe ser URL absoluta `https://…`. Detalle: [`ADMIN_STAGING_QA_REPORT.md`](./ADMIN_STAGING_QA_REPORT.md).  
-**Railway deploy SHA (analytics):** no anotado en panel — confirmar que el servicio incluye `f937abf` (+ fix partner) antes de depender de backdate.  
-**Pendiente paso 3:** redeploy partner + auth catalog/Vercel → re-seed KPI → **PASS PRD 17/17** (`ANALYTICS_ALLOW_BACKDATE`) + firma GO/NO-GO.
+**Partner admin 500 (cerrado 2026-08-03):** causa ops = `ADMIN_OIDC_ISSUER`/`PARTNER_OIDC_ISSUER` valían `floit-admin`/`floit-partner` (audiences) en vez de `https://<tenant>.us.auth0.com`. Corregido + `ADMIN_CATALOG_DELEGATE_EMAIL`; catalog `ADMIN_OIDC_*` ON; probes admin **200**. Código endurecido en `oidc-jose.ts` (partner/catalog/leads).  
+**Analytics:** `ANALYTICS_ALLOW_BACKDATE=true` (staging) — usar solo para seed KPI.  
+**Pendiente:** Vercel `AUTH0_M2M_*` para BFF; re-seed KPI 17/17; GO.
 
 ---
 
