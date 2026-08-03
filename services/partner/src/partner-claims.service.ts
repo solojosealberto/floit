@@ -1,7 +1,8 @@
 import { BadGatewayException, BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
-import { existsSync, unlinkSync } from "node:fs";
+import { existsSync, readFileSync, unlinkSync } from "node:fs";
+import { basename } from "node:path";
 import { Repository } from "typeorm";
 import { CreatePartnerPlanDto } from "./dto/create-partner-plan.dto";
 import type { CreatePartnerClaimDto } from "./dto/create-partner-claim.dto";
@@ -736,11 +737,12 @@ export class PartnerClaimsService {
       items: rows.map((r) => ({
         id: r.id,
         venueSlug: r.venueSlug,
-        url: this.rewritePublicMediaUrl(r.url),
+        url: this.publicPhotoUrl(r),
         mimeType: r.mimeType,
         sizeBytes: r.sizeBytes,
         sortOrder: r.sortOrder,
         createdAt: r.createdAt.toISOString(),
+        updatedAt: r.updatedAt.toISOString(),
       })),
     };
   }
@@ -759,15 +761,26 @@ export class PartnerClaimsService {
       where: { partnerEmail: identity.email, venueSlug, status: "active" },
     });
     if (count >= 12) return { error: "photo_limit_reached" as const };
-    const publicUrl = `${this.getPublicBaseUrl()}/uploads/${encodeURIComponent(file.filename)}`;
+    const filename = basename(file.filename);
+    const publicUrl = `${this.getPublicBaseUrl()}/uploads/${encodeURIComponent(filename)}`;
+    let blobBase64: string | null = null;
+    try {
+      if (existsSync(file.path)) {
+        blobBase64 = readFileSync(file.path).toString("base64");
+      }
+    } catch {
+      blobBase64 = null;
+    }
     const row = await this.photos.save(
       this.photos.create({
         partnerEmail: identity.email,
         venueSlug,
         url: publicUrl,
         storagePath: file.path,
+        filename,
         mimeType: file.mimeType,
         sizeBytes: file.sizeBytes,
+        blobBase64,
         sortOrder: count,
         status: "active",
       }),
@@ -777,11 +790,12 @@ export class PartnerClaimsService {
     return {
       id: row.id,
       venueSlug: row.venueSlug,
-      url: this.rewritePublicMediaUrl(row.url),
+      url: this.publicPhotoUrl(row),
       mimeType: row.mimeType,
       sizeBytes: row.sizeBytes,
       sortOrder: row.sortOrder,
       createdAt: row.createdAt.toISOString(),
+      updatedAt: row.updatedAt.toISOString(),
     };
   }
 
@@ -795,8 +809,10 @@ export class PartnerClaimsService {
       where: { id: photoId, partnerEmail: identity.email, venueSlug, status: "active" },
     });
     if (!row) return { error: "photo_not_found" as const };
-    row.status = "deleted";
-    await this.photos.save(row);
+    await this.photos.update(
+      { id: row.id },
+      { status: "deleted", blobBase64: null },
+    );
     if (existsSync(row.storagePath)) {
       try {
         unlinkSync(row.storagePath);
@@ -977,6 +993,18 @@ export class PartnerClaimsService {
 
   async retryCatalogSyncOutboxFailures(limit = 50) {
     return this.catalogOutbox.retryFailures(limit);
+  }
+
+  private publicPhotoUrl(row: {
+    url: string;
+    filename?: string | null;
+    updatedAt?: Date;
+  }): string {
+    const base = this.rewritePublicMediaUrl(row.url);
+    const v = row.updatedAt?.getTime?.();
+    if (!v) return base;
+    const sep = base.includes("?") ? "&" : "?";
+    return `${base}${sep}v=${v}`;
   }
 
   private getPublicBaseUrl(): string {

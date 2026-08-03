@@ -5,3 +5,6 @@
 export const TIMESTAMP_COLUMN_TYPE = process.env.DATABASE_URL?.trim()
   ? ("timestamptz" as const)
   : ("datetime" as const);
+
+/** Durable photo payload: text works on Postgres + SQLite (bytea is Postgres-only). */
+export const PHOTO_BLOB_COLUMN_TYPE = "text" as const;

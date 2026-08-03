@@ -17,6 +17,7 @@ import { PartnerProfileEntity } from "./partner-profile.entity";
 import { PartnerOwnershipAuditEntity } from "./partner-ownership-audit.entity";
 import { PartnerVenueOwnershipEntity } from "./partner-venue-ownership.entity";
 import { PartnerVenuePhotoEntity } from "./partner-venue-photo.entity";
+import { PartnerUploadsController } from "./partner-uploads.controller";
 
 @Module({
   imports: [
@@ -70,7 +71,7 @@ import { PartnerVenuePhotoEntity } from "./partner-venue-photo.entity";
       PartnerCatalogSyncJobEntity,
     ]),
   ],
-  controllers: [HealthController, PartnerClaimsController],
+  controllers: [HealthController, PartnerClaimsController, PartnerUploadsController],
   providers: [
     PartnerClaimsService,
     PartnerCatalogSyncOutboxService,

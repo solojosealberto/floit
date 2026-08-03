@@ -59,6 +59,7 @@ type VenuePhoto = {
   sizeBytes: number;
   sortOrder: number;
   createdAt: string;
+  updatedAt?: string;
 };
 
 type PartnerLead = {
@@ -204,6 +205,7 @@ export function PartnerPanelClient(props: {
   const [updatingLeadId, setUpdatingLeadId] = useState<string | null>(null);
   const [scheduleDays, setScheduleDays] = useState<DaySchedule[]>(() => emptyWeekSchedule());
   const [scheduleParseNote, setScheduleParseNote] = useState<string | null>(null);
+  const [brokenPhotoIds, setBrokenPhotoIds] = useState<Record<string, true>>({});
   const ogPreviewTitle =
     profileForm.businessName.trim() ||
     profile.businessName?.trim() ||
@@ -743,6 +745,7 @@ export function PartnerPanelClient(props: {
         return;
       }
       setPhotos(body.items ?? []);
+      setBrokenPhotoIds({});
     } catch {
       setErr("Error de red al cargar fotos.");
       setPhotos([]);
@@ -1247,28 +1250,32 @@ export function PartnerPanelClient(props: {
                       } ${reorderingPhotos ? "pointer-events-none opacity-70" : ""}`}
                     >
                       <div className="h-16 w-24 shrink-0 overflow-hidden rounded-lg border border-quegym-border bg-quegym-subtle">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={photo.url}
-                          alt={`Foto ${idx + 1}`}
-                          className="h-full w-full object-cover"
-                          loading="lazy"
-                          onError={(ev) => {
-                            ev.currentTarget.replaceWith(
-                              Object.assign(document.createElement("div"), {
-                                className:
-                                  "flex h-full w-full items-center justify-center px-1 text-center text-[10px] text-quegym-secondary",
-                                textContent: "Sin preview",
-                              }),
-                            );
-                          }}
-                        />
+                        {brokenPhotoIds[photo.id] ? (
+                          <div className="flex h-full w-full flex-col items-center justify-center gap-0.5 px-1 text-center text-[10px] text-quegym-secondary">
+                            <span>Sin archivo</span>
+                            <span>Vuelve a subir</span>
+                          </div>
+                        ) : (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={photo.url}
+                            alt={`Foto ${idx + 1}`}
+                            className="h-full w-full object-cover"
+                            loading="lazy"
+                            onError={() =>
+                              setBrokenPhotoIds((prev) => ({ ...prev, [photo.id]: true }))
+                            }
+                          />
+                        )}
                       </div>
                       <div className="min-w-0 flex-1 text-xs text-quegym-secondary">
                         <p className="font-medium text-quegym-primary">
                           {idx === 0 ? "Portada" : `Foto ${idx + 1}`}
                         </p>
-                        <p className="truncate">{photo.mimeType} · {Math.round(photo.sizeBytes / 1024)} KB</p>
+                        <p className="truncate">
+                          {photo.mimeType} · {Math.round(photo.sizeBytes / 1024)} KB
+                          {brokenPhotoIds[photo.id] ? " · archivo no disponible" : ""}
+                        </p>
                       </div>
                       <div className="flex flex-wrap items-center gap-1">
                         <UIButton
@@ -1370,8 +1377,14 @@ export function PartnerPanelClient(props: {
                 <span className="text-xs text-quegym-secondary">
                   {photoFileName
                     ? photoFileName
-                    : "JPG/PNG/WEBP, hasta 5MB"}
+                    : "JPG/PNG/WEBP, hasta 5MB. Las fotos se guardan de forma persistente."}
                 </span>
+                {Object.keys(brokenPhotoIds).length > 0 ? (
+                  <p className="basis-full text-xs text-amber-800">
+                    Hay fotos sin archivo en disco (típico tras un redeploy). Elimínalas y vuelve a
+                    subirlas; las nuevas quedarán persistidas.
+                  </p>
+                ) : null}
               </form>
             </UICard>
 

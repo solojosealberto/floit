@@ -3,7 +3,6 @@ import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
-import { static as serveStatic } from "express";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
@@ -21,7 +20,7 @@ async function bootstrap() {
   if (!existsSync(mediaDir)) {
     mkdirSync(mediaDir, { recursive: true });
   }
-  app.use("/uploads", serveStatic(mediaDir));
+  // Files are served by PartnerUploadsController (disk + DB blob fallback).
   const port = Number(process.env.PORT ?? 4013);
   const host = process.env.HOST ?? "0.0.0.0";
   await app.listen(port, host);
