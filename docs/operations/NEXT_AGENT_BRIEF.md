@@ -47,6 +47,7 @@
 - Import 95 venues, smoke 5/5, admin M2M (`00fd9f9`)
 - QA visual PASS; E2E lead API PASS
 - Script `staging:generate-traffic` + soporte backdate en código (`f937abf`)
+- Panel admin: hidrata catálogo + edición real modalidades/amenidades/horarios (sync ampliado)
 - Vercel Production/Preview: AUTH0_M2M_* + ADMIN_OIDC_ISSUER; BFF leads/taxonomy 200
 - Partner admin 500: env `ADMIN_OIDC_ISSUER` era audience `floit-admin` (incorrecto) → `https://<tenant>.us.auth0.com`; código `oidc-jose`; catalog OIDC ON; `ADMIN_CATALOG_DELEGATE_EMAIL` set; analytics backdate ON
 

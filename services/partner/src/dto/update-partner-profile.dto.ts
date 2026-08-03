@@ -44,4 +44,18 @@ export class UpdatePartnerProfileDto {
   @ArrayMaxSize(12)
   @IsUrl({ require_tld: false }, { each: true })
   photoUrls?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(40)
+  @IsString({ each: true })
+  @MaxLength(64, { each: true })
+  modalities?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(40)
+  @IsString({ each: true })
+  @MaxLength(64, { each: true })
+  amenities?: string[];
 }

@@ -428,9 +428,29 @@ export class VenuesService {
   async applyPartnerSync(slug: string, dto: UpdatePartnerSyncDto): Promise<void> {
     const venue = await this.findBySlug(slug);
     if (!venue) throw new NotFoundException("Venue not found");
-    if (dto.description !== undefined) {
+    if (dto.name !== undefined) {
+      const name = dto.name.trim();
+      if (name) venue.name = name.slice(0, 240);
+    }
+    if (dto.description !== undefined || dto.scheduleSummary !== undefined) {
       const lines: string[] = [];
-      if (dto.description.trim()) lines.push(dto.description.trim());
+      const desc =
+        dto.description !== undefined
+          ? dto.description.trim()
+          : (venue.description ?? "").trim();
+      // Strip a previous trailing "Horarios:" block before re-appending.
+      const withoutSchedule = desc
+        .replace(/\n*\nHorarios:\n[\s\S]*$/i, "")
+        .trim();
+      if (withoutSchedule) lines.push(withoutSchedule);
+      const schedule =
+        dto.scheduleSummary !== undefined
+          ? dto.scheduleSummary.trim()
+          : null;
+      if (schedule) {
+        lines.push("Horarios:");
+        lines.push(schedule);
+      }
       if (Array.isArray(dto.plans) && dto.plans.length > 0) {
         const planLines = dto.plans
           .filter((p) => p.active !== false)
@@ -451,6 +471,23 @@ export class VenuesService {
         }
       }
       venue.description = lines.join("\n").trim() || null;
+    } else if (Array.isArray(dto.plans) && dto.plans.length > 0) {
+      // plans-only update keeps existing description body
+      const base = (venue.description ?? "").replace(/\n*\nPlanes:\n[\s\S]*$/i, "").trim();
+      const planLines = dto.plans
+        .filter((p) => p.active !== false)
+        .map((p) =>
+          [p.name?.trim(), p.period?.trim(), p.priceLabel?.trim(), p.description?.trim()]
+            .filter(Boolean)
+            .join(" · "),
+        )
+        .filter(Boolean);
+      const lines = base ? [base] : [];
+      if (planLines.length > 0) {
+        lines.push("Planes:");
+        lines.push(...planLines.map((x) => `- ${x}`));
+      }
+      venue.description = lines.join("\n").trim() || null;
     }
     if (dto.contactPhone !== undefined) venue.contactPhone = dto.contactPhone.trim() || null;
     if (dto.contactWhatsapp !== undefined) {
@@ -460,6 +497,12 @@ export class VenuesService {
       venue.contactEmail = dto.contactEmail.trim().toLowerCase() || null;
     }
     if (dto.allowsTrial !== undefined) venue.allowsTrial = dto.allowsTrial;
+    if (dto.modalities !== undefined) {
+      venue.modalities = normalizeSlugList(dto.modalities);
+    }
+    if (dto.amenities !== undefined) {
+      venue.amenities = normalizeSlugList(dto.amenities);
+    }
     if (dto.photoUrls !== undefined) {
       venue.photoUrls = sanitizePhotoUrls(dto.photoUrls);
     }
@@ -635,6 +678,25 @@ function sanitizePhotoUrls(items: string[]): string[] {
     seen.add(value);
     cleaned.push(value);
     if (cleaned.length >= 12) break;
+  }
+  return cleaned;
+}
+
+function normalizeSlugList(items: string[]): string[] {
+  const seen = new Set<string>();
+  const cleaned: string[] = [];
+  for (const raw of items) {
+    const value = raw
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    if (!value || seen.has(value)) continue;
+    seen.add(value);
+    cleaned.push(value);
+    if (cleaned.length >= 40) break;
   }
   return cleaned;
 }

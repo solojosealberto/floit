@@ -41,6 +41,14 @@ export class PartnerProfileEntity {
   @Column({ type: "simple-json", nullable: true })
   photoUrls!: string[] | null;
 
+  /** Catalog modality slugs (e.g. pilates, functional). */
+  @Column({ type: "simple-json", nullable: true })
+  modalities!: string[] | null;
+
+  /** Catalog amenity slugs (e.g. parking, sauna). */
+  @Column({ type: "simple-json", nullable: true })
+  amenities!: string[] | null;
+
   @CreateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   createdAt!: Date;
 

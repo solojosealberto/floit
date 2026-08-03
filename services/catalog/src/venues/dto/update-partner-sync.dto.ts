@@ -12,8 +12,18 @@ import {
 export class UpdatePartnerSyncDto {
   @IsOptional()
   @IsString()
+  @MaxLength(240)
+  name?: string;
+
+  @IsOptional()
+  @IsString()
   @MaxLength(1200)
   description?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  scheduleSummary?: string;
 
   @IsOptional()
   @IsString()
@@ -33,6 +43,20 @@ export class UpdatePartnerSyncDto {
   @IsOptional()
   @IsBoolean()
   allowsTrial?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(40)
+  @IsString({ each: true })
+  @MaxLength(64, { each: true })
+  modalities?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(40)
+  @IsString({ each: true })
+  @MaxLength(64, { each: true })
+  amenities?: string[];
 
   @IsOptional()
   @IsArray()

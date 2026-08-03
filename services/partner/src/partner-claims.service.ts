@@ -459,30 +459,20 @@ export class PartnerClaimsService {
       where: { partnerEmail: identity.email, venueSlug },
     });
     const effectiveRow = row ?? (await this.copyGlobalProfileToVenue(identity.email, venueSlug));
-    if (!effectiveRow) {
-      return {
-        partnerEmail: identity.email,
-        venueSlug,
-        businessName: null,
-        description: null,
-        scheduleSummary: null,
-        contactPhone: null,
-        contactEmail: null,
-        contactWhatsapp: null,
-        photoUrls: [],
-      };
-    }
-    return {
-      partnerEmail: effectiveRow.partnerEmail,
-      venueSlug: effectiveRow.venueSlug,
-      businessName: effectiveRow.businessName,
-      description: effectiveRow.description,
-      scheduleSummary: effectiveRow.scheduleSummary,
-      contactPhone: effectiveRow.contactPhone,
-      contactEmail: effectiveRow.contactEmail,
-      contactWhatsapp: effectiveRow.contactWhatsapp,
-      photoUrls: effectiveRow.photoUrls ?? [],
+    const base = {
+      partnerEmail: identity.email,
+      venueSlug,
+      businessName: effectiveRow?.businessName ?? null,
+      description: effectiveRow?.description ?? null,
+      scheduleSummary: effectiveRow?.scheduleSummary ?? null,
+      contactPhone: effectiveRow?.contactPhone ?? null,
+      contactEmail: effectiveRow?.contactEmail ?? null,
+      contactWhatsapp: effectiveRow?.contactWhatsapp ?? null,
+      photoUrls: effectiveRow?.photoUrls ?? [],
+      modalities: effectiveRow?.modalities ?? [],
+      amenities: effectiveRow?.amenities ?? [],
     };
+    return this.mergeCatalogSnapshotIntoProfile(base);
   }
 
   async upsertProfile(identity: PartnerIdentity, dto: UpdatePartnerProfileDto) {
@@ -516,6 +506,8 @@ export class PartnerClaimsService {
         contactEmail: null,
         contactWhatsapp: null,
         photoUrls: [],
+        modalities: [],
+        amenities: [],
       });
     }
     if (dto.businessName !== undefined) row.businessName = dto.businessName.trim() || null;
@@ -533,14 +525,15 @@ export class PartnerClaimsService {
     if (dto.photoUrls !== undefined) {
       row.photoUrls = sanitizePhotoUrls(dto.photoUrls);
     }
-    const saved = await this.profiles.save(row);
-    const links = await this.ownerships.find({
-      where: { partnerEmail: identity.email, status: "active" },
-    });
-    for (const link of links) {
-      await this.enqueueVenueCatalogSync(identity.email, link.venueSlug);
+    if (dto.modalities !== undefined) {
+      row.modalities = normalizeSlugList(dto.modalities);
     }
-    return {
+    if (dto.amenities !== undefined) {
+      row.amenities = normalizeSlugList(dto.amenities);
+    }
+    const saved = await this.profiles.save(row);
+    await this.enqueueVenueCatalogSync(identity.email, venueSlug);
+    return this.mergeCatalogSnapshotIntoProfile({
       partnerEmail: saved.partnerEmail,
       venueSlug: saved.venueSlug,
       businessName: saved.businessName,
@@ -550,7 +543,9 @@ export class PartnerClaimsService {
       contactEmail: saved.contactEmail,
       contactWhatsapp: saved.contactWhatsapp,
       photoUrls: saved.photoUrls ?? [],
-    };
+      modalities: saved.modalities ?? [],
+      amenities: saved.amenities ?? [],
+    });
   }
 
   async listMyPlans(identity: PartnerIdentity) {
@@ -902,11 +897,16 @@ export class PartnerClaimsService {
       take: 12,
     });
     const payload = {
+      name: profile?.businessName ?? undefined,
       description: profile?.description ?? undefined,
+      scheduleSummary: profile?.scheduleSummary ?? undefined,
       contactPhone: profile?.contactPhone ?? undefined,
       contactEmail: profile?.contactEmail ?? undefined,
       contactWhatsapp: profile?.contactWhatsapp ?? undefined,
-      photoUrls: photos.map((p) => p.url),
+      modalities: profile?.modalities ?? undefined,
+      amenities: profile?.amenities ?? undefined,
+      // Never send empty photoUrls — that would wipe catalog gallery on profile-only saves.
+      ...(photos.length > 0 ? { photoUrls: photos.map((p) => p.url) } : {}),
       allowsTrial: plans.some((p) => p.active),
       plans: plans.map((p) => ({
         name: p.name,
@@ -988,8 +988,107 @@ export class PartnerClaimsService {
       contactEmail: legacy.contactEmail,
       contactWhatsapp: legacy.contactWhatsapp,
       photoUrls: legacy.photoUrls ?? [],
+      modalities: legacy.modalities ?? [],
+      amenities: legacy.amenities ?? [],
     });
     return this.profiles.save(copy);
+  }
+
+  private async mergeCatalogSnapshotIntoProfile(base: {
+    partnerEmail: string;
+    venueSlug: string;
+    businessName: string | null;
+    description: string | null;
+    scheduleSummary: string | null;
+    contactPhone: string | null;
+    contactEmail: string | null;
+    contactWhatsapp: string | null;
+    photoUrls: string[];
+    modalities: string[];
+    amenities: string[];
+  }) {
+    const catalog = await this.fetchCatalogVenueSnapshot(base.venueSlug);
+    const scheduleFromCatalog = catalog
+      ? extractScheduleSummaryFromDescription(catalog.description)
+      : null;
+    const descriptionFromCatalog = catalog
+      ? stripScheduleAndPlansFromDescription(catalog.description)
+      : null;
+    const modalities =
+      base.modalities.length > 0
+        ? base.modalities
+        : (catalog?.modalities ?? []);
+    const amenities =
+      base.amenities.length > 0 ? base.amenities : (catalog?.amenities ?? []);
+    const catalogPhotoUrls = catalog?.photoUrls ?? [];
+    return {
+      ...base,
+      businessName: base.businessName?.trim() || catalog?.name || null,
+      description: base.description?.trim() || descriptionFromCatalog || null,
+      scheduleSummary:
+        base.scheduleSummary?.trim() || scheduleFromCatalog || null,
+      contactPhone: base.contactPhone?.trim() || catalog?.contactPhone || null,
+      contactEmail: base.contactEmail?.trim() || catalog?.contactEmail || null,
+      contactWhatsapp:
+        base.contactWhatsapp?.trim() || catalog?.contactWhatsapp || null,
+      modalities,
+      amenities,
+      venueType: catalog?.venueType ?? null,
+      zone: catalog?.zone ?? null,
+      catalogPhotoUrls,
+      hydratedFromCatalog: Boolean(catalog),
+    };
+  }
+
+  private async fetchCatalogVenueSnapshot(venueSlug: string): Promise<{
+    name: string;
+    description: string | null;
+    venueType: string;
+    zone: string;
+    modalities: string[];
+    amenities: string[];
+    contactPhone: string | null;
+    contactEmail: string | null;
+    contactWhatsapp: string | null;
+    photoUrls: string[];
+  } | null> {
+    if (!venueSlug || venueSlug === "__global__") return null;
+    const base =
+      this.config.get<string>("CATALOG_SERVICE_URL")?.trim() ||
+      "http://localhost:4010";
+    try {
+      const res = await fetch(
+        `${base.replace(/\/$/, "")}/v1/venues/${encodeURIComponent(venueSlug)}`,
+        { signal: AbortSignal.timeout(8000) },
+      );
+      if (!res.ok) return null;
+      const body = (await res.json()) as {
+        name?: string;
+        description?: string | null;
+        venueType?: string;
+        zone?: string;
+        modalities?: string[];
+        amenities?: string[];
+        contactPhone?: string | null;
+        contactEmail?: string | null;
+        contactWhatsapp?: string | null;
+        photoUrls?: string[] | null;
+      };
+      return {
+        name: body.name?.trim() || "",
+        description: body.description ?? null,
+        venueType: body.venueType?.trim() || "",
+        zone: body.zone?.trim() || "",
+        modalities: Array.isArray(body.modalities) ? body.modalities : [],
+        amenities: Array.isArray(body.amenities) ? body.amenities : [],
+        contactPhone: body.contactPhone ?? null,
+        contactEmail: body.contactEmail ?? null,
+        contactWhatsapp: body.contactWhatsapp ?? null,
+        photoUrls: Array.isArray(body.photoUrls) ? body.photoUrls : [],
+      };
+    } catch {
+      return null;
+    }
   }
 
   /**
@@ -1170,4 +1269,42 @@ function sanitizePhotoUrls(items: string[]): string[] {
     if (cleaned.length >= 12) break;
   }
   return cleaned;
+}
+
+function normalizeSlugList(items: string[]): string[] {
+  const seen = new Set<string>();
+  const cleaned: string[] = [];
+  for (const raw of items) {
+    const value = raw
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    if (!value || seen.has(value)) continue;
+    seen.add(value);
+    cleaned.push(value);
+    if (cleaned.length >= 40) break;
+  }
+  return cleaned;
+}
+
+function stripScheduleAndPlansFromDescription(
+  description: string | null | undefined,
+): string | null {
+  if (!description?.trim()) return null;
+  return description
+    .replace(/\n*\nHorarios:\n[\s\S]*$/i, "")
+    .replace(/\n*\nPlanes:\n[\s\S]*$/i, "")
+    .trim() || null;
+}
+
+function extractScheduleSummaryFromDescription(
+  description: string | null | undefined,
+): string | null {
+  if (!description) return null;
+  const match = description.match(/\nHorarios:\n([\s\S]*?)(?:\nPlanes:|$)/i);
+  const value = match?.[1]?.trim();
+  return value || null;
 }

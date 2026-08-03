@@ -20,6 +20,12 @@ type Profile = {
   contactPhone: string | null;
   contactEmail: string | null;
   contactWhatsapp: string | null;
+  modalities?: string[];
+  amenities?: string[];
+  venueType?: string | null;
+  zone?: string | null;
+  catalogPhotoUrls?: string[];
+  hydratedFromCatalog?: boolean;
 };
 
 type Plan = {
@@ -60,7 +66,11 @@ type ProfileFormState = {
   contactPhone: string;
   contactEmail: string;
   contactWhatsapp: string;
+  modalities: string[];
+  amenities: string[];
 };
+
+type TaxonomyOption = { slug: string; label: string; kind: "modality" | "amenity" };
 
 type PanelSection = "dashboard" | "perfil" | "fotos" | "planes" | "leads" | "config";
 type LeadFilter = "all" | "received" | "contacted" | "closed";
@@ -74,6 +84,9 @@ const EMPTY_PROFILE: Profile = {
   contactPhone: null,
   contactEmail: null,
   contactWhatsapp: null,
+  modalities: [],
+  amenities: [],
+  catalogPhotoUrls: [],
 };
 
 const EMPTY_PROFILE_FORM: ProfileFormState = {
@@ -83,7 +96,39 @@ const EMPTY_PROFILE_FORM: ProfileFormState = {
   contactPhone: "",
   contactEmail: "",
   contactWhatsapp: "",
+  modalities: [],
+  amenities: [],
 };
+
+const FALLBACK_MODALITIES = [
+  "musculacion",
+  "cardio",
+  "functional",
+  "trx",
+  "spinning",
+  "yoga",
+  "pilates",
+  "boxing",
+  "pole-fitness",
+];
+const FALLBACK_AMENITIES = [
+  "parking",
+  "sauna",
+  "showers",
+  "ac",
+  "pool",
+  "cafe",
+  "wifi",
+  "terrace",
+];
+
+function slugLabel(slug: string): string {
+  return slug
+    .split("-")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
 
 export type PartnerPanelVariant = "partner" | "admin";
 
@@ -108,6 +153,7 @@ export function PartnerPanelClient(props: {
 
   const [profile, setProfile] = useState<Profile>(EMPTY_PROFILE);
   const [profileForm, setProfileForm] = useState<ProfileFormState>(EMPTY_PROFILE_FORM);
+  const [taxonomyOptions, setTaxonomyOptions] = useState<TaxonomyOption[]>([]);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState<string | null>(null);
@@ -132,12 +178,43 @@ export function PartnerPanelClient(props: {
   const [configView, setConfigView] = useState<ConfigView>("account");
   const [updatingLeadId, setUpdatingLeadId] = useState<string | null>(null);
   const ogPreviewTitle =
-    profile.businessName?.trim() || photosVenueSlug.trim() || `Centro en ${BRAND_NAME}`;
+    profileForm.businessName.trim() ||
+    profile.businessName?.trim() ||
+    photosVenueSlug.trim() ||
+    `Centro en ${BRAND_NAME}`;
   const ogPreviewDescription =
+    profileForm.description.trim() ||
     profile.description?.trim() ||
     `Descubre este centro en ${BRAND_NAME} y solicita información directamente.`;
-  const ogPreviewImage = photos[0]?.url ?? null;
+  const ogPreviewImage =
+    photos[0]?.url ?? profile.catalogPhotoUrls?.[0] ?? null;
   const ogPreviewPath = photosVenueSlug.trim() ? `/gyms/${encodeURIComponent(photosVenueSlug.trim())}` : "/gyms/[slug]";
+
+  function applyProfileToForm(p: Profile) {
+    setProfileForm({
+      businessName: p.businessName ?? "",
+      description: p.description ?? "",
+      scheduleSummary: p.scheduleSummary ?? "",
+      contactPhone: p.contactPhone ?? "",
+      contactEmail: p.contactEmail ?? "",
+      contactWhatsapp: p.contactWhatsapp ?? "",
+      modalities: p.modalities ?? [],
+      amenities: p.amenities ?? [],
+    });
+  }
+
+  function toggleSlug(
+    field: "modalities" | "amenities",
+    slug: string,
+  ) {
+    setProfileForm((prev) => {
+      const current = prev[field];
+      const next = current.includes(slug)
+        ? current.filter((s) => s !== slug)
+        : [...current, slug];
+      return { ...prev, [field]: next };
+    });
+  }
 
   function redirectToLogin() {
     router.replace(variant === "admin" ? "/admin/login" : "/partner/login");
@@ -200,14 +277,7 @@ export function PartnerPanelClient(props: {
       }
       const p = (await pRes.json()) as Profile;
       setProfile(p);
-      setProfileForm({
-        businessName: p.businessName ?? "",
-        description: p.description ?? "",
-        scheduleSummary: p.scheduleSummary ?? "",
-        contactPhone: p.contactPhone ?? "",
-        contactEmail: p.contactEmail ?? "",
-        contactWhatsapp: p.contactWhatsapp ?? "",
-      });
+      applyProfileToForm(p);
       if (plansRes.ok) {
         const payload = (await plansRes.json()) as { items?: Plan[] };
         setPlans(payload.items ?? []);
@@ -219,6 +289,29 @@ export function PartnerPanelClient(props: {
         setLeads(payload.items ?? []);
       } else {
         setLeads([]);
+      }
+      if (variant === "admin") {
+        try {
+          const taxRes = await fetch("/api/admin/taxonomy-attributes", {
+            cache: "no-store",
+          });
+          if (taxRes.ok) {
+            const taxBody = (await taxRes.json()) as {
+              items?: Array<{ slug: string; label?: string; kind?: string; active?: boolean }>;
+            };
+            setTaxonomyOptions(
+              (taxBody.items ?? [])
+                .filter((it) => it.active !== false && (it.kind === "modality" || it.kind === "amenity"))
+                .map((it) => ({
+                  slug: it.slug,
+                  label: it.label?.trim() || slugLabel(it.slug),
+                  kind: it.kind as "modality" | "amenity",
+                })),
+            );
+          }
+        } catch {
+          /* taxonomy optional for chip labels */
+        }
       }
     } catch (e) {
       if (isAuthFailureError(e instanceof Error ? e.message : e)) {
@@ -297,6 +390,8 @@ export function PartnerPanelClient(props: {
       contactPhone: profileForm.contactPhone.trim() || undefined,
       contactEmail: profileForm.contactEmail.trim() || undefined,
       contactWhatsapp: profileForm.contactWhatsapp.trim() || undefined,
+      modalities: profileForm.modalities,
+      amenities: profileForm.amenities,
     };
     try {
       const res = await fetch(venueApi(venueSlug, "/profile"), {
@@ -311,15 +406,12 @@ export function PartnerPanelClient(props: {
       }
       const updated = body as Profile;
       setProfile(updated);
-      setProfileForm({
-        businessName: updated.businessName ?? "",
-        description: updated.description ?? "",
-        scheduleSummary: updated.scheduleSummary ?? "",
-        contactPhone: updated.contactPhone ?? "",
-        contactEmail: updated.contactEmail ?? "",
-        contactWhatsapp: updated.contactWhatsapp ?? "",
-      });
-      setMsg("Perfil guardado.");
+      applyProfileToForm(updated);
+      setMsg(
+        variant === "admin"
+          ? "Perfil guardado. Los cambios se sincronizan con la ficha pública del catálogo."
+          : "Perfil guardado.",
+      );
     } catch {
       setErr("Error de red al guardar perfil.");
     } finally {
@@ -613,16 +705,39 @@ export function PartnerPanelClient(props: {
   const leadsWeek = leads.filter((it) => now - new Date(it.createdAt).getTime() <= weekMs).length;
   const leadsMonth = leads.filter((it) => now - new Date(it.createdAt).getTime() <= monthMs).length;
   const activePlans = plans.filter((plan) => plan.active).length;
+  const catalogPhotos = profile.catalogPhotoUrls ?? [];
+  const galleryCount = photos.length > 0 ? photos.length : catalogPhotos.length;
   const profileChecklist = [
-    Boolean(profile.businessName?.trim() && profile.description?.trim()),
-    Boolean(profile.scheduleSummary?.trim()),
-    photos.length >= 3,
+    Boolean(profileForm.businessName.trim() && profileForm.description.trim()),
+    Boolean(profileForm.scheduleSummary.trim()),
+    galleryCount >= 1,
     activePlans > 0,
-    Boolean(profile.contactPhone?.trim() || profile.contactWhatsapp?.trim() || profile.contactEmail?.trim()),
+    Boolean(
+      profileForm.contactPhone.trim() ||
+        profileForm.contactWhatsapp.trim() ||
+        profileForm.contactEmail.trim(),
+    ),
     Boolean(photosVenueSlug.trim()),
+    profileForm.modalities.length > 0,
   ];
   const completedChecklist = profileChecklist.filter(Boolean).length;
   const completionPct = Math.round((completedChecklist / profileChecklist.length) * 100);
+  const modalityOptions = Array.from(
+    new Set([
+      ...taxonomyOptions.filter((t) => t.kind === "modality").map((t) => t.slug),
+      ...FALLBACK_MODALITIES,
+      ...profileForm.modalities,
+    ]),
+  );
+  const amenityOptions = Array.from(
+    new Set([
+      ...taxonomyOptions.filter((t) => t.kind === "amenity").map((t) => t.slug),
+      ...FALLBACK_AMENITIES,
+      ...profileForm.amenities,
+    ]),
+  );
+  const taxonomyLabel = (slug: string) =>
+    taxonomyOptions.find((t) => t.slug === slug)?.label ?? slugLabel(slug);
   const recentLeads = [...leads]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 3);
@@ -825,11 +940,12 @@ export function PartnerPanelClient(props: {
                 <h2 className="mb-3 text-base font-semibold text-quegym-primary">Estado del perfil</h2>
                 <ul className="space-y-2 text-sm">
                   <li className={statusLine(profileChecklist[0])}>Info básica</li>
-                  <li className={statusLine(profileChecklist[1])}>Horarios completos</li>
-                  <li className={statusLine(profileChecklist[2])}>Fotos (mín. 3)</li>
+                  <li className={statusLine(profileChecklist[1])}>Horarios</li>
+                  <li className={statusLine(profileChecklist[2])}>Fotos</li>
                   <li className={statusLine(profileChecklist[3])}>Planes y precios</li>
-                  <li className={statusLine(profileChecklist[4])}>Contactos configurados</li>
+                  <li className={statusLine(profileChecklist[4])}>Contactos</li>
                   <li className={statusLine(profileChecklist[5])}>Centro seleccionado</li>
+                  <li className={statusLine(profileChecklist[6])}>Modalidades</li>
                 </ul>
               </UICard>
             </div>
@@ -844,15 +960,43 @@ export function PartnerPanelClient(props: {
                 <h2 className="text-base font-semibold">Galería de fotos</h2>
                 <span className="text-xs text-quegym-secondary">
                   Centro: {photosVenueSlug || "sin seleccionar"}
-                  {photosLoading ? " · cargando…" : ` · ${photos.length} foto(s)`}
+                  {photosLoading
+                    ? " · cargando…"
+                    : ` · ${photos.length} editables${catalogPhotos.length > 0 ? ` · ${catalogPhotos.length} en catálogo` : ""}`}
                 </span>
               </div>
               {photosLoading ? (
                 <p className="text-sm text-quegym-secondary">Cargando fotos del centro…</p>
               ) : photos.length === 0 ? (
-                <p className="rounded-xl border border-dashed border-quegym-border px-4 py-8 text-center text-sm text-quegym-secondary">
-                  Aún no hay fotos. Usa el formulario de abajo para subir la primera.
-                </p>
+                <div className="space-y-3">
+                  {catalogPhotos.length > 0 ? (
+                    <>
+                      <p className="text-xs text-quegym-secondary">
+                        Fotos actuales de la ficha pública (catálogo). Sube fotos nuevas para gestionar portada y orden desde este panel; al subir, esas pasan a ser la galería editable.
+                      </p>
+                      <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        {catalogPhotos.slice(0, 6).map((url, idx) => (
+                          <li
+                            key={`${url}-${idx}`}
+                            className="overflow-hidden rounded-xl border border-quegym-border"
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={url}
+                              alt={`Catálogo ${idx + 1}`}
+                              className="h-28 w-full object-cover"
+                              loading="lazy"
+                            />
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : (
+                    <p className="rounded-xl border border-dashed border-quegym-border px-4 py-8 text-center text-sm text-quegym-secondary">
+                      Aún no hay fotos. Usa el formulario de abajo para subir la primera.
+                    </p>
+                  )}
+                </div>
               ) : (
                 <ul className="space-y-2">
                   {photos.map((photo, idx) => (
@@ -952,7 +1096,19 @@ export function PartnerPanelClient(props: {
             {activeSection === "perfil" ? (
             <>
             <UICard className={`bg-quegym-subtle ${lightCardClass}`}>
-              <h2 className="mb-3 text-base font-semibold">Información básica</h2>
+              <h2 className="mb-1 text-base font-semibold">Información básica</h2>
+              {profile.hydratedFromCatalog ? (
+                <p className="mb-3 text-xs text-quegym-secondary">
+                  Datos precargados desde el catálogo
+                  {profile.zone ? ` · Zona: ${profile.zone}` : ""}
+                  {profile.venueType ? ` · Tipo: ${slugLabel(profile.venueType)}` : ""}.
+                  Al guardar se actualiza la ficha pública.
+                </p>
+              ) : (
+                <p className="mb-3 text-xs text-quegym-secondary">
+                  Completa el perfil del centro. Los campos vacíos no aparecen en la ficha pública.
+                </p>
+              )}
               {variant === "partner" ? (
                 <div className="mb-4 grid gap-3 rounded-xl border border-quegym-border bg-quegym-elevated p-3 md:grid-cols-[1fr_auto]">
                   <UITextInput
@@ -985,25 +1141,26 @@ export function PartnerPanelClient(props: {
                     />
                   </label>
                   <label className="space-y-1">
-                    <span className="text-xs font-medium text-quegym-secondary">Tipo de centro</span>
+                    <span className="text-xs font-medium text-quegym-secondary">Tipo en catálogo</span>
                     <UITextInput
-                      name="scheduleSummary"
-                      value={profileForm.scheduleSummary}
-                      onChange={(e) => setProfileForm((prev) => ({ ...prev, scheduleSummary: e.target.value }))}
-                      placeholder="Gym clásico + funcional"
-                      className={`h-[46px] rounded-xl ${lightInputClass}`}
+                      value={profile.venueType ? slugLabel(profile.venueType) : "—"}
+                      readOnly
+                      disabled
+                      className={`h-[46px] rounded-xl ${lightInputClass} opacity-80`}
                     />
                   </label>
                 </div>
-                <textarea
-                  name="description"
-                  value={profileForm.description}
-                  onChange={(e) => setProfileForm((prev) => ({ ...prev, description: e.target.value }))}
-                  placeholder="Descripción"
-                  rows={3}
-                  className={`rounded-xl border border-amber-300 bg-amber-50/40 px-3 py-2 ${lightInputClass}`}
-                />
-                <p className="text-xs text-amber-700">◷ En revisión</p>
+                <label className="space-y-1">
+                  <span className="text-xs font-medium text-quegym-secondary">Descripción</span>
+                  <textarea
+                    name="description"
+                    value={profileForm.description}
+                    onChange={(e) => setProfileForm((prev) => ({ ...prev, description: e.target.value }))}
+                    placeholder="Descripción pública del centro"
+                    rows={4}
+                    className={`rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 ${lightInputClass}`}
+                  />
+                </label>
                 <div className="grid gap-3 md:grid-cols-3">
                   <UITextInput
                     name="contactPhone"
@@ -1032,39 +1189,66 @@ export function PartnerPanelClient(props: {
             </UICard>
 
             <UICard className={`bg-quegym-subtle ${lightCardClass}`}>
-              <h2 className="mb-3 text-base font-semibold">Horarios de atención</h2>
-              <div className="grid gap-2 sm:grid-cols-2">
-                {[
-                  ["Lun - Vie", "5:00am - 11:00pm"],
-                  ["Sábado", "6:00am - 8:00pm"],
-                  ["Domingo", "7:00am - 2:00pm"],
-                  ["Feriados", "Horario reducido"],
-                ].map(([label, value], i) => (
-                  <div key={label} className={`rounded-xl border px-3 py-2 text-sm ${i < 2 ? "border-amber-200 bg-amber-50/60 text-amber-800" : "border-quegym-border bg-quegym-elevated text-quegym-primary"}`}>
-                    <span className="font-medium">{label}</span>{" "}
-                    <span className="ml-1">{value}</span>
-                    <span className="float-right text-xs">{i < 2 ? "◷" : "✓"}</span>
-                  </div>
-                ))}
-              </div>
+              <h2 className="mb-1 text-base font-semibold">Horarios de atención</h2>
+              <p className="mb-3 text-xs text-quegym-secondary">
+                Texto libre que se publica en la ficha (ej. Lun–Vie 5am–10pm · Sáb 7am–2pm).
+              </p>
+              <textarea
+                form="partner-profile-form"
+                name="scheduleSummary"
+                value={profileForm.scheduleSummary}
+                onChange={(e) => setProfileForm((prev) => ({ ...prev, scheduleSummary: e.target.value }))}
+                placeholder="Lun–Vie 5:00am–11:00pm · Sáb 6:00am–8:00pm · Dom cerrado"
+                rows={3}
+                className={`w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 text-sm ${lightInputClass}`}
+              />
             </UICard>
 
             <UICard className={`bg-quegym-subtle ${lightCardClass}`}>
-              <h2 className="mb-3 text-base font-semibold">Modalidades</h2>
+              <h2 className="mb-1 text-base font-semibold">Modalidades</h2>
+              <p className="mb-3 text-xs text-quegym-secondary">
+                Activa las que ofrezca el centro. Se guardan en el catálogo (filtros y ficha).
+              </p>
               <div className="mb-5 flex flex-wrap gap-2">
-                {["Musculación", "Cardio", "Funcional", "TRX", "Spinning", "Yoga", "Pilates", "Boxing"].map((m, idx) => (
-                  <span key={m} className={`rounded-full border px-3 py-1 text-[13px] ${idx < 4 ? "border-quegym-accent bg-quegym-accent text-white" : "border-quegym-border bg-quegym-elevated text-quegym-secondary"}`}>
-                    {idx < 4 ? "✓ " : ""}{m}
-                  </span>
-                ))}
+                {modalityOptions.map((slug) => {
+                  const on = profileForm.modalities.includes(slug);
+                  return (
+                    <button
+                      key={slug}
+                      type="button"
+                      onClick={() => toggleSlug("modalities", slug)}
+                      className={`rounded-full border px-3 py-1 text-[13px] transition ${
+                        on
+                          ? "border-quegym-accent bg-quegym-accent text-white"
+                          : "border-quegym-border bg-quegym-elevated text-quegym-secondary hover:bg-quegym-subtle"
+                      }`}
+                    >
+                      {on ? "✓ " : ""}
+                      {taxonomyLabel(slug)}
+                    </button>
+                  );
+                })}
               </div>
               <h3 className="mb-2 text-sm font-semibold text-quegym-primary">Amenidades</h3>
               <div className="flex flex-wrap gap-2">
-                {["Estacionamiento", "Sauna", "Duchas", "Aire acondicionado", "Piscina", "Cafetería", "Wifi"].map((a, idx) => (
-                  <span key={a} className={`rounded-full border px-3 py-1 text-[13px] ${idx < 4 ? "border-quegym-accent bg-quegym-accent text-white" : "border-quegym-border bg-quegym-elevated text-quegym-secondary"}`}>
-                    {idx < 4 ? "✓ " : ""}{a}
-                  </span>
-                ))}
+                {amenityOptions.map((slug) => {
+                  const on = profileForm.amenities.includes(slug);
+                  return (
+                    <button
+                      key={slug}
+                      type="button"
+                      onClick={() => toggleSlug("amenities", slug)}
+                      className={`rounded-full border px-3 py-1 text-[13px] transition ${
+                        on
+                          ? "border-quegym-accent bg-quegym-accent text-white"
+                          : "border-quegym-border bg-quegym-elevated text-quegym-secondary hover:bg-quegym-subtle"
+                      }`}
+                    >
+                      {on ? "✓ " : ""}
+                      {taxonomyLabel(slug)}
+                    </button>
+                  );
+                })}
               </div>
             </UICard>
             </>
@@ -1104,24 +1288,36 @@ export function PartnerPanelClient(props: {
           <div className="space-y-3 xl:sticky xl:top-4 xl:h-fit">
             <UICard className={lightCardClass}>
               <h3 className="text-sm font-semibold text-quegym-primary">Estado de publicación</h3>
-              <p className="mt-2 text-sm text-quegym-highlight">● Perfil publicado y activo</p>
-              <p className="mt-1 text-xs text-amber-700">◷ {Math.max(0, profileChecklist.length - completedChecklist)} cambios en revisión (desc. + horarios)</p>
-              <p className="mt-1 text-xs text-quegym-secondary">Última publicación: hoy 10:45am</p>
+              <p className="mt-2 text-sm text-quegym-highlight">
+                ● {profile.hydratedFromCatalog ? "Ficha pública en catálogo" : "Perfil partner"}
+              </p>
+              <p className="mt-1 text-xs text-quegym-secondary">
+                Completitud del formulario: {completedChecklist}/{profileChecklist.length} bloques.
+                Guarda para sincronizar con la ficha pública.
+              </p>
             </UICard>
-            <UICard className="border-amber-200 bg-amber-50/60">
-              <p className="text-sm font-medium text-amber-900">Completitud del perfil</p>
+            <UICard className="border-quegym-border bg-quegym-subtle">
+              <p className="text-sm font-medium text-quegym-primary">Completitud del perfil</p>
               <div className="mt-2 flex items-center gap-2">
-                <div className="h-2 flex-1 rounded-full bg-amber-100">
-                  <div className="h-2 rounded-full bg-amber-500" style={{ width: `${completionPct}%` }} />
+                <div className="h-2 flex-1 rounded-full bg-quegym-border">
+                  <div className="h-2 rounded-full bg-quegym-accent" style={{ width: `${completionPct}%` }} />
                 </div>
-                <span className="text-sm font-semibold text-amber-900">{completionPct}%</span>
+                <span className="text-sm font-semibold text-quegym-primary">{completionPct}%</span>
               </div>
-              <ul className="mt-2 space-y-1 text-xs text-amber-800">
-                <li>• Agregar min. 3 fotos</li>
-                <li>• Horarios fin de semana</li>
+              <ul className="mt-2 space-y-1 text-xs text-quegym-secondary">
+                {!profileChecklist[0] ? <li>• Nombre y descripción</li> : null}
+                {!profileChecklist[1] ? <li>• Horarios</li> : null}
+                {!profileChecklist[2] ? <li>• Al menos 1 foto</li> : null}
+                {!profileChecklist[6] ? <li>• Modalidades</li> : null}
               </ul>
             </UICard>
-            <UIButton form="partner-profile-form" type="submit" className={lightPrimaryButtonClass} fullWidth>
+            <UIButton
+              form="partner-profile-form"
+              type="submit"
+              className={lightPrimaryButtonClass}
+              fullWidth
+              disabled={savingProfile}
+            >
               {savingProfile ? "Guardando…" : "Guardar cambios"}
             </UIButton>
             <UIButton
@@ -1129,12 +1325,16 @@ export function PartnerPanelClient(props: {
               variant="secondary"
               className={lightSecondaryButtonClass}
               fullWidth
-              onClick={() => void reload(photosVenueSlug)}
+              onClick={() => {
+                applyProfileToForm(profile);
+                setMsg(null);
+                setErr(null);
+              }}
             >
               Descartar cambios
             </UIButton>
             <p className="text-xs text-quegym-secondary">
-              ◷ Los cambios quedan en revisión antes de publicarse públicamente en el catálogo de {BRAND_NAME}.
+              Al guardar, partner sincroniza nombre, descripción, horarios, contactos, modalidades y amenidades hacia el catálogo de {BRAND_NAME}.
             </p>
           </div>
           ) : null}

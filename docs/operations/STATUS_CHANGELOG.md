@@ -6,6 +6,7 @@ Formato: `YYYY-MM-DD | SHA | qué cambió | evidencia`.
 
 | Fecha | SHA / ref | Cambio | Evidencia |
 |-------|-----------|--------|-----------|
+| 2026-08-03 | (push) | Panel admin: hydrate catálogo + sync name/modalities/amenities/schedule; UI editable real | partner/catalog/web |
 | 2026-08-03 | Vercel | `AUTH0_M2M_*` + `ADMIN_OIDC_ISSUER` en Production/Preview; redeploy `staging.quegym.com`; BFF `/api/admin/leads` + taxonomy **200** | Probe HTTP post-redeploy |
 | 2026-08-03 | Railway | Partner admin **PASS**: issuer era audience → Auth0 URL; catalog OIDC; delegate; analytics backdate ON | M2M claims/profile/plans/photos/taxonomy **200** |
 | 2026-08-03 | `49cb52a` | BFF admin: renovación M2M automática (`AUTH0_M2M_*`); OIDC JWKS harden en catalog/leads; partner fix `d9373dc` | Code on `main` |
