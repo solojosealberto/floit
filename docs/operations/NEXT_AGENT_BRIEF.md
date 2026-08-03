@@ -5,7 +5,7 @@
 > Ledger histórico: `sprints.md` · Backlog/US: `EPICS_USER_STORIES_STATUS.md` · Contexto: `PROJECT_CONTEXT_HANDOVER.md`.  
 > Vocabulario de estados: [`DOC_STATUS_VOCABULARY.md`](./DOC_STATUS_VOCABULARY.md) · Log de flips: [`STATUS_CHANGELOG.md`](./STATUS_CHANGELOG.md).
 
-**Última reconciliación documental:** 2026-08-03 · **Repo HEAD:** `330c4aa` · **URL staging:** https://staging.quegym.com  
+**Última reconciliación documental:** 2026-08-03 · **Repo HEAD:** `955de56` · **URL staging:** https://staging.quegym.com  
 **No usar:** `https://www.staging.quegym.com` (NXDOMAIN — no existe en DNS).
 
 ---
@@ -15,11 +15,12 @@
 | Campo | Valor (2026-08-03) |
 |-------|---------------------|
 | Producto | QueGym MVP — discovery + comparación + leads (Caracas) |
-| Repo | `main` @ `330c4aa` |
-| Web staging (Vercel) | `staging.quegym.com` — Production alias; commits `88a683a`…`330c4aa` en panel/ficha |
+| Repo | `main` @ `955de56` |
+| Web staging (Vercel) | `staging.quegym.com` — Production alias; panel/ficha + taxonomías CRUD |
 | APIs (Railway `quegym-api`) | catalog / search / leads / partner / analytics — **health 5/5** |
 | Partner admin `/v1/admin/*` | **PASS** — claims/profile/plans/photos **200**; bad token **401** |
 | Catálogo | **95 venues** |
+| Taxonomías admin | **PASS** — 36 attrs; DELETE + sync-from-venues live (`955de56`) |
 | Smoke platform | **PASS** (2026-08-02) |
 | QA visual staging | **PASS** (firma producto/ops 2026-05-27) — no reabrir |
 | E2E lead **API** | **PASS** — `POST /api/leads` → visible en admin M2M |
@@ -31,7 +32,6 @@
 | Prod `www.quegym.com` | **Pendiente** (post-GO) |
 | Partner media | `PARTNER_PUBLIC_BASE_URL` + volume `/data/uploads` + `blobBase64` en Neon; `/uploads` sirve disco **o** BD |
 | Panel admin catálogo | Perfil (tipo multi + horarios picker), planes CRUD↔ficha, fotos persistentes |
-| Taxonomías admin | **Lista OK** (36 attrs seeded 2026-08-03); CRUD create/edit/activate + **DELETE/sync** en código pendiente deploy |
 
 ### Próximas 3 acciones (orden estricto)
 
