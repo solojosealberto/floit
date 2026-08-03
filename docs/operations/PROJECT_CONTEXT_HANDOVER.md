@@ -251,6 +251,7 @@ Implementado en esta iteración:
 - Endpoint BFF legacy de estado de leads (`/api/partner/me/leads/{id}/status`) deprecado operativamente con `410`; flujo oficial en `/api/partner/me/venues/{venueSlug}/leads/{id}/status`.
 - Fixture local reproducible `seed:ownership` en `partner-service` para activar/revocar ownership partner↔venue en QA.
 - Panel partner rediseñado y funcional por secciones (`Dashboard`, `Editar perfil`, `Planes y precios`, `Leads recibidos`, `Configuración`) con navegación lateral activa y acciones de leads (`Atender`/`Cerrar`) por `venueSlug`.
+- (2026-08-03) Panel admin catálogo en staging: perfil editable real (tipos multi, horarios picker), planes sincronizados a ficha pública, fotos durables (Railway volume + Neon blob). Ver `NEXT_AGENT_BRIEF.md` @ `330c4aa`.
 - Configuración partner llevada a nivel de pantallas dedicadas con diseño de referencia:
   - `/partner/configuracion` (hub),
   - `/partner/configuracion/mis-centros` (listado real por ownership),

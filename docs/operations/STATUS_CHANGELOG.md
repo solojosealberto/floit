@@ -6,10 +6,12 @@ Formato: `YYYY-MM-DD | SHA | qué cambió | evidencia`.
 
 | Fecha | SHA / ref | Cambio | Evidencia |
 |-------|-----------|--------|-----------|
-| 2026-08-03 | (push) | Ficha gym: planes reales desde catalog.plans (no mocks); sync JSON + hydrate admin | catalog/partner/web |
-| 2026-08-03 | (push) | Planes panel: fix create/list UX + edit/delete; DELETE plans API; catalog clear empty plans | partner/web/openapi |
-| 2026-08-03 | `88a683a` | Fotos: `PARTNER_PUBLIC_BASE_URL` + rewrite localhost; preview UI; Railway var set | upload GET 200 HTTPS |
-| 2026-08-03 | (push) | Panel admin: hydrate catálogo + sync name/modalities/amenities/schedule; UI editable real | partner/catalog/web |
+| 2026-08-03 | (taxonomy) | Staging `taxonomy_attributes` vacío → listado admin vacío; seed M2M 36 attrs (19 modality / 17 amenity); código: DELETE + sync-from-venues + auto-heal | GET meta/admin taxonomy |
+| 2026-08-03 | `dc4748c` | Perfil admin: tipo multi-select, horarios day/time picker, descripción full-width | staging panel UI |
+| 2026-08-03 | `7686b4f` | Ficha gym: planes reales `catalog.plans` (no mocks); sync JSON + priceMin/Max | GET venue.plans |
+| 2026-08-03 | `9f6ebbf` | Planes panel: create/list UX + edit/delete; DELETE API; docs media URL | partner/web/openapi |
+| 2026-08-03 | `88a683a` | Fotos: `PARTNER_PUBLIC_BASE_URL` + rewrite localhost; preview al seleccionar | upload HTTPS |
+| 2026-08-03 | (push) | Panel admin: hydrate catálogo + sync name/modalities/amenities/schedule | partner/catalog/web |
 | 2026-08-03 | Vercel | `AUTH0_M2M_*` + `ADMIN_OIDC_ISSUER` en Production/Preview; redeploy `staging.quegym.com`; BFF `/api/admin/leads` + taxonomy **200** | Probe HTTP post-redeploy |
 | 2026-08-03 | Railway | Partner admin **PASS**: issuer era audience → Auth0 URL; catalog OIDC; delegate; analytics backdate ON | M2M claims/profile/plans/photos/taxonomy **200** |
 | 2026-08-03 | `49cb52a` | BFF admin: renovación M2M automática (`AUTH0_M2M_*`); OIDC JWKS harden en catalog/leads; partner fix `d9373dc` | Code on `main` |

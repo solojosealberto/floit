@@ -109,7 +109,8 @@ PARTNER_LOCAL_LOGIN_PASSWORD=
 # PARTNER_CLAIM_STATUS_WEBHOOK_URL=
 # Public HTTPS base for /uploads (required in staging/prod; else URLs become localhost)
 # PARTNER_PUBLIC_BASE_URL=https://floitpartner-service-production.up.railway.app
-# Optional: PARTNER_MEDIA_DIR=/data/uploads  (use a Railway volume so files survive redeploys)
+# Durable uploads: Railway volume mount + PARTNER_MEDIA_DIR (also stores blobBase64 in Postgres)
+# PARTNER_MEDIA_DIR=/data/uploads
 
 # =============================================================================
 # Railway — analytics-service

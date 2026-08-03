@@ -306,6 +306,7 @@ OpenAPI (`openapi/README.md`), `pnpm verify`, `pnpm smoke:local`, [`docs/operati
 - `Completado` Mapa `/buscar` refinado: solo una ficha activa (sin popup legacy), deselección en mapa vacío, mapa desktop full-height y listado mobile con `Mostrar 8 más`.
 - `Completado` Modo mapa `/buscar` con focus+zoom automático al seleccionar fichas de la lista y tarjeta contextual posicionada a la derecha del marcador para mantener visible el icono.
 - `Completado` Corrección de error visual de la ficha anclada al mapa (posición inválida/flicker) mediante render condicionado a coordenadas válidas y callbacks estables.
+- `Completado` (2026-08-03) panel admin/partner staging: hydrate desde catálogo; planes CRUD↔ficha (`catalog.plans`); fotos con URL pública + persistencia volume/`blobBase64`; perfil con tipo multi-select y horarios estructurados. SHAs: `88a683a`…`330c4aa`.
 - `Completado` Backend partner/catalog extendido para fotos de centros (MVP URL-based): `photoUrls` en perfil partner, sincronización interna `partner-sync` y exposición en detalle público de catálogo.
 - `Completado` Backend partner con upload real de fotos por venue (multipart `jpeg/png/webp`, límite 5MB), almacenamiento local y gestión (`listar/subir/eliminar`) con ownership y sync automático a catálogo.
 - `Completado` Ordenamiento manual de fotos por partner (botones `↑/↓` + drag-and-drop en panel), persistido en backend y reflejado en la galería pública de `gyms/[slug]`.
@@ -402,6 +403,7 @@ OpenAPI (`openapi/README.md`), `pnpm verify`, `pnpm smoke:local`, [`docs/operati
 ### Avance de iteración (Admin taxonomías)
 
 - `Completado` CRUD de modalidades y amenidades en **`/admin/taxonomias`** (`taxonomias-client.tsx`), alineado al diseño operativo (pestañas, panel lateral, activación/desactivación).
+- `Completado` (2026-08-03) listado vacío en staging corregido (tabla sin seed); `DELETE`, `POST …/sync-from-venues`, auto-heal si vacía, sync al boot sin `SEED_ON_BOOT`.
 - `Completado` **`catalog-service`:** entidad `taxonomy_attributes`, APIs `v1/admin/taxonomy-attributes`, `AdminApiGuard`, dependencia `jose` para OIDC admin opcional; seed `syncMissingSlugsFromVenues` cuando `SEED_ON_BOOT=true`.
 - `Completado` BFF **`/api/admin/taxonomy-attributes`** y contrato en `openapi/catalog.yaml`; estado US-5.2 en `EPICS_USER_STORIES_STATUS.md`.
 

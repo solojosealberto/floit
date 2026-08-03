@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { UIButton, UITextInput, UICard } from "@floit/ui";
 
 export type TaxonomyRow = {
@@ -38,8 +38,10 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
   const [formKind, setFormKind] = useState<TabId>("modality");
   const [icon, setIcon] = useState("");
   const [loading, setLoading] = useState(false);
+  const [syncing, setSyncing] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [listError, setListError] = useState<string | null>(null);
+  const [listInfo, setListInfo] = useState<string | null>(null);
 
   const filtered = useMemo(
     () => items.filter((r) => r.kind === tab),
@@ -63,13 +65,67 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
       const data = (await res.json().catch(() => ({}))) as { items?: TaxonomyRow[] };
       if (res.ok) {
         setItems(data.items ?? []);
-      } else {
-        setListError("No se pudo actualizar la lista. Reintenta en unos segundos.");
+        return data.items ?? [];
       }
+      setListError("No se pudo actualizar la lista. Reintenta en unos segundos.");
+      return null;
     } catch {
       setListError("No se pudo contactar al servidor.");
+      return null;
     }
   }
+
+  async function syncFromVenues(opts?: { silent?: boolean }) {
+    setListError(null);
+    if (!opts?.silent) setListInfo(null);
+    setSyncing(true);
+    try {
+      const res = await fetch("/api/admin/taxonomy-attributes/sync-from-venues", {
+        method: "POST",
+        cache: "no-store",
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        inserted?: number;
+        items?: TaxonomyRow[];
+        message?: string;
+      };
+      if (!res.ok) {
+        setListError(
+          typeof data.message === "string"
+            ? data.message
+            : "No se pudo sincronizar desde los centros.",
+        );
+        return;
+      }
+      const next = data.items ?? [];
+      setItems(next);
+      const inserted = data.inserted ?? 0;
+      if (!opts?.silent) {
+        setListInfo(
+          inserted > 0
+            ? `Se importaron ${inserted} atributos desde los centros.`
+            : "No había slugs nuevos por importar.",
+        );
+      } else if (inserted > 0) {
+        setListInfo(`Se cargaron ${inserted} atributos existentes desde el catálogo.`);
+      }
+    } catch {
+      setListError("No se pudo contactar al servidor para sincronizar.");
+    } finally {
+      setSyncing(false);
+    }
+  }
+
+  useEffect(() => {
+    if (props.initialItems.length > 0) return;
+    void (async () => {
+      const listed = await refresh();
+      if (listed && listed.length === 0) {
+        await syncFromVenues({ silent: true });
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- one-shot hydrate when SSR list was empty
+  }, []);
 
   function startCreate() {
     setEditingSlug(null);
@@ -196,6 +252,34 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
     }
   }
 
+  async function removeRow(row: TaxonomyRow) {
+    const warn =
+      row.gymCount > 0
+        ? `«${row.label}» está en ${row.gymCount} centro(s). Se elimina de la taxonomía admin; los centros conservan el slug hasta que los edites. ¿Continuar?`
+        : `¿Eliminar «${row.label}» (${row.slug})?`;
+    if (typeof window !== "undefined" && !window.confirm(warn)) return;
+    setListError(null);
+    try {
+      const res = await fetch(
+        `/api/admin/taxonomy-attributes/${encodeURIComponent(row.slug)}`,
+        { method: "DELETE" },
+      );
+      if (!res.ok && res.status !== 204) {
+        const data = await res.json().catch(() => ({}));
+        setListError(
+          typeof (data as { message?: string }).message === "string"
+            ? String((data as { message: string }).message)
+            : "No se pudo eliminar.",
+        );
+        return;
+      }
+      setItems((prev) => prev.filter((x) => x.slug !== row.slug));
+      if (editingSlug === row.slug) startCreate();
+    } catch {
+      setListError("No se pudo eliminar el atributo.");
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
@@ -208,11 +292,22 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
             Modalidades y amenidades usadas en búsqueda, comparación y fichas.
           </p>
         </div>
-        <a href="#nuevo-atributo" className="shrink-0">
-          <UIButton type="button" className="w-full sm:w-auto">
-            + Nuevo atributo
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <UIButton
+            type="button"
+            variant="secondary"
+            disabled={syncing}
+            onClick={() => void syncFromVenues()}
+            className="w-full sm:w-auto"
+          >
+            {syncing ? "Sincronizando…" : "Sincronizar desde centros"}
           </UIButton>
-        </a>
+          <a href="#nuevo-atributo" className="shrink-0">
+            <UIButton type="button" className="w-full sm:w-auto">
+              + Nuevo atributo
+            </UIButton>
+          </a>
+        </div>
       </div>
 
       <div className="space-y-3">
@@ -223,7 +318,9 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
           <p>
             <span className="font-medium">Inactivar</span> un atributo no borra datos
             históricos: los centros que ya lo tenían asignado siguen mostrándolo; deja de
-            usarse en filtros y en altas nuevas mientras esté inactivo.
+            usarse en filtros y en altas nuevas mientras esté inactivo.{" "}
+            <span className="font-medium">Eliminar</span> lo quita de esta lista (los
+            centros conservan el slug hasta que los edites).
           </p>
         </div>
         <div
@@ -243,6 +340,11 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
       {listError ? (
         <p className="text-sm text-red-600" role="alert">
           {listError}
+        </p>
+      ) : null}
+      {listInfo ? (
+        <p className="text-sm text-quegym-highlight" role="status">
+          {listInfo}
         </p>
       ) : null}
 
@@ -278,13 +380,17 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
               <span>Nombre / slug</span>
               <span className="hidden sm:block">Tipo</span>
               <span className="text-center">Gyms</span>
-              <span className="text-right">Activo</span>
+              <span className="text-right">Acciones</span>
             </div>
             <ul className="divide-y divide-quegym-border">
               {filtered.length === 0 ? (
                 <li className="px-4 py-8 text-center text-sm text-quegym-secondary">
-                  No hay atributos en esta pestaña. Crea uno o sincroniza desde datos de
-                  centros (seed del catálogo).
+                  <p>
+                    No hay atributos en esta pestaña.
+                    {syncing
+                      ? " Sincronizando desde centros…"
+                      : " Usa «Sincronizar desde centros» o crea uno nuevo."}
+                  </p>
                 </li>
               ) : (
                 filtered.map((row) => (
@@ -320,7 +426,7 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
                     <span className="text-sm tabular-nums text-quegym-primary md:text-center">
                       {row.gymCount}
                     </span>
-                    <div className="col-span-2 flex items-center justify-end gap-2 md:col-span-1 md:col-start-4">
+                    <div className="col-span-2 flex items-center justify-end gap-1 md:col-span-1 md:col-start-4">
                       <input
                         type="checkbox"
                         aria-label={`Activo: ${row.label}`}
@@ -346,6 +452,27 @@ export function AdminTaxonomiasClient(props: { initialItems: TaxonomyRow[] }) {
                             strokeLinejoin="round"
                             strokeWidth={2}
                             d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        className="rounded-lg p-2 text-quegym-secondary hover:bg-red-500/10 hover:text-red-500"
+                        title="Eliminar"
+                        onClick={() => void removeRow(row)}
+                      >
+                        <svg
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          aria-hidden
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3m-7 0h8"
                           />
                         </svg>
                       </button>

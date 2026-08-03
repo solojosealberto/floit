@@ -238,6 +238,7 @@ paths:
       description: |
         Requiere `x-admin-token` (o Bearer OIDC si está configurado en el servicio catalog).
         Incluye conteo de venues que referencian cada slug en `modalities` / `amenities`.
+        Si la tabla está vacía, auto-sincroniza slugs desde venues antes de responder.
       responses:
         "200":
           description: Lista con uso en gyms
@@ -268,6 +269,24 @@ paths:
         "400": { description: Validación }
         "401": { description: No autorizado }
         "409": { description: Slug duplicado }
+  /v1/admin/taxonomy-attributes/sync-from-venues:
+    post:
+      operationId: adminSyncTaxonomyAttributesFromVenues
+      summary: Importa slugs de modalities/amenities de venues faltantes en taxonomía
+      responses:
+        "200":
+          description: Sync aplicado
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [inserted, items]
+                properties:
+                  inserted: { type: integer, minimum: 0 }
+                  items:
+                    type: array
+                    items: { $ref: "#/components/schemas/TaxonomyAttribute" }
+        "401": { description: No autorizado }
   /v1/admin/taxonomy-attributes/{slug}:
     patch:
       operationId: adminPatchTaxonomyAttribute
@@ -288,6 +307,18 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/TaxonomyAttribute" }
+        "401": { description: No autorizado }
+        "404": { description: No encontrado }
+    delete:
+      operationId: adminDeleteTaxonomyAttribute
+      summary: Elimina un atributo de taxonomía (no quita el slug de venues)
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string, minLength: 1 }
+      responses:
+        "204": { description: Eliminado }
         "401": { description: No autorizado }
         "404": { description: No encontrado }
 components:

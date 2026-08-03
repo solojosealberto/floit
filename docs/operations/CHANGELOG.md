@@ -17,11 +17,15 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 ## [Unreleased]
 
 ### Fixed
-- **Planes ficha vs admin (2026-08-03):** la ficha `/gyms/[slug]` mostraba planes mock (básica/premium/trimestral). Ahora usa `venue.plans` del catálogo (JSON sync desde partner); panel hidrata planes desde catálogo si partner está vacío; sync persiste `plans` + `priceMin`/`priceMax`.
-- **Partner/admin planes (2026-08-03):** crear plan fallaba en UI por `form.reset()` tras `await` (falso «Error de red») y la lista no se refrescaba; edición y eliminación cableadas; `DELETE` venue-scoped en partner + BFF; catálogo limpia bloque `Planes:` con array vacío.
-- **Partner/admin fotos (2026-08-03):** URLs públicas vía `PARTNER_PUBLIC_BASE_URL` / `RAILWAY_PUBLIC_DOMAIN` (antes `localhost:4013`); rewrite de URLs locales; preview al seleccionar; reset de form seguro tras upload (`88a683a`).
+- **Taxonomías admin vacías (2026-08-03):** `taxonomy_attributes` en staging sin filas (`SEED_ON_BOOT` off). Auto-heal en `list`/`listActive`, sync al boot sin depender del seed, `POST …/sync-from-venues`, `DELETE`, UI sync/eliminar. Staging rellenado (36 attrs).
+- **Fotos persistentes (2026-08-03, `330c4aa`):** preview 404 tras redeploy Railway — volume `/data/uploads` + `blobBase64` en Neon; `PartnerUploadsController` sirve disco o BD; UI indica re-subir huérfanas.
+- **Perfil panel UX (2026-08-03, `dc4748c`):** tipo en catálogo multi-select (sync → `venueType`/`mixed`); descripción full-width bajo título; horarios con selector día/hora (ya no texto libre).
+- **Planes ficha vs admin (2026-08-03, `7686b4f`):** la ficha `/gyms/[slug]` mostraba planes mock. Ahora usa `venue.plans` del catálogo; panel hidrata desde catálogo si partner vacío; sync `plans` + `priceMin`/`priceMax`.
+- **Partner/admin planes (2026-08-03, `9f6ebbf`):** falso «Error de red» por `form.reset()` tras await; edit/delete + `DELETE` venue-scoped.
+- **Partner/admin fotos URLs (2026-08-03, `88a683a`):** `PARTNER_PUBLIC_BASE_URL` / rewrite `localhost:4013`; preview al seleccionar archivo.
 
 ### Changed
+- **Documentación operativa (2026-08-03):** brief `330c4aa`, staging media cerrado (volume+blob), status changelog sesión panel, trinidad EPICS/sprints/handover.
 - **Documentación operativa (2026-08-02):** brief = CURRENT TRUTH; vocabulario + status changelog + documentation guide; reconciliación KPI live / QA PASS / wireframe ausente; banners Superseded en informes GPT/agent; §0 en evidencia Sprint 5.
 - **Logotipo QueGym (2026-06-15, repo local):** assets consolidados a 3 PNG en `/brand/`; componente `QueGymLogo` (swap light/dark); favicon estático `icon.png` / `apple-icon.png` desde símbolo; eliminados generadores dinámicos `icon.tsx` / `apple-icon.tsx`.
 - **Partner panel fotos (2026-06-15):** galería cableada en `partner-panel-client.tsx` — subir, eliminar, reordenar, portada, copiar enlace, vista previa OG.

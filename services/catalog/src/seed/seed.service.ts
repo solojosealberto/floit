@@ -213,28 +213,30 @@ export class SeedService implements OnModuleInit {
   ) {}
 
   async onModuleInit(): Promise<void> {
-    if (this.config.get<string>("SEED_ON_BOOT") !== "true") return;
+    if (this.config.get<string>("SEED_ON_BOOT") === "true") {
+      const venueCount = await this.venues.count();
+      if (venueCount === 0) {
+        const rows = SEED_VENUES.map((v) =>
+          this.venues.create({
+            ...v,
+            ...(v.slug ? DEMO_CONTACTS[v.slug] ?? {} : {}),
+            ...(v.slug ? { photoUrls: DEMO_PHOTO_URLS[v.slug] ?? [] } : {}),
+          }),
+        );
+        const saved = await this.venues.save(rows);
+        this.log.log(`Seeded ${saved.length} demo venues`);
+        await this.seedPromotions(saved);
+        await this.syncTaxonomyFromVenues();
+        return;
+      }
 
-    const venueCount = await this.venues.count();
-    if (venueCount === 0) {
-      const rows = SEED_VENUES.map((v) =>
-        this.venues.create({
-          ...v,
-          ...(v.slug ? DEMO_CONTACTS[v.slug] ?? {} : {}),
-          ...(v.slug ? { photoUrls: DEMO_PHOTO_URLS[v.slug] ?? [] } : {}),
-        }),
-      );
-      const saved = await this.venues.save(rows);
-      this.log.log(`Seeded ${saved.length} demo venues`);
-      await this.seedPromotions(saved);
-      await this.syncTaxonomyFromVenues();
-      return;
+      this.log.log(`Seed venues skipped (${venueCount} exist)`);
+      const existing = await this.venues.find();
+      await this.backfillDemoPhotoUrls(existing);
+      await this.seedPromotionsIfEmpty(existing);
     }
 
-    this.log.log(`Seed venues skipped (${venueCount} exist)`);
-    const existing = await this.venues.find();
-    await this.backfillDemoPhotoUrls(existing);
-    await this.seedPromotionsIfEmpty(existing);
+    // Always backfill taxonomy from venue slugs (staging/prod often skip SEED_ON_BOOT).
     await this.syncTaxonomyFromVenues();
   }
 

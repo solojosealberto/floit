@@ -32,6 +32,7 @@ export class TaxonomyService {
   ) {}
 
   async listActive(kind?: TaxonomyKind): Promise<TaxonomyAttributeDto[]> {
+    await this.ensureSeededFromVenuesIfEmpty();
     const rows = await this.taxonomy.find({
       where: {
         active: true,
@@ -48,6 +49,7 @@ export class TaxonomyService {
   }
 
   async list(): Promise<TaxonomyAttributeDto[]> {
+    await this.ensureSeededFromVenuesIfEmpty();
     const rows = await this.taxonomy.find({
       order: { sortOrder: "ASC", label: "ASC" },
     });
@@ -98,6 +100,15 @@ export class TaxonomyService {
     const saved = await this.taxonomy.save(row);
     const gymCount = await this.countVenueRefs(saved.kind, saved.slug);
     return this.toDto(saved, gymCount);
+  }
+
+  async remove(slugRaw: string): Promise<void> {
+    const slug = slugRaw.trim().toLowerCase();
+    const row = await this.taxonomy.findOne({ where: { slug } });
+    if (!row) {
+      throw new NotFoundException("taxonomy_not_found");
+    }
+    await this.taxonomy.remove(row);
   }
 
   /**
@@ -153,6 +164,13 @@ export class TaxonomyService {
     }
 
     return { inserted };
+  }
+
+  /** Self-heal: staging/prod often skip SEED_ON_BOOT, leaving taxonomy_attributes empty. */
+  private async ensureSeededFromVenuesIfEmpty(): Promise<void> {
+    const count = await this.taxonomy.count();
+    if (count > 0) return;
+    await this.syncMissingSlugsFromVenues();
   }
 
   private async countVenueRefs(

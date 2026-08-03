@@ -71,8 +71,8 @@ Equivalencia historica en este documento:
 | User story | Estado | Evidencia principal |
 |---|---|---|
 | US-4.1 Claim de perfil | Implementada | claim público `/partner/claim` (`claimKind` reclamo vs alta nueva + revisión admin); alta nueva crea stub en catálogo al aprobar (`POST /v1/internal/venues`) antes de ownership+sync; webhook opcional de estado claim + E2E Playwright (`e2e/partner-claim.spec.ts`) |
-| US-4.2 Gestión básica de perfil | Implementada | operación oficial venue-scoped: `GET/PUT /v1/partner/me/venues/{venueSlug}/profile` (global deprecated `410`) |
-| US-4.3 Gestión de planes/precios | Implementada | operación oficial venue-scoped: `/v1/partner/me/venues/{venueSlug}/plans*` (global deprecated `410`) |
+| US-4.2 Gestión básica de perfil | Implementada | venue-scoped profile; admin/partner panel: tipo multi-select (`venueTypes`→`venueType`), horarios day/time picker, sync catálogo (`dc4748c`) |
+| US-4.3 Gestión de planes/precios | Implementada | venue-scoped plans CRUD + DELETE; ficha pública `catalog.plans` (no mocks); hydrate admin desde catálogo (`9f6ebbf`, `7686b4f`) |
 | US-4.4 Recepción de leads | Implementada | operación oficial venue-scoped: `/v1/partner/me/venues/{venueSlug}/leads` y `/v1/partner/me/venues/{venueSlug}/leads/{id}/status`; BFF web usa `/api/partner/me/venues/{venueSlug}/leads/{id}/status` (legacy `/api/partner/me/leads/{id}/status` deprecated `410`) |
 | US-4.5 Promociones/ofertas | Implementada (MVP base) | promociones activas en catálogo/ficha |
 
@@ -88,6 +88,7 @@ Equivalencia historica en este documento:
 - `Completado` (2026-05-09, misma jornada) pulido UX/copy en `/partner/claim` (título de página, cabecera «Tu centro en QueGym» — rebrand Fase 1 mayo 2026, opciones reclamo vs alta en paralelo, textos por paso) y en `/partner/panel` → Configuración → Cuenta: menú lateral consistente y «Cerrar sesión» junto a «Eliminar cuenta» (`POST /partner/logout`).
 - `Completado` (2026-05-09) continuidad claim→acceso: copy explícito de que el **correo del claim** es el de login en `/partner/login`; confirmación enlaza al login; rutas configuración cuenta envueltas en **Suspense** para build estable.
 - `Completado` (2026-05) rutas de entrada partner alineadas al login: **`FloitMainHeader`** («¿Eres partner?») y **home** (banner «Reclamar mi centro») → **`/partner/login`**; alta/reclamo público permanece en **`/partner/claim`** (p. ej. desde login «Primera vez»). Panel **`/partner/panel`** incluye retorno rápido al hub **`/partner/venues`** vía **«← Mis centros»**. Referencia de rutas: `docs/operations/WEB_ROUTES_PLATFORM.md`.
+- `Completado` (2026-08-03) panel admin/partner staging: hydrate perfil desde catálogo; planes CRUD + sync `catalog.plans` a ficha pública; fotos con URL pública + volume Railway + `blobBase64`; perfil tipo multi-select y horarios day/time. SHAs `88a683a`…`330c4aa`.
 
 ## Catálogo — datos operativos Caracas (2026-05-21)
 
@@ -103,7 +104,7 @@ Equivalencia historica en este documento:
 | User story | Estado | Evidencia principal |
 |---|---|---|
 | US-5.1 Alta/edición/moderación admin | Parcial | vistas/admin operativas; moderación avanzada pendiente |
-| US-5.2 Taxonomías y atributos | Implementada | tabla `taxonomy_attributes` en catalog; `GET/POST/PATCH /v1/admin/taxonomy-attributes` + `AdminApiGuard`; seed opcional sincroniza slugs desde `venues.modalities`/`amenities`; BFF `apps/web/src/app/api/admin/taxonomy-attributes/*`; UI `/admin/taxonomias` (`taxonomias-client.tsx`) pestañas Modalidad/Amenidad, listado con conteo en gyms, activar/desactivar, crear/editar con slug **únimo global** |
+| US-5.2 Taxonomías y atributos | Implementada | tabla `taxonomy_attributes`; `GET/POST/PATCH/DELETE` + `POST …/sync-from-venues`; auto-sync si tabla vacía; seed sync sin depender solo de `SEED_ON_BOOT`; BFF + UI `/admin/taxonomias` (crear/editar/activar/eliminar + sync) |
 | US-5.3 Gestión de leads backoffice | Implementada | `/admin/leads`: mismo shell que catálogo; tabla con **Ver** → modal de detalle (`LeadDetailModal`): datos del contacto, mensaje, consentimiento, trazabilidad (IP hoy / mismo teléfono), historial, estados (Nuevo/Atendido/Sospechoso/Spam) vía `PATCH /v1/admin/lead/:id`, WhatsApp, nota interna (`adminNote`); API detalle `GET /v1/admin/lead/:id` |
 | US-5.4 Duplicados/calidad de datos | Implementada (UI revisión), Parcial (merge) | UI **`/admin/duplicados`** sobre `v1/admin/meta/duplicate-suspects`; fusión automática de venues fuera de MVP |
 | US-5.5 Gestión de contenido visual | Implementada (MVP) | UI **`/admin/moderacion-media`**: reportes (`venue_reports` + PATCH estado) y revisión de fotos por centro |
@@ -198,7 +199,7 @@ Evidencia: `STAGING_EVIDENCE_SPRINT5.md`, `STAGING_DEPLOYMENT_STATUS.md`, `STAGI
 |------------|--------|-----------|--------|--------|
 | UX-V0-101–104 | Fundación `VenueImage`, `VenuePrice`, sanitizar descripción | P0 | UX-A | ✅ |
 | UX-V0-201–205 | `/buscar`: tarjetas unificadas, ranking completitud, filtros chip ✕, skeletons | P0–P2 | UX-A / UX-B | ✅ |
-| UX-V0-301–306 | `/gyms/[slug]`: galería, logo, sin rating fake, planes/horarios demo + Lucide | P0–P1 | UX-A / UX-C | ✅ (planes demo placeholder) |
+| UX-V0-301–306 | `/gyms/[slug]`: galería, logo, sin rating fake, planes/horarios + Lucide | P0–P1 | UX-A / UX-C | ✅ (planes desde `catalog.plans` reales, 2026-08-03) |
 | UX-V0-401–404 | Nav móvil, comparar global, FAB mapa, barra flotante + grilla móvil | P0–P2 | UX-B / cierre | ✅ |
 | UX-V0-501–504 | Home: stats, cómo funciona, footer | P1–P2 | UX-B | ✅ |
 | UX-V0-601–603 | Lucide, skeletons, paridad favoritos/comparar, focus formularios | P1–P2 | UX-C | ✅ |
