@@ -16,6 +16,10 @@ and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ## [Unreleased]
 
+### Fixed
+- **Partner/admin planes (2026-08-03):** crear plan fallaba en UI por `form.reset()` tras `await` (falso «Error de red») y la lista no se refrescaba; edición y eliminación cableadas; `DELETE` venue-scoped en partner + BFF; catálogo limpia bloque `Planes:` con array vacío.
+- **Partner/admin fotos (2026-08-03):** URLs públicas vía `PARTNER_PUBLIC_BASE_URL` / `RAILWAY_PUBLIC_DOMAIN` (antes `localhost:4013`); rewrite de URLs locales; preview al seleccionar; reset de form seguro tras upload (`88a683a`).
+
 ### Changed
 - **Documentación operativa (2026-08-02):** brief = CURRENT TRUTH; vocabulario + status changelog + documentation guide; reconciliación KPI live / QA PASS / wireframe ausente; banners Superseded en informes GPT/agent; §0 en evidencia Sprint 5.
 - **Logotipo QueGym (2026-06-15, repo local):** assets consolidados a 3 PNG en `/brand/`; componente `QueGymLogo` (swap light/dark); favicon estático `icon.png` / `apple-icon.png` desde símbolo; eliminados generadores dinámicos `icon.tsx` / `apple-icon.tsx`.

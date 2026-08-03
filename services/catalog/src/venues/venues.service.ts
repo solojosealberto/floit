@@ -471,8 +471,8 @@ export class VenuesService {
         }
       }
       venue.description = lines.join("\n").trim() || null;
-    } else if (Array.isArray(dto.plans) && dto.plans.length > 0) {
-      // plans-only update keeps existing description body
+    } else if (Array.isArray(dto.plans)) {
+      // plans-only update (including empty array to clear Planes: block)
       const base = (venue.description ?? "").replace(/\n*\nPlanes:\n[\s\S]*$/i, "").trim();
       const planLines = dto.plans
         .filter((p) => p.active !== false)

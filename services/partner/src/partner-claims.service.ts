@@ -611,6 +611,17 @@ export class PartnerClaimsService {
     return this.updatePlan(identity, id, dto);
   }
 
+  async deletePlanByVenue(identity: PartnerIdentity, venueSlugRaw: string, id: string) {
+    const venueSlug = venueSlugRaw.trim();
+    const row = await this.plans.findOne({
+      where: { id, partnerEmail: identity.email, venueSlug },
+    });
+    if (!row) return { error: "plan_not_found" as const };
+    await this.plans.remove(row);
+    await this.enqueueVenueCatalogSync(identity.email, venueSlug);
+    return { id, status: "deleted" as const };
+  }
+
   async listMyVenues(identity: PartnerIdentity) {
     const rows = await this.ownerships.find({
       where: { partnerEmail: identity.email, status: "active" },
@@ -1278,6 +1289,12 @@ export class PartnerClaimsService {
     const r = await this.resolveDelegatedPartnerIdentityForVenue(venueSlug);
     if ("error" in r) return r;
     return this.updatePlanByVenue(r.identity, venueSlug, planId, dto);
+  }
+
+  async adminCatalogDeletePlan(venueSlug: string, planId: string) {
+    const r = await this.resolveDelegatedPartnerIdentityForVenue(venueSlug);
+    if ("error" in r) return r;
+    return this.deletePlanByVenue(r.identity, venueSlug, planId);
   }
 
   async adminCatalogListLeads(venueSlug: string, limit: number) {

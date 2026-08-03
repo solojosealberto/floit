@@ -12,8 +12,9 @@ Registro operativo de lo configurado en proveedores (sin secretos). Alineado a [
 **APIs Railway:** health **5/5** (catalog, search, leads, partner, analytics) — verificado 2026-08-02.  
 **Auth admin:** M2M Auth0 + `ADMIN_OIDC_ACCESS_TOKEN` Preview; issuer fix `00fd9f9`.  
 **Partner admin 500 (cerrado 2026-08-03):** causa ops = `ADMIN_OIDC_ISSUER`/`PARTNER_OIDC_ISSUER` valían `floit-admin`/`floit-partner` (audiences) en vez de `https://<tenant>.us.auth0.com`. Corregido + `ADMIN_CATALOG_DELEGATE_EMAIL`; catalog `ADMIN_OIDC_*` ON; probes admin **200**. Código endurecido en `oidc-jose.ts` (partner/catalog/leads).  
+**Partner media (2026-08-03):** `PARTNER_PUBLIC_BASE_URL=https://floitpartner-service-production.up.railway.app` — sin esto las fotos se guardaban como `http://localhost:4013/uploads/...` y no cargaban en el browser. Disco de uploads **efímero** (redeploy = re-subir fotos; volume Railway recomendado).  
 **Analytics:** `ANALYTICS_ALLOW_BACKDATE=true` (staging) — usar solo para seed KPI.  
-**Pendiente:** Vercel `AUTH0_M2M_*` para BFF; re-seed KPI 17/17; GO.
+**Pendiente:** re-seed KPI 17/17; GO; volume media partner.
 
 ---
 

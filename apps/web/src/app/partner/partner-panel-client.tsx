@@ -160,6 +160,14 @@ export function PartnerPanelClient(props: {
   const [err, setErr] = useState<string | null>(null);
   const [savingProfile, setSavingProfile] = useState(false);
   const [savingPlan, setSavingPlan] = useState(false);
+  const [editingPlanId, setEditingPlanId] = useState<string | null>(null);
+  const [planForm, setPlanForm] = useState({
+    name: "",
+    description: "",
+    period: "Mensual",
+    priceLabel: "",
+  });
+  const [deletingPlanId, setDeletingPlanId] = useState<string | null>(null);
   const [leads, setLeads] = useState<PartnerLead[]>([]);
   const [photosVenueSlug, setPhotosVenueSlug] = useState("");
   const [photos, setPhotos] = useState<VenuePhoto[]>([]);
@@ -462,37 +470,106 @@ export function PartnerPanelClient(props: {
     }
   }
 
+  async function loadPlans(venueSlug: string) {
+    if (!venueSlug.trim()) {
+      setPlans([]);
+      return;
+    }
+    try {
+      const res = await fetch(venueApi(venueSlug.trim(), "/plans"), { cache: "no-store" });
+      const body = (await res.json().catch(() => ({}))) as { items?: Plan[]; message?: string };
+      if (!res.ok) {
+        if (res.status === 401 || res.status === 503 || isAuthFailureError(body.message)) {
+          redirectToLogin();
+          return;
+        }
+        setPlans([]);
+        return;
+      }
+      setPlans(body.items ?? []);
+    } catch {
+      setPlans([]);
+    }
+  }
+
+  function resetPlanForm() {
+    setEditingPlanId(null);
+    setPlanForm({
+      name: "",
+      description: "",
+      period: "Mensual",
+      priceLabel: "",
+    });
+  }
+
+  function openCreatePlanForm() {
+    resetPlanForm();
+    setShowPlanForm(true);
+  }
+
+  function openEditPlanForm(plan: Plan) {
+    setEditingPlanId(plan.id);
+    setPlanForm({
+      name: plan.name,
+      description: plan.description ?? "",
+      period: plan.period?.trim() || "Mensual",
+      priceLabel: plan.priceLabel ?? "",
+    });
+    setShowPlanForm(true);
+  }
+
   async function onCreatePlan(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const form = e.currentTarget;
     const venueSlug = photosVenueSlug.trim();
     if (!venueSlug) return;
+    const name = planForm.name.trim();
+    if (name.length < 2) {
+      setErr("El nombre del plan debe tener al menos 2 caracteres.");
+      return;
+    }
     setSavingPlan(true);
     setErr(null);
     setMsg(null);
-    const fd = new FormData(e.currentTarget);
     const payload = {
-      venueSlug: String(fd.get("venueSlug") ?? "").trim(),
-      name: String(fd.get("name") ?? "").trim(),
-      description: String(fd.get("description") ?? "").trim() || undefined,
-      period: String(fd.get("period") ?? "").trim() || undefined,
-      priceLabel: String(fd.get("priceLabel") ?? "").trim() || undefined,
+      name,
+      description: planForm.description.trim() || undefined,
+      period: planForm.period.trim() || undefined,
+      priceLabel: planForm.priceLabel.trim() || undefined,
     };
     try {
-      const res = await fetch(venueApi(venueSlug, "/plans"), {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const isEdit = Boolean(editingPlanId);
+      const res = await fetch(
+        isEdit
+          ? venueApi(venueSlug, `/plans/${encodeURIComponent(editingPlanId!)}`)
+          : venueApi(venueSlug, "/plans"),
+        {
+          method: isEdit ? "PATCH" : "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(payload),
+        },
+      );
       const body = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setErr(formatUpstreamError(body, "No se pudo crear el plan."));
+        setErr(
+          formatUpstreamError(
+            body,
+            isEdit ? "No se pudo actualizar el plan." : "No se pudo crear el plan.",
+          ),
+        );
         return;
       }
-      e.currentTarget.reset();
-      setMsg("Plan creado.");
-      await reload(venueSlug);
+      form.reset();
+      resetPlanForm();
+      setShowPlanForm(false);
+      setMsg(isEdit ? "Plan actualizado." : "Plan creado.");
+      await loadPlans(venueSlug);
     } catch {
-      setErr("Error de red al crear plan.");
+      setErr(
+        editingPlanId
+          ? "Error de red al actualizar plan."
+          : "Error de red al crear plan.",
+      );
     } finally {
       setSavingPlan(false);
     }
@@ -505,9 +582,9 @@ export function PartnerPanelClient(props: {
       const res = await fetch(
         venueApi(plan.venueSlug, `/plans/${encodeURIComponent(plan.id)}`),
         {
-        method: "PATCH",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ active: !plan.active }),
+          method: "PATCH",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ active: !plan.active }),
         },
       );
       const body = await res.json().catch(() => ({}));
@@ -518,9 +595,39 @@ export function PartnerPanelClient(props: {
       setPlans((prev) =>
         prev.map((p) => (p.id === plan.id ? { ...p, active: !plan.active } : p)),
       );
-      setMsg("Plan actualizado.");
+      setMsg(plan.active ? "Plan oculto en la ficha pública." : "Plan publicado.");
     } catch {
       setErr("Error de red al actualizar plan.");
+    }
+  }
+
+  async function onDeletePlan(plan: Plan) {
+    if (!window.confirm(`¿Eliminar el plan «${plan.name}»? Esta acción no se puede deshacer.`)) {
+      return;
+    }
+    setErr(null);
+    setMsg(null);
+    setDeletingPlanId(plan.id);
+    try {
+      const res = await fetch(
+        venueApi(plan.venueSlug, `/plans/${encodeURIComponent(plan.id)}`),
+        { method: "DELETE" },
+      );
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setErr(formatUpstreamError(body, "No se pudo eliminar el plan."));
+        return;
+      }
+      setPlans((prev) => prev.filter((p) => p.id !== plan.id));
+      if (editingPlanId === plan.id) {
+        resetPlanForm();
+        setShowPlanForm(false);
+      }
+      setMsg("Plan eliminado.");
+    } catch {
+      setErr("Error de red al eliminar plan.");
+    } finally {
+      setDeletingPlanId(null);
     }
   }
 
@@ -1467,14 +1574,21 @@ export function PartnerPanelClient(props: {
             </div>
             <UIButton
               size="sm"
-              onClick={() => setShowPlanForm((v) => !v)}
+              onClick={() => {
+                if (showPlanForm) {
+                  setShowPlanForm(false);
+                  resetPlanForm();
+                } else {
+                  openCreatePlanForm();
+                }
+              }}
               className="!rounded-full !px-4"
             >
-              + Agregar plan
+              {showPlanForm ? "Cerrar" : "+ Agregar plan"}
             </UIButton>
           </div>
 
-          <div className="mb-2 grid grid-cols-[1.6fr_0.8fr_0.7fr_0.5fr_0.55fr] gap-2 px-3 text-xs font-medium text-quegym-secondary">
+          <div className="mb-2 grid grid-cols-[1.6fr_0.8fr_0.7fr_0.5fr_0.7fr] gap-2 px-3 text-xs font-medium text-quegym-secondary">
             <span>Nombre y descripción</span>
             <span>Periodicidad</span>
             <span>Precio ref.</span>
@@ -1491,12 +1605,16 @@ export function PartnerPanelClient(props: {
               plans.map((p, idx) => (
                 <article
                   key={p.id}
-                  className={`grid grid-cols-[1.6fr_0.8fr_0.7fr_0.5fr_0.55fr] items-center gap-2 rounded-2xl border px-3 py-3 ${
-                    idx === 0 ? "border-quegym-accent bg-quegym-elevated" : "border-quegym-border bg-quegym-elevated"
+                  className={`grid grid-cols-[1.6fr_0.8fr_0.7fr_0.5fr_0.7fr] items-center gap-2 rounded-2xl border px-3 py-3 ${
+                    editingPlanId === p.id
+                      ? "border-quegym-accent bg-quegym-elevated"
+                      : idx === 0
+                        ? "border-quegym-accent/40 bg-quegym-elevated"
+                        : "border-quegym-border bg-quegym-elevated"
                   }`}
                 >
                   <div className="min-w-0">
-                    <p className="truncate text-[28px]/none text-sm font-semibold text-quegym-primary">{p.name}</p>
+                    <p className="truncate text-sm font-semibold text-quegym-primary">{p.name}</p>
                     <p className="truncate text-xs text-quegym-secondary">
                       {p.description?.trim() || "Sin descripción"}
                     </p>
@@ -1506,7 +1624,7 @@ export function PartnerPanelClient(props: {
                     {p.priceLabel?.trim() ? `$${p.priceLabel.replace(/[^0-9.,]/g, "") || p.priceLabel}` : "Consultar"}
                   </p>
                   <p className={`text-sm ${p.active ? "text-quegym-highlight" : "text-quegym-secondary"}`}>
-                    {p.active ? "●" : "●"}
+                    {p.active ? "Visible" : "Oculto"}
                   </p>
                   <div className="flex items-center gap-1">
                     <button
@@ -1519,11 +1637,20 @@ export function PartnerPanelClient(props: {
                     </button>
                     <button
                       type="button"
-                      disabled
-                      title="Editar (próximamente)"
-                      className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-quegym-border bg-quegym-elevated text-xs text-quegym-secondary"
+                      title="Editar plan"
+                      onClick={() => openEditPlanForm(p)}
+                      className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-quegym-border bg-quegym-elevated text-xs text-quegym-secondary hover:bg-quegym-subtle"
                     >
                       ✎
+                    </button>
+                    <button
+                      type="button"
+                      title="Eliminar plan"
+                      disabled={deletingPlanId === p.id}
+                      onClick={() => void onDeletePlan(p)}
+                      className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-rose-200 bg-quegym-elevated text-xs text-rose-700 hover:bg-rose-50 disabled:opacity-50"
+                    >
+                      {deletingPlanId === p.id ? "…" : "🗑"}
                     </button>
                   </div>
                 </article>
@@ -1533,7 +1660,7 @@ export function PartnerPanelClient(props: {
 
           <button
             type="button"
-            onClick={() => setShowPlanForm(true)}
+            onClick={openCreatePlanForm}
             className="mt-3 inline-flex w-full items-center justify-center rounded-2xl border border-dashed border-quegym-border px-4 py-3 text-sm font-medium text-quegym-secondary hover:bg-quegym-subtle"
           >
             + Agregar nuevo plan
@@ -1543,22 +1670,28 @@ export function PartnerPanelClient(props: {
         {showPlanForm ? (
           <UICard className={`h-fit bg-quegym-subtle ${lightCardClass}`}>
             <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-quegym-primary">Nuevo plan</h3>
+              <h3 className="text-lg font-semibold text-quegym-primary">
+                {editingPlanId ? "Editar plan" : "Nuevo plan"}
+              </h3>
               <button
                 type="button"
-                onClick={() => setShowPlanForm(false)}
+                onClick={() => {
+                  setShowPlanForm(false);
+                  resetPlanForm();
+                }}
                 className="rounded-full border border-quegym-border px-2 py-0.5 text-xs text-quegym-secondary hover:bg-quegym-subtle"
               >
                 ×
               </button>
             </div>
             <form className="space-y-3" onSubmit={onCreatePlan}>
-              <input type="hidden" name="venueSlug" value={photosVenueSlug} />
               <label className="block space-y-1">
                 <span className="text-xs font-medium text-quegym-primary">Nombre del plan *</span>
                 <UITextInput
                   name="name"
                   required
+                  value={planForm.name}
+                  onChange={(e) => setPlanForm((prev) => ({ ...prev, name: e.target.value }))}
                   placeholder="Ej: Mensualidad, Plan Básico, 3 meses..."
                   className={`h-[44px] ${lightInputClass}`}
                 />
@@ -1568,6 +1701,10 @@ export function PartnerPanelClient(props: {
                 <textarea
                   name="description"
                   rows={2}
+                  value={planForm.description}
+                  onChange={(e) =>
+                    setPlanForm((prev) => ({ ...prev, description: e.target.value }))
+                  }
                   placeholder="¿Qué incluye este plan?"
                   className={`w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 py-2 text-sm text-quegym-primary placeholder:text-quegym-secondary`}
                 />
@@ -1577,19 +1714,28 @@ export function PartnerPanelClient(props: {
                   <span className="text-xs font-medium text-quegym-primary">Periodicidad *</span>
                   <select
                     name="period"
-                    defaultValue="Mensual"
+                    value={planForm.period}
+                    onChange={(e) => setPlanForm((prev) => ({ ...prev, period: e.target.value }))}
                     className={`h-[44px] w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 text-sm text-quegym-primary`}
                   >
                     <option value="Mensual">Mensual</option>
                     <option value="3 meses">3 meses</option>
                     <option value="Una vez">Una vez</option>
                     <option value="Anual">Anual</option>
+                    {!["Mensual", "3 meses", "Una vez", "Anual"].includes(planForm.period) &&
+                    planForm.period ? (
+                      <option value={planForm.period}>{planForm.period}</option>
+                    ) : null}
                   </select>
                 </label>
                 <label className="space-y-1">
                   <span className="text-xs font-medium text-quegym-primary">Precio referencial</span>
                   <UITextInput
                     name="priceLabel"
+                    value={planForm.priceLabel}
+                    onChange={(e) =>
+                      setPlanForm((prev) => ({ ...prev, priceLabel: e.target.value }))
+                    }
                     placeholder='0.00 (o "Consultar")'
                     className={`h-[44px] ${lightInputClass}`}
                   />
@@ -1600,9 +1746,23 @@ export function PartnerPanelClient(props: {
               </UICard>
               <div className="flex items-center gap-2">
                 <UIButton type="submit" disabled={savingPlan} className={lightPrimaryButtonClass}>
-                  {savingPlan ? "Agregando..." : "Agregar plan"}
+                  {savingPlan
+                    ? editingPlanId
+                      ? "Guardando…"
+                      : "Agregando…"
+                    : editingPlanId
+                      ? "Guardar cambios"
+                      : "Agregar plan"}
                 </UIButton>
-                <UIButton type="button" variant="secondary" className={lightSecondaryButtonClass} onClick={() => setShowPlanForm(false)}>
+                <UIButton
+                  type="button"
+                  variant="secondary"
+                  className={lightSecondaryButtonClass}
+                  onClick={() => {
+                    setShowPlanForm(false);
+                    resetPlanForm();
+                  }}
+                >
                   Cancelar
                 </UIButton>
               </div>

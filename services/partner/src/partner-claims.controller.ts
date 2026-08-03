@@ -223,6 +223,20 @@ export class PartnerClaimsController {
     return updated;
   }
 
+  @Delete("v1/partner/me/venues/:venueSlug/plans/:id")
+  @UseGuards(PartnerAuthGuard)
+  async deleteVenuePlan(
+    @Req() req: { partnerIdentity?: { subject: string; email: string } },
+    @Param("venueSlug") venueSlug: string,
+    @Param("id") id: string,
+  ) {
+    const identity = req.partnerIdentity;
+    if (!identity) throw new ForbiddenException("partner_identity_missing");
+    const deleted = await this.claims.deletePlanByVenue(identity, venueSlug, id);
+    if ("error" in deleted) throw new ForbiddenException(deleted.error);
+    return deleted;
+  }
+
   @Get("v1/partner/me/venues/:venueSlug/photos")
   @UseGuards(PartnerAuthGuard)
   async listVenuePhotos(
@@ -448,6 +462,20 @@ export class PartnerClaimsController {
     dto: UpdatePartnerPlanDto,
   ) {
     const result = await this.claims.adminCatalogUpdatePlan(venueSlug, id, dto);
+    this.throwIfDelegatedVenueError(result);
+    if (result && typeof result === "object" && "error" in result) {
+      throw new ForbiddenException((result as { error: string }).error);
+    }
+    return result;
+  }
+
+  @Delete("v1/admin/catalog/venues/:venueSlug/plans/:id")
+  @UseGuards(AdminApiGuard)
+  async adminCatalogVenuePlanDelete(
+    @Param("venueSlug") venueSlug: string,
+    @Param("id") id: string,
+  ) {
+    const result = await this.claims.adminCatalogDeletePlan(venueSlug, id);
     this.throwIfDelegatedVenueError(result);
     if (result && typeof result === "object" && "error" in result) {
       throw new ForbiddenException((result as { error: string }).error);

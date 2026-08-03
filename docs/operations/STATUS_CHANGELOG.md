@@ -6,6 +6,8 @@ Formato: `YYYY-MM-DD | SHA | qué cambió | evidencia`.
 
 | Fecha | SHA / ref | Cambio | Evidencia |
 |-------|-----------|--------|-----------|
+| 2026-08-03 | (push) | Planes panel: fix create/list UX + edit/delete; DELETE plans API; catalog clear empty plans | partner/web/openapi |
+| 2026-08-03 | `88a683a` | Fotos: `PARTNER_PUBLIC_BASE_URL` + rewrite localhost; preview UI; Railway var set | upload GET 200 HTTPS |
 | 2026-08-03 | (push) | Panel admin: hydrate catálogo + sync name/modalities/amenities/schedule; UI editable real | partner/catalog/web |
 | 2026-08-03 | Vercel | `AUTH0_M2M_*` + `ADMIN_OIDC_ISSUER` en Production/Preview; redeploy `staging.quegym.com`; BFF `/api/admin/leads` + taxonomy **200** | Probe HTTP post-redeploy |
 | 2026-08-03 | Railway | Partner admin **PASS**: issuer era audience → Auth0 URL; catalog OIDC; delegate; analytics backdate ON | M2M claims/profile/plans/photos/taxonomy **200** |

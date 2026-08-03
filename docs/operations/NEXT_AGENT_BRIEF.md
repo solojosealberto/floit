@@ -5,7 +5,7 @@
 > Ledger histórico: `sprints.md` · Backlog/US: `EPICS_USER_STORIES_STATUS.md` · Contexto: `PROJECT_CONTEXT_HANDOVER.md`.  
 > Vocabulario de estados: [`DOC_STATUS_VOCABULARY.md`](./DOC_STATUS_VOCABULARY.md) · Log de flips: [`STATUS_CHANGELOG.md`](./STATUS_CHANGELOG.md).
 
-**Última reconciliación documental:** 2026-08-03 · **Repo HEAD:** `aae2f0d`+ · **URL staging:** https://staging.quegym.com  
+**Última reconciliación documental:** 2026-08-03 · **Repo HEAD:** `88a683a`+ · **URL staging:** https://staging.quegym.com  
 **No usar:** `https://www.staging.quegym.com` (NXDOMAIN — no existe en DNS).
 
 ---
@@ -15,7 +15,7 @@
 | Campo | Valor (2026-08-03) |
 |-------|---------------------|
 | Producto | QueGym MVP — discovery + comparación + leads (Caracas) |
-| Repo | `main` @ `aae2f0d`+ |
+| Repo | `main` @ `88a683a`+ |
 | Web staging (Vercel) | `staging.quegym.com` — deploy citado `ca4070b`–`ff98be2` (+ commits posteriores en `main`) |
 | APIs (Railway `quegym-api`) | catalog / search / leads / partner / analytics — **health 5/5** |
 | Partner admin `/v1/admin/*` | **PASS** (2026-08-03) — issuer Auth0 corregido + redeploy; claims/profile/plans/photos **200**; bad token **401** |
@@ -33,6 +33,8 @@
 | CI GitHub `e2e-services` | **FAIL** (lead-flow / timing) — no implica staging caído |
 | GO producto/ops | **Pendiente** |
 | Prod `www.quegym.com` | **Pendiente** (post-GO) |
+| Partner media | `PARTNER_PUBLIC_BASE_URL` set; uploads HTTPS; **disco efímero** (redeploy borra `/uploads` — volume pendiente) |
+| Panel planes | Create/list/edit/delete **fixed** (ship pending deploy) |
 
 ### Próximas 3 acciones (orden estricto)
 
@@ -50,6 +52,7 @@
 - Panel admin: hidrata catálogo + edición real modalidades/amenidades/horarios (sync ampliado)
 - Vercel Production/Preview: AUTH0_M2M_* + ADMIN_OIDC_ISSUER; BFF leads/taxonomy 200
 - Partner admin 500: env `ADMIN_OIDC_ISSUER` era audience `floit-admin` (incorrecto) → `https://<tenant>.us.auth0.com`; código `oidc-jose`; catalog OIDC ON; `ADMIN_CATALOG_DELEGATE_EMAIL` set; analytics backdate ON
+- Fotos panel (`88a683a`): URLs públicas Railway + preview; no usar `localhost:4013` en staging
 
 ---
 
