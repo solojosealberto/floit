@@ -1088,6 +1088,8 @@ components:
         zone: { type: string, nullable: true }
         lat: { type: number, nullable: true }
         lng: { type: number, nullable: true }
+        instagramHandle: { type: string, nullable: true }
+        websiteUrl: { type: string, nullable: true }
         photoUrls:
           type: array
           items: { type: string, format: uri }
@@ -1104,6 +1106,8 @@ components:
         zone: { type: string, maxLength: 120 }
         lat: { type: number, minimum: -90, maximum: 90 }
         lng: { type: number, minimum: -180, maximum: 180 }
+        instagramHandle: { type: string, maxLength: 120, description: "Handle o URL; vacío para borrar" }
+        websiteUrl: { type: string, maxLength: 400, description: "URL; vacío para borrar" }
         photoUrls:
           type: array
           maxItems: 12

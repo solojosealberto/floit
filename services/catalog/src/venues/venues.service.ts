@@ -8,6 +8,11 @@ import type { CreateInternalVenueDto } from "./dto/create-internal-venue.dto";
 import type { UpdatePartnerSyncDto } from "./dto/update-partner-sync.dto";
 import type { ListVenuesQueryDto } from "./dto/list-venues.query";
 import { VenueEntity } from "./venue.entity";
+import {
+  normalizeInstagramHandle,
+  normalizeWebsiteUrl,
+  rewriteSocialLinesInDescription,
+} from "./venue-social";
 
 export type VenueSummary = {
   id: string;
@@ -537,6 +542,22 @@ export class VenuesService {
     }
     if (dto.lng != null && Number.isFinite(dto.lng)) {
       venue.lng = dto.lng;
+    }
+    if (dto.instagramHandle !== undefined || dto.websiteUrl !== undefined) {
+      if (dto.instagramHandle !== undefined) {
+        const trimmed = dto.instagramHandle.trim();
+        venue.instagramHandle = trimmed
+          ? normalizeInstagramHandle(trimmed)
+          : null;
+      }
+      if (dto.websiteUrl !== undefined) {
+        const trimmed = dto.websiteUrl.trim();
+        venue.websiteUrl = trimmed ? normalizeWebsiteUrl(trimmed) : null;
+      }
+      venue.description = rewriteSocialLinesInDescription(venue.description, {
+        instagramHandle: venue.instagramHandle,
+        websiteUrl: venue.websiteUrl,
+      });
     }
     if (dto.photoUrls !== undefined) {
       venue.photoUrls = sanitizePhotoUrls(dto.photoUrls);

@@ -118,6 +118,18 @@ export class UpdatePartnerSyncDto {
   @Max(180)
   lng?: number;
 
+  /** Instagram handle without @, or empty string to clear. */
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  instagramHandle?: string;
+
+  /** Website URL, or empty string to clear. */
+  @IsOptional()
+  @IsString()
+  @MaxLength(400)
+  websiteUrl?: string;
+
   @IsOptional()
   @IsArray()
   @ArrayMaxSize(20)

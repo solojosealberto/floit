@@ -68,6 +68,14 @@ export class PartnerProfileEntity {
   @Column({ type: "float", nullable: true })
   lng!: number | null;
 
+  /** Instagram handle without leading @ (e.g. 212studiccs). */
+  @Column({ type: "varchar", length: 120, nullable: true })
+  instagramHandle!: string | null;
+
+  /** Public website URL (https://…). */
+  @Column({ type: "varchar", length: 400, nullable: true })
+  websiteUrl!: string | null;
+
   @CreateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   createdAt!: Date;
 

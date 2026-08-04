@@ -41,6 +41,8 @@ type VenueDetail = {
   contactPhone?: string | null;
   contactWhatsapp?: string | null;
   contactEmail?: string | null;
+  instagramHandle?: string | null;
+  websiteUrl?: string | null;
   photoUrls?: string[];
   plans?: PublicVenuePlan[];
 };
@@ -236,6 +238,8 @@ export default async function GymPage(props: Props) {
                 fallbackVenueType={venue.venueType}
                 fallbackModalities={modalityList}
                 fallbackAmenities={amenityList}
+                instagramHandle={venue.instagramHandle}
+                websiteUrl={venue.websiteUrl}
               />
             </div>
 
@@ -374,6 +378,8 @@ export default async function GymPage(props: Props) {
               fallbackVenueType={venue.venueType}
               fallbackModalities={modalityList}
               fallbackAmenities={amenityList}
+              instagramHandle={venue.instagramHandle}
+              websiteUrl={venue.websiteUrl}
             />
           </UICard>
 

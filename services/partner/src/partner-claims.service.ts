@@ -17,6 +17,12 @@ import { PartnerPlanEntity } from "./partner-plan.entity";
 import { PartnerProfileEntity } from "./partner-profile.entity";
 import { PartnerVenueOwnershipEntity } from "./partner-venue-ownership.entity";
 import { PartnerVenuePhotoEntity } from "./partner-venue-photo.entity";
+import {
+  extractInstagramFromDescription,
+  extractWebsiteFromDescription,
+  normalizeInstagramHandle,
+  normalizeWebsiteUrl,
+} from "./venue-social";
 
 type LeadSummary = {
   id: string;
@@ -477,6 +483,8 @@ export class PartnerClaimsService {
       zone: effectiveRow?.zone ?? null,
       lat: effectiveRow?.lat ?? null,
       lng: effectiveRow?.lng ?? null,
+      instagramHandle: effectiveRow?.instagramHandle ?? null,
+      websiteUrl: effectiveRow?.websiteUrl ?? null,
     };
     return this.mergeCatalogSnapshotIntoProfile(base);
   }
@@ -519,6 +527,8 @@ export class PartnerClaimsService {
         zone: null,
         lat: null,
         lng: null,
+        instagramHandle: null,
+        websiteUrl: null,
       });
     }
     if (dto.businessName !== undefined) row.businessName = dto.businessName.trim() || null;
@@ -553,6 +563,24 @@ export class PartnerClaimsService {
     if (dto.lng !== undefined) {
       row.lng = Number.isFinite(dto.lng) ? dto.lng : null;
     }
+    if (dto.instagramHandle !== undefined) {
+      const trimmed = dto.instagramHandle.trim();
+      if (!trimmed) {
+        row.instagramHandle = "";
+      } else {
+        const normalized = normalizeInstagramHandle(trimmed);
+        if (normalized) row.instagramHandle = normalized;
+      }
+    }
+    if (dto.websiteUrl !== undefined) {
+      const trimmed = dto.websiteUrl.trim();
+      if (!trimmed) {
+        row.websiteUrl = "";
+      } else {
+        const normalized = normalizeWebsiteUrl(trimmed);
+        if (normalized) row.websiteUrl = normalized;
+      }
+    }
     const saved = await this.profiles.save(row);
     await this.enqueueVenueCatalogSync(identity.email, venueSlug);
     return this.mergeCatalogSnapshotIntoProfile({
@@ -572,6 +600,8 @@ export class PartnerClaimsService {
       zone: saved.zone ?? null,
       lat: saved.lat ?? null,
       lng: saved.lng ?? null,
+      instagramHandle: saved.instagramHandle ?? null,
+      websiteUrl: saved.websiteUrl ?? null,
     });
   }
 
@@ -991,6 +1021,12 @@ export class PartnerClaimsService {
       ...(profile?.lng != null && Number.isFinite(profile.lng)
         ? { lng: profile.lng }
         : {}),
+      ...(profile && profile.instagramHandle !== null
+        ? { instagramHandle: profile.instagramHandle || "" }
+        : {}),
+      ...(profile && profile.websiteUrl !== null
+        ? { websiteUrl: profile.websiteUrl || "" }
+        : {}),
       // Never send empty photoUrls — that would wipe catalog gallery on profile-only saves.
       ...(photos.length > 0
         ? { photoUrls: photos.map((p) => this.rewritePublicMediaUrl(p.url)) }
@@ -1129,6 +1165,8 @@ export class PartnerClaimsService {
       zone: legacy.zone ?? null,
       lat: legacy.lat ?? null,
       lng: legacy.lng ?? null,
+      instagramHandle: legacy.instagramHandle ?? null,
+      websiteUrl: legacy.websiteUrl ?? null,
     });
     return this.profiles.save(copy);
   }
@@ -1150,6 +1188,9 @@ export class PartnerClaimsService {
     zone: string | null;
     lat: number | null;
     lng: number | null;
+    /** null = never set (hydrate); "" = cleared; value = handle without @ */
+    instagramHandle: string | null;
+    websiteUrl: string | null;
   }) {
     const catalog = await this.fetchCatalogVenueSnapshot(base.venueSlug);
     const scheduleFromCatalog = catalog
@@ -1181,6 +1222,18 @@ export class PartnerClaimsService {
       base.lng != null && Number.isFinite(base.lng)
         ? base.lng
         : (catalog?.lng ?? null);
+    const instagramHandle =
+      base.instagramHandle !== null
+        ? normalizeInstagramHandle(base.instagramHandle)
+        : (normalizeInstagramHandle(catalog?.instagramHandle) ??
+          extractInstagramFromDescription(catalog?.description) ??
+          null);
+    const websiteUrl =
+      base.websiteUrl !== null
+        ? normalizeWebsiteUrl(base.websiteUrl)
+        : (normalizeWebsiteUrl(catalog?.websiteUrl) ??
+          extractWebsiteFromDescription(catalog?.description) ??
+          null);
     return {
       ...base,
       businessName: base.businessName?.trim() || catalog?.name || null,
@@ -1200,6 +1253,8 @@ export class PartnerClaimsService {
       zone: base.zone?.trim() || catalog?.zone || null,
       lat,
       lng,
+      instagramHandle,
+      websiteUrl,
       catalogPhotoUrls,
       photoUrls: (base.photoUrls ?? []).map((u) => this.rewritePublicMediaUrl(u)),
       hydratedFromCatalog: Boolean(catalog),
@@ -1228,6 +1283,8 @@ export class PartnerClaimsService {
     address: string;
     lat: number | null;
     lng: number | null;
+    instagramHandle: string | null;
+    websiteUrl: string | null;
     modalities: string[];
     amenities: string[];
     contactPhone: string | null;
@@ -1275,6 +1332,8 @@ export class PartnerClaimsService {
           address?: string;
           lat?: number;
           lng?: number;
+          instagramHandle?: string | null;
+          websiteUrl?: string | null;
           modalities?: string[];
           amenities?: string[];
           contactPhone?: string | null;
@@ -1318,6 +1377,14 @@ export class PartnerClaimsService {
             body.lng != null && Number.isFinite(Number(body.lng))
               ? Number(body.lng)
               : null,
+          instagramHandle:
+            normalizeInstagramHandle(body.instagramHandle) ??
+            extractInstagramFromDescription(body.description) ??
+            null,
+          websiteUrl:
+            normalizeWebsiteUrl(body.websiteUrl) ??
+            extractWebsiteFromDescription(body.description) ??
+            null,
           modalities: Array.isArray(body.modalities) ? body.modalities : [],
           amenities: Array.isArray(body.amenities) ? body.amenities : [],
           contactPhone: body.contactPhone ?? null,

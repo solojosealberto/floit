@@ -93,4 +93,16 @@ export class UpdatePartnerProfileDto {
   @Min(-180)
   @Max(180)
   lng?: number;
+
+  /** Instagram @handle or profile URL. Empty string clears. */
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  instagramHandle?: string;
+
+  /** Website URL. Empty string clears. */
+  @IsOptional()
+  @IsString()
+  @MaxLength(400)
+  websiteUrl?: string;
 }

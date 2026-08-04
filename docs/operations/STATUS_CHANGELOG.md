@@ -6,7 +6,7 @@ Formato: `YYYY-MM-DD | SHA | qué cambió | evidencia`.
 
 | Fecha | SHA / ref | Cambio | Evidencia |
 |-------|-----------|--------|-----------|
-| 2026-08-03 | (location) | Panel perfil: sección Ubicación (dirección/zona/lat/lng + mapa Leaflet editable); sync partner→catalog | admin/partner panel |
+| 2026-08-03 | (social) | Panel perfil: Instagram + sitio web (crear/editar/quitar); sync catalog + ficha pública | partner/catalog/web |
 | 2026-08-03 | `dc4748c` | Perfil admin: tipo multi-select, horarios day/time picker, descripción full-width | staging panel UI |
 | 2026-08-03 | `7686b4f` | Ficha gym: planes reales `catalog.plans` (no mocks); sync JSON + priceMin/Max | GET venue.plans |
 | 2026-08-03 | `9f6ebbf` | Planes panel: create/list UX + edit/delete; DELETE API; docs media URL | partner/web/openapi |

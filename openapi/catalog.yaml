@@ -213,6 +213,8 @@ paths:
                 zone: { type: string, maxLength: 120 }
                 lat: { type: number, minimum: -90, maximum: 90 }
                 lng: { type: number, minimum: -180, maximum: 180 }
+                instagramHandle: { type: string, maxLength: 120 }
+                websiteUrl: { type: string, maxLength: 400 }
                 photoUrls:
                   type: array
                   maxItems: 12

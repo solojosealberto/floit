@@ -74,6 +74,14 @@ export class VenueEntity {
   @Column({ type: "varchar", length: 200, nullable: true })
   contactEmail!: string | null;
 
+  /** Instagram handle without leading @. */
+  @Column({ type: "varchar", length: 120, nullable: true })
+  instagramHandle!: string | null;
+
+  /** Public website URL. */
+  @Column({ type: "varchar", length: 400, nullable: true })
+  websiteUrl!: string | null;
+
   @Column({ type: "varchar", length: 900, array: true, nullable: true })
   photoUrls!: string[] | null;
 

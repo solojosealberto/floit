@@ -1,11 +1,21 @@
 import { parseVenueDescription } from "@/lib/venue-description";
 import { formatVenueTypeLabel } from "@/lib/venue-labels";
+import {
+  formatInstagramHandle,
+  instagramProfileUrl,
+  normalizeInstagramHandle,
+  normalizeWebsiteUrl,
+  websiteDisplayLabel,
+} from "@/lib/venue-social";
 
 type Props = {
   description: string | null | undefined;
   fallbackVenueType?: string;
   fallbackModalities?: string[];
   fallbackAmenities?: string[];
+  /** Structured fields from catalog (preferred over description parse). */
+  instagramHandle?: string | null;
+  websiteUrl?: string | null;
 };
 
 export function GymDescriptionBlock({
@@ -13,6 +23,8 @@ export function GymDescriptionBlock({
   fallbackVenueType,
   fallbackModalities = [],
   fallbackAmenities = [],
+  instagramHandle,
+  websiteUrl,
 }: Props) {
   const parsed = parseVenueDescription(description);
   const activities =
@@ -22,7 +34,27 @@ export function GymDescriptionBlock({
   const venueTypeLabel =
     parsed.venueType ?? formatVenueTypeLabel(fallbackVenueType);
 
-  if (!parsed.summary && activities.length === 0 && amenities.length === 0) {
+  const igHandle =
+    formatInstagramHandle(instagramHandle) ??
+    parsed.instagramHandle ??
+    null;
+  const igUrl =
+    instagramProfileUrl(instagramHandle) ??
+    (normalizeInstagramHandle(parsed.instagramHandle)
+      ? instagramProfileUrl(parsed.instagramHandle)
+      : null) ??
+    parsed.instagramUrl;
+  const webUrl =
+    normalizeWebsiteUrl(websiteUrl) ??
+    null;
+
+  if (
+    !parsed.summary &&
+    activities.length === 0 &&
+    amenities.length === 0 &&
+    !igUrl &&
+    !webUrl
+  ) {
     return (
       <p className="text-sm text-quegym-secondary">
         Este centro aún no publicó una descripción detallada.
@@ -80,15 +112,27 @@ export function GymDescriptionBlock({
           {parsed.schedule}
         </p>
       ) : null}
-      {parsed.instagramUrl ? (
+      {igUrl ? (
         <p>
           <a
-            href={parsed.instagramUrl}
+            href={igUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="font-medium text-quegym-highlight hover:underline"
           >
-            {parsed.instagramHandle ?? "Instagram"}
+            {igHandle ?? "Instagram"}
+          </a>
+        </p>
+      ) : null}
+      {webUrl ? (
+        <p>
+          <a
+            href={webUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-quegym-highlight hover:underline"
+          >
+            {websiteDisplayLabel(webUrl)}
           </a>
         </p>
       ) : null}

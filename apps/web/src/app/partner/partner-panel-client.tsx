@@ -24,6 +24,11 @@ import {
   serializeScheduleSummary,
 } from "@/lib/venue-schedule";
 import { VenueLocationEditor } from "@/components/venue-location-editor";
+import {
+  formatInstagramHandle,
+  normalizeInstagramHandle,
+  normalizeWebsiteUrl,
+} from "@/lib/venue-social";
 
 type Profile = {
   partnerEmail: string;
@@ -41,6 +46,8 @@ type Profile = {
   zone?: string | null;
   lat?: number | null;
   lng?: number | null;
+  instagramHandle?: string | null;
+  websiteUrl?: string | null;
   catalogPhotoUrls?: string[];
   hydratedFromCatalog?: boolean;
 };
@@ -91,6 +98,8 @@ type ProfileFormState = {
   zone: string;
   lat: number | null;
   lng: number | null;
+  instagramHandle: string;
+  websiteUrl: string;
 };
 
 type TaxonomyOption = { slug: string; label: string; kind: "modality" | "amenity" };
@@ -126,6 +135,8 @@ const EMPTY_PROFILE_FORM: ProfileFormState = {
   zone: "",
   lat: null,
   lng: null,
+  instagramHandle: "",
+  websiteUrl: "",
 };
 
 const FALLBACK_MODALITIES = [
@@ -260,6 +271,8 @@ export function PartnerPanelClient(props: {
       zone: p.zone ?? "",
       lat: p.lat != null && Number.isFinite(p.lat) ? p.lat : null,
       lng: p.lng != null && Number.isFinite(p.lng) ? p.lng : null,
+      instagramHandle: formatInstagramHandle(p.instagramHandle) ?? "",
+      websiteUrl: p.websiteUrl ?? "",
     });
   }
 
@@ -531,6 +544,14 @@ export function PartnerPanelClient(props: {
       ...(profileForm.lng != null && Number.isFinite(profileForm.lng)
         ? { lng: profileForm.lng }
         : {}),
+      instagramHandle: profileForm.instagramHandle.trim()
+        ? normalizeInstagramHandle(profileForm.instagramHandle) ??
+          profileForm.instagramHandle.trim()
+        : "",
+      websiteUrl: profileForm.websiteUrl.trim()
+        ? normalizeWebsiteUrl(profileForm.websiteUrl) ??
+          profileForm.websiteUrl.trim()
+        : "",
     };
     try {
       const res = await fetch(venueApi(venueSlug, "/profile"), {
@@ -1574,6 +1595,94 @@ export function PartnerPanelClient(props: {
                   }))
                 }
               />
+            </UICard>
+
+            <UICard className={`bg-quegym-subtle ${lightCardClass}`}>
+              <h2 className="mb-1 text-base font-semibold">Redes y sitio web</h2>
+              <p className="mb-3 text-xs text-quegym-secondary">
+                Instagram y página web del centro. Se muestran en la ficha pública. Usa
+                «Quitar» para eliminarlos.
+              </p>
+              <div className="space-y-3">
+                <div className="grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
+                  <label className="block space-y-1">
+                    <span className="text-xs font-medium text-quegym-secondary">
+                      Instagram
+                    </span>
+                    <UITextInput
+                      name="instagramHandle"
+                      value={profileForm.instagramHandle}
+                      onChange={(e) =>
+                        setProfileForm((prev) => ({
+                          ...prev,
+                          instagramHandle: e.target.value,
+                        }))
+                      }
+                      onBlur={() =>
+                        setProfileForm((prev) => ({
+                          ...prev,
+                          instagramHandle:
+                            formatInstagramHandle(prev.instagramHandle) ??
+                            prev.instagramHandle.trim(),
+                        }))
+                      }
+                      placeholder="@tu_centro"
+                      className={`h-[46px] w-full rounded-xl ${lightInputClass}`}
+                    />
+                  </label>
+                  <UIButton
+                    type="button"
+                    size="sm"
+                    variant="secondary"
+                    className={lightSecondaryButtonClass}
+                    disabled={!profileForm.instagramHandle.trim()}
+                    onClick={() =>
+                      setProfileForm((prev) => ({ ...prev, instagramHandle: "" }))
+                    }
+                  >
+                    Quitar
+                  </UIButton>
+                </div>
+                <div className="grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
+                  <label className="block space-y-1">
+                    <span className="text-xs font-medium text-quegym-secondary">
+                      Sitio web
+                    </span>
+                    <UITextInput
+                      name="websiteUrl"
+                      value={profileForm.websiteUrl}
+                      onChange={(e) =>
+                        setProfileForm((prev) => ({
+                          ...prev,
+                          websiteUrl: e.target.value,
+                        }))
+                      }
+                      onBlur={() =>
+                        setProfileForm((prev) => ({
+                          ...prev,
+                          websiteUrl:
+                            normalizeWebsiteUrl(prev.websiteUrl) ??
+                            prev.websiteUrl.trim(),
+                        }))
+                      }
+                      placeholder="https://tu-centro.com"
+                      className={`h-[46px] w-full rounded-xl ${lightInputClass}`}
+                    />
+                  </label>
+                  <UIButton
+                    type="button"
+                    size="sm"
+                    variant="secondary"
+                    className={lightSecondaryButtonClass}
+                    disabled={!profileForm.websiteUrl.trim()}
+                    onClick={() =>
+                      setProfileForm((prev) => ({ ...prev, websiteUrl: "" }))
+                    }
+                  >
+                    Quitar
+                  </UIButton>
+                </div>
+              </div>
             </UICard>
 
             <UICard className={`bg-quegym-subtle ${lightCardClass}`}>
