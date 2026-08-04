@@ -26,6 +26,12 @@ export const PREFERRED_CITY_BY_LABEL: Record<string, string> = {
   guarenas: "miranda--plaza",
   "san antonio de los altos": "miranda--guaicaipuro",
   caracas: "distrito-capital--libertador",
+  // Featured barrios (avoid nationwide parroquia name collisions)
+  altamira: "miranda--chacao",
+  "el rosal": "miranda--chacao",
+  rosal: "miranda--chacao",
+  "las mercedes": "miranda--baruta",
+  mercedes: "miranda--baruta",
 };
 
 type GeoFile = {
@@ -250,55 +256,25 @@ export class GeoService implements OnModuleInit {
     const s = raw.trim();
     if (!s) return null;
     const slug = slugifyGeo(s);
-    const qb = this.zones
-      .createQueryBuilder("z")
-      .where(
-        "(z.id = :s OR z.slug = :slug OR z.slug = :slugRaw OR LOWER(z.name) = LOWER(:n))",
-        { s, slug, slugRaw: s.toLowerCase(), n: s },
-      );
-    if (cityId) qb.andWhere("z.cityId = :cityId", { cityId });
-    let zone = await qb.getOne();
-    if (!zone && !cityId) {
-      // Preferred city for known Caracas labels (avoid Libertador collisions).
-      const preferredCity = PREFERRED_CITY_BY_LABEL[s.toLowerCase()];
-      if (preferredCity) {
-        zone = await this.zones
-          .createQueryBuilder("z")
-          .where(
-            "z.cityId = :cityId AND (z.slug = :slug OR LOWER(z.name) = LOWER(:n))",
-            { cityId: preferredCity, slug, n: s },
-          )
-          .getOne();
-        if (!zone) {
-          // fall back to municipio-named zone inside preferred city
-          zone = await this.zones.findOne({
-            where: { id: `${preferredCity}--${slugifyGeo(preferredCity.split("--").pop() ?? "")}` },
-          });
-          if (!zone) {
-            zone = await this.zones.findOne({
-              where: { cityId: preferredCity, slug: slugifyGeo(preferredCity.split("--").pop() ?? "") },
-            });
-          }
-        }
-      }
-    }
-    if (!zone) {
-      const needle = s.toLowerCase();
-      const candidates = await this.zones
+    const preferredCity =
+      cityId?.trim() || PREFERRED_CITY_BY_LABEL[s.toLowerCase()] || undefined;
+
+    // Prefer scoped city first (Caracas AM / featured barrios) before nationwide slug hits.
+    if (preferredCity) {
+      let zone = await this.zones
         .createQueryBuilder("z")
-        .where(cityId ? "z.cityId = :cityId" : "1=1", { cityId })
-        .andWhere("z.aliases IS NOT NULL")
-        .take(500)
-        .getMany();
-      zone =
-        candidates.find((z) =>
-          (z.aliases ?? []).some(
-            (a) => a.toLowerCase() === needle || needle.includes(a.toLowerCase()),
-          ),
-        ) ?? null;
-      // Also search featured aliases without loading all rows
+        .where(
+          "z.cityId = :cityId AND (z.id = :s OR z.slug = :slug OR z.slug = :slugRaw OR LOWER(z.name) = LOWER(:n))",
+          { cityId: preferredCity, s, slug, slugRaw: s.toLowerCase(), n: s },
+        )
+        .orderBy("z.featured", "DESC")
+        .addOrderBy("z.id", "ASC")
+        .getOne();
       if (!zone) {
-        const featured = await this.zones.find({ where: { featured: true } });
+        const featured = await this.zones.find({
+          where: { cityId: preferredCity, featured: true },
+        });
+        const needle = s.toLowerCase();
         zone =
           featured.find(
             (z) =>
@@ -307,8 +283,70 @@ export class GeoService implements OnModuleInit {
               (z.aliases ?? []).some((a) => a.toLowerCase() === needle),
           ) ?? null;
       }
+      if (!zone) {
+        // Municipio-named zone inside preferred city (legacy labels like "Baruta")
+        zone = await this.zones.findOne({
+          where: {
+            id: `${preferredCity}--${slugifyGeo(preferredCity.split("--").pop() ?? "")}`,
+          },
+        });
+        if (!zone) {
+          zone = await this.zones.findOne({
+            where: {
+              cityId: preferredCity,
+              slug: slugifyGeo(preferredCity.split("--").pop() ?? ""),
+            },
+          });
+        }
+      }
+      if (zone) {
+        return this.toResolved(zone);
+      }
+      if (cityId?.trim()) return null;
+    }
+
+    let zone = await this.zones
+      .createQueryBuilder("z")
+      .where(
+        "(z.id = :s OR z.slug = :slug OR z.slug = :slugRaw OR LOWER(z.name) = LOWER(:n))",
+        { s, slug, slugRaw: s.toLowerCase(), n: s },
+      )
+      .orderBy("z.featured", "DESC")
+      .addOrderBy("z.id", "ASC")
+      .getOne();
+    if (!zone) {
+      const needle = s.toLowerCase();
+      const featured = await this.zones.find({ where: { featured: true } });
+      zone =
+        featured.find(
+          (z) =>
+            z.name.toLowerCase() === needle ||
+            z.slug === slug ||
+            (z.aliases ?? []).some((a) => a.toLowerCase() === needle),
+        ) ?? null;
+      if (!zone) {
+        const candidates = await this.zones
+          .createQueryBuilder("z")
+          .where("z.aliases IS NOT NULL")
+          .take(500)
+          .getMany();
+        zone =
+          candidates.find((z) =>
+            (z.aliases ?? []).some(
+              (a) => a.toLowerCase() === needle || needle.includes(a.toLowerCase()),
+            ),
+          ) ?? null;
+      }
     }
     if (!zone) return null;
+    return this.toResolved(zone);
+  }
+
+  async getZoneById(zoneId: string): Promise<GeoZoneResolved | null> {
+    return this.resolveZoneRef(zoneId);
+  }
+
+  private async toResolved(zone: GeoZoneEntity): Promise<GeoZoneResolved | null> {
     const city = await this.cities.findOne({ where: { id: zone.cityId } });
     if (!city) return null;
     const state = await this.states.findOne({ where: { code: city.stateCode } });
@@ -324,10 +362,6 @@ export class GeoService implements OnModuleInit {
       zoneSlug: zone.slug,
       zoneName: zone.name,
     };
-  }
-
-  async getZoneById(zoneId: string): Promise<GeoZoneResolved | null> {
-    return this.resolveZoneRef(zoneId);
   }
 
   private loadGeoFile(): GeoFile | null {
