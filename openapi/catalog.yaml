@@ -434,6 +434,8 @@ components:
         contactPhone: { type: string, nullable: true }
         contactWhatsapp: { type: string, nullable: true }
         contactEmail: { type: string, nullable: true }
+        instagramHandle: { type: string, nullable: true }
+        websiteUrl: { type: string, nullable: true }
         photoUrls:
           type: array
           maxItems: 12
