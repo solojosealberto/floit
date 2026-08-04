@@ -5,21 +5,22 @@
 > Ledger histórico: `sprints.md` · Backlog/US: `EPICS_USER_STORIES_STATUS.md` · Contexto: `PROJECT_CONTEXT_HANDOVER.md`.  
 > Vocabulario de estados: [`DOC_STATUS_VOCABULARY.md`](./DOC_STATUS_VOCABULARY.md) · Log de flips: [`STATUS_CHANGELOG.md`](./STATUS_CHANGELOG.md).
 
-**Última reconciliación documental:** 2026-08-03 · **Repo HEAD:** (geo VE) · **URL staging:** https://staging.quegym.com  
+**Última reconciliación documental:** 2026-08-04 · **Repo HEAD:** `f688639` · **URL staging:** https://staging.quegym.com  
 **No usar:** `https://www.staging.quegym.com` (NXDOMAIN — no existe en DNS).
 
 ---
 
 ## 0) Tarjeta viva (leer primero)
 
-| Campo | Valor (2026-08-03) |
+| Campo | Valor (2026-08-04) |
 |-------|---------------------|
 | Producto | QueGym MVP — discovery + comparación + leads (Caracas) |
-| Repo | `main` @ `b522d98` |
+| Repo | `main` @ `f688639` |
 | Web staging (Vercel) | `staging.quegym.com` — Production alias; panel/ficha + taxonomías + ubicación |
 | APIs (Railway `quegym-api`) | catalog / search / leads / partner / analytics — **health 5/5** |
 | Partner admin `/v1/admin/*` | **PASS** — claims/profile/plans/photos **200**; bad token **401** |
 | Catálogo | **95 venues** |
+| Geo VE | **PASS** — 24 estados / municipios / zonas; cascada panel; `?zone=` legacy; chips featured (Las Mercedes→29, Altamira→26) |
 | Taxonomías admin | **PASS** — 36 attrs; DELETE + sync-from-venues live (`955de56`) |
 | Smoke platform | **PASS** (2026-08-02) |
 | QA visual staging | **PASS** (firma producto/ops 2026-05-27) — no reabrir |
@@ -39,7 +40,7 @@
 2. Desactivar `ANALYTICS_ALLOW_BACKDATE` tras el gate.
 3. Firma GO → cutover según [`PRODUCTION_LAUNCH_PLAN.md`](./PRODUCTION_LAUNCH_PLAN.md).
 
-### Hecho (no repetir) — sesión panel staging 2026-08-03
+### Hecho (no repetir) — sesión panel staging 2026-08-03 → 2026-08-04
 
 - Rebrand Fase 1+2, import 95 venues, smoke 5/5, admin M2M, partner OIDC issuer fix
 - **Fotos:** URLs públicas (`88a683a`); persistencia volume + Postgres blob (`330c4aa`); preview local al seleccionar
@@ -47,6 +48,7 @@
 - **Perfil UI:** tipo multi-select, descripción full-width, horarios por día (`dc4748c`); sync `venueType` a catálogo
 - Panel hydrate desde catálogo (modalidades/amenidades/horarios/nombre)
 - **Taxonomías:** tabla staging estaba vacía (sin `SEED_ON_BOOT`) → seed M2M 19 modalidades + 17 amenidades; código añade DELETE + `sync-from-venues` + auto-heal
+- **Geo VE nacional:** Ciudad=municipio, Zona=barrio/sector; dataset + APIs meta; cascada Estado→Municipio→Zona en panel; backfill + preferencia Caracas AM; fix colisión `Las Mercedes` Guárico vs Baruta (`f688639`)
 
 ---
 
