@@ -4,7 +4,7 @@ import { Repository } from "typeorm";
 import type { CreateVenueReportDto } from "../reports/create-report.dto";
 import { PromotionEntity } from "../promotions/promotion.entity";
 import { VenueReportEntity } from "../reports/venue-report.entity";
-import { GeoService } from "../geo/geo.service";
+import { GeoService, PREFERRED_CITY_BY_LABEL } from "../geo/geo.service";
 import type { CreateInternalVenueDto } from "./dto/create-internal-venue.dto";
 import type { UpdatePartnerSyncDto } from "./dto/update-partner-sync.dto";
 import type { ListVenuesQueryDto } from "./dto/list-venues.query";
@@ -77,39 +77,40 @@ export class VenuesService {
     const venues = await this.venues.find();
     let updated = 0;
     for (const v of venues) {
-      if (v.zoneId && v.cityId && v.stateCode) continue;
-      const resolved =
-        (await this.geo.resolveZoneRef(v.zone)) ??
-        (await this.geo.resolveZoneRef(v.zone.split(",")[0]?.trim() ?? ""));
-      if (!resolved) {
-        // try municipio name as city then zone with same name
-        const city = await this.geo.resolveCity(v.zone);
-        if (city) {
-          const zoneAsCity = await this.geo.resolveZoneRef(city.name, city.id);
-          if (zoneAsCity) {
-            v.stateCode = zoneAsCity.stateCode;
-            v.cityId = zoneAsCity.cityId;
-            v.zoneId = zoneAsCity.zoneId;
-            v.zone = zoneAsCity.zoneName;
-            await this.venues.save(v);
-            updated += 1;
-          }
-        }
-        continue;
+      const label = (v.zone ?? "").trim();
+      if (!label) continue;
+
+      // Prefer explicit Caracas AM map to avoid Libertador collisions nationwide.
+      const preferredCityId =
+        PREFERRED_CITY_BY_LABEL[label.toLowerCase()] ?? undefined;
+
+      let resolved =
+        (preferredCityId
+          ? await this.geo.resolveZoneRef(label, preferredCityId)
+          : null) ?? (await this.geo.resolveZoneRef(label));
+
+      if (!resolved && preferredCityId) {
+        // Use municipio-named zone inside preferred city
+        resolved = await this.geo.resolveZoneRef(
+          preferredCityId.split("--").pop() ?? label,
+          preferredCityId,
+        );
       }
+
+      if (!resolved) continue;
+
+      const dirty =
+        v.stateCode !== resolved.stateCode ||
+        v.cityId !== resolved.cityId ||
+        v.zoneId !== resolved.zoneId;
+      if (!dirty && v.zoneId) continue;
+
       v.stateCode = resolved.stateCode;
       v.cityId = resolved.cityId;
       v.zoneId = resolved.zoneId;
-      // Keep display zone as resolved zone name (barrio) when it was a barrio alias;
-      // if legacy was municipio, keep municipio label for cards.
-      if (resolved.zoneName.toLowerCase() !== v.zone.toLowerCase()) {
-        // If legacy matched city name, keep city name as zone label for compatibility
-        const city = await this.geo.resolveCity(v.zone, resolved.stateCode);
-        if (city && city.name.toLowerCase() === v.zone.toLowerCase()) {
-          // leave v.zone as municipio label
-        } else {
-          v.zone = resolved.zoneName;
-        }
+      // Keep municipio-level display label when legacy was a municipio name
+      if (PREFERRED_CITY_BY_LABEL[label.toLowerCase()]) {
+        v.zone = resolved.cityName;
       }
       await this.venues.save(v);
       updated += 1;

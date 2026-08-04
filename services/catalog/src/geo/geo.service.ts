@@ -5,6 +5,29 @@ import { join } from "node:path";
 import { Repository } from "typeorm";
 import { GeoCityEntity, GeoStateEntity, GeoZoneEntity } from "./geo.entities";
 
+function slugifyGeo(input: string): string {
+  return String(input ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 120);
+}
+
+/** Legacy Caracas AM labels → preferred geo city ids. */
+export const PREFERRED_CITY_BY_LABEL: Record<string, string> = {
+  chacao: "miranda--chacao",
+  baruta: "miranda--baruta",
+  "el hatillo": "miranda--el-hatillo",
+  sucre: "miranda--sucre",
+  libertador: "distrito-capital--libertador",
+  guatire: "miranda--zamora",
+  guarenas: "miranda--plaza",
+  "san antonio de los altos": "miranda--guaicaipuro",
+  caracas: "distrito-capital--libertador",
+};
+
 type GeoFile = {
   version: number;
   states: Array<{
@@ -226,25 +249,64 @@ export class GeoService implements OnModuleInit {
   async resolveZoneRef(raw: string, cityId?: string): Promise<GeoZoneResolved | null> {
     const s = raw.trim();
     if (!s) return null;
+    const slug = slugifyGeo(s);
     const qb = this.zones
       .createQueryBuilder("z")
       .where(
-        "(z.id = :s OR z.slug = :slug OR LOWER(z.name) = LOWER(:n))",
-        { s, slug: s.toLowerCase(), n: s },
+        "(z.id = :s OR z.slug = :slug OR z.slug = :slugRaw OR LOWER(z.name) = LOWER(:n))",
+        { s, slug, slugRaw: s.toLowerCase(), n: s },
       );
     if (cityId) qb.andWhere("z.cityId = :cityId", { cityId });
     let zone = await qb.getOne();
+    if (!zone && !cityId) {
+      // Preferred city for known Caracas labels (avoid Libertador collisions).
+      const preferredCity = PREFERRED_CITY_BY_LABEL[s.toLowerCase()];
+      if (preferredCity) {
+        zone = await this.zones
+          .createQueryBuilder("z")
+          .where(
+            "z.cityId = :cityId AND (z.slug = :slug OR LOWER(z.name) = LOWER(:n))",
+            { cityId: preferredCity, slug, n: s },
+          )
+          .getOne();
+        if (!zone) {
+          // fall back to municipio-named zone inside preferred city
+          zone = await this.zones.findOne({
+            where: { id: `${preferredCity}--${slugifyGeo(preferredCity.split("--").pop() ?? "")}` },
+          });
+          if (!zone) {
+            zone = await this.zones.findOne({
+              where: { cityId: preferredCity, slug: slugifyGeo(preferredCity.split("--").pop() ?? "") },
+            });
+          }
+        }
+      }
+    }
     if (!zone) {
-      // alias match (simple scan limited)
+      const needle = s.toLowerCase();
       const candidates = await this.zones
         .createQueryBuilder("z")
         .where(cityId ? "z.cityId = :cityId" : "1=1", { cityId })
+        .andWhere("z.aliases IS NOT NULL")
+        .take(500)
         .getMany();
-      const needle = s.toLowerCase();
       zone =
         candidates.find((z) =>
-          (z.aliases ?? []).some((a) => a.toLowerCase() === needle || needle.includes(a.toLowerCase())),
+          (z.aliases ?? []).some(
+            (a) => a.toLowerCase() === needle || needle.includes(a.toLowerCase()),
+          ),
         ) ?? null;
+      // Also search featured aliases without loading all rows
+      if (!zone) {
+        const featured = await this.zones.find({ where: { featured: true } });
+        zone =
+          featured.find(
+            (z) =>
+              z.name.toLowerCase() === needle ||
+              z.slug === slug ||
+              (z.aliases ?? []).some((a) => a.toLowerCase() === needle),
+          ) ?? null;
+      }
     }
     if (!zone) return null;
     const city = await this.cities.findOne({ where: { id: zone.cityId } });
