@@ -62,6 +62,15 @@ export class PartnerProfileEntity {
   @Column({ type: "varchar", length: 120, nullable: true })
   zone!: string | null;
 
+  @Column({ type: "varchar", length: 16, nullable: true })
+  stateCode!: string | null;
+
+  @Column({ type: "varchar", length: 160, nullable: true })
+  cityId!: string | null;
+
+  @Column({ type: "varchar", length: 220, nullable: true })
+  zoneId!: string | null;
+
   @Column({ type: "float", nullable: true })
   lat!: number | null;
 

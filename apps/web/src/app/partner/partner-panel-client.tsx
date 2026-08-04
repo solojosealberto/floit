@@ -44,6 +44,9 @@ type Profile = {
   venueType?: string | null;
   address?: string | null;
   zone?: string | null;
+  stateCode?: string | null;
+  cityId?: string | null;
+  zoneId?: string | null;
   lat?: number | null;
   lng?: number | null;
   instagramHandle?: string | null;
@@ -96,6 +99,9 @@ type ProfileFormState = {
   venueTypes: string[];
   address: string;
   zone: string;
+  stateCode: string;
+  cityId: string;
+  zoneId: string;
   lat: number | null;
   lng: number | null;
   instagramHandle: string;
@@ -133,6 +139,9 @@ const EMPTY_PROFILE_FORM: ProfileFormState = {
   venueTypes: [],
   address: "",
   zone: "",
+  stateCode: "",
+  cityId: "",
+  zoneId: "",
   lat: null,
   lng: null,
   instagramHandle: "",
@@ -269,6 +278,9 @@ export function PartnerPanelClient(props: {
       venueTypes,
       address: p.address ?? "",
       zone: p.zone ?? "",
+      stateCode: p.stateCode ?? "",
+      cityId: p.cityId ?? "",
+      zoneId: p.zoneId ?? "",
       lat: p.lat != null && Number.isFinite(p.lat) ? p.lat : null,
       lng: p.lng != null && Number.isFinite(p.lng) ? p.lng : null,
       instagramHandle: formatInstagramHandle(p.instagramHandle) ?? "",
@@ -538,6 +550,9 @@ export function PartnerPanelClient(props: {
       venueTypes: profileForm.venueTypes,
       address: profileForm.address.trim() || undefined,
       zone: profileForm.zone.trim() || undefined,
+      stateCode: profileForm.stateCode.trim() || undefined,
+      cityId: profileForm.cityId.trim() || undefined,
+      zoneId: profileForm.zoneId.trim() || undefined,
       ...(profileForm.lat != null && Number.isFinite(profileForm.lat)
         ? { lat: profileForm.lat }
         : {}),
@@ -992,6 +1007,9 @@ export function PartnerPanelClient(props: {
     Boolean(
       profileForm.address.trim() &&
         profileForm.zone.trim() &&
+        profileForm.stateCode.trim() &&
+        profileForm.cityId.trim() &&
+        profileForm.zoneId.trim() &&
         profileForm.lat != null &&
         profileForm.lng != null,
     ),
@@ -1576,6 +1594,9 @@ export function PartnerPanelClient(props: {
                 value={{
                   address: profileForm.address,
                   zone: profileForm.zone,
+                  stateCode: profileForm.stateCode,
+                  cityId: profileForm.cityId,
+                  zoneId: profileForm.zoneId,
                   lat: profileForm.lat,
                   lng: profileForm.lng,
                 }}
@@ -1590,6 +1611,9 @@ export function PartnerPanelClient(props: {
                     ...prev,
                     address: next.address,
                     zone: next.zone,
+                    stateCode: next.stateCode,
+                    cityId: next.cityId,
+                    zoneId: next.zoneId,
                     lat: next.lat,
                     lng: next.lng,
                   }))
@@ -1869,7 +1893,7 @@ export function PartnerPanelClient(props: {
                 {!profileChecklist[1] ? <li>• Horarios</li> : null}
                 {!profileChecklist[2] ? <li>• Al menos 1 foto</li> : null}
                 {!profileChecklist[6] ? <li>• Modalidades</li> : null}
-                {!profileChecklist[7] ? <li>• Dirección, zona y coordenadas</li> : null}
+                {!profileChecklist[7] ? <li>• Estado, municipio, zona y coordenadas</li> : null}
               </ul>
             </UICard>
             <UIButton

@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import type { CreateVenueReportDto } from "../reports/create-report.dto";
 import { PromotionEntity } from "../promotions/promotion.entity";
 import { VenueReportEntity } from "../reports/venue-report.entity";
+import { GeoService } from "../geo/geo.service";
 import type { CreateInternalVenueDto } from "./dto/create-internal-venue.dto";
 import type { UpdatePartnerSyncDto } from "./dto/update-partner-sync.dto";
 import type { ListVenuesQueryDto } from "./dto/list-venues.query";
@@ -40,6 +41,8 @@ export type VenueSummary = {
 
 @Injectable()
 export class VenuesService {
+  private readonly log = new Logger(VenuesService.name);
+
   constructor(
     @InjectRepository(VenueEntity)
     private readonly venues: Repository<VenueEntity>,
@@ -47,6 +50,7 @@ export class VenuesService {
     private readonly promotions: Repository<PromotionEntity>,
     @InjectRepository(VenueReportEntity)
     private readonly reports: Repository<VenueReportEntity>,
+    private readonly geo: GeoService,
   ) {}
 
   async findBySlug(slug: string): Promise<VenueEntity | null> {
@@ -54,10 +58,64 @@ export class VenuesService {
   }
 
   async listZones(): Promise<string[]> {
+    // Prefer curated/featured geo labels; fall back to DISTINCT venue.zone
+    try {
+      const featured = await this.geo.listZoneLabels();
+      if (featured.length > 0) return featured;
+    } catch {
+      /* geo tables may be empty on first boot */
+    }
     const rows = (await this.venues.query(
       `SELECT DISTINCT zone FROM venues ORDER BY zone ASC`,
     )) as { zone: string }[];
     return rows.map((r) => r.zone);
+  }
+
+  /** Backfill stateCode/cityId/zoneId from legacy venues.zone labels. */
+  async backfillGeoFromZoneLabels(): Promise<{ updated: number }> {
+    await this.geo.ensureSeeded();
+    const venues = await this.venues.find();
+    let updated = 0;
+    for (const v of venues) {
+      if (v.zoneId && v.cityId && v.stateCode) continue;
+      const resolved =
+        (await this.geo.resolveZoneRef(v.zone)) ??
+        (await this.geo.resolveZoneRef(v.zone.split(",")[0]?.trim() ?? ""));
+      if (!resolved) {
+        // try municipio name as city then zone with same name
+        const city = await this.geo.resolveCity(v.zone);
+        if (city) {
+          const zoneAsCity = await this.geo.resolveZoneRef(city.name, city.id);
+          if (zoneAsCity) {
+            v.stateCode = zoneAsCity.stateCode;
+            v.cityId = zoneAsCity.cityId;
+            v.zoneId = zoneAsCity.zoneId;
+            v.zone = zoneAsCity.zoneName;
+            await this.venues.save(v);
+            updated += 1;
+          }
+        }
+        continue;
+      }
+      v.stateCode = resolved.stateCode;
+      v.cityId = resolved.cityId;
+      v.zoneId = resolved.zoneId;
+      // Keep display zone as resolved zone name (barrio) when it was a barrio alias;
+      // if legacy was municipio, keep municipio label for cards.
+      if (resolved.zoneName.toLowerCase() !== v.zone.toLowerCase()) {
+        // If legacy matched city name, keep city name as zone label for compatibility
+        const city = await this.geo.resolveCity(v.zone, resolved.stateCode);
+        if (city && city.name.toLowerCase() === v.zone.toLowerCase()) {
+          // leave v.zone as municipio label
+        } else {
+          v.zone = resolved.zoneName;
+        }
+      }
+      await this.venues.save(v);
+      updated += 1;
+    }
+    this.log.log(`Geo backfill: updated ${updated} venues`);
+    return { updated };
   }
 
   async findPublicDetail(slug: string): Promise<{
@@ -88,10 +146,40 @@ export class VenuesService {
       });
     }
 
-    if (query.zone?.trim()) {
-      qb.andWhere("v.zone ILIKE :zoneExact", {
-        zoneExact: query.zone.trim(),
-      });
+    if (query.zone?.trim() || query.zone_id?.trim() || query.city?.trim() || query.state?.trim()) {
+      const zoneRaw = query.zone_id?.trim() || query.zone?.trim();
+      if (zoneRaw) {
+        const resolved = await this.geo.resolveZoneRef(zoneRaw);
+        if (resolved) {
+          qb.andWhere(
+            "(v.zoneId = :zoneId OR v.zone ILIKE :zoneName OR v.zone ILIKE :cityName)",
+            {
+              zoneId: resolved.zoneId,
+              zoneName: resolved.zoneName,
+              cityName: resolved.cityName,
+            },
+          );
+        } else {
+          qb.andWhere("v.zone ILIKE :zoneExact", {
+            zoneExact: zoneRaw,
+          });
+        }
+      }
+      if (query.city?.trim()) {
+        const city = await this.geo.resolveCity(query.city.trim());
+        if (city) {
+          qb.andWhere("(v.cityId = :cityId OR v.zone ILIKE :cityLabel)", {
+            cityId: city.id,
+            cityLabel: city.name,
+          });
+        }
+      }
+      if (query.state?.trim()) {
+        const st = await this.geo.resolveState(query.state.trim());
+        if (st) {
+          qb.andWhere("v.stateCode = :stateCode", { stateCode: st.code });
+        }
+      }
     }
 
     if (query.venue_type?.trim()) {
@@ -536,6 +624,25 @@ export class VenuesService {
     if (dto.zone !== undefined) {
       const zone = dto.zone.trim();
       if (zone) venue.zone = zone.slice(0, 120);
+    }
+    if (dto.stateCode !== undefined) {
+      venue.stateCode = dto.stateCode.trim() || null;
+    }
+    if (dto.cityId !== undefined) {
+      venue.cityId = dto.cityId.trim() || null;
+    }
+    if (dto.zoneId !== undefined) {
+      venue.zoneId = dto.zoneId.trim() || null;
+    }
+    // If zoneId provided without denormalized labels, resolve
+    if (dto.zoneId?.trim() && (!dto.zone || !dto.cityId || !dto.stateCode)) {
+      const resolved = await this.geo.getZoneById(dto.zoneId.trim());
+      if (resolved) {
+        venue.zoneId = resolved.zoneId;
+        venue.cityId = resolved.cityId;
+        venue.stateCode = resolved.stateCode;
+        if (!dto.zone?.trim()) venue.zone = resolved.zoneName;
+      }
     }
     if (dto.lat != null && Number.isFinite(dto.lat)) {
       venue.lat = dto.lat;

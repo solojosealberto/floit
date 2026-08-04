@@ -26,6 +26,18 @@ export class VenueEntity {
   @Column({ type: "varchar", length: 120 })
   zone!: string;
 
+  /** ISO-ish state code from geo_states (e.g. VE-M). */
+  @Column({ type: "varchar", length: 16, nullable: true })
+  stateCode!: string | null;
+
+  /** FK to geo_cities.id (municipio). */
+  @Column({ type: "varchar", length: 160, nullable: true })
+  cityId!: string | null;
+
+  /** FK to geo_zones.id (barrio/parroquia/sector). */
+  @Column({ type: "varchar", length: 220, nullable: true })
+  zoneId!: string | null;
+
   @Column({ type: "double precision" })
   lat!: number;
 

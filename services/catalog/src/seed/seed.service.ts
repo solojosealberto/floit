@@ -4,6 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { PromotionEntity } from "../promotions/promotion.entity";
 import { TaxonomyService } from "../taxonomy/taxonomy.service";
+import { VenuesService } from "../venues/venues.service";
 import { VenueEntity } from "../venues/venue.entity";
 
 /** Datos demo — Caracas / Miranda (coordenadas aproximadas). */
@@ -210,6 +211,7 @@ export class SeedService implements OnModuleInit {
     private readonly promotions: Repository<PromotionEntity>,
     private readonly config: ConfigService,
     private readonly taxonomy: TaxonomyService,
+    private readonly venuesService: VenuesService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -227,6 +229,7 @@ export class SeedService implements OnModuleInit {
         this.log.log(`Seeded ${saved.length} demo venues`);
         await this.seedPromotions(saved);
         await this.syncTaxonomyFromVenues();
+        await this.backfillGeo();
         return;
       }
 
@@ -238,6 +241,20 @@ export class SeedService implements OnModuleInit {
 
     // Always backfill taxonomy from venue slugs (staging/prod often skip SEED_ON_BOOT).
     await this.syncTaxonomyFromVenues();
+    await this.backfillGeo();
+  }
+
+  private async backfillGeo(): Promise<void> {
+    try {
+      const { updated } = await this.venuesService.backfillGeoFromZoneLabels();
+      if (updated > 0) {
+        this.log.log(`Geo backfill applied to ${updated} venues`);
+      }
+    } catch (err) {
+      this.log.warn(
+        `Geo backfill skipped: ${err instanceof Error ? err.message : String(err)}`,
+      );
+    }
   }
 
   private async syncTaxonomyFromVenues(): Promise<void> {

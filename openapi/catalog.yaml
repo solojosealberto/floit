@@ -119,7 +119,7 @@ paths:
   /v1/meta/zones:
     get:
       operationId: listZones
-      summary: Zonas distintas para facetas UI
+      summary: Labels de zona para facetas UI (featured geo o DISTINCT legacy)
       responses:
         "200":
           description: Lista de zonas
@@ -132,6 +132,91 @@ paths:
                   zones:
                     type: array
                     items: { type: string }
+  /v1/meta/geo/states:
+    get:
+      operationId: listGeoStates
+      summary: Estados de Venezuela (referencia geo)
+      responses:
+        "200":
+          description: Estados
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      required: [code, slug, name]
+                      properties:
+                        code: { type: string }
+                        slug: { type: string }
+                        name: { type: string }
+                        capital: { type: string, nullable: true }
+  /v1/meta/geo/cities:
+    get:
+      operationId: listGeoCities
+      summary: Municipios (ciudad) por estado
+      parameters:
+        - name: state
+          in: query
+          schema: { type: string }
+          description: code o slug del estado
+      responses:
+        "200":
+          description: Municipios
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, stateCode, slug, name]
+                      properties:
+                        id: { type: string }
+                        stateCode: { type: string }
+                        slug: { type: string }
+                        name: { type: string }
+  /v1/meta/geo/zones:
+    get:
+      operationId: listGeoZones
+      summary: Zonas (parroquia/barrio/sector) por municipio
+      parameters:
+        - name: cityId
+          in: query
+          schema: { type: string }
+        - name: state
+          in: query
+          schema: { type: string }
+        - name: featured
+          in: query
+          schema: { type: string, enum: ["true", "1"] }
+      responses:
+        "200":
+          description: Zonas
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, cityId, slug, name]
+                      properties:
+                        id: { type: string }
+                        cityId: { type: string }
+                        slug: { type: string }
+                        name: { type: string }
+                        featured: { type: boolean }
   /v1/meta/duplicate-suspects:
     get:
       operationId: duplicateSuspects

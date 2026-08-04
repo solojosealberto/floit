@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { UITextInput } from "@floit/ui";
 import { mapPinMarkerHtml } from "@/lib/map-marker-html";
 import "leaflet/dist/leaflet.css";
@@ -10,9 +10,24 @@ export const CARACAS_MAP_CENTER = { lat: 10.480594, lng: -66.903606 } as const;
 
 export type VenueLocationFields = {
   address: string;
+  /** Display label (barrio/sector or municipio) — kept for cards/legacy `zone` filter. */
   zone: string;
+  stateCode: string;
+  cityId: string;
+  zoneId: string;
   lat: number | null;
   lng: number | null;
+};
+
+type GeoState = { code: string; slug: string; name: string };
+type GeoCity = { id: string; stateCode: string; slug: string; name: string };
+type GeoZone = {
+  id: string;
+  cityId: string;
+  slug: string;
+  name: string;
+  kind?: string;
+  featured?: boolean;
 };
 
 type Props = {
@@ -29,6 +44,9 @@ function parseCoord(raw: string, min: number, max: number): number | null {
   return Math.round(n * 1e6) / 1e6;
 }
 
+const selectClass =
+  "h-[46px] w-full rounded-xl border border-quegym-border bg-quegym-elevated px-3 text-sm text-quegym-primary";
+
 export function VenueLocationEditor({
   value,
   venueName,
@@ -44,6 +62,11 @@ export function VenueLocationEditor({
   const valueRef = useRef(value);
   valueRef.current = value;
 
+  const [states, setStates] = useState<GeoState[]>([]);
+  const [cities, setCities] = useState<GeoCity[]>([]);
+  const [zones, setZones] = useState<GeoZone[]>([]);
+  const [geoError, setGeoError] = useState<string | null>(null);
+
   const displayLat =
     value.lat != null && Number.isFinite(value.lat)
       ? value.lat
@@ -52,6 +75,74 @@ export function VenueLocationEditor({
     value.lng != null && Number.isFinite(value.lng)
       ? value.lng
       : CARACAS_MAP_CENTER.lng;
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const res = await fetch("/api/meta/geo/states", { cache: "no-store" });
+        const data = (await res.json().catch(() => ({}))) as {
+          items?: GeoState[];
+        };
+        if (!cancelled) setStates(data.items ?? []);
+      } catch {
+        if (!cancelled) setGeoError("No se pudo cargar la lista de estados.");
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!value.stateCode) {
+      setCities([]);
+      return;
+    }
+    void (async () => {
+      try {
+        const res = await fetch(
+          `/api/meta/geo/cities?state=${encodeURIComponent(value.stateCode)}`,
+          { cache: "no-store" },
+        );
+        const data = (await res.json().catch(() => ({}))) as {
+          items?: GeoCity[];
+        };
+        if (!cancelled) setCities(data.items ?? []);
+      } catch {
+        if (!cancelled) setCities([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [value.stateCode]);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!value.cityId) {
+      setZones([]);
+      return;
+    }
+    void (async () => {
+      try {
+        const res = await fetch(
+          `/api/meta/geo/zones?cityId=${encodeURIComponent(value.cityId)}`,
+          { cache: "no-store" },
+        );
+        const data = (await res.json().catch(() => ({}))) as {
+          items?: GeoZone[];
+        };
+        if (!cancelled) setZones(data.items ?? []);
+      } catch {
+        if (!cancelled) setZones([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [value.cityId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -113,7 +204,6 @@ export function VenueLocationEditor({
         commitCoords(e.latlng.lat, e.latlng.lng);
       });
 
-      // Leaflet needs a layout pass inside dynamic containers.
       setTimeout(() => map.invalidateSize(), 50);
     })();
 
@@ -125,7 +215,6 @@ export function VenueLocationEditor({
         markerRef.current = null;
       }
     };
-    // Re-init only when venue identity changes; pin moves via separate effect.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [venueName]);
 
@@ -146,75 +235,140 @@ export function VenueLocationEditor({
 
   return (
     <div className="space-y-3">
-      <div className="grid gap-3 md:grid-cols-2">
-        <label className="block space-y-1 md:col-span-2">
+      {geoError ? (
+        <p className="text-xs text-red-600" role="alert">
+          {geoError}
+        </p>
+      ) : null}
+      <div className="grid gap-3 md:grid-cols-3">
+        <label className="block space-y-1">
+          <span className="text-xs font-medium text-quegym-secondary">Estado</span>
+          <select
+            className={selectClass}
+            value={value.stateCode}
+            onChange={(e) => {
+              const stateCode = e.target.value;
+              onChange({
+                ...value,
+                stateCode,
+                cityId: "",
+                zoneId: "",
+                zone: "",
+              });
+            }}
+          >
+            <option value="">Selecciona estado</option>
+            {states.map((s) => (
+              <option key={s.code} value={s.code}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="block space-y-1">
           <span className="text-xs font-medium text-quegym-secondary">
-            Dirección
+            Ciudad (municipio)
           </span>
+          <select
+            className={selectClass}
+            value={value.cityId}
+            disabled={!value.stateCode}
+            onChange={(e) => {
+              const cityId = e.target.value;
+              const city = cities.find((c) => c.id === cityId);
+              onChange({
+                ...value,
+                cityId,
+                zoneId: "",
+                zone: city?.name ?? "",
+              });
+            }}
+          >
+            <option value="">Selecciona municipio</option>
+            {cities.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="block space-y-1">
+          <span className="text-xs font-medium text-quegym-secondary">
+            Zona (barrio / sector)
+          </span>
+          <select
+            className={selectClass}
+            value={value.zoneId}
+            disabled={!value.cityId}
+            onChange={(e) => {
+              const zoneId = e.target.value;
+              const zone = zones.find((z) => z.id === zoneId);
+              onChange({
+                ...value,
+                zoneId,
+                zone: zone?.name ?? value.zone,
+              });
+            }}
+          >
+            <option value="">Selecciona zona</option>
+            {zones.map((z) => (
+              <option key={z.id} value={z.id}>
+                {z.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      <label className="block space-y-1">
+        <span className="text-xs font-medium text-quegym-secondary">Dirección</span>
+        <UITextInput
+          name="address"
+          value={value.address}
+          onChange={(e) => onChange({ ...value, address: e.target.value })}
+          placeholder="Calle, edificio, referencia…"
+          className={`h-[46px] w-full rounded-xl ${inputClassName ?? ""}`}
+        />
+      </label>
+
+      <div className="grid grid-cols-2 gap-3">
+        <label className="block space-y-1">
+          <span className="text-xs font-medium text-quegym-secondary">Latitud</span>
           <UITextInput
-            name="address"
-            value={value.address}
+            name="lat"
+            inputMode="decimal"
+            value={value.lat != null && Number.isFinite(value.lat) ? String(value.lat) : ""}
             onChange={(e) =>
-              onChange({ ...value, address: e.target.value })
+              onChange({
+                ...value,
+                lat: parseCoord(e.target.value, -90, 90),
+              })
             }
-            placeholder="Calle, edificio, municipio…"
+            placeholder="10.48"
             className={`h-[46px] w-full rounded-xl ${inputClassName ?? ""}`}
           />
         </label>
         <label className="block space-y-1">
-          <span className="text-xs font-medium text-quegym-secondary">Zona</span>
+          <span className="text-xs font-medium text-quegym-secondary">Longitud</span>
           <UITextInput
-            name="zone"
-            value={value.zone}
-            onChange={(e) => onChange({ ...value, zone: e.target.value })}
-            placeholder="Ej: Chacao"
+            name="lng"
+            inputMode="decimal"
+            value={value.lng != null && Number.isFinite(value.lng) ? String(value.lng) : ""}
+            onChange={(e) =>
+              onChange({
+                ...value,
+                lng: parseCoord(e.target.value, -180, 180),
+              })
+            }
+            placeholder="-66.90"
             className={`h-[46px] w-full rounded-xl ${inputClassName ?? ""}`}
           />
         </label>
-        <div className="grid grid-cols-2 gap-3">
-          <label className="block space-y-1">
-            <span className="text-xs font-medium text-quegym-secondary">
-              Latitud
-            </span>
-            <UITextInput
-              name="lat"
-              inputMode="decimal"
-              value={value.lat != null && Number.isFinite(value.lat) ? String(value.lat) : ""}
-              onChange={(e) =>
-                onChange({
-                  ...value,
-                  lat: parseCoord(e.target.value, -90, 90),
-                })
-              }
-              placeholder="10.48"
-              className={`h-[46px] w-full rounded-xl ${inputClassName ?? ""}`}
-            />
-          </label>
-          <label className="block space-y-1">
-            <span className="text-xs font-medium text-quegym-secondary">
-              Longitud
-            </span>
-            <UITextInput
-              name="lng"
-              inputMode="decimal"
-              value={value.lng != null && Number.isFinite(value.lng) ? String(value.lng) : ""}
-              onChange={(e) =>
-                onChange({
-                  ...value,
-                  lng: parseCoord(e.target.value, -180, 180),
-                })
-              }
-              placeholder="-66.90"
-              className={`h-[46px] w-full rounded-xl ${inputClassName ?? ""}`}
-            />
-          </label>
-        </div>
       </div>
 
       <div>
         <p className="mb-2 text-xs text-quegym-secondary">
-          Arrastra el pin o haz clic en el mapa para ajustar la ubicación. Se
-          publica en la ficha y en el mapa de búsqueda.
+          Arrastra el pin o haz clic en el mapa para ajustar coordenadas.
         </p>
         <div
           ref={mapEl}

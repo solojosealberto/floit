@@ -9,6 +9,8 @@ import { PromotionEntity } from "./promotions/promotion.entity";
 import { VenueReportEntity } from "./reports/venue-report.entity";
 import { TaxonomyAttributeEntity } from "./taxonomy/taxonomy-attribute.entity";
 import { TaxonomyModule } from "./taxonomy/taxonomy.module";
+import { GeoCityEntity, GeoStateEntity, GeoZoneEntity } from "./geo/geo.entities";
+import { GeoModule } from "./geo/geo.module";
 import { VenueEntity } from "./venues/venue.entity";
 import { VenuesModule } from "./venues/venues.module";
 
@@ -45,6 +47,9 @@ const DEFAULT_LOCAL_DATABASE_URL =
             PromotionEntity,
             VenueReportEntity,
             TaxonomyAttributeEntity,
+            GeoStateEntity,
+            GeoCityEntity,
+            GeoZoneEntity,
           ],
           synchronize: config.get<string>("DATABASE_SYNC") === "true",
           logging: config.get<string>("TYPEORM_LOGGING") === "true",
@@ -53,6 +58,7 @@ const DEFAULT_LOCAL_DATABASE_URL =
     }),
     VenuesModule,
     TaxonomyModule,
+    GeoModule,
     SeedModule,
   ],
   controllers: [HealthController],

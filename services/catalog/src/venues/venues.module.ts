@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { InternalApiGuard } from "../internal-api.guard";
+import { GeoModule } from "../geo/geo.module";
 import { PromotionEntity } from "../promotions/promotion.entity";
 import { VenueReportEntity } from "../reports/venue-report.entity";
 import { VenueEntity } from "./venue.entity";
@@ -17,6 +18,7 @@ import { VenuesService } from "./venues.service";
       PromotionEntity,
       VenueReportEntity,
     ]),
+    GeoModule,
   ],
   controllers: [
     VenuesController,

@@ -62,16 +62,24 @@ async function fetchSearchMeta(
 
 export default async function Home() {
   const searchBase = process.env.SEARCH_SERVICE_URL ?? "http://localhost:4011";
+  const catalogBase = process.env.CATALOG_SERVICE_URL ?? "http://localhost:4010";
   let zones: string[] = QUICK_ZONES;
   let featured: FeaturedVenueCard[] = [];
   let totalVenues = 0;
 
   try {
-    const [zonesRes, featuredRes] = await Promise.all([
+    const [zonesRes, featuredGeoRes, featuredRes] = await Promise.all([
       fetch(`${searchBase}/v1/meta/zones`, { cache: "no-store" }),
+      fetch(`${catalogBase}/v1/meta/geo/zones?featured=true`, { cache: "no-store" }),
       fetch(`${searchBase}/v1/search?sort=popularity`, { cache: "no-store" }),
     ]);
-    if (zonesRes.ok) {
+    if (featuredGeoRes.ok) {
+      const payload = (await featuredGeoRes.json()) as {
+        items?: Array<{ name: string }>;
+      };
+      const names = (payload.items ?? []).map((z) => z.name).filter(Boolean);
+      if (names.length > 0) zones = names;
+    } else if (zonesRes.ok) {
       const payload = (await zonesRes.json()) as { zones?: string[] };
       if (payload.zones && payload.zones.length > 0) zones = payload.zones;
     }

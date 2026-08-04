@@ -5,7 +5,7 @@
 > Ledger histórico: `sprints.md` · Backlog/US: `EPICS_USER_STORIES_STATUS.md` · Contexto: `PROJECT_CONTEXT_HANDOVER.md`.  
 > Vocabulario de estados: [`DOC_STATUS_VOCABULARY.md`](./DOC_STATUS_VOCABULARY.md) · Log de flips: [`STATUS_CHANGELOG.md`](./STATUS_CHANGELOG.md).
 
-**Última reconciliación documental:** 2026-08-03 · **Repo HEAD:** `b522d98` · **URL staging:** https://staging.quegym.com  
+**Última reconciliación documental:** 2026-08-03 · **Repo HEAD:** (geo VE) · **URL staging:** https://staging.quegym.com  
 **No usar:** `https://www.staging.quegym.com` (NXDOMAIN — no existe en DNS).
 
 ---

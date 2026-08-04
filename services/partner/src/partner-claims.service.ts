@@ -481,6 +481,9 @@ export class PartnerClaimsService {
       venueTypes: effectiveRow?.venueTypes ?? [],
       address: effectiveRow?.address ?? null,
       zone: effectiveRow?.zone ?? null,
+      stateCode: effectiveRow?.stateCode ?? null,
+      cityId: effectiveRow?.cityId ?? null,
+      zoneId: effectiveRow?.zoneId ?? null,
       lat: effectiveRow?.lat ?? null,
       lng: effectiveRow?.lng ?? null,
       instagramHandle: effectiveRow?.instagramHandle ?? null,
@@ -525,6 +528,9 @@ export class PartnerClaimsService {
         venueTypes: [],
         address: null,
         zone: null,
+        stateCode: null,
+        cityId: null,
+        zoneId: null,
         lat: null,
         lng: null,
         instagramHandle: null,
@@ -557,6 +563,9 @@ export class PartnerClaimsService {
     }
     if (dto.address !== undefined) row.address = dto.address.trim() || null;
     if (dto.zone !== undefined) row.zone = dto.zone.trim() || null;
+    if (dto.stateCode !== undefined) row.stateCode = dto.stateCode.trim() || null;
+    if (dto.cityId !== undefined) row.cityId = dto.cityId.trim() || null;
+    if (dto.zoneId !== undefined) row.zoneId = dto.zoneId.trim() || null;
     if (dto.lat !== undefined) {
       row.lat = Number.isFinite(dto.lat) ? dto.lat : null;
     }
@@ -598,6 +607,9 @@ export class PartnerClaimsService {
       venueTypes: saved.venueTypes ?? [],
       address: saved.address ?? null,
       zone: saved.zone ?? null,
+      stateCode: saved.stateCode ?? null,
+      cityId: saved.cityId ?? null,
+      zoneId: saved.zoneId ?? null,
       lat: saved.lat ?? null,
       lng: saved.lng ?? null,
       instagramHandle: saved.instagramHandle ?? null,
@@ -1015,6 +1027,11 @@ export class PartnerClaimsService {
         : {}),
       ...(profile?.address?.trim() ? { address: profile.address.trim() } : {}),
       ...(profile?.zone?.trim() ? { zone: profile.zone.trim() } : {}),
+      ...(profile?.stateCode?.trim()
+        ? { stateCode: profile.stateCode.trim() }
+        : {}),
+      ...(profile?.cityId?.trim() ? { cityId: profile.cityId.trim() } : {}),
+      ...(profile?.zoneId?.trim() ? { zoneId: profile.zoneId.trim() } : {}),
       ...(profile?.lat != null && Number.isFinite(profile.lat)
         ? { lat: profile.lat }
         : {}),
@@ -1163,6 +1180,9 @@ export class PartnerClaimsService {
       venueTypes: legacy.venueTypes ?? [],
       address: legacy.address ?? null,
       zone: legacy.zone ?? null,
+      stateCode: legacy.stateCode ?? null,
+      cityId: legacy.cityId ?? null,
+      zoneId: legacy.zoneId ?? null,
       lat: legacy.lat ?? null,
       lng: legacy.lng ?? null,
       instagramHandle: legacy.instagramHandle ?? null,
@@ -1186,6 +1206,9 @@ export class PartnerClaimsService {
     venueTypes: string[];
     address: string | null;
     zone: string | null;
+    stateCode: string | null;
+    cityId: string | null;
+    zoneId: string | null;
     lat: number | null;
     lng: number | null;
     /** null = never set (hydrate); "" = cleared; value = handle without @ */
@@ -1251,6 +1274,9 @@ export class PartnerClaimsService {
         derivePrimaryVenueType(venueTypes) || catalog?.venueType || null,
       address: base.address?.trim() || catalog?.address || null,
       zone: base.zone?.trim() || catalog?.zone || null,
+      stateCode: base.stateCode?.trim() || catalog?.stateCode || null,
+      cityId: base.cityId?.trim() || catalog?.cityId || null,
+      zoneId: base.zoneId?.trim() || catalog?.zoneId || null,
       lat,
       lng,
       instagramHandle,
@@ -1283,6 +1309,9 @@ export class PartnerClaimsService {
     address: string;
     lat: number | null;
     lng: number | null;
+    stateCode: string | null;
+    cityId: string | null;
+    zoneId: string | null;
     instagramHandle: string | null;
     websiteUrl: string | null;
     modalities: string[];
@@ -1332,6 +1361,9 @@ export class PartnerClaimsService {
           address?: string;
           lat?: number;
           lng?: number;
+          stateCode?: string | null;
+          cityId?: string | null;
+          zoneId?: string | null;
           instagramHandle?: string | null;
           websiteUrl?: string | null;
           modalities?: string[];
@@ -1377,6 +1409,9 @@ export class PartnerClaimsService {
             body.lng != null && Number.isFinite(Number(body.lng))
               ? Number(body.lng)
               : null,
+          stateCode: body.stateCode?.trim() || null,
+          cityId: body.cityId?.trim() || null,
+          zoneId: body.zoneId?.trim() || null,
           instagramHandle:
             normalizeInstagramHandle(body.instagramHandle) ??
             extractInstagramFromDescription(body.description) ??

@@ -17,6 +17,21 @@ export class ListVenuesQueryDto {
   @IsString()
   zone?: string;
 
+  /** Estado (code o slug), ej. VE-M / miranda */
+  @IsOptional()
+  @IsString()
+  state?: string;
+
+  /** Municipio (cityId o slug) */
+  @IsOptional()
+  @IsString()
+  city?: string;
+
+  /** Zona geo id o slug (preferido); `zone` legacy sigue soportado */
+  @IsOptional()
+  @IsString()
+  zone_id?: string;
+
   @IsOptional()
   @IsString()
   venue_type?: string;

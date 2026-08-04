@@ -81,6 +81,21 @@ export class UpdatePartnerProfileDto {
   zone?: string;
 
   @IsOptional()
+  @IsString()
+  @MaxLength(16)
+  stateCode?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(160)
+  cityId?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(220)
+  zoneId?: string;
+
+  @IsOptional()
   @Type(() => Number)
   @IsNumber()
   @Min(-90)
