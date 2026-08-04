@@ -29,7 +29,7 @@ En términos de cobertura de backlog/PRD:
 | Seed demo (`SEED_ON_BOOT`) | 8 fichas hardcodeadas en `seed.service.ts`; **solo se insertan si la tabla está vacía**; en BD ya limpiada **no** vuelven al reiniciar catalog |
 | Import masivo | `pnpm venues:normalize` → `pnpm venues:import` (ver `docs/operations/VENUES_CATALOG_IMPORT.md`) |
 | Preservación de fuente | Columnas CSV en `record.source` (JSON) + bloque en `description` marcado `venues-import` |
-| Calidad conocida | ~52 venues con coords fallback Caracas; revisar geocode en admin; `venueType`/zonas pueden requerir segunda pasada de mapeo |
+| Calidad conocida | ~52 venues con coords fallback Caracas; geo IDs backfilleados 2026-08-03; revisar geocode fino en admin; `venueType` puede requerir segunda pasada |
 
 Los 8 slugs demo históricos (`oxide-chacao`, `arena-baruta`, `zen-hatillo`, `metropolitan-libertador`, `las-mercedes-cross`, `ride-miranda`, `forma-personal`, `balance-pilates`) **no deben usarse** en smoke/QA salvo que se re-sembré BD vacía o se restaure el seed.
 
@@ -225,11 +225,12 @@ Antes de implementar nuevos cambios:
 > **Next session / prioridad:** solo [`NEXT_AGENT_BRIEF.md`](./NEXT_AGENT_BRIEF.md). No duplicar «objetivo próxima sesión» aquí.
 
 - **Rebrand QueGym:** Fase 1 + Fase 2 ✅ (repo + staging); QA visual **PASS** (2026-05-27). Fase 3 (`@floit/*`) pendiente.
-- **Completado:** Sprint UX-A/B/C; logo/`QueGymLogo`; menú móvil opaco; `VenueImage`; import 95 venues; smoke 5/5; admin M2M `00fd9f9`; E2E lead API; commits `ca4070b`–`f937abf` en `main`.
+- **Completado:** Sprint UX-A/B/C; logo/`QueGymLogo`; menú móvil opaco; `VenueImage`; import 95 venues; smoke 5/5; admin M2M; E2E lead API.
+- **Completado (2026-08-03):** panel admin/partner operable en staging — hydrate, planes↔ficha, fotos durables, taxonomías 36, ubicación+mapa, Instagram/web, **geo VE** (municipio/barrio, nacional, `?zone=` legacy). HEAD `300fc35`.
 - **KPI:** pico **PASS PRD 16/17** (2026-06-17); live **FAIL PRD** (2026-08-02) por ventana 7d — re-seed + backdate.
 - **Staging:** `https://staging.quegym.com` — informe histórico superseded: `STAGING_AGENT_EXECUTION_REPORT.md`.
 - **Prod `www`:** sin cutover hasta GO producto/ops.
-- **Admin reciente:** analytics, partner-claims, `#operaciones-y-sync`, `/admin/configuracion` — ver rutas en `WEB_ROUTES_PLATFORM.md`.
+- **Admin reciente:** analytics, partner-claims, `#operaciones-y-sync`, `/admin/configuracion`, `/admin/taxonomias`, panel catálogo — ver `WEB_ROUTES_PLATFORM.md`.
 
 ### Regla de handoff al cerrar cada jornada
 
@@ -251,7 +252,7 @@ Implementado en esta iteración:
 - Endpoint BFF legacy de estado de leads (`/api/partner/me/leads/{id}/status`) deprecado operativamente con `410`; flujo oficial en `/api/partner/me/venues/{venueSlug}/leads/{id}/status`.
 - Fixture local reproducible `seed:ownership` en `partner-service` para activar/revocar ownership partner↔venue en QA.
 - Panel partner rediseñado y funcional por secciones (`Dashboard`, `Editar perfil`, `Planes y precios`, `Leads recibidos`, `Configuración`) con navegación lateral activa y acciones de leads (`Atender`/`Cerrar`) por `venueSlug`.
-- (2026-08-03) Panel admin catálogo en staging: perfil editable real (tipos multi, horarios picker), planes sincronizados a ficha pública, fotos durables (Railway volume + Neon blob). Ver `NEXT_AGENT_BRIEF.md` @ `330c4aa`.
+- (2026-08-03) Panel admin catálogo en staging: perfil editable real (tipos multi, horarios picker, mapa/ubicación, Instagram/website), planes sincronizados a ficha pública, fotos durables (Railway volume + Neon blob), taxonomías restauradas, geo VE nacional. Ver `NEXT_AGENT_BRIEF.md` @ `300fc35`.
 - Configuración partner llevada a nivel de pantallas dedicadas con diseño de referencia:
   - `/partner/configuracion` (hub),
   - `/partner/configuracion/mis-centros` (listado real por ownership),
@@ -286,7 +287,8 @@ Implementado en esta iteración:
 - Botón `Filtros` activado en `Mapa` desktop con panel desplegable en barra superior (zona/tipo/precio/modalidad), manteniendo separación de comportamiento vs vista lista.
 - Ajuste final visual en listado lateral de mapa desktop: iconos compactos para acciones, estado de favorito activo (estrella blanca/fondo negro) y proporción de layout 30% barra / 70% mapa.
 - Inventario Sprint UI: rutas P1/P2 del sprint **implementadas** (ver `WEB_ROUTES_PLATFORM.md`). Fuera de MVP: `/checkout`, `/reservas`. Pendiente producto: fusión automática de duplicados, moderación con cola de assets dedicada (más allá de reportes + fotos en catálogo).
-- **Taxonomías (detalle técnico):** persistencia PostgreSQL (`taxonomy_attributes`); `GET/POST/PATCH` en `services/catalog` bajo `AdminApiGuard`; sincronización de slugs desde arrays de venues en seed; proxies `apps/web/src/app/api/admin/taxonomy-attributes/*`; contrato `openapi/catalog.yaml`. Siguiente mejora opcional: que search/filtros y chips consuman solo atributos **activos** desde esta tabla (hoy los venues siguen guardando slugs en arrays como antes).
+- **Taxonomías (detalle técnico):** persistencia PostgreSQL (`taxonomy_attributes`); `GET/POST/PATCH/DELETE` + `POST …/sync-from-venues` en `services/catalog` bajo `AdminApiGuard`; auto-heal si tabla vacía (staging sin `SEED_ON_BOOT`); proxies `apps/web/src/app/api/admin/taxonomy-attributes/*`; contrato `openapi/catalog.yaml`. 36 attrs en staging (2026-08-03).
+- **Geo VE (detalle técnico, 2026-08-03):** `data/geo/ve/venezuela-geo.json`; entidades `geo_states` / `geo_cities` / `geo_zones`; APIs públicas `/v1/meta/geo/states|cities|zones` (+ BFF web); venues `stateCode`/`cityId`/`zoneId` + label legacy `zone`; resolución con preferencia Caracas AM / featured; cascada UI `venue-location-editor.tsx`. Producto: Ciudad=municipio, Zona=barrio/sector, cobertura nacional.
 
 Validación local ejecutada:
 

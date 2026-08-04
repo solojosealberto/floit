@@ -8,12 +8,13 @@ Registro operativo de lo configurado en proveedores (sin secretos). Alineado a [
 
 **Catalog Railway:** https://floitcatalog-service-production.up.railway.app — `venues: 95`.  
 **Search Railway:** https://floitsearch-service-production.up.railway.app — `/v1/search` OK (`meta.total: 95`).  
-**Vercel staging:** commits `ca4070b`–`ff98be2` (+ `main` posterior); assets `/brand/` OK.  
-**APIs Railway:** health **5/5** (catalog, search, leads, partner, analytics) — verificado 2026-08-02.  
-**Auth admin:** M2M Auth0 + `ADMIN_OIDC_ACCESS_TOKEN` Preview; issuer fix `00fd9f9`.  
+**Vercel staging:** `main` @ `300fc35` (+ deploys previos); assets `/brand/` OK.  
+**APIs Railway:** health **5/5** (catalog, search, leads, partner, analytics) — verificado 2026-08-02; geo meta **PASS** 2026-08-03.  
+**Auth admin:** M2M Auth0 + BFF auto-refresh `AUTH0_M2M_*`; issuer fix `d9373dc`/`49cb52a`.  
 **Partner admin 500 (cerrado 2026-08-03):** causa ops = `ADMIN_OIDC_ISSUER`/`PARTNER_OIDC_ISSUER` valían audiences en vez de URL Auth0. Corregido + `ADMIN_CATALOG_DELEGATE_EMAIL`; catalog OIDC ON; probes **200**.  
-**Partner media (2026-08-03, cerrado):** `PARTNER_PUBLIC_BASE_URL=https://floitpartner-service-production.up.railway.app`; volume Railway **`/data/uploads`** + `PARTNER_MEDIA_DIR`; blob `blobBase64` en Neon; `GET /uploads/:filename` sirve disco o BD (`PartnerUploadsController`). Fotos previas a este fix sin blob hay que **re-subir** una vez.  
-**Panel admin / ficha (2026-08-03):** planes CRUD + `catalog.plans` en ficha pública (sin mocks); perfil con tipo multi-select, horarios por día, descripción full-width.  
+**Partner media (2026-08-03, cerrado):** `PARTNER_PUBLIC_BASE_URL=https://floitpartner-service-production.up.railway.app`; volume Railway **`/data/uploads`** + `PARTNER_MEDIA_DIR`; blob `blobBase64` en Neon; `GET /uploads/:filename` sirve disco o BD. Fotos previas sin blob: **re-subir** una vez.  
+**Panel admin / ficha (2026-08-03):** planes CRUD + `catalog.plans` en ficha; perfil multi-tipo + horarios; ubicación+mapa; Instagram/website; taxonomías 36 attrs.  
+**Geo VE (2026-08-03, cerrado):** `/v1/meta/geo/states` → 24; Ciudad=municipio, Zona=barrio/sector; cascada panel; legacy `?zone=Las Mercedes` → 29; featured chips OK.  
 **Analytics:** `ANALYTICS_ALLOW_BACKDATE=true` (staging) — solo seed KPI.  
 **Pendiente:** re-seed KPI 17/17; GO producto/ops; cutover `www`.
 
@@ -214,13 +215,14 @@ pnpm sprint5:staging-gate
 
 ---
 
-## Brechas conocidas (actualizado 2026-05-27)
+## Brechas conocidas (actualizado 2026-08-03)
 
 1. **KPI PRD 17/17** — re-seed con `ANALYTICS_ALLOW_BACKDATE` (§ Cierre KPI 17/17); live 2026-08-02 = FAIL por ventana vacía.
-2. **Token M2M** — expira ~24 h; renovar con `pnpm auth0:m2m-token` → Vercel Preview `ADMIN_OIDC_ACCESS_TOKEN`.
+2. **Token M2M** — BFF renueva con `AUTH0_M2M_*` en Vercel; fallback `pnpm auth0:m2m-token` si hace falta.
 3. **Firma GO/NO-GO** — producto/ops pendiente tras KPI 17/17.
 4. **Prod** — `www.quegym.com`: pendiente post-GO staging.
 5. **CI `e2e-services`** — sigue FAIL en `main` (no bloquea staging online).
+6. **Geo UI opcional** — `/buscar` aún prioriza `?zone=` / chips; selects `state`/`city`/`zone_id` y cascada en claim wizard pendientes.
 
 ---
 

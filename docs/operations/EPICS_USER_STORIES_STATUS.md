@@ -29,7 +29,7 @@ Equivalencia historica en este documento:
 
 | User story | Estado | Evidencia principal |
 |---|---|---|
-| US-1.1 Búsqueda por zona/ubicación | Implementada | `search-service` + `/buscar` lista/mapa |
+| US-1.1 Búsqueda por zona/ubicación | Implementada | `search-service` + `/buscar` lista/mapa; geo VE `state`/`city`/`zone_id` + legacy `?zone=`; chips featured home (2026-08-03) |
 | US-1.2 Filtros básicos | Implementada | Filtros en querystring y aplicación server-side |
 | US-1.3 Vista lista y mapa | Implementada | `/buscar` con lista + `DiscoveryMap` |
 | US-1.4 Orden por relevancia | Implementada | `sort=relevance/popularity/distance/price` |
@@ -71,7 +71,7 @@ Equivalencia historica en este documento:
 | User story | Estado | Evidencia principal |
 |---|---|---|
 | US-4.1 Claim de perfil | Implementada | claim público `/partner/claim` (`claimKind` reclamo vs alta nueva + revisión admin); alta nueva crea stub en catálogo al aprobar (`POST /v1/internal/venues`) antes de ownership+sync; webhook opcional de estado claim + E2E Playwright (`e2e/partner-claim.spec.ts`) |
-| US-4.2 Gestión básica de perfil | Implementada | venue-scoped profile; admin/partner panel: tipo multi-select (`venueTypes`→`venueType`), horarios day/time picker, sync catálogo (`dc4748c`) |
+| US-4.2 Gestión básica de perfil | Implementada | venue-scoped profile; admin/partner: tipo multi-select, horarios picker, mapa/ubicación, Instagram/website, sync catálogo (`dc4748c`…`fc4dec8`) |
 | US-4.3 Gestión de planes/precios | Implementada | venue-scoped plans CRUD + DELETE; ficha pública `catalog.plans` (no mocks); hydrate admin desde catálogo (`9f6ebbf`, `7686b4f`) |
 | US-4.4 Recepción de leads | Implementada | operación oficial venue-scoped: `/v1/partner/me/venues/{venueSlug}/leads` y `/v1/partner/me/venues/{venueSlug}/leads/{id}/status`; BFF web usa `/api/partner/me/venues/{venueSlug}/leads/{id}/status` (legacy `/api/partner/me/leads/{id}/status` deprecated `410`) |
 | US-4.5 Promociones/ofertas | Implementada (MVP base) | promociones activas en catálogo/ficha |
@@ -88,7 +88,8 @@ Equivalencia historica en este documento:
 - `Completado` (2026-05-09, misma jornada) pulido UX/copy en `/partner/claim` (título de página, cabecera «Tu centro en QueGym» — rebrand Fase 1 mayo 2026, opciones reclamo vs alta en paralelo, textos por paso) y en `/partner/panel` → Configuración → Cuenta: menú lateral consistente y «Cerrar sesión» junto a «Eliminar cuenta» (`POST /partner/logout`).
 - `Completado` (2026-05-09) continuidad claim→acceso: copy explícito de que el **correo del claim** es el de login en `/partner/login`; confirmación enlaza al login; rutas configuración cuenta envueltas en **Suspense** para build estable.
 - `Completado` (2026-05) rutas de entrada partner alineadas al login: **`FloitMainHeader`** («¿Eres partner?») y **home** (banner «Reclamar mi centro») → **`/partner/login`**; alta/reclamo público permanece en **`/partner/claim`** (p. ej. desde login «Primera vez»). Panel **`/partner/panel`** incluye retorno rápido al hub **`/partner/venues`** vía **«← Mis centros»**. Referencia de rutas: `docs/operations/WEB_ROUTES_PLATFORM.md`.
-- `Completado` (2026-08-03) panel admin/partner staging: hydrate perfil desde catálogo; planes CRUD + sync `catalog.plans` a ficha pública; fotos con URL pública + volume Railway + `blobBase64`; perfil tipo multi-select y horarios day/time. SHAs `88a683a`…`330c4aa`.
+- `Completado` (2026-08-03) panel admin/partner staging: hydrate perfil desde catálogo; planes CRUD + sync `catalog.plans` a ficha pública; fotos con URL pública + volume Railway + `blobBase64`; perfil tipo multi-select y horarios day/time; ubicación con mapa; Instagram/website. SHAs `88a683a`…`fc4dec8`.
+- `Completado` (2026-08-03) **Geo VE nacional** en catálogo/panel/discovery: Ciudad=municipio, Zona=barrio/sector; `/v1/meta/geo/*`; cascada Estado→Municipio→Zona; legacy `?zone=`; fix colisiones featured Caracas (`9194a49`…`f688639`).
 
 ## Catálogo — datos operativos Caracas (2026-05-21)
 
@@ -97,14 +98,14 @@ Equivalencia historica en este documento:
 | Import CSV → Postgres | **Implementado** — `scripts/venues-import/`, `pnpm venues:load`, guía `docs/operations/VENUES_CATALOG_IMPORT.md` |
 | Volumen MVP piloto PRD (40–70) | **Superado** en local (~95 centros) |
 | Seed demo 8 venues | **Retirado de BD** en entorno cargado; código seed sigue en repo solo para BD vacía |
-| Calidad post-import | **Parcial** — geocodificación y mapeo `venueType`/zona documentados como deuda en `VENUES_CATALOG_IMPORT.md` |
+| Calidad post-import | **Parcial** — geocode fallback aún documentado; geo IDs backfilleados 2026-08-03 (`stateCode`/`cityId`/`zoneId`); `venueType` puede requerir segunda pasada |
 
 ## Epic 5 — Backoffice y calidad catálogo
 
 | User story | Estado | Evidencia principal |
 |---|---|---|
-| US-5.1 Alta/edición/moderación admin | Parcial | vistas/admin operativas; moderación avanzada pendiente |
-| US-5.2 Taxonomías y atributos | Implementada | tabla `taxonomy_attributes`; `GET/POST/PATCH/DELETE` + `POST …/sync-from-venues`; auto-sync si tabla vacía; seed sync sin depender solo de `SEED_ON_BOOT`; BFF + UI `/admin/taxonomias` (crear/editar/activar/eliminar + sync) |
+| US-5.1 Alta/edición/moderación admin | Parcial | panel catálogo operable (perfil/planes/fotos/ubicación/redes); moderación avanzada pendiente |
+| US-5.2 Taxonomías y atributos | Implementada | tabla `taxonomy_attributes`; `GET/POST/PATCH/DELETE` + `POST …/sync-from-venues`; auto-sync si tabla vacía; seed sync sin depender solo de `SEED_ON_BOOT`; BFF + UI `/admin/taxonomias` (36 attrs staging `955de56`) |
 | US-5.3 Gestión de leads backoffice | Implementada | `/admin/leads`: mismo shell que catálogo; tabla con **Ver** → modal de detalle (`LeadDetailModal`): datos del contacto, mensaje, consentimiento, trazabilidad (IP hoy / mismo teléfono), historial, estados (Nuevo/Atendido/Sospechoso/Spam) vía `PATCH /v1/admin/lead/:id`, WhatsApp, nota interna (`adminNote`); API detalle `GET /v1/admin/lead/:id` |
 | US-5.4 Duplicados/calidad de datos | Implementada (UI revisión), Parcial (merge) | UI **`/admin/duplicados`** sobre `v1/admin/meta/duplicate-suspects`; fusión automática de venues fuera de MVP |
 | US-5.5 Gestión de contenido visual | Implementada (MVP) | UI **`/admin/moderacion-media`**: reportes (`venue_reports` + PATCH estado) y revisión de fotos por centro |
@@ -180,7 +181,7 @@ Notas operativas recientes de discovery/comparación (US-2.x):
 | Logotipo header/footer/login | `Completado` | Deploy `ca4070b` en staging; `QueGymLogo` + `/brand/*.png` |
 | Ficha / comparar (US-2.x) | `Completado` | `/gyms/*`, `/api/compare/search` verificados en staging |
 | Leads públicos (US-3.1) | `Completado` (infra staging) | `leads-service` Railway `/health` 200; admin API con M2M |
-| Partner / admin ops (US-4.x, 5.x) | `Parcial` | `/admin/leads` operativo (M2M + `00fd9f9`); E2E manual partner/admin pendiente |
+| Partner / admin ops (US-4.x, 5.x) | `Completado` (ops staging) | Panel catálogo + taxonomías + geo/ubicación + media durables (2026-08-03); E2E manual partner opcional |
 | Analytics / Sprint 5 KPIs (US-6.x) | `Parcial` | Pico **PASS PRD 16/17** (2026-06-17); live **FAIL PRD** (2026-08-02); re-seed + backdate → 17/17; GO pendiente |
 
 Evidencia: `STAGING_EVIDENCE_SPRINT5.md`, `STAGING_DEPLOYMENT_STATUS.md`, `STAGING_AGENT_EXECUTION_REPORT.md`.
@@ -246,9 +247,10 @@ Evidencia: `STAGING_EVIDENCE_SPRINT5.md`, `STAGING_DEPLOYMENT_STATUS.md`, `STAGI
 
 ## Foco vigente de ejecución
 
-- **Completado:** Rebrand Fase 2; Sprint UX-A/B/C; deploy staging; logo `ca4070b`; `VenueImage` `ff98be2`; traffic/KPI tooling `f937abf`.
+- **Completado (2026-08-03):** panel admin operable (perfil/planes/fotos/ubicación/redes); taxonomías 36 attrs; geo VE nacional + legacy `?zone=`. HEAD docs `300fc35`.
+- **Completado (previo):** Rebrand Fase 2; Sprint UX-A/B/C; deploy staging; logo; traffic/KPI tooling.
 - **QA visual:** **PASS** (no reabrir).
 - **E2E lead API:** **PASS**. E2E checklist §2–3: opcional pre-GO.
 - **KPI:** live **FAIL PRD** (2026-08-02); pico histórico **PASS PRD 16/17**. Next: backdate + re-seed → **17/17** → firma GO.
 - **Fuente de next actions:** [`NEXT_AGENT_BRIEF.md`](./NEXT_AGENT_BRIEF.md).
-- Fuera de MVP: `/checkout`, `/reservas`.
+- Fuera de MVP: `/checkout`, `/reservas`. Opcional: selects geo en `/buscar`; cascada en claim wizard.

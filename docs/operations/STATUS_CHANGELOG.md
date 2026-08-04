@@ -6,12 +6,19 @@ Formato: `YYYY-MM-DD | SHA | qué cambió | evidencia`.
 
 | Fecha | SHA / ref | Cambio | Evidencia |
 |-------|-----------|--------|-----------|
-| 2026-08-03 | (geo) | Estado→Municipio→Zona nacional (parroquias+barrios AM); meta `/v1/meta/geo/*`; venues `stateCode/cityId/zoneId`; panel cascada; legacy `?zone=` | catalog/partner/web |
+| 2026-08-03 | `300fc35` | Docs: geo VE live en brief; reconciliación trinidad + staging | `NEXT_AGENT_BRIEF.md` + trinity |
+| 2026-08-03 | `f688639` | Geo resolve: preferir zonas featured Caracas (fix `Las Mercedes`→Baruta 29 hits) | Probe catalog `?zone=Las Mercedes` |
+| 2026-08-03 | `cbaabe6` | Geo backfill: slugify + preferencia municipios AM (Libertador→DC) | Detail Activa Gym `VE-A` |
+| 2026-08-03 | `9194a49` | Geo VE nacional: Ciudad=municipio, Zona=barrio/sector; `/v1/meta/geo/*`; cascada panel; legacy `?zone=` | 24 estados / featured chips |
+| 2026-08-03 | `fc4dec8` | Panel: Instagram + website estructurados (`instagramHandle`/`websiteUrl`) | partner + catalog OpenAPI |
+| 2026-08-03 | `b522d98` | Panel: editor ubicación con mapa (lat/lng) | `venue-location-editor.tsx` |
+| 2026-08-03 | `955de56` | Taxonomías: DELETE + sync-from-venues + auto-heal; staging 36 attrs | `/admin/taxonomias` |
+| 2026-08-03 | `330c4aa` | Fotos durables: volume Railway `/data/uploads` + `blobBase64` Neon | `PartnerUploadsController` |
 | 2026-08-03 | `dc4748c` | Perfil admin: tipo multi-select, horarios day/time picker, descripción full-width | staging panel UI |
 | 2026-08-03 | `7686b4f` | Ficha gym: planes reales `catalog.plans` (no mocks); sync JSON + priceMin/Max | GET venue.plans |
 | 2026-08-03 | `9f6ebbf` | Planes panel: create/list UX + edit/delete; DELETE API; docs media URL | partner/web/openapi |
 | 2026-08-03 | `88a683a` | Fotos: `PARTNER_PUBLIC_BASE_URL` + rewrite localhost; preview al seleccionar | upload HTTPS |
-| 2026-08-03 | (push) | Panel admin: hydrate catálogo + sync name/modalities/amenities/schedule | partner/catalog/web |
+| 2026-08-03 | `8333061` | Panel admin: hydrate catálogo + sync name/modalities/amenities/schedule | partner/catalog/web |
 | 2026-08-03 | Vercel | `AUTH0_M2M_*` + `ADMIN_OIDC_ISSUER` en Production/Preview; redeploy `staging.quegym.com`; BFF `/api/admin/leads` + taxonomy **200** | Probe HTTP post-redeploy |
 | 2026-08-03 | Railway | Partner admin **PASS**: issuer era audience → Auth0 URL; catalog OIDC; delegate; analytics backdate ON | M2M claims/profile/plans/photos/taxonomy **200** |
 | 2026-08-03 | `49cb52a` | BFF admin: renovación M2M automática (`AUTH0_M2M_*`); OIDC JWKS harden en catalog/leads; partner fix `d9373dc` | Code on `main` |

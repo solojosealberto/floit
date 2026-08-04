@@ -64,7 +64,7 @@ Resumen: **[`docs/operations/sprints.md`](docs/operations/sprints.md)**. Estado 
 
 **Sprint 3+:** export CSV admin, `lead_persisted`, Turnstile opcional, E2E Playwright (`pnpm test:e2e`; claim con servicios: `E2E_WITH_SERVICES=1`).
 
-**Admin web:** hub `/admin/configuracion`; `/admin/partner-claims` + `#operaciones-y-sync`. Rutas: [`WEB_ROUTES_PLATFORM.md`](docs/operations/WEB_ROUTES_PLATFORM.md), [`LOCALHOST_LINKS_GUIDE.md`](docs/operations/LOCALHOST_LINKS_GUIDE.md).
+**Admin web:** hub `/admin/configuracion`; `/admin/partner-claims` + `#operaciones-y-sync`; `/admin/taxonomias` (CRUD + sync); panel catálogo (perfil/planes/fotos/ubicación/redes). Geo: Ciudad=municipio, Zona=barrio/sector (`/v1/meta/geo/*`). Rutas: [`WEB_ROUTES_PLATFORM.md`](docs/operations/WEB_ROUTES_PLATFORM.md), [`LOCALHOST_LINKS_GUIDE.md`](docs/operations/LOCALHOST_LINKS_GUIDE.md). Estado vivo: [`NEXT_AGENT_BRIEF.md`](docs/operations/NEXT_AGENT_BRIEF.md).
 
 ## Sprint 1 — Discovery local
 

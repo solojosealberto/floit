@@ -306,7 +306,9 @@ OpenAPI (`openapi/README.md`), `pnpm verify`, `pnpm smoke:local`, [`docs/operati
 - `Completado` Mapa `/buscar` refinado: solo una ficha activa (sin popup legacy), deselección en mapa vacío, mapa desktop full-height y listado mobile con `Mostrar 8 más`.
 - `Completado` Modo mapa `/buscar` con focus+zoom automático al seleccionar fichas de la lista y tarjeta contextual posicionada a la derecha del marcador para mantener visible el icono.
 - `Completado` Corrección de error visual de la ficha anclada al mapa (posición inválida/flicker) mediante render condicionado a coordenadas válidas y callbacks estables.
-- `Completado` (2026-08-03) panel admin/partner staging: hydrate desde catálogo; planes CRUD↔ficha (`catalog.plans`); fotos con URL pública + persistencia volume/`blobBase64`; perfil con tipo multi-select y horarios estructurados. SHAs: `88a683a`…`330c4aa`.
+- `Completado` (2026-08-03) panel admin/partner staging: hydrate desde catálogo; planes CRUD↔ficha (`catalog.plans`); fotos con URL pública + persistencia volume/`blobBase64`; perfil con tipo multi-select y horarios estructurados; editor ubicación+mapa; Instagram/website; geo VE nacional. SHAs: `88a683a`…`f688639` (HEAD docs `300fc35`).
+- `Completado` (2026-08-03) **Geo VE:** Ciudad=municipio, Zona=barrio/sector; dataset nacional (`data/geo/ve/venezuela-geo.json`); tablas `geo_states/cities/zones`; APIs `GET /v1/meta/geo/states|cities|zones`; venues `stateCode/cityId/zoneId` + legacy `zone`; cascada en `VenueLocationEditor`; chips home featured; backfill boot; preferencia Caracas AM (fix colisión Las Mercedes).
+- `Completado` (2026-08-03) **Taxonomías staging:** tabla vacía sin `SEED_ON_BOOT` → auto-heal + `DELETE` + `POST …/sync-from-venues`; 36 attrs live (`955de56`).
 - `Completado` Backend partner/catalog extendido para fotos de centros (MVP URL-based): `photoUrls` en perfil partner, sincronización interna `partner-sync` y exposición en detalle público de catálogo.
 - `Completado` Backend partner con upload real de fotos por venue (multipart `jpeg/png/webp`, límite 5MB), almacenamiento local y gestión (`listar/subir/eliminar`) con ownership y sync automático a catálogo.
 - `Completado` Ordenamiento manual de fotos por partner (botones `↑/↓` + drag-and-drop en panel), persistido en backend y reflejado en la galería pública de `gyms/[slug]`.
@@ -403,9 +405,18 @@ OpenAPI (`openapi/README.md`), `pnpm verify`, `pnpm smoke:local`, [`docs/operati
 ### Avance de iteración (Admin taxonomías)
 
 - `Completado` CRUD de modalidades y amenidades en **`/admin/taxonomias`** (`taxonomias-client.tsx`), alineado al diseño operativo (pestañas, panel lateral, activación/desactivación).
-- `Completado` (2026-08-03) listado vacío en staging corregido (tabla sin seed); `DELETE`, `POST …/sync-from-venues`, auto-heal si vacía, sync al boot sin `SEED_ON_BOOT`.
+- `Completado` (2026-08-03) listado vacío en staging corregido (tabla sin seed); `DELETE`, `POST …/sync-from-venues`, auto-heal si vacía, sync al boot sin `SEED_ON_BOOT` (`955de56` — 36 attrs en staging).
 - `Completado` **`catalog-service`:** entidad `taxonomy_attributes`, APIs `v1/admin/taxonomy-attributes`, `AdminApiGuard`, dependencia `jose` para OIDC admin opcional; seed `syncMissingSlugsFromVenues` cuando `SEED_ON_BOOT=true`.
 - `Completado` BFF **`/api/admin/taxonomy-attributes`** y contrato en `openapi/catalog.yaml`; estado US-5.2 en `EPICS_USER_STORIES_STATUS.md`.
+
+### Avance de iteración (Geo VE + panel ubicación 2026-08-03)
+
+- `Completado` Producto: **Ciudad = municipio**, **Zona = barrio/sector**; cobertura **nacional**; compatibilidad **`?zone=`** legacy.
+- `Completado` Dataset `data/geo/ve/venezuela-geo.json` (+ copia en catalog para Railway): ~24 estados, municipios, parroquias + barrios AM Caracas featured.
+- `Completado` Catalog: entidades `geo_*`, `GeoModule`, filtros `state`/`city`/`zone_id` + legacy `zone`; backfill desde labels; OpenAPI query params.
+- `Completado` Panel: cascada Estado→Municipio→Zona + mapa en `venue-location-editor.tsx`; sync partner→catalog `stateCode`/`cityId`/`zoneId`.
+- `Completado` Home chips featured vía `/v1/meta/geo/zones?featured=true`; probe staging Las Mercedes→29, Altamira→26.
+- `Pendiente opcional` selects `state`/`city`/`zone_id` en UI `/buscar` (hoy chips + `?zone=`); alinear wizard claim a cascada si sigue en zonas libres.
 
 ### Avance de iteración (Sprint UI — cierre ciclo)
 
