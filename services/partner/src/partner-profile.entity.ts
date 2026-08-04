@@ -56,6 +56,18 @@ export class PartnerProfileEntity {
   @Column({ type: "simple-json", nullable: true })
   venueTypes!: string[] | null;
 
+  @Column({ type: "varchar", length: 320, nullable: true })
+  address!: string | null;
+
+  @Column({ type: "varchar", length: 120, nullable: true })
+  zone!: string | null;
+
+  @Column({ type: "float", nullable: true })
+  lat!: number | null;
+
+  @Column({ type: "float", nullable: true })
+  lng!: number | null;
+
   @CreateDateColumn({ type: TIMESTAMP_COLUMN_TYPE })
   createdAt!: Date;
 

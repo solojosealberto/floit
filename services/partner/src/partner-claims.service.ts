@@ -473,6 +473,10 @@ export class PartnerClaimsService {
       modalities: effectiveRow?.modalities ?? [],
       amenities: effectiveRow?.amenities ?? [],
       venueTypes: effectiveRow?.venueTypes ?? [],
+      address: effectiveRow?.address ?? null,
+      zone: effectiveRow?.zone ?? null,
+      lat: effectiveRow?.lat ?? null,
+      lng: effectiveRow?.lng ?? null,
     };
     return this.mergeCatalogSnapshotIntoProfile(base);
   }
@@ -511,6 +515,10 @@ export class PartnerClaimsService {
         modalities: [],
         amenities: [],
         venueTypes: [],
+        address: null,
+        zone: null,
+        lat: null,
+        lng: null,
       });
     }
     if (dto.businessName !== undefined) row.businessName = dto.businessName.trim() || null;
@@ -537,6 +545,14 @@ export class PartnerClaimsService {
     if (dto.venueTypes !== undefined) {
       row.venueTypes = normalizeSlugList(dto.venueTypes).slice(0, 12);
     }
+    if (dto.address !== undefined) row.address = dto.address.trim() || null;
+    if (dto.zone !== undefined) row.zone = dto.zone.trim() || null;
+    if (dto.lat !== undefined) {
+      row.lat = Number.isFinite(dto.lat) ? dto.lat : null;
+    }
+    if (dto.lng !== undefined) {
+      row.lng = Number.isFinite(dto.lng) ? dto.lng : null;
+    }
     const saved = await this.profiles.save(row);
     await this.enqueueVenueCatalogSync(identity.email, venueSlug);
     return this.mergeCatalogSnapshotIntoProfile({
@@ -552,6 +568,10 @@ export class PartnerClaimsService {
       modalities: saved.modalities ?? [],
       amenities: saved.amenities ?? [],
       venueTypes: saved.venueTypes ?? [],
+      address: saved.address ?? null,
+      zone: saved.zone ?? null,
+      lat: saved.lat ?? null,
+      lng: saved.lng ?? null,
     });
   }
 
@@ -963,6 +983,14 @@ export class PartnerClaimsService {
       ...(derivePrimaryVenueType(profile?.venueTypes ?? [])
         ? { venueType: derivePrimaryVenueType(profile?.venueTypes ?? [])! }
         : {}),
+      ...(profile?.address?.trim() ? { address: profile.address.trim() } : {}),
+      ...(profile?.zone?.trim() ? { zone: profile.zone.trim() } : {}),
+      ...(profile?.lat != null && Number.isFinite(profile.lat)
+        ? { lat: profile.lat }
+        : {}),
+      ...(profile?.lng != null && Number.isFinite(profile.lng)
+        ? { lng: profile.lng }
+        : {}),
       // Never send empty photoUrls — that would wipe catalog gallery on profile-only saves.
       ...(photos.length > 0
         ? { photoUrls: photos.map((p) => this.rewritePublicMediaUrl(p.url)) }
@@ -1097,6 +1125,10 @@ export class PartnerClaimsService {
       modalities: legacy.modalities ?? [],
       amenities: legacy.amenities ?? [],
       venueTypes: legacy.venueTypes ?? [],
+      address: legacy.address ?? null,
+      zone: legacy.zone ?? null,
+      lat: legacy.lat ?? null,
+      lng: legacy.lng ?? null,
     });
     return this.profiles.save(copy);
   }
@@ -1114,6 +1146,10 @@ export class PartnerClaimsService {
     modalities: string[];
     amenities: string[];
     venueTypes: string[];
+    address: string | null;
+    zone: string | null;
+    lat: number | null;
+    lng: number | null;
   }) {
     const catalog = await this.fetchCatalogVenueSnapshot(base.venueSlug);
     const scheduleFromCatalog = catalog
@@ -1137,6 +1173,14 @@ export class PartnerClaimsService {
     const catalogPhotoUrls = (catalog?.photoUrls ?? []).map((u) =>
       this.rewritePublicMediaUrl(u),
     );
+    const lat =
+      base.lat != null && Number.isFinite(base.lat)
+        ? base.lat
+        : (catalog?.lat ?? null);
+    const lng =
+      base.lng != null && Number.isFinite(base.lng)
+        ? base.lng
+        : (catalog?.lng ?? null);
     return {
       ...base,
       businessName: base.businessName?.trim() || catalog?.name || null,
@@ -1152,7 +1196,10 @@ export class PartnerClaimsService {
       venueTypes,
       venueType:
         derivePrimaryVenueType(venueTypes) || catalog?.venueType || null,
-      zone: catalog?.zone ?? null,
+      address: base.address?.trim() || catalog?.address || null,
+      zone: base.zone?.trim() || catalog?.zone || null,
+      lat,
+      lng,
       catalogPhotoUrls,
       photoUrls: (base.photoUrls ?? []).map((u) => this.rewritePublicMediaUrl(u)),
       hydratedFromCatalog: Boolean(catalog),
@@ -1178,6 +1225,9 @@ export class PartnerClaimsService {
     description: string | null;
     venueType: string;
     zone: string;
+    address: string;
+    lat: number | null;
+    lng: number | null;
     modalities: string[];
     amenities: string[];
     contactPhone: string | null;
@@ -1222,6 +1272,9 @@ export class PartnerClaimsService {
           description?: string | null;
           venueType?: string;
           zone?: string;
+          address?: string;
+          lat?: number;
+          lng?: number;
           modalities?: string[];
           amenities?: string[];
           contactPhone?: string | null;
@@ -1256,6 +1309,15 @@ export class PartnerClaimsService {
           description: body.description ?? null,
           venueType: body.venueType?.trim() || "",
           zone: body.zone?.trim() || "",
+          address: body.address?.trim() || "",
+          lat:
+            body.lat != null && Number.isFinite(Number(body.lat))
+              ? Number(body.lat)
+              : null,
+          lng:
+            body.lng != null && Number.isFinite(Number(body.lng))
+              ? Number(body.lng)
+              : null,
           modalities: Array.isArray(body.modalities) ? body.modalities : [],
           amenities: Array.isArray(body.amenities) ? body.amenities : [],
           contactPhone: body.contactPhone ?? null,

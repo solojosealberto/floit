@@ -1084,6 +1084,10 @@ components:
         contactPhone: { type: string, nullable: true }
         contactEmail: { type: string, nullable: true }
         contactWhatsapp: { type: string, nullable: true }
+        address: { type: string, nullable: true }
+        zone: { type: string, nullable: true }
+        lat: { type: number, nullable: true }
+        lng: { type: number, nullable: true }
         photoUrls:
           type: array
           items: { type: string, format: uri }
@@ -1096,6 +1100,10 @@ components:
         contactPhone: { type: string, maxLength: 40 }
         contactEmail: { type: string, format: email, maxLength: 200 }
         contactWhatsapp: { type: string, maxLength: 200 }
+        address: { type: string, maxLength: 320 }
+        zone: { type: string, maxLength: 120 }
+        lat: { type: number, minimum: -90, maximum: 90 }
+        lng: { type: number, minimum: -180, maximum: 180 }
         photoUrls:
           type: array
           maxItems: 12

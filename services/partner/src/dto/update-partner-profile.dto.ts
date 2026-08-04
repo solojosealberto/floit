@@ -1,11 +1,15 @@
+import { Type } from "class-transformer";
 import {
   ArrayMaxSize,
   IsArray,
   IsEmail,
+  IsNumber,
   IsOptional,
   IsString,
   IsUrl,
+  Max,
   MaxLength,
+  Min,
 } from "class-validator";
 
 export class UpdatePartnerProfileDto {
@@ -65,4 +69,28 @@ export class UpdatePartnerProfileDto {
   @IsString({ each: true })
   @MaxLength(48, { each: true })
   venueTypes?: string[];
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(320)
+  address?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  zone?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(-90)
+  @Max(90)
+  lat?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(-180)
+  @Max(180)
+  lng?: number;
 }

@@ -524,6 +524,20 @@ export class VenuesService {
       const vt = dto.venueType.trim().toLowerCase();
       if (vt) venue.venueType = vt.slice(0, 48);
     }
+    if (dto.address !== undefined) {
+      const address = dto.address.trim();
+      if (address) venue.address = address.slice(0, 320);
+    }
+    if (dto.zone !== undefined) {
+      const zone = dto.zone.trim();
+      if (zone) venue.zone = zone.slice(0, 120);
+    }
+    if (dto.lat != null && Number.isFinite(dto.lat)) {
+      venue.lat = dto.lat;
+    }
+    if (dto.lng != null && Number.isFinite(dto.lng)) {
+      venue.lng = dto.lng;
+    }
     if (dto.photoUrls !== undefined) {
       venue.photoUrls = sanitizePhotoUrls(dto.photoUrls);
     }

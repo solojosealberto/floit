@@ -23,6 +23,7 @@ import {
   parseScheduleSummary,
   serializeScheduleSummary,
 } from "@/lib/venue-schedule";
+import { VenueLocationEditor } from "@/components/venue-location-editor";
 
 type Profile = {
   partnerEmail: string;
@@ -36,7 +37,10 @@ type Profile = {
   amenities?: string[];
   venueTypes?: string[];
   venueType?: string | null;
+  address?: string | null;
   zone?: string | null;
+  lat?: number | null;
+  lng?: number | null;
   catalogPhotoUrls?: string[];
   hydratedFromCatalog?: boolean;
 };
@@ -83,6 +87,10 @@ type ProfileFormState = {
   modalities: string[];
   amenities: string[];
   venueTypes: string[];
+  address: string;
+  zone: string;
+  lat: number | null;
+  lng: number | null;
 };
 
 type TaxonomyOption = { slug: string; label: string; kind: "modality" | "amenity" };
@@ -114,6 +122,10 @@ const EMPTY_PROFILE_FORM: ProfileFormState = {
   modalities: [],
   amenities: [],
   venueTypes: [],
+  address: "",
+  zone: "",
+  lat: null,
+  lng: null,
 };
 
 const FALLBACK_MODALITIES = [
@@ -244,6 +256,10 @@ export function PartnerPanelClient(props: {
       modalities: p.modalities ?? [],
       amenities: p.amenities ?? [],
       venueTypes,
+      address: p.address ?? "",
+      zone: p.zone ?? "",
+      lat: p.lat != null && Number.isFinite(p.lat) ? p.lat : null,
+      lng: p.lng != null && Number.isFinite(p.lng) ? p.lng : null,
     });
   }
 
@@ -507,6 +523,14 @@ export function PartnerPanelClient(props: {
       modalities: profileForm.modalities,
       amenities: profileForm.amenities,
       venueTypes: profileForm.venueTypes,
+      address: profileForm.address.trim() || undefined,
+      zone: profileForm.zone.trim() || undefined,
+      ...(profileForm.lat != null && Number.isFinite(profileForm.lat)
+        ? { lat: profileForm.lat }
+        : {}),
+      ...(profileForm.lng != null && Number.isFinite(profileForm.lng)
+        ? { lng: profileForm.lng }
+        : {}),
     };
     try {
       const res = await fetch(venueApi(venueSlug, "/profile"), {
@@ -944,6 +968,12 @@ export function PartnerPanelClient(props: {
     ),
     Boolean(photosVenueSlug.trim()),
     profileForm.modalities.length > 0,
+    Boolean(
+      profileForm.address.trim() &&
+        profileForm.zone.trim() &&
+        profileForm.lat != null &&
+        profileForm.lng != null,
+    ),
   ];
   const completedChecklist = profileChecklist.filter(Boolean).length;
   const completionPct = Math.round((completedChecklist / profileChecklist.length) * 100);
@@ -1171,6 +1201,7 @@ export function PartnerPanelClient(props: {
                   <li className={statusLine(profileChecklist[4])}>Contactos</li>
                   <li className={statusLine(profileChecklist[5])}>Centro seleccionado</li>
                   <li className={statusLine(profileChecklist[6])}>Modalidades</li>
+                  <li className={statusLine(profileChecklist[7])}>Ubicación</li>
                 </ul>
               </UICard>
             </div>
@@ -1515,6 +1546,37 @@ export function PartnerPanelClient(props: {
             </UICard>
 
             <UICard className={`bg-quegym-subtle ${lightCardClass}`}>
+              <h2 className="mb-1 text-base font-semibold">Ubicación</h2>
+              <p className="mb-3 text-xs text-quegym-secondary">
+                Dirección, zona y pin en el mapa. Se sincroniza con la ficha pública y
+                el discovery.
+              </p>
+              <VenueLocationEditor
+                value={{
+                  address: profileForm.address,
+                  zone: profileForm.zone,
+                  lat: profileForm.lat,
+                  lng: profileForm.lng,
+                }}
+                venueName={
+                  profileForm.businessName.trim() ||
+                  profile.businessName?.trim() ||
+                  photosVenueSlug
+                }
+                inputClassName={lightInputClass}
+                onChange={(next) =>
+                  setProfileForm((prev) => ({
+                    ...prev,
+                    address: next.address,
+                    zone: next.zone,
+                    lat: next.lat,
+                    lng: next.lng,
+                  }))
+                }
+              />
+            </UICard>
+
+            <UICard className={`bg-quegym-subtle ${lightCardClass}`}>
               <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
                 <div>
                   <h2 className="text-base font-semibold">Horarios de atención</h2>
@@ -1698,6 +1760,7 @@ export function PartnerPanelClient(props: {
                 {!profileChecklist[1] ? <li>• Horarios</li> : null}
                 {!profileChecklist[2] ? <li>• Al menos 1 foto</li> : null}
                 {!profileChecklist[6] ? <li>• Modalidades</li> : null}
+                {!profileChecklist[7] ? <li>• Dirección, zona y coordenadas</li> : null}
               </ul>
             </UICard>
             <UIButton
