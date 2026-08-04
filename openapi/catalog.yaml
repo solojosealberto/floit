@@ -35,6 +35,16 @@ paths:
         - name: zone
           in: query
           schema: { type: string }
+          description: Label legacy (sigue soportado)
+        - name: state
+          in: query
+          schema: { type: string }
+        - name: city
+          in: query
+          schema: { type: string }
+        - name: zone_id
+          in: query
+          schema: { type: string }
         - name: venue_type
           in: query
           schema: { type: string }
